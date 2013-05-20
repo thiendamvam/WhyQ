@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Permping</string>
+    <string name="app_name_inkakao"> 펌핑 이미지 SNS </string>
+    <string name="bt_join">회원 등록</string>
+    <string name="bt_login">로그인</string>
+    <string name="bt_unlike">취소</string>
+    <string name="bt_facebook">Login with Facebook</string>
+    <string name="bt_twitter">Login with Twitter</string>
+    <string name="bt_join_permping">펌핑 가입하기</string>
+    <string name="permping_head_title">Permping</string>
+    <string name="hint_email">입력해 주세요</string>
+    <string name="hint_password">입력해 주세요</string>
+    <string name="bt_cancel">Cancel</string>
+    <string name="screen_login">Permping.com/Login</string>
+    <string name="acc_name">이름</string>
+    <string name="acc_email">이메일</string>
+    <string name="acc_password">비밀번호</string>
+    <string name="acc_confirm_password">재확인</string>
+    <string name="bt_create_account">계정 만들기</string>
+    <string name="nick_name">Nickname:</string>
+    <string name="user_name">Username:</string>
+    <string name="category">카테고리</string>
+    <string name="category_prompt">Main category</string>
+    <string name="board_prompt">Select board</string>
+    <string name="board_name">보드 이름</string>
+    <string name="board_description">보드 설명</string>
+    <string name="bt_create_board">확인</string>
+    <string name="logout">로그 아웃</string>
+    <string name="account">Account</string>
+    <string name="cancel">취소</string>
+    <string name="bt_reperm">펌하기</string>
+    <string name="bt_like">좋아요</string>
+    <string name="bt_comment">댓글</string>
+    <string name="ok">OK</string>
+    <string name="title_reperm">RePerm</string>
+    <string name="image_description">Description of Image</string>
+    <string name="comment_title">Comment</string>
+    <string name="addnew">All category</string>
+    
+    <string name="login_text1">펌핑 이미지 SNS</string>
+    <string name="login_text2">로그인 하기</string>
+    <string name="email_address">이메일    :   </string>
+    <string name="password">비밀번호  :  </string>
+    <string name="required">입력하세요</string>
+    <string name="login">로그인</string>
+    
+    <string name="image_take_photo">카메라 촬영</string>
+    <string name="gallery">앨범에서 선택</string>
+    <string name="create_board">보드 만들기</string>
+    
+    <string name="new_description">당신의 이야기를 
+담아 주세요</string>
+    <string name="new_board">보드</string>
+    <string name="new_place">위치</string>
+    <string name="new_facebook">페이스북</string>
+    <string name="new_twitter">트위터</string>
+    <string name="new_kakao_talk">카카오톡</string>
+    <string name="voice_recording">얘기 녹음</string>
+    
+    <string name="followers">팔로우</string>
+    <string name="perm">펌</string>
+    <string name="follow">팔로우</string>
+    <string name="unfollow">언팔로우</string>
+    <string name="welcome1">이미지를 소통하는 소셜 커뮤니티</string>
+    <string name="welcome2">순간의 이야기를 펌핑과 함께</string>
+    
+    <string name="exit_title">종료 안내</string>
+    <string name="exit_content">펌핑을 종료 하시겠습니까?</string>
+    <string name="yes">종료</string>
+    <string name="yes_delete">예</string>
+    <string name="no">아니오</string>
+    <string name="delete">삭제</string>
+    <string name="addProfile">프로파일 사진 올리기</string>
+    <string name="app_info">Please record an audio</string>
+    <string name="stop_recording">Stop</string>
+    <string name="start_recording">Start</string>
+    <string name="record_audio">얘기 녹</string>
+    <string name="confirm_delete">당신의 펌을 삭제하시겠습니까?</string>
+</resources>

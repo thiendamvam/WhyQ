@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.whyq"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- <uses-feature android:name="android.hardware.screen.portrait" /> -->
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
+    <application
+        android:name="whyq.PermpingApplication"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name="whyq.PermpingMain"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomTheme"
+            android:windowSoftInputMode="adjustPan" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="whyq.activity.ExplorerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.FollowerActivityGroup"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.FollowerActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.permpings.activity.intent.action.SEND_LOG" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="whyq.activity.BoardListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.ExplorerActivityGroup"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.ImageActivityGroup"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.ImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.NewPermActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/toggle_style" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="newperm"
+                    android:scheme="perm" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="whyq.activity.MyDiaryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.MyDiaryActivityGroup"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.ProfileActivityGroup"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity android:name=".utils.twitters.TwitterActivity" >
+        </activity>
+        <activity
+            android:name="whyq.activity.JoinPermActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="whyq.activity.LoginPermActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="whyq.activity.CreateBoardActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="whyq.activity.AccountActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.AudioPlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent" />
+        <activity
+            android:name="whyq.activity.BoardDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.RecorderActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.RepermActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="whyq.activity.PrepareRequestTokenActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="twitter"
+                    android:scheme="perm" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="whyq.activity.GoogleMapActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="whyq.activity.FacebookActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="whyq.view.ImageDetail"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateVisible" >
+        </activity>
+
+        <uses-library android:name="com.google.android.maps" />
+    </application>
+
+</manifest>
