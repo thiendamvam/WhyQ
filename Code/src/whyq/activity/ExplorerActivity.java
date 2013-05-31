@@ -2,13 +2,13 @@ package whyq.activity;
 
 import java.util.ArrayList;
 
-import whyq.PermpingMain;
+import whyq.WhyqMain;
 import whyq.adapter.CategoryAdapter;
 import whyq.controller.CategoryController;
 import whyq.interfaces.get_category_delegate;
 import whyq.model.Category;
 import whyq.utils.API;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +43,7 @@ public class ExplorerActivity extends Activity implements get_category_delegate 
 		final CategoryController catController = new CategoryController(ExplorerActivity.this);
 		final ArrayList<Category> categories = catController.getCategoryList();
 		context = ExplorerActivity.this;
-		PermUtils.clearViewHistory();
+		WhyqUtils.clearViewHistory();
 		
 		/*Button btnAllCategory = (Button)findViewById(R.id.btnAllCategory);
 		btnAllCategory.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +108,7 @@ public class ExplorerActivity extends Activity implements get_category_delegate 
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

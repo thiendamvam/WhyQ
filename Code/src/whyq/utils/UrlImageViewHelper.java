@@ -18,7 +18,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import whyq.PermpingApplication;
+import whyq.WhyqApplication;
 
 import android.app.Activity;
 import android.content.Context;
@@ -329,7 +329,7 @@ public final class UrlImageViewHelper {
 
 						if (scaleView == true) {
 
-							PermpingApplication state = (PermpingApplication) context
+							WhyqApplication state = (WhyqApplication) context
 									.getApplicationContext();
 							DisplayMetrics metrics = state.getDisplayMetrics();
 							//Log.d("==ORIGINAL IMAGE SIZE:==========>"," Width==="+oiw+"===Heigth===="+oih);

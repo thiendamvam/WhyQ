@@ -11,7 +11,7 @@ import oauth.signpost.OAuth;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import whyq.PermpingApplication;
+import whyq.WhyqApplication;
 import whyq.interfaces.JoinPerm_Delegate;
 import whyq.model.User;
 import whyq.utils.API;
@@ -38,7 +38,7 @@ import com.whyq.R;
  * @author Linh Nguyen
  * This activity supports to create new Perming account.
  */
-public class JoinPermActivity extends Activity implements TextWatcher, JoinPerm_Delegate {
+public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_Delegate {
 	Button createAccount;
 	EditText name;
 	EditText nickName;
@@ -51,7 +51,7 @@ public class JoinPermActivity extends Activity implements TextWatcher, JoinPerm_
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.permping_join);
+        setContentView(R.layout.whyq_join);
         
         TextView textView = (TextView)findViewById(R.id.permpingTitle);
 		Typeface tf = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
@@ -102,7 +102,7 @@ public class JoinPermActivity extends Activity implements TextWatcher, JoinPerm_
 					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPassword.getText().toString()));
 				}
 				
-				XMLParser parser = new XMLParser(XMLParser.JOIN_PERM, JoinPermActivity.this, API.createAccountURL, nameValuePairs);
+				XMLParser parser = new XMLParser(XMLParser.JOIN_PERM, JoinWhyqActivity.this, API.createAccountURL, nameValuePairs);
 				User user = parser.getUser();
 			}
 		});
@@ -140,7 +140,7 @@ public class JoinPermActivity extends Activity implements TextWatcher, JoinPerm_
 		// TODO Auto-generated method stub
 		if (user != null) {
 			// Store the user object to PermpingApplication
-			PermpingApplication state = (PermpingApplication) getApplicationContext();
+			WhyqApplication state = (WhyqApplication) getApplicationContext();
 			state.setUser(user);
 			if(getApplicationContext() != null && email != null && password != null) {
 				if(email.getText().toString().length() > 0 && password.getText().toString().length() > 0) {

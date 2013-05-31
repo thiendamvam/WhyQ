@@ -10,8 +10,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import whyq.model.PermBoard;
-import whyq.model.PermImage;
+import whyq.model.WhyqBoard;
+import whyq.model.WhyqImage;
 import whyq.model.User;
 import whyq.utils.Constants;
 
@@ -23,8 +23,8 @@ import whyq.utils.Constants;
 public class UserHandler extends DefaultHandler {
 	
 	private User user;
-	private List<PermBoard> boards;
-	private PermBoard permBoard;
+	private List<WhyqBoard> boards;
+	private WhyqBoard whyqBoard;
 	
 	private StringBuffer buffer = new StringBuffer();
 	
@@ -43,7 +43,7 @@ public class UserHandler extends DefaultHandler {
 		} else if (localName.equals(Constants.USER_NAME)) {
 			user.setName(buffer.toString());
 		} else if (localName.equals(Constants.USER_AVATAR)) {
-			PermImage avatar = new PermImage(buffer.toString());
+			WhyqImage avatar = new WhyqImage(buffer.toString());
 			user.setAvatar(avatar);
 		} else if (localName.equals(Constants.FOLLOWING_COUNT)) {
 			user.setFollowings(Integer.parseInt(buffer.toString()));			
@@ -58,17 +58,17 @@ public class UserHandler extends DefaultHandler {
 		} else if (localName.equals(Constants.BOARDS)) {
 			user.setBoards(boards);
 		} else if (localName.equals(Constants.ITEM)) {
-			boards.add(permBoard);
+			boards.add(whyqBoard);
 		} else if (localName.equals(Constants.ID)) {
-			permBoard.setId(buffer.toString());
+			whyqBoard.setId(buffer.toString());
 		} else if (localName.equals(Constants.NAME)) {
-			permBoard.setName(buffer.toString());
+			whyqBoard.setName(buffer.toString());
 		} else if (localName.equals(Constants.DESCRIPTION)) {
-			permBoard.setDescription(buffer.toString());
+			whyqBoard.setDescription(buffer.toString());
 		} else if (localName.equals(Constants.FOLLOWERS)) {
-			permBoard.setFollowers(Integer.parseInt(buffer.toString()));
+			whyqBoard.setFollowers(Integer.parseInt(buffer.toString()));
 		} else if (localName.equals(Constants.PINS)) {
-			permBoard.setPins(Integer.parseInt(buffer.toString()));
+			whyqBoard.setPins(Integer.parseInt(buffer.toString()));
 		}
 	}
 
@@ -81,9 +81,9 @@ public class UserHandler extends DefaultHandler {
 		if (localName.equals(Constants.USER)) {
 			user = new User();
 		} else if (localName.equals(Constants.BOARDS)) {
-			boards = new ArrayList<PermBoard>();
+			boards = new ArrayList<WhyqBoard>();
 		} else if (localName.equals(Constants.ITEM)) {
-			permBoard = new PermBoard();
+			whyqBoard = new WhyqBoard();
 		}
 	}
 	

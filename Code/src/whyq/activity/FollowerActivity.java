@@ -6,15 +6,15 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import whyq.PermpingApplication;
-import whyq.PermpingMain;
-import whyq.adapter.PermAdapter;
-import whyq.controller.PermListController;
+import whyq.WhyqApplication;
+import whyq.WhyqMain;
+import whyq.adapter.WhyqAdapter;
+import whyq.controller.WhyqListController;
 import whyq.interfaces.Login_delegate;
-import whyq.model.Perm;
+import whyq.model.Whyq;
 import whyq.model.User;
 import whyq.utils.API;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import whyq.utils.UrlImageViewHelper;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -47,7 +47,7 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 	/**
 	 * MSA
 	 */
-	private ArrayList<Perm> permListMain = new ArrayList<Perm>();
+	private ArrayList<Whyq> permListMain = new ArrayList<Whyq>();
 
 	public static int screenWidth;
 	public static int screenHeight;
@@ -63,7 +63,7 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 	ProgressBar progressBar;
 	ImageView imageViewBeforRefesh;
 	RelativeLayout headerLayout;
-	PermAdapter permListAdapter;
+	WhyqAdapter permListAdapter;
 	View headerView = null;
 	private boolean isFirst = true;
 	public static LoadPermList loadPermList;
@@ -85,8 +85,8 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 		createUI();
 		IntentFilter intentFilter = new IntentFilter(DOWNLOAD_COMPLETED);
 		registerReceiver(receiver, intentFilter);
-		PermUtils.clearViewHistory();
-		PermUtils utils= new PermUtils();
+		WhyqUtils.clearViewHistory();
+		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(FollowerActivity.this.getIntent());
 	}
 	
@@ -121,21 +121,21 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(isLogin && PermpingMain.getCurrentTab() == 3){
-			User user2 = PermUtils.isAuthenticated(getApplicationContext());
+		if(isLogin && WhyqMain.getCurrentTab() == 3){
+			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
 			if(user2 != null){
 				String id = user2.getId();
 				if(id != null)
-					PermpingMain.gotoDiaryTab(id);
+					WhyqMain.gotoDiaryTab(id);
 			}
 			isLogin = false;
-		}else if(PermpingMain.getCurrentTab() == 0 && isRefesh){
+		}else if(WhyqMain.getCurrentTab() == 0 && isRefesh){
 			// Get the screen's size.
 			exeFollowerActivity();
-		}else if(PermpingMain.getCurrentTab() == 1 || PermpingMain.getCurrentTab() == 4){
+		}else if(WhyqMain.getCurrentTab() == 1 || WhyqMain.getCurrentTab() == 4){
 			if(isRefesh)
 				exeFollowerActivity();
-		}else if(PermpingMain.getCurrentTab() == 3) { 
+		}else if(WhyqMain.getCurrentTab() == 3) { 
 			isCalendar = true;
 			exeFollowerActivity();
 		}else if(!isRefesh){
@@ -171,7 +171,7 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 		
 		
 		//Set to application
-		PermpingApplication state = (PermpingApplication) this.getApplication();
+		WhyqApplication state = (WhyqApplication) this.getApplication();
 		if (state != null) {
 			state.setDisplayMetrics(metrics);
 		}
@@ -180,7 +180,7 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 		screenHeight = metrics.heightPixels;
 		screenWidth = metrics.widthPixels;
 
-		User user = PermUtils.isAuthenticated(getApplicationContext());
+		User user = WhyqUtils.isAuthenticated(getApplicationContext());
 		Bundle extras = getIntent().getExtras();
 		if(extras != null && extras.containsKey("allcategory")){
 			this.url = API.getNewPerm;
@@ -261,18 +261,18 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 	}
 	
 	private void loadPerms() {
-		User user = PermUtils.isAuthenticated(getApplicationContext());		
+		User user = WhyqUtils.isAuthenticated(getApplicationContext());		
 		if(permListMain != null && !permListMain.isEmpty()){
 			//clearData();
 			//createUI();
 			if(this.permListAdapter == null) {
-				this.permListAdapter = new PermAdapter(FollowerActivityGroup.context,
-					getSupportFragmentManager(),R.layout.perm_item_1, permListMain, this, screenWidth, screenHeight, header, user);
+				this.permListAdapter = new WhyqAdapter(FollowerActivityGroup.context,
+					getSupportFragmentManager(),R.layout.whyq_item_1, permListMain, this, screenWidth, screenHeight, header, user);
 			} else {
 				for(int i = 0; i < permListMain.size(); i++) {
-					Perm perm = permListMain.get(i);
-					if(!permListAdapter.isPermDuplicate(perm)) {
-						permListAdapter.add(perm);
+					Whyq whyq = permListMain.get(i);
+					if(!permListAdapter.isPermDuplicate(whyq)) {
+						permListAdapter.add(whyq);
 					}
 				}
 			}
@@ -324,31 +324,31 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 	
 	// AsyncTask task for upload file
 
-	public class LoadPermList extends AsyncTask<ArrayList<Perm>, Void, ArrayList<Perm>> {
+	public class LoadPermList extends AsyncTask<ArrayList<Whyq>, Void, ArrayList<Whyq>> {
 
 		@Override
-		protected ArrayList<Perm> doInBackground(ArrayList<Perm>... params) {
+		protected ArrayList<Whyq> doInBackground(ArrayList<Whyq>... params) {
 			// TODO Auto-generated method stub
-			PermListController permListController = new PermListController();
-			ArrayList<Perm> permList = null;
+			WhyqListController whyqListController = new WhyqListController();
+			ArrayList<Whyq> permList = null;
 			try {				
 				if (nextItem != -1) {
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("nextItem", String.valueOf(nextItem)));
 					if(isCalendar){
-						nameValuePairs.add(new BasicNameValuePair("uid", PermpingMain.UID));
+						nameValuePairs.add(new BasicNameValuePair("uid", WhyqMain.UID));
 //						isCalendar =false;
 					}
 
-					permList = permListController.getPermList(url, nameValuePairs);
+					permList = whyqListController.getPermList(url, nameValuePairs);
 				} else {
 					if(isCalendar){
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair("uid", PermpingMain.UID));
-						permList = permListController.getPermList(url,nameValuePairs);
+						nameValuePairs.add(new BasicNameValuePair("uid", WhyqMain.UID));
+						permList = whyqListController.getPermList(url,nameValuePairs);
 						
 					}else{
-						permList = permListController.getPermList(url);	
+						permList = whyqListController.getPermList(url);	
 					}
 					
 				}
@@ -386,12 +386,12 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList< Perm> sResponse) {
+		protected void onPostExecute(ArrayList< Whyq> sResponse) {
 			/**
 			 * MSA
 			 */
 			loadPerms();
-			PermListController.isLoading = false;
+			WhyqListController.isLoading = false;
 			
 			//permListMain.size();
 //			if (dialog != null && dialog.isShowing()) {
@@ -412,7 +412,7 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 	{
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
@@ -421,14 +421,14 @@ public class FollowerActivity extends FragmentActivity implements Login_delegate
 	@Override
 	public void on_success() {
 		// TODO Auto-generated method stub
-		PermpingMain.refeshFollowerActivity();
+		WhyqMain.refeshFollowerActivity();
 	}
 
 	@Override
 	public void on_error() {
 		// TODO Auto-generated method stub
 		//Logger.appendLog("test log", "loginerror");
-		Intent intent = new Intent(getApplicationContext(), JoinPermActivity.class);
+		Intent intent = new Intent(getApplicationContext(), JoinWhyqActivity.class);
 		this.startActivity(intent);		
 	}
 

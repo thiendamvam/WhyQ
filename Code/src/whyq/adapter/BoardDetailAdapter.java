@@ -10,11 +10,11 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import whyq.activity.GoogleMapActivity;
-import whyq.activity.NewPermActivity;
+import whyq.activity.NewWhyqActivity;
 import whyq.activity.ProfileActivityGroup;
 import whyq.model.Comment;
-import whyq.model.Perm;
-import whyq.model.PermBoard;
+import whyq.model.Whyq;
+import whyq.model.WhyqBoard;
 import whyq.model.User;
 import whyq.utils.API;
 import whyq.utils.Constants;
@@ -44,17 +44,17 @@ import com.whyq.R;
 public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 
 	private Activity activity;
-	private List<Perm> perms;
+	private List<Whyq> whyqs;
 	private String boardName;
 	private int screenWidth;
 	private int screenHeight;
 	private User user;
 	private Context context;
-	public BoardDetailAdapter(Activity activity, List<Perm> perms, String boardName, 
+	public BoardDetailAdapter(Activity activity, List<Whyq> whyqs, String boardName, 
 			int screenWidth, int screenHeight, User user) {
 		this.activity = activity;
 		this.context = activity.getParent();
-		this.perms = perms;
+		this.whyqs = whyqs;
 		this.boardName = boardName;
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
@@ -66,13 +66,13 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 		final LayoutInflater inflater = activity.getLayoutInflater();
 		final View view = inflater.inflate(R.layout.profile_perm_layout, null);
 		
-		final Perm perm = perms.get(position);
+		final Whyq whyq = whyqs.get(position);
 		final Button like = (Button) view.findViewById(R.id.btLike);
 		final Button rePerm = (Button) view.findViewById(R.id.btReperm);
 		final ImageView btnLocation = (ImageView)view.findViewById(R.id.btLocation);
 		// Validate Like or Unlike
-		if (perm != null) {
-			if (perm.getPermUserLikeCount() != null && "0".equals(perm.getPermUserLikeCount())) {
+		if (whyq != null) {
+			if (whyq.getPermUserLikeCount() != null && "0".equals(whyq.getPermUserLikeCount())) {
 				like.setText(Constants.LIKE);
 			} else {
 				like.setText(Constants.UNLIKE);
@@ -80,30 +80,30 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 		}
 		like.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (user != null && perm != null) {
+				if (user != null && whyq != null) {
 					HttpPermUtils httpPermUtils = new HttpPermUtils();
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("pid", String.valueOf(perm.getId())));
+					nameValuePairs.add(new BasicNameValuePair("pid", String.valueOf(whyq.getId())));
 					nameValuePairs.add(new BasicNameValuePair("uid", String.valueOf(user.getId()))); 
 					httpPermUtils.sendRequest(API.likeURL, nameValuePairs, false);
 					if (v instanceof Button) {
 						String label = ((Button) v).getText().toString();
-						int likeCount = Integer.parseInt(perm.getPermLikeCount());
+						int likeCount = Integer.parseInt(whyq.getPermLikeCount());
 						if (label != null && label.equals(Constants.LIKE)) { // Like
 							// Update the count
 							likeCount++;
-	    					perm.setPermLikeCount(String.valueOf(likeCount));
+	    					whyq.setPermLikeCount(String.valueOf(likeCount));
 	    					// Change the text to "Unlike"
 	    					like.setText(Constants.UNLIKE);
 						} else { // Unlike
 							likeCount = likeCount - 1;
 							if (likeCount < 0) 
 								likeCount = 0;
-							perm.setPermLikeCount(String.valueOf(likeCount));
+							whyq.setPermLikeCount(String.valueOf(likeCount));
 							like.setText(Constants.LIKE);
 						}
 					}
-					String permStatus = "Like: " + perm.getPermLikeCount() + " - Repin: " + perm.getPermRepinCount() + " - Comment: " + perm.getPermCommentCount();
+					String permStatus = "Like: " + whyq.getPermLikeCount() + " - Repin: " + whyq.getPermRepinCount() + " - Comment: " + whyq.getPermCommentCount();
 		            TextView txtStatus = (TextView) view.findViewById(R.id.permStatus);
 		            txtStatus.setText(permStatus);
 				} else {
@@ -117,10 +117,10 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 			
 			public void onClick(View v) {
 				// Get the id of perm
-				if (perm != null) {
+				if (whyq != null) {
 					
-					Intent myIntent = new Intent(view.getContext(), NewPermActivity.class);
-					myIntent.putExtra("permID", (String) perm.getId() );
+					Intent myIntent = new Intent(view.getContext(), NewWhyqActivity.class);
+					myIntent.putExtra("permID", (String) whyq.getId() );
 					View repermView = ProfileActivityGroup.group.getLocalActivityManager() .startActivity("RepermActivity", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
 					ProfileActivityGroup.group.replaceView( repermView );
 					
@@ -150,27 +150,27 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 				Intent googleMap = new Intent(context,
 						GoogleMapActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putFloat("lat", perm.getLat());
-				bundle.putFloat("lon", perm.getLon());
-				bundle.putString("thumbnail", perm.getImage().getUrl());
+				bundle.putFloat("lat", whyq.getLat());
+				bundle.putFloat("lon", whyq.getLon());
+				bundle.putString("thumbnail", whyq.getImage().getUrl());
 				googleMap.putExtra("locationData", bundle);
 				//Log.d("AA+++++============","========="+perm.getImage().getUrl());
-				View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "PrGoogleMapActivity"+perm.getId(), googleMap).getDecorView();
+				View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "PrGoogleMapActivity"+whyq.getId(), googleMap).getDecorView();
 				ProfileActivityGroup.group.replaceView(view);	
 			}
 		});
-		if(perm.getLon() ==0 && perm.getLat() == 0){
+		if(whyq.getLon() ==0 && whyq.getLat() == 0){
 			btnLocation.setVisibility(View.GONE);
 		}else{
 			btnLocation.setVisibility(View.VISIBLE);
 		}
-		if (perm != null) {
+		if (whyq != null) {
 			// The Board Name
 			TextView txtBoardName = (TextView) view.findViewById(R.id.boardName);
 			if (boardName != null) {
 				txtBoardName.setText(boardName);
 			} else {
-				PermBoard board = perm.getBoard();
+				WhyqBoard board = whyq.getBoard();
 				if (board != null) {
 					txtBoardName.setText(board.getName());
 				} else {
@@ -180,27 +180,27 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 			
 			// The image of perm
 			final ImageView permImage = (ImageView) view.findViewById(R.id.permImage);
-			UrlImageViewHelper.setUrlDrawable(permImage, perm.getImage().getUrl());
+			UrlImageViewHelper.setUrlDrawable(permImage, whyq.getImage().getUrl());
 			//PermUtils.scaleImage(permImage, screenWidth, screenHeight);
 			
 			// Perm Description
 			TextView txtPermDescription = (TextView) view.findViewById(R.id.permDescription);
-			txtPermDescription.setText(perm.getDescription());
+			txtPermDescription.setText(whyq.getDescription());
 			
 //			// Perm Information
 //			TextView txtPermInfo = (TextView) view.findViewById(R.id.permInfo);
 //			txtPermInfo.setText("via " + perm.getAuthor().getName() + " on to " + boardName);
 			
 			// Status
-			String permStatus = "Like: " + perm.getPermLikeCount() + " - Repin: " + perm.getPermRepinCount() + " - Comment: " + perm.getPermCommentCount();
+			String permStatus = "Like: " + whyq.getPermLikeCount() + " - Repin: " + whyq.getPermRepinCount() + " - Comment: " + whyq.getPermCommentCount();
             TextView txtStatus = (TextView) view.findViewById(R.id.permStatus );
             txtStatus.setText(permStatus);
             
             LinearLayout comments = (LinearLayout) view.findViewById(R.id.comments);
-            if(perm.getComments() != null){
-            	for(int i = 0; i < perm.getComments().size(); i ++){
+            if(whyq.getComments() != null){
+            	for(int i = 0; i < whyq.getComments().size(); i ++){
                     View cm = inflater.inflate(R.layout.comment_item, null );
-                    Comment comment = perm.getComments().get(i);
+                    Comment comment = whyq.getComments().get(i);
                     if(comment != null && comment.getAuthor() != null) {
                        
                  		   ImageView cma = (ImageView) cm.findViewById(R.id.commentAvatar);
@@ -210,7 +210,7 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
     	               TextView cmt = (TextView) cm.findViewById(R.id.commentContent);
     	               cmt.setText(comment.getContent());
     	                   
-    	               if( i == (perm.getComments().size() -1)){
+    	               if( i == (whyq.getComments().size() -1)){
     	            	   View sp = (View) cm.findViewById(R.id.separator);
     	            	   sp.setVisibility(View.INVISIBLE);
     	               }
@@ -228,13 +228,13 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 	
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return perms.size();
+		return whyqs.size();
 	}
 	
 	
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return perms.get(position);
+		return whyqs.get(position);
 	}
 	
 	

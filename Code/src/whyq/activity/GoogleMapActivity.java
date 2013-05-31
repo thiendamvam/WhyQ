@@ -3,8 +3,8 @@ package whyq.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import whyq.PermpingMain;
-import whyq.utils.PermUtils;
+import whyq.WhyqMain;
+import whyq.utils.WhyqUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -70,7 +70,7 @@ public class GoogleMapActivity extends MapActivity {
 		BitmapFactory.Options bmOptions;
 		bmOptions = new BitmapFactory.Options();
 		bmOptions.inSampleSize = 1;
-		bitmap = PermUtils.LoadImage(url, bmOptions);
+		bitmap = WhyqUtils.LoadImage(url, bmOptions);
 		Bitmap bubleBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.bubble);
 		if (bitmap != null)
@@ -94,7 +94,7 @@ public class GoogleMapActivity extends MapActivity {
 		BitmapFactory.Options bmOptions;
 		bmOptions = new BitmapFactory.Options();
 		bmOptions.inSampleSize = 1;
-		bitmap = PermUtils.LoadImage(url, bmOptions);
+		bitmap = WhyqUtils.LoadImage(url, bmOptions);
 		Bitmap bubleBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.bubble);
 		if (bitmap != null)
@@ -122,7 +122,7 @@ public class GoogleMapActivity extends MapActivity {
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

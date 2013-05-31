@@ -12,13 +12,13 @@ public class User implements Serializable {
 	private String id;
 	private String name;
 	private String status;
-	private PermImage avatar;
+	private WhyqImage avatar;
 	private int followings;
 	private int friends;	
 	private int pin;
 	private int like;
 	private int board;
-	List<PermBoard> boards;
+	List<WhyqBoard> boards;
 
 	/**
 	 * Default constructor
@@ -47,8 +47,8 @@ public class User implements Serializable {
 	 * @param board
 	 * @param boards
 	 */
-	public User(String id, String name, PermImage avatar, int friends, int followings, 
-			int pin, int like, int board, List<PermBoard> boards) {
+	public User(String id, String name, WhyqImage avatar, int friends, int followings, 
+			int pin, int like, int board, List<WhyqBoard> boards) {
 		this.setId(id);
 		this.setName(name);
 		this.setAvatar(avatar);
@@ -64,14 +64,14 @@ public class User implements Serializable {
 	/**
 	 * @return the boards
 	 */
-	public List<PermBoard> getBoards() {
+	public List<WhyqBoard> getBoards() {
 		return boards;
 	}
 
 	/**
 	 * @param boards the boards to set
 	 */
-	public void setBoards(List<PermBoard> boards) {
+	public void setBoards(List<WhyqBoard> boards) {
 		this.boards = boards;
 	}
 
@@ -95,12 +95,12 @@ public class User implements Serializable {
 	}
 
 
-	public PermImage getAvatar() {
+	public WhyqImage getAvatar() {
 		return avatar;
 	}
 
 
-	public void setAvatar(PermImage avatar) {
+	public void setAvatar(WhyqImage avatar) {
 		this.avatar = avatar;
 	}
 

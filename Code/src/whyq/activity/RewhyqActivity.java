@@ -3,8 +3,8 @@
  */
 package whyq.activity;
 
-import whyq.PermpingMain;
-import whyq.model.PermBoard;
+import whyq.WhyqMain;
+import whyq.model.WhyqBoard;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -21,11 +21,11 @@ import com.whyq.R;
  * @author Linh Nguyen
  *
  */
-public class RepermActivity extends Activity {
+public class RewhyqActivity extends Activity {
 	
 	private String p_permId;
 	private String p_permDescription;
-	private PermBoard p_currentBoard;
+	private WhyqBoard p_currentBoard;
 	
 	private int selectedBoardId = -1;
 	
@@ -43,7 +43,7 @@ public class RepermActivity extends Activity {
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
-			PermBoard board = (PermBoard) parent.getItemAtPosition(pos);
+			WhyqBoard board = (WhyqBoard) parent.getItemAtPosition(pos);
 			selectedBoardId = Integer.parseInt(board.getId());
 		}
 
@@ -60,7 +60,7 @@ public class RepermActivity extends Activity {
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

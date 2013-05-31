@@ -2,11 +2,11 @@ package whyq.activity;
 
 import java.util.ArrayList;
 
-import whyq.PermpingMain;
+import whyq.WhyqMain;
 import whyq.adapter.BoardAdapter;
 import whyq.controller.BoardController;
 import whyq.model.Category;
-import whyq.model.PermBoard;
+import whyq.model.WhyqBoard;
 import whyq.utils.API;
 import android.app.Activity;
 import android.content.Intent;
@@ -39,7 +39,7 @@ public class BoardListActivity extends Activity {
 		
 		ListView boardView = (ListView) findViewById(R.id.categories); //Reuse category layout
 		BoardController boardController = new BoardController();
-		final ArrayList<PermBoard> boards = boardController.getBoardList( this.cat.getId() );
+		final ArrayList<WhyqBoard> boards = boardController.getBoardList( this.cat.getId() );
 
 		BoardAdapter boardAdapter = new BoardAdapter(this, R.layout.category_item, boards);
 		boardView.setAdapter(boardAdapter);
@@ -48,7 +48,7 @@ public class BoardListActivity extends Activity {
 			@SuppressWarnings("deprecation")
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent myIntent = new Intent(view.getContext(), FollowerActivity.class);
-				PermBoard board = boards.get(position);
+				WhyqBoard board = boards.get(position);
 				String boardUrl = API.permListFromBoardUrl + board.getId();
 				myIntent.putExtra("boardUrl", boardUrl);
 				View boardListView = ExplorerActivityGroup.group.getLocalActivityManager() .startActivity("BoardListActivity", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
@@ -61,7 +61,7 @@ public class BoardListActivity extends Activity {
 	}
 	
 	public void onBackPressed(){
-		PermpingMain.back();
+		WhyqMain.back();
 	}
 	
 	@Override
@@ -69,7 +69,7 @@ public class BoardListActivity extends Activity {
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

@@ -3,11 +3,11 @@
  */
 package whyq.activity;
 
-import whyq.PermpingApplication;
-import whyq.PermpingMain;
+import whyq.WhyqApplication;
+import whyq.WhyqMain;
 import whyq.controller.AuthorizeController;
 import whyq.model.User;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
 import android.app.Activity;
 import android.graphics.Typeface;
@@ -53,14 +53,14 @@ public class AccountActivity extends Activity {
 			
 			public void onClick(View v) {
 				// Remove the User object in application state.
-				PermpingApplication state = (PermpingApplication) getApplicationContext();
+				WhyqApplication state = (WhyqApplication) getApplicationContext();
 				User user = state.getUser();
 				if (user != null) {
 					AuthorizeController authorizeController = new AuthorizeController();
 					authorizeController.logout(user.getId());
-					PermUtils permUtils = new PermUtils();
-					permUtils.logOutFacebook(getParent());
-					permUtils.logOutTwitter(getApplicationContext());
+					WhyqUtils whyqUtils = new WhyqUtils();
+					whyqUtils.logOutFacebook(getParent());
+					whyqUtils.logOutTwitter(getApplicationContext());
 					state.setUser(null);
 					XMLParser.storePermpingAccount(AccountActivity.this, "", "");
 				}
@@ -84,7 +84,7 @@ public class AccountActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				PermpingMain.gotoTab(2, "UploadProfile");
+				WhyqMain.gotoTab(2, "UploadProfile");
 			}
 		});
 		

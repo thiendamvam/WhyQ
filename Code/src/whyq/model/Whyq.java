@@ -6,7 +6,7 @@ package whyq.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-public class Perm implements Serializable{
+public class Whyq implements Serializable{
 
 	/**
 	 * 
@@ -18,10 +18,10 @@ public class Perm implements Serializable{
 	private String name;
 	private String description;
 	private String permDateMessage;
-	private PermImage image;
+	private WhyqImage image;
 	private List<Comment> comments;
 	private User author;
-	private PermBoard board;
+	private WhyqBoard board;
 	private String category;
 	
 	private String permRepinCount = "0";
@@ -42,16 +42,16 @@ public class Perm implements Serializable{
 	 * Constructor
 	 */
 	
-	public Perm(){
+	public Whyq(){
 		
 	}
 	
 	
-	public Perm( String id){
+	public Whyq( String id){
 		this.setId(id);
 	}
 	
-	public Perm( String id, String name, String description, String permDateMessage, PermImage image, String permUrl, String permAduio ){
+	public Whyq( String id, String name, String description, String permDateMessage, WhyqImage image, String permUrl, String permAduio ){
 		this.setId(id);
 		this.setName(name);
 		this.setDescription(description);
@@ -68,7 +68,7 @@ public class Perm implements Serializable{
 	}
 
 
-	public Perm( String id, PermBoard board, String description, String permDateMessage, PermImage image , ArrayList<Comment> comments, String permUrl, String permAudio){
+	public Whyq( String id, WhyqBoard board, String description, String permDateMessage, WhyqImage image , ArrayList<Comment> comments, String permUrl, String permAudio){
 		this.setId(id);
 		this.setBoard(board);
 		this.setDescription(description);
@@ -102,11 +102,11 @@ public class Perm implements Serializable{
 		this.permCommentCount += 1;
 	}
 
-	public PermImage getImage() {
+	public WhyqImage getImage() {
 		return image;
 	}
 
-	public void setImage(PermImage image) {
+	public void setImage(WhyqImage image) {
 		this.image = image;
 	}
 
@@ -144,11 +144,11 @@ public class Perm implements Serializable{
 		this.author = author;
 	}
 
-	public PermBoard getBoard() {
+	public WhyqBoard getBoard() {
 		return board;
 	}
 
-	public void setBoard(PermBoard board) {
+	public void setBoard(WhyqBoard board) {
 		this.board = board;
 	}
 	public void setPermUrl( String url) {

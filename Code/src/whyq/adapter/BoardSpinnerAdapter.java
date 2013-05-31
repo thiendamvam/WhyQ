@@ -5,7 +5,7 @@ package whyq.adapter;
 
 import java.util.List;
 
-import whyq.model.PermBoard;
+import whyq.model.WhyqBoard;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +23,10 @@ import com.whyq.R;
 public class BoardSpinnerAdapter extends BaseAdapter implements
 		SpinnerAdapter {
 	
-	private final List<PermBoard> boards;
+	private final List<WhyqBoard> boards;
 	private Activity activity;
 	
-	public BoardSpinnerAdapter(Activity activity, List<PermBoard> boards) {
+	public BoardSpinnerAdapter(Activity activity, List<WhyqBoard> boards) {
 		this.boards = boards;
 		this.activity = activity;
 	}
@@ -60,7 +60,7 @@ public class BoardSpinnerAdapter extends BaseAdapter implements
 		final LayoutInflater inflater = activity.getLayoutInflater();
 		View view = inflater.inflate(R.layout.category_spinner_entry, null);
 		
-		PermBoard board = boards.get(position);
+		WhyqBoard board = boards.get(position);
 		if (board != null) {
 			final TextView categoryName = (TextView) view.findViewById(R.id.spinner_category_name);
 			categoryName.setText(board.getName());

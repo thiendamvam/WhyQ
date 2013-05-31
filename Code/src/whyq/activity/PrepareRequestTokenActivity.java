@@ -13,11 +13,11 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import twitter4j.http.AccessToken;
-import whyq.PermpingMain;
+import whyq.WhyqMain;
 import whyq.controller.AuthorizeController;
 import whyq.interfaces.Login_delegate;
 import whyq.utils.Constants;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import whyq.utils.twitter.OAuthRequestTokenTask;
 import android.app.Activity;
 import android.content.Context;
@@ -81,7 +81,7 @@ public class PrepareRequestTokenActivity extends Activity implements Login_deleg
 			//Log.i(TAG, "Callback received : " + uri);
 			//Log.i(TAG, "Retrieving Access Token");
 			new RetrieveAccessTokenTask(this,consumer,provider,prefs).execute(uri);
-			if(!LoginPermActivity.isTwitter)
+			if(!LoginWhyqActivity.isTwitter)
 				finish();	
 		}
 	}
@@ -126,11 +126,11 @@ public class PrepareRequestTokenActivity extends Activity implements Login_deleg
 				
 				consumer.setTokenWithSecret(token, secret);
 				AccessToken accessToken = new AccessToken(token, secret);
-				PermUtils permUtils = new PermUtils();
-				permUtils.saveTwitterAccess("twitter", accessToken, getApplicationContext());
+				WhyqUtils whyqUtils = new WhyqUtils();
+				whyqUtils.saveTwitterAccess("twitter", accessToken, getApplicationContext());
 				//TODO: validate user before forwarding to new page.
 				// Check on server
-				if(LoginPermActivity.isTwitter){
+				if(LoginWhyqActivity.isTwitter){
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
 					nameValuePairs.add(new BasicNameValuePair("type", "twitter"));
 					nameValuePairs.add(new BasicNameValuePair("oauth_token", token));
@@ -164,17 +164,17 @@ public class PrepareRequestTokenActivity extends Activity implements Login_deleg
 	@Override
 	public void on_success() {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(context, PermpingMain.class);
+		Intent intent = new Intent(context, WhyqMain.class);
 		context.startActivity(intent);
-		LoginPermActivity.isTwitter =false;
+		LoginWhyqActivity.isTwitter =false;
 		finish();
 	}
 	@Override
 	public void on_error() {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(context, JoinPermActivity.class);
+		Intent intent = new Intent(context, JoinWhyqActivity.class);
 		context.startActivity(intent);
-		LoginPermActivity.isTwitter = false;
+		LoginWhyqActivity.isTwitter = false;
 		finish();
 	}	
 	

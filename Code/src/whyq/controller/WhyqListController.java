@@ -9,18 +9,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import whyq.interfaces.PermList_Delegate;
+import whyq.interfaces.WhyqList_Delegate;
 import whyq.model.Comment;
-import whyq.model.Perm;
-import whyq.model.PermBoard;
-import whyq.model.PermImage;
+import whyq.model.Whyq;
+import whyq.model.WhyqBoard;
+import whyq.model.WhyqImage;
 import whyq.model.User;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.XMLParser;
 
 
-public class PermListController implements PermList_Delegate {
+public class WhyqListController implements WhyqList_Delegate {
 
 
 	/**
@@ -33,17 +33,17 @@ public class PermListController implements PermList_Delegate {
 	/**
 	 * Constructor
 	 */
-	public PermListController(){
+	public WhyqListController(){
 		
 	}
 	
 	/**
 	 * @TODO simulate perm lists
 	 */
-	public ArrayList<Perm> getPermList( String url ){
+	public ArrayList<Whyq> getPermList( String url ){
 
 		
-		ArrayList<Perm> permList = new ArrayList<Perm>();
+		ArrayList<Whyq> permList = new ArrayList<Whyq>();
 		
 		if( url == "" ) {
 			url = API.popularPermsURL;
@@ -92,7 +92,7 @@ public class PermListController implements PermList_Delegate {
 			String userAvatar  = getValue(permUser, "userAvatar");
 			
 			//user avatar
-			PermImage userAvatarImage = new PermImage(userAvatar);
+			WhyqImage userAvatarImage = new WhyqImage(userAvatar);
 			//user object
 			User permAuthor = new User(userId);
 			permAuthor.setName(userName);
@@ -117,7 +117,7 @@ public class PermListController implements PermList_Delegate {
 					String commentUserAvatar = getValue(commentUser, "l_userAvatar");
 					//commentUserAvatar = "http://www.lahiguera.net/cinemania/actores/jackie_chan/fotos/5635/jackie_chan.jpg";
 					
-					PermImage commentAvatar = new PermImage( commentUserAvatar );
+					WhyqImage commentAvatar = new WhyqImage( commentUserAvatar );
 					User commentAuthor = new User(commentUserId );
 					commentAuthor.setName(commentUserName);
 					commentAuthor.setAvatar( commentAvatar );
@@ -136,18 +136,18 @@ public class PermListController implements PermList_Delegate {
 			String lon = getValue(permElement, "permLong");
 			String permUserLikeCount = getValue(permElement, Constants.PERM_USERLIKECOUNT);
 			
-			Perm perm = new Perm(permId, new PermBoard("BoardID", permBoard), permDesc, permDateMessage, new PermImage(permImage), comments, permUrl,permAudio);
-			perm.setAuthor(permAuthor);
-			perm.setPermRepinCount(permRepinCount);
-			perm.setPermLikeCount(permLikeCount);
-			perm.setPermCommentCount(permCommentCount);
-			perm.setPermUserLikeCount(permUserLikeCount);
-			perm.setLat(Float.valueOf(lat).floatValue());
-			perm.setLon(Float.valueOf(lon).floatValue());
-			perm.setNextItem(nextItem);
-			perm.setPreviousItem(previousItem);
+			Whyq whyq = new Whyq(permId, new WhyqBoard("BoardID", permBoard), permDesc, permDateMessage, new WhyqImage(permImage), comments, permUrl,permAudio);
+			whyq.setAuthor(permAuthor);
+			whyq.setPermRepinCount(permRepinCount);
+			whyq.setPermLikeCount(permLikeCount);
+			whyq.setPermCommentCount(permCommentCount);
+			whyq.setPermUserLikeCount(permUserLikeCount);
+			whyq.setLat(Float.valueOf(lat).floatValue());
+			whyq.setLon(Float.valueOf(lon).floatValue());
+			whyq.setNextItem(nextItem);
+			whyq.setPreviousItem(previousItem);
 			
-			permList.add(perm);
+			permList.add(whyq);
 			
 			
 			
@@ -156,7 +156,7 @@ public class PermListController implements PermList_Delegate {
 		if(Integer.parseInt(nextItem) == -1 && Integer.parseInt(previousItem) == -1) {
 			isFooterAdded = false;
 		} else {
-			permList.add(new Perm());
+			permList.add(new Whyq());
 			isFooterAdded = true;
 		}
 		
@@ -171,10 +171,10 @@ public class PermListController implements PermList_Delegate {
 	 * @param nameValuePairs
 	 * @return
 	 */
-	public ArrayList<Perm> getPermList(String url, List<NameValuePair> nameValuePairs){
+	public ArrayList<Whyq> getPermList(String url, List<NameValuePair> nameValuePairs){
 
 		
-		ArrayList<Perm> permList = new ArrayList<Perm>();
+		ArrayList<Whyq> permList = new ArrayList<Whyq>();
 		
 		if( url == "" ) {
 			url = API.popularPermsURL;
@@ -185,7 +185,7 @@ public class PermListController implements PermList_Delegate {
 				permList.add(new Perm());
 			}
 		}*/
-		XMLParser parser = new XMLParser(XMLParser.PERMLIST, PermListController.this, url, nameValuePairs, true);
+		XMLParser parser = new XMLParser(XMLParser.PERMLIST, WhyqListController.this, url, nameValuePairs, true);
 		Document doc = parser.getDoc();
 		NodeList responseNodeList = doc.getElementsByTagName("response"); // TODO: actually, only 1 response in the list.
 		String nextItem = "-1";
@@ -218,7 +218,7 @@ public class PermListController implements PermList_Delegate {
 			String userAvatar  = getValue(permUser, "userAvatar");
 			
 			//user avatar
-			PermImage userAvatarImage = new PermImage(userAvatar);
+			WhyqImage userAvatarImage = new WhyqImage(userAvatar);
 			//user object
 			User permAuthor = new User(userId);
 			permAuthor.setName(userName);
@@ -243,7 +243,7 @@ public class PermListController implements PermList_Delegate {
 					String commentUserAvatar = getValue(commentUser, "l_userAvatar");
 					//commentUserAvatar = "http://www.lahiguera.net/cinemania/actores/jackie_chan/fotos/5635/jackie_chan.jpg";
 					
-					PermImage commentAvatar = new PermImage( commentUserAvatar );
+					WhyqImage commentAvatar = new WhyqImage( commentUserAvatar );
 					User commentAuthor = new User(commentUserId );
 					commentAuthor.setName(commentUserName);
 					commentAuthor.setAvatar( commentAvatar );
@@ -262,17 +262,17 @@ public class PermListController implements PermList_Delegate {
 			String lon = getValue(permElement, "permLong");
 			String permUserLikeCount = getValue(permElement, Constants.PERM_USERLIKECOUNT);
 			
-			Perm perm = new Perm(permId, new PermBoard("BoardID", permBoard), permDesc, permDateMessage, new PermImage(permImage), comments, permUrl,permAudio);
-			perm.setAuthor(permAuthor);
-			perm.setPermRepinCount(permRepinCount);
-			perm.setPermLikeCount(permLikeCount);
-			perm.setPermCommentCount(permCommentCount);
-			perm.setPermUserLikeCount(permUserLikeCount);
-			perm.setLat(Float.valueOf(lat).floatValue());
-			perm.setLon(Float.valueOf(lon).floatValue());
-			perm.setNextItem(nextItem);
-			perm.setPreviousItem(previousItem);
-			permList.add(perm);
+			Whyq whyq = new Whyq(permId, new WhyqBoard("BoardID", permBoard), permDesc, permDateMessage, new WhyqImage(permImage), comments, permUrl,permAudio);
+			whyq.setAuthor(permAuthor);
+			whyq.setPermRepinCount(permRepinCount);
+			whyq.setPermLikeCount(permLikeCount);
+			whyq.setPermCommentCount(permCommentCount);
+			whyq.setPermUserLikeCount(permUserLikeCount);
+			whyq.setLat(Float.valueOf(lat).floatValue());
+			whyq.setLon(Float.valueOf(lon).floatValue());
+			whyq.setNextItem(nextItem);
+			whyq.setPreviousItem(previousItem);
+			permList.add(whyq);
 			
 			
 			
@@ -281,7 +281,7 @@ public class PermListController implements PermList_Delegate {
 		if(Integer.parseInt(nextItem) == -1 && Integer.parseInt(previousItem) == -1) {
 			isFooterAdded = false;
 		} else {
-			permList.add(new Perm());
+			permList.add(new Whyq());
 			isFooterAdded = true;
 		}
 		//ArrayList <Perm> permList = parser.permListFromNodeList("popularPerms");

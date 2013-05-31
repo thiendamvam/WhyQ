@@ -39,15 +39,15 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import twitter4j.http.AccessToken;
-import whyq.PermpingApplication;
-import whyq.PermpingMain;
+import whyq.WhyqApplication;
+import whyq.WhyqMain;
 import whyq.adapter.BoardSpinnerAdapter;
 import whyq.model.Category;
-import whyq.model.PermBoard;
+import whyq.model.WhyqBoard;
 import whyq.model.User;
 import whyq.utils.API;
 import whyq.utils.KakaoLink;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -81,9 +81,9 @@ import android.widget.ToggleButton;
 
 import com.whyq.R;
 
-public class NewPermActivity extends Activity implements OnClickListener {
+public class NewWhyqActivity extends Activity implements OnClickListener {
 
-	public static List<PermBoard> boardList = new ArrayList<PermBoard>();
+	public static List<WhyqBoard> boardList = new ArrayList<WhyqBoard>();
 	private String boardIdRe = "";
 	private String boardDescRe = "";
 	private String permIdRe = "";
@@ -109,12 +109,12 @@ public class NewPermActivity extends Activity implements OnClickListener {
 	private AccessToken twitterAccessToken;
 	private double lat = 0.0;
 	private double lon = 0.0;
-	private PermUtils permUtils;
+	private WhyqUtils whyqUtils;
 	// private LocationManager mlocManager;
 	// private LocationListener mlocListener;
 	private ArrayList<Category> categories;
 	private String permId;
-	private List<PermBoard> boards;
+	private List<WhyqBoard> boards;
 	private LinearLayout btnCatilogy;
 	private ImageView rightArrow;
 	// private ProgressDialog loadingDialog;
@@ -153,7 +153,7 @@ public class NewPermActivity extends Activity implements OnClickListener {
 
 		// Remove title bar
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		context = NewPermActivity.this;
+		context = NewWhyqActivity.this;
 		// Remove notification bar
 		// this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		// WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -183,7 +183,7 @@ public class NewPermActivity extends Activity implements OnClickListener {
 //		btnLocation.setOnClickListener(this);
 		btnCatilogy.setOnClickListener(this);
 		btnRecordAudio.setOnClickListener(this);
-		permUtils = new PermUtils();
+		whyqUtils = new WhyqUtils();
 		final Button buttonCANCEL = (Button) findViewById(R.id.buttonCANCEL);
 		buttonCANCEL.setOnClickListener(this);
 		btnOk = (Button) findViewById(R.id.buttonOK);
@@ -220,8 +220,8 @@ public class NewPermActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (PermpingMain.isKakao) {
-			PermpingMain.isKakao = false;
+		if (WhyqMain.isKakao) {
+			WhyqMain.isKakao = false;
 			finish();
 		}
 	}
@@ -284,8 +284,8 @@ public class NewPermActivity extends Activity implements OnClickListener {
 
 	private void initToggleStatus() {
 		// TODO Auto-generated method stub
-		facebookToken = permUtils.getFacebookToken(getApplicationContext());
-		twitterAccessToken = permUtils.getTwitterAccess(NewPermActivity.this);
+		facebookToken = whyqUtils.getFacebookToken(getApplicationContext());
+		twitterAccessToken = whyqUtils.getTwitterAccess(NewWhyqActivity.this);
 		if (facebookToken == null || facebookToken == "") {// &&
 															// facebookToken.isEmpty()
 			btnShareFacebook.setChecked(false);
@@ -356,11 +356,11 @@ public class NewPermActivity extends Activity implements OnClickListener {
 				.setOnItemSelectedListener(new CategorySpinnerSelectedListener());
 	}
 
-	private void addItemsOnMainCategory(Spinner spinner, List<PermBoard> boards2) {
+	private void addItemsOnMainCategory(Spinner spinner, List<WhyqBoard> boards2) {
 		BoardSpinnerAdapter boardSpinnerAdapter = new BoardSpinnerAdapter(this,
 				boards2);
 		spinner.setAdapter(boardSpinnerAdapter);
-		PermBoard initial = (PermBoard) boardSpinnerAdapter.getItem(0);
+		WhyqBoard initial = (WhyqBoard) boardSpinnerAdapter.getItem(0);
 		if (initial != null)
 			boardId = Integer.parseInt(initial.getId());
 	}
@@ -370,7 +370,7 @@ public class NewPermActivity extends Activity implements OnClickListener {
 
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
-			PermBoard board = (PermBoard) parent.getItemAtPosition(pos);
+			WhyqBoard board = (WhyqBoard) parent.getItemAtPosition(pos);
 			boardId = Integer.parseInt(board.getId());
 		}
 
@@ -387,10 +387,10 @@ public class NewPermActivity extends Activity implements OnClickListener {
 			// CategoryController catController = new CategoryController();
 			// categories = catController.getCategoryList();
 			// BoardController boardController = new BoardController();
-			User user = PermUtils.isAuthenticated(getApplicationContext());
+			User user = WhyqUtils.isAuthenticated(getApplicationContext());
 			if (user != null)
 				// boards = boardController.getBoardList("121");
-				boards = (ArrayList<PermBoard>) user.getBoards();
+				boards = (ArrayList<WhyqBoard>) user.getBoards();
 			else {
 				// User has no boards created
 			}
@@ -437,7 +437,7 @@ public class NewPermActivity extends Activity implements OnClickListener {
 		public void executeMultipartPost() throws Exception {
 			try {
 
-				PermpingApplication state = (PermpingApplication) getApplicationContext();
+				WhyqApplication state = (WhyqApplication) getApplicationContext();
 				User user = state.getUser();
 
 				if (user != null) {
@@ -447,10 +447,10 @@ public class NewPermActivity extends Activity implements OnClickListener {
 					// HttpPost("http://10.0.2.2/perm/testupload.php");
 					HttpPost postRequest = null;
 					Charset chars = Charset.forName("UTF-8");
-					facebookToken = permUtils
-							.getFacebookToken(NewPermActivity.this);
-					twitterAccessToken = permUtils
-							.getTwitterAccess(NewPermActivity.this);
+					facebookToken = whyqUtils
+							.getFacebookToken(NewWhyqActivity.this);
+					twitterAccessToken = whyqUtils
+							.getTwitterAccess(NewWhyqActivity.this);
 
 					MultipartEntity reqEntity = new MultipartEntity(
 							HttpMultipartMode.BROWSER_COMPATIBLE, null,
@@ -962,7 +962,7 @@ public class NewPermActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		if (btnRecordAudio.isChecked()) {
 			isGetRecord = true;
-			Intent recordIntent = new Intent(NewPermActivity.this,
+			Intent recordIntent = new Intent(NewWhyqActivity.this,
 					RecorderActivity.class);
 			startActivityForResult(recordIntent, 2);
 		} else {
@@ -994,7 +994,7 @@ public class NewPermActivity extends Activity implements OnClickListener {
 	private void shareTwitter() {
 		// TODO Auto-generated method stub
 		if (btnShareTwitter.isChecked()) {
-			twitterAccessToken = permUtils
+			twitterAccessToken = whyqUtils
 					.getTwitterAccess(getApplicationContext());
 			if (twitterAccessToken == null) {
 				Intent i = new Intent(context,
@@ -1012,9 +1012,9 @@ public class NewPermActivity extends Activity implements OnClickListener {
 
 	private void shareFb() {
 		if (btnShareFacebook.isChecked()) {
-			facebookToken = permUtils.getFacebookToken(getApplicationContext());
+			facebookToken = whyqUtils.getFacebookToken(getApplicationContext());
 			if (facebookToken == null || facebookToken == "") {
-				permUtils.integateLoginFacebook(NewPermActivity.this,
+				whyqUtils.integateLoginFacebook(NewWhyqActivity.this,
 						handleFbLogin);
 			} else {
 				// btnShareFacebook.setChecked(false);
@@ -1098,8 +1098,8 @@ public class NewPermActivity extends Activity implements OnClickListener {
 			metaInfoAndroid.put("installurl", strInstallUrl);
 			metaInfoAndroid.put("executeurl", "perm://newperm");
 			arrMetaInfo.add(metaInfoAndroid);
-			PermpingMain.isKakao = true;
-			KakaoLink link = new KakaoLink(NewPermActivity.this, strURL,
+			WhyqMain.isKakao = true;
+			KakaoLink link = new KakaoLink(NewWhyqActivity.this, strURL,
 					strAppId, strAppVer, strMessage, strAppName, arrMetaInfo,
 					"UTF-8");
 

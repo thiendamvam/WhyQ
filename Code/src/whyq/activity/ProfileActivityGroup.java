@@ -3,11 +3,11 @@
  */
 package whyq.activity;
 
-import whyq.PermpingMain;
+import whyq.WhyqMain;
 import whyq.TabGroupActivity;
 import whyq.model.Comment;
 import whyq.model.User;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,7 +42,7 @@ public class ProfileActivityGroup extends TabGroupActivity {
 	public void createUI() {
 		ProfileActivity.commentData = null;
 		ProfileActivity.isUserProfile = true;
-		User user = PermUtils.isAuthenticated(getApplicationContext());
+		User user = WhyqUtils.isAuthenticated(getApplicationContext());
 		setTabGroup(this);
         if (user != null) {
         	Comment comment = new Comment(user.getId());
@@ -53,7 +53,7 @@ public class ProfileActivityGroup extends TabGroupActivity {
     		clearHistory(); 
     	} else {
     		clearHistory();
-			PermpingMain.showLogin();
+			WhyqMain.showLogin();
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class ProfileActivityGroup extends TabGroupActivity {
 	    	if(accountActivity instanceof AccountActivity) {
 	    		return accountActivity.onKeyDown(keyCode, event);
 	    	}
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import whyq.PermpingMain;
+import whyq.WhyqMain;
 import whyq.model.User;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -43,13 +43,13 @@ public class ImageActivity extends Activity {
 		final LinearLayout takePhoto = (LinearLayout) findViewById(R.id.takePhoto);
 		takePhoto.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				User user = PermUtils.isAuthenticated(getApplicationContext());
+				User user = WhyqUtils.isAuthenticated(getApplicationContext());
 				if (user != null) {
 					// define the file-name to save photo taken by Camera activity
 					showCamera();
 				} else {
 
-					PermpingMain.showLogin();
+					WhyqMain.showLogin();
 				}
 			}
 		});
@@ -60,7 +60,7 @@ public class ImageActivity extends Activity {
 		openGalerry.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				   // select a file
-				User user = PermUtils.isAuthenticated(getApplicationContext());
+				User user = WhyqUtils.isAuthenticated(getApplicationContext());
 				if (user != null) {
 					Intent intent = new Intent();
 	                intent.setType("image/*");
@@ -70,7 +70,7 @@ public class ImageActivity extends Activity {
 					// Go to login screen
 //					Intent i = new Intent(v.getContext(), LoginPermActivity.class);
 //					v.getContext().startActivity(i);
-					PermpingMain.showLogin();
+					WhyqMain.showLogin();
 				}
                 
 			}
@@ -79,7 +79,7 @@ public class ImageActivity extends Activity {
 		final LinearLayout createBoard = (LinearLayout) findViewById(R.id.createBoard);
 		createBoard.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				User user = PermUtils.isAuthenticated(getApplicationContext());
+				User user = WhyqUtils.isAuthenticated(getApplicationContext());
 				if (user != null) {
 					// Go to the Create Board screen.
 					Intent i = new Intent(v.getContext(), CreateBoardActivity.class);
@@ -89,13 +89,13 @@ public class ImageActivity extends Activity {
 					// Go to login screen
 //					Intent i = new Intent(v.getContext(), LoginPermActivity.class);
 //					v.getContext().startActivity(i);
-					PermpingMain.showLogin();
+					WhyqMain.showLogin();
 				}
 				
 			}
 		});
 		
-		PermUtils.clearViewHistory();
+		WhyqUtils.clearViewHistory();
 
 	}
 
@@ -148,7 +148,7 @@ public class ImageActivity extends Activity {
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

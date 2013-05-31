@@ -89,7 +89,7 @@ private int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1224;
 //	        		selectedImagePath = ImageActivity.imagePath;
 	        	}
 	            //Start activity allow user input perm info
-	            Intent myIntent = new Intent(ImageActivityGroup.this, NewPermActivity.class);
+	            Intent myIntent = new Intent(ImageActivityGroup.this, NewWhyqActivity.class);
 	            myIntent.putExtra("imagePath", selectedImagePath );
 				View boardListView = ImageActivityGroup.group.getLocalActivityManager() .startActivity("NewPermActivity", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
 				if(selectedImagePath != null && selectedImagePath != ""){

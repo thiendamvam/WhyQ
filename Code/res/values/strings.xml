@@ -12,7 +12,7 @@
     <string name="hint_email">입력해 주세요</string>
     <string name="hint_password">입력해 주세요</string>
     <string name="bt_cancel">Cancel</string>
-    <string name="screen_login">Permping.com/Login</string>
+    <string name="screen_login">Whyq.com/Login</string>
     <string name="acc_name">이름</string>
     <string name="acc_email">이메일</string>
     <string name="acc_password">비밀번호</string>
@@ -77,4 +77,6 @@
     <string name="start_recording">Start</string>
     <string name="record_audio">얘기 녹</string>
     <string name="confirm_delete">당신의 펌을 삭제하시겠습니까?</string>
+    <string name="AlertTitleWebExtLoadError">Netword not available</string>
+    <string name="AlertMsgWebExtLoadError">Please check your netword again!</string>
 </resources>

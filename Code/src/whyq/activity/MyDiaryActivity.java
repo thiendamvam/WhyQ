@@ -12,14 +12,14 @@ import java.util.Locale;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import whyq.PermpingMain;
+import whyq.WhyqMain;
 import whyq.interfaces.Get_Perm_Delegate;
 import whyq.interfaces.MyDiary_Delegate;
-import whyq.model.Perm;
+import whyq.model.Whyq;
 import whyq.model.Transporter;
 import whyq.utils.API;
 import whyq.utils.Constants;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
 import android.app.Activity;
 import android.content.Context;
@@ -115,7 +115,7 @@ public class MyDiaryActivity extends Activity implements View.OnClickListener , 
 		calendarView.setPadding(0, 0, 0, 0);
 		calendarView.setAdapter(adapter);
 		
-		PermUtils.clearViewHistory();
+		WhyqUtils.clearViewHistory();
 
 	}
 //	@Override
@@ -515,7 +515,7 @@ public class MyDiaryActivity extends Activity implements View.OnClickListener , 
 			thumbList.add(thumb1);
 			thumbList.add(thumb2);
 			thumbList.add(thumb3);
-			String []paras = {API.getPermsByDateWithMonth+date, PermpingMain.UID ,theday};
+			String []paras = {API.getPermsByDateWithMonth+date, WhyqMain.UID ,theday};
 			if(!isGettingData ){
 				isGettingData = true;
 				new getData().execute(paras);
@@ -555,7 +555,7 @@ public class MyDiaryActivity extends Activity implements View.OnClickListener , 
 			String date_month_year = date_;
 			try {
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);
-					nameValuePairs.add(new BasicNameValuePair("uid", PermpingMain.UID));
+					nameValuePairs.add(new BasicNameValuePair("uid", WhyqMain.UID));
 					String url = API.getPermsByDate + date_month_year;
 					XMLParser xmlParser = new XMLParser();
 					xmlParser.getResponseFromURL(XMLParser.GET_PERMS_BY_DATE, MyDiaryActivity.this, url, nameValuePairs,null);
@@ -684,16 +684,16 @@ public class MyDiaryActivity extends Activity implements View.OnClickListener , 
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
 	@Override
-	public void onSuccess(ArrayList<Perm> perms) {
+	public void onSuccess(ArrayList<Whyq> whyqs) {
 		// TODO Auto-generated method stub
 		Transporter transporter = new Transporter();
-		transporter.setPerms(perms);
+		transporter.setPerms(whyqs);
 
 		
 		// Go to the Board Detail screen

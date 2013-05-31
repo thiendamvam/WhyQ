@@ -2,7 +2,7 @@ package whyq.model;
 
 import java.io.Serializable;
 
-public class PermImage implements Serializable{
+public class WhyqImage implements Serializable{
 
 	/**
 	 * 
@@ -13,7 +13,7 @@ public class PermImage implements Serializable{
 	private String fileName;
 	
 	
-	public PermImage( String url ){
+	public WhyqImage( String url ){
 		this.setUrl(url);
 	}
 

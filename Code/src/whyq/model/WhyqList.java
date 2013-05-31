@@ -1,7 +1,7 @@
 package whyq.model;
 
 import java.io.Serializable;
-public class PermList implements Serializable{
+public class WhyqList implements Serializable{
 
 	/**
 	 * 

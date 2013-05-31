@@ -3,10 +3,10 @@
  */
 package whyq.activity;
 
-import whyq.PermpingMain;
+import whyq.WhyqMain;
 import whyq.TabGroupActivity;
 import whyq.model.User;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -40,14 +40,14 @@ public class MyDiaryActivityGroup extends TabGroupActivity {
 	}
 	
 	public void createUI() {
-		User user = PermUtils.isAuthenticated(getApplicationContext());
+		User user = WhyqUtils.isAuthenticated(getApplicationContext());
 		setTabGroup(this);
         if (user != null) {
         	View view = getLocalActivityManager().startActivity( "MyDiaryActivity", new Intent(this, MyDiaryActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
     		replaceView(view);
     		clearHistory();
     	} else {
-			PermpingMain.showLogin();
+			WhyqMain.showLogin();
 		}
 	}
 }

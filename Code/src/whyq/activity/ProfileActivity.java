@@ -24,19 +24,19 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import whyq.PermpingApplication;
-import whyq.PermpingMain;
+import whyq.WhyqApplication;
+import whyq.WhyqMain;
 import whyq.adapter.BoardAdapter;
 import whyq.interfaces.Get_Board_delegate;
 import whyq.model.Comment;
-import whyq.model.Perm;
-import whyq.model.PermBoard;
-import whyq.model.PermImage;
+import whyq.model.Whyq;
+import whyq.model.WhyqBoard;
+import whyq.model.WhyqImage;
 import whyq.model.Transporter;
 import whyq.model.User;
 import whyq.utils.API;
 import whyq.utils.Constants;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import whyq.utils.UrlImageViewHelper;
 import whyq.utils.XMLParser;
 import android.R.string;
@@ -81,7 +81,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 	public boolean isFirst=true;
 //	public ProgressDialog loadingDialog;
 	ProgressBar progressBar;
-	public PermBoard board;
+	public WhyqBoard board;
 	public Context context;
 	//private int selectedBoardId = -1;
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -128,7 +128,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 		IntentFilter intentFilter = new IntentFilter(FollowerActivity.DOWNLOAD_COMPLETED);
 		registerReceiver(receiver, intentFilter);
 		context = ProfileActivity.this;
-		PermpingApplication state = (PermpingApplication) context.getApplicationContext();
+		WhyqApplication state = (WhyqApplication) context.getApplicationContext();
 		user = state.getUser();
 		initButtonStatus();
 		btnAccount.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +136,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				PermpingApplication state = (PermpingApplication) context.getApplicationContext();
+				WhyqApplication state = (WhyqApplication) context.getApplicationContext();
 				User user = state.getUser();
 				String buttonType = btnAccount.getText().toString();
 				if(buttonType.equals(context.getString(R.string.account))){
@@ -159,7 +159,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				PermpingApplication state = (PermpingApplication) context.getApplicationContext();
+				WhyqApplication state = (WhyqApplication) context.getApplicationContext();
 				User user = state.getUser();
 				String buttonType = btnFollow.getText().toString();
 				if(buttonType.equals(context.getString(R.string.follow))){
@@ -169,7 +169,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 						new exeFollow(API.follow, true, false).execute(null,null);
 						
 					}else {
-						PermpingMain.showLogin();
+						WhyqMain.showLogin();
 					}
 					progressBar.setVisibility(View.VISIBLE);
 //					showLoadingDialog("Pregressing", "Please wait...");
@@ -181,15 +181,15 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 						new exeFollow(API.follow, true, false).execute(null,null);
 						
 					}else {
-						PermpingMain.showLogin();
+						WhyqMain.showLogin();
 					}
 				}else if(buttonType.equals(context.getString(R.string.login))){
-					PermpingMain.showLogin();
+					WhyqMain.showLogin();
 				}
 			}
 		});
 		exeUserProfile();
-		PermUtils.clearViewHistory();       
+		WhyqUtils.clearViewHistory();       
     }
 	
     private void initButtonStatus() {
@@ -248,10 +248,10 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 
     	if(isUserProfile){
     		
-    		user = PermUtils.isAuthenticated(getApplicationContext());
+    		user = WhyqUtils.isAuthenticated(getApplicationContext());
     		if(user != null){
     			btnAccount.setText(context.getString(R.string.account));
-    			ArrayList<PermBoard> boards = (ArrayList<PermBoard>) user.getBoards();
+    			ArrayList<WhyqBoard> boards = (ArrayList<WhyqBoard>) user.getBoards();
             	BoardAdapter boardAdapter = new BoardAdapter(ProfileActivity.this,R.layout.board_item, boards);
             	exeGet(boardAdapter);
             	btnAccount.setVisibility(View.VISIBLE);
@@ -260,7 +260,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
     		}else{
 //    			btnAccount.setText(context.getString(R.string.login));
     			btnAccount.invalidate();
-    			PermpingMain.showLogin();
+    			WhyqMain.showLogin();
     		}
     		btnFollow.setVisibility(View.GONE);
 //    		dismissLoadingDialog();
@@ -294,7 +294,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
                         authorName.setText(name);
                         
                         // The author avatar
-                    	PermImage avatar = user.getAvatar();
+                    	WhyqImage avatar = user.getAvatar();
                         UrlImageViewHelper.setUrlDrawable(authorAvatar, avatar.getUrl());
                         
                         // The number of friends
@@ -303,7 +303,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
             		}
             	} else {
 	                authorName.setText(commentData.getAuthor().getName());
-	                PermImage avatar = commentData.getAuthor().getAvatar();
+	                WhyqImage avatar = commentData.getAuthor().getAvatar();
 	                UrlImageViewHelper.setUrlDrawable(authorAvatar, avatar.getUrl());
 	                friends.setText(String.valueOf(ProfileActivity.this.getString(R.string.perm) + " " + ProfileActivity.pinCount + " " + ProfileActivity.this.getString(R.string.followers) + " " + ProfileActivity.followerCount));
             	}
@@ -362,11 +362,11 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 			progressBar.setVisibility(View.INVISIBLE);
 			if(result != null){
 				if(result.booleanValue() && btnAccount.getText().equals(context.getString(R.string.logout))){
-					PermpingApplication state = (PermpingApplication)context.getApplicationContext();
+					WhyqApplication state = (WhyqApplication)context.getApplicationContext();
 					state.setUser(null);
 					XMLParser.storePermpingAccount(context, "", "");
-					PermpingMain.back();
-					PermpingMain.showLogin();
+					WhyqMain.back();
+					WhyqMain.showLogin();
 //					btnAccount.setText(context.getString(R.string.login));
 					btnAccount.invalidate();
 				}
@@ -392,7 +392,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 	}
 
     
-	class getUserProfile extends AsyncTask<ArrayList<PermBoard>, Void, ArrayList<PermBoard>> {
+	class getUserProfile extends AsyncTask<ArrayList<WhyqBoard>, Void, ArrayList<WhyqBoard>> {
 
 		private String filePath = "";
 		public  String title = "";
@@ -401,13 +401,13 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 		}
 
 		@Override
-		protected ArrayList<PermBoard> doInBackground(
-				ArrayList<PermBoard>... arg0) {
+		protected ArrayList<WhyqBoard> doInBackground(
+				ArrayList<WhyqBoard>... arg0) {
 			// TODO Auto-generated method stub
-			ArrayList<PermBoard> boards = null;
+			ArrayList<WhyqBoard> boards = null;
 			try {
 
-				boards = (ArrayList<PermBoard>)executeMultipartPost( filePath, false, false);
+				boards = (ArrayList<WhyqBoard>)executeMultipartPost( filePath, false, false);
 				return boards;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -423,7 +423,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<PermBoard> boards) {
+		protected void onPostExecute(ArrayList<WhyqBoard> boards) {
 			if(ProfileActivity.userfollowcount <= 0) {
 				btnFollow.setText(context.getString(R.string.follow));
 				btnFollow.invalidate();
@@ -440,7 +440,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 			
 			if(boards != null){
 				//Log.d("tttttt","OOOOOOO=======>>>>>"+boards);
-	    		user = PermUtils.isAuthenticated(getApplicationContext());
+	    		user = WhyqUtils.isAuthenticated(getApplicationContext());
 	            BoardAdapter boardAdapter = new BoardAdapter(ProfileActivity.this,R.layout.board_item, boards);
 	    		exeGet(boardAdapter);
 			}
@@ -451,7 +451,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 		Object boards = null ;
 		try {
 
-			PermpingApplication state = (PermpingApplication) getApplicationContext();
+			WhyqApplication state = (WhyqApplication) getApplicationContext();
 			User user = state.getUser();
 
 //			if (user != null) 
@@ -555,9 +555,9 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 		return false;
 	}
 
-	ArrayList<PermBoard> parseXmlFile(String xmlFile) {
+	ArrayList<WhyqBoard> parseXmlFile(String xmlFile) {
 		Document doc = null;
-		ArrayList<PermBoard> boards = new ArrayList<PermBoard>();
+		ArrayList<WhyqBoard> boards = new ArrayList<WhyqBoard>();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 
@@ -638,9 +638,9 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 				pin = pinElement.getChildNodes();
 				String permPin = ((Node) pin.item(0)).getNodeValue();
 				
-				PermBoard permBoard = new PermBoard(permId, permName, permDescriptionn, Integer.valueOf(permFollowers), Integer.valueOf(permPin));
-				if(permBoard != null)
-					boards.add(permBoard);
+				WhyqBoard whyqBoard = new WhyqBoard(permId, permName, permDescriptionn, Integer.valueOf(permFollowers), Integer.valueOf(permPin));
+				if(whyqBoard != null)
+					boards.add(whyqBoard);
 			}
 
 		} catch (ParserConfigurationException e) {
@@ -663,7 +663,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 
 		public void onItemClick(AdapterView<?> parent, View view, int pos,
 				long id) {
-			board = (PermBoard) parent.getItemAtPosition(pos);
+			board = (WhyqBoard) parent.getItemAtPosition(pos);
 			//BoardController boardController = new BoardController();
 			//List<Perm> perms = boardController.getPermsByBoardId(board.getId(), ProfileActivity.this);			
 			
@@ -689,11 +689,11 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 //			loadingDialog.dismiss();
 //	}
 	@Override
-	public void onSuccess(ArrayList<Perm> perms) {
+	public void onSuccess(ArrayList<Whyq> whyqs) {
 		// TODO Auto-generated method stub
 		
 		Transporter transporter = new Transporter();
-		transporter.setPerms(perms);
+		transporter.setPerms(whyqs);
 		transporter.setBoardName(board.getName());
 		
 		// Go to the Board Detail screen
@@ -713,7 +713,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

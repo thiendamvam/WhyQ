@@ -19,8 +19,8 @@ public class Transporter implements Serializable {
 	
 	private String boardName;
 	
-	private ArrayList<Perm> perms;
-	private List<PermBoard> permsBoard;
+	private ArrayList<Whyq> whyqs;
+	private List<WhyqBoard> permsBoard;
 	/**
 	 * Default constructor
 	 */
@@ -47,24 +47,24 @@ public class Transporter implements Serializable {
 
 	/**
 	 * Constructor which initializes the list of perms
-	 * @param perms the list of perms
+	 * @param whyqs the list of perms
 	 */
-	public Transporter(ArrayList<Perm> perms) {
-		this.perms = perms;
+	public Transporter(ArrayList<Whyq> whyqs) {
+		this.whyqs = whyqs;
 	}
 
-	public ArrayList<Perm> getPerms() {
-		return perms;
+	public ArrayList<Whyq> getPerms() {
+		return whyqs;
 	}
 
-	public void setPerms(ArrayList<Perm> perms) {
-		this.perms = perms;
+	public void setPerms(ArrayList<Whyq> whyqs) {
+		this.whyqs = whyqs;
 	}
-	public List<PermBoard> getPermsBoard() {
+	public List<WhyqBoard> getPermsBoard() {
 		return permsBoard;
 	}
 
-	public void setPermsBoard(List<PermBoard> perms) {
+	public void setPermsBoard(List<WhyqBoard> perms) {
 		this.permsBoard = perms;
 	}
 

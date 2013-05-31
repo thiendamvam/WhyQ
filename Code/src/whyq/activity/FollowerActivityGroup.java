@@ -11,7 +11,7 @@ import whyq.controller.AuthorizeController;
 import whyq.interfaces.Login_delegate;
 import whyq.model.Comment;
 import whyq.utils.Constants;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
 
 import android.app.Activity;
@@ -56,8 +56,8 @@ public class FollowerActivityGroup extends TabGroupActivity implements Login_del
 				}				
 			}*/
 		} else {
-			PermUtils permUtils = new PermUtils();
-			String facebookToken = permUtils.getFacebookToken(getApplicationContext());
+			WhyqUtils whyqUtils = new WhyqUtils();
+			String facebookToken = whyqUtils.getFacebookToken(getApplicationContext());
 			if (facebookToken != null && facebookToken.length() > 0) {
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
 				nameValuePairs.add(new BasicNameValuePair("type", Constants.FACEBOOK_LOGIN));
@@ -67,7 +67,7 @@ public class FollowerActivityGroup extends TabGroupActivity implements Login_del
 				AuthorizeController authorizeController = new AuthorizeController(FollowerActivityGroup.this);
 				authorizeController.authorize(this, nameValuePairs);
 				isReload = true;
-				LoginPermActivity.isLoginFb = true;
+				LoginWhyqActivity.isLoginFb = true;
 			}
 			
 		}

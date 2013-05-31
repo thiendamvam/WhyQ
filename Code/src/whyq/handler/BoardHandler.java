@@ -11,8 +11,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import whyq.model.Comment;
-import whyq.model.Perm;
-import whyq.model.PermImage;
+import whyq.model.Whyq;
+import whyq.model.WhyqImage;
 import whyq.model.User;
 import whyq.utils.Constants;
 
@@ -25,9 +25,9 @@ public class BoardHandler extends DefaultHandler {
 
 	private StringBuffer buffer = new StringBuffer();
 	
-	private List<Perm> perms;
+	private List<Whyq> whyqs;
 	
-	private Perm perm;
+	private Whyq whyq;
 	
 	private User user;
 	
@@ -47,24 +47,24 @@ public class BoardHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		if (localName != null && localName.equals(Constants.ITEM)) {
-			perms.add(perm);
+			whyqs.add(whyq);
 		} else if (localName != null && localName.equals(Constants.PERM_ID)) {
-			perm.setId(buffer.toString());
+			whyq.setId(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_DESCRIPTION)) {
-			perm.setDescription(buffer.toString());
+			whyq.setDescription(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_CATEGORY)) {
-			perm.setCategory(buffer.toString());
+			whyq.setCategory(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_IMAGE)) {
-			PermImage permImage = new PermImage(buffer.toString());
-			perm.setImage(permImage);
+			WhyqImage whyqImage = new WhyqImage(buffer.toString());
+			whyq.setImage(whyqImage);
 		} else if (localName != null && localName.equals(Constants.PERM_COMMENTS)) {
-			perm.setComments(comments);
+			whyq.setComments(comments);
 		} else if (localName != null && localName.equals(Constants.COMMENT)) {
 			comments.add(comment);
 		} else if (localName != null && localName.equals(Constants.ID)) {
 			comment.setId(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.USER)) {
-			perm.setAuthor(user);
+			whyq.setAuthor(user);
 		} else if (localName != null && localName.equals(Constants.L_USER)) {
 			comment.setAuthor(commentAuthor);
 		} else if (localName != null && localName.equals(Constants.USER_ID)) {
@@ -80,25 +80,25 @@ public class BoardHandler extends DefaultHandler {
 		} else if (localName != null && localName.equals(Constants.L_STATUS)) {
 			commentAuthor.setStatus(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.USER_AVATAR)) {
-			PermImage avatar = new PermImage(buffer.toString());
+			WhyqImage avatar = new WhyqImage(buffer.toString());
 			user.setAvatar(avatar);
 		} else if (localName != null && localName.equals(Constants.L_USER_AVATAR)) {
-			PermImage avatar = new PermImage(buffer.toString());
+			WhyqImage avatar = new WhyqImage(buffer.toString());
 			commentAuthor.setAvatar(avatar);
 		} else if (localName != null && localName.equals(Constants.CONTENT)) {
 			comment.setContent(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.IS_MORE)) {
 			comment.setIsMore(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_REPINCOUNT)) {
-			perm.setPermRepinCount(buffer.toString());
+			whyq.setPermRepinCount(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_LIKECOUNT)) {
-			perm.setPermLikeCount(buffer.toString());
+			whyq.setPermLikeCount(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_COMMENTCOUNT)) {
-			perm.setPermCommentCount(buffer.toString());
+			whyq.setPermCommentCount(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_USERLIKECOUNT)) {
-			perm.setPermUserLikeCount(buffer.toString());
+			whyq.setPermUserLikeCount(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.NEXT_ITEM)) {
-			perm.setNextItem(buffer.toString());
+			whyq.setNextItem(buffer.toString());
 		}
 	}
 
@@ -108,9 +108,9 @@ public class BoardHandler extends DefaultHandler {
 		buffer.setLength(0);
 		
 		if (localName != null && localName.equals(Constants.PERMS)) {
-			perms = new ArrayList<Perm>();
+			whyqs = new ArrayList<Whyq>();
 		} else if (localName != null && localName.equals(Constants.ITEM)) {
-			perm = new Perm();
+			whyq = new Whyq();
 		} else if (localName != null && localName.equals(Constants.USER)) {
 			user = new User();
 		} else if (localName != null && localName.equals(Constants.L_USER)) {
@@ -124,7 +124,7 @@ public class BoardHandler extends DefaultHandler {
 		}
 	}
 	
-	public List<Perm> getPerms() {
-		return perms;
+	public List<Whyq> getPerms() {
+		return whyqs;
 	}
 }

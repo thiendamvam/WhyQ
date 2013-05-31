@@ -2,9 +2,9 @@ package whyq.controller;
 
 import whyq.model.User;
 
-public class PermController {
+public class WhyqController {
 
-	public PermController() {
+	public WhyqController() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

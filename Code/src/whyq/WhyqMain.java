@@ -5,11 +5,11 @@ import whyq.activity.ExplorerActivityGroup;
 import whyq.activity.FollowerActivity;
 import whyq.activity.FollowerActivityGroup;
 import whyq.activity.ImageActivityGroup;
-import whyq.activity.LoginPermActivity;
+import whyq.activity.LoginWhyqActivity;
 import whyq.activity.MyDiaryActivityGroup;
 import whyq.activity.ProfileActivityGroup;
 import whyq.model.User;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +24,7 @@ import android.widget.TabHost.TabSpec;
 
 import com.whyq.R;
 
-public class PermpingMain extends TabActivity  {
+public class WhyqMain extends TabActivity  {
     /** Called when the activity is first created. */
 	public static String UID = "121";
 	private static TabHost tabHost;
@@ -38,33 +38,33 @@ public class PermpingMain extends TabActivity  {
         setContentView(R.layout.main);
         
         tabHost = getTabHost();
-        context = PermpingMain.this;
+        context = WhyqMain.this;
         tabHost.getTabWidget().setBackgroundResource( R.drawable.tabs_background );
         
         // Tab for followers
-        TabSpec followers = tabHost.newTabSpec("Followers");
-        followers.setIndicator("Followers", getResources().getDrawable(R.drawable.icon_follower_tab));
+        TabSpec followers = tabHost.newTabSpec("List");
+        followers.setIndicator("List", getResources().getDrawable(R.drawable.icon_follower_tab));
         Intent followersIntent = new Intent(this, FollowerActivityGroup.class);
         followers.setContent(followersIntent);
         tabHost.addTab( followers );
         
         // Tab for Explorer
-        TabSpec explorer = tabHost.newTabSpec("Explorer");
+        TabSpec explorer = tabHost.newTabSpec("Favourites");
         // setting Title and Icon for the Tab
-        explorer.setIndicator("Explorer", getResources().getDrawable(R.drawable.icon_explorer_tab));
+        explorer.setIndicator("Favourites", getResources().getDrawable(R.drawable.icon_explorer_tab));
         Intent explorerIntent = new Intent(this, ExplorerActivityGroup.class);
         explorer.setContent(explorerIntent);
         tabHost.addTab( explorer );
         
-        // Tab for Image
-        TabSpec image = tabHost.newTabSpec("Images");
-        image.setIndicator("Images", getResources().getDrawable(R.drawable.icon_image_tab));
-        Intent imageIntent = new Intent(this, ImageActivityGroup.class);
-        image.setContent(imageIntent);
-        tabHost.addTab( image );
+//        // Tab for Image
+//        TabSpec image = tabHost.newTabSpec("Friends");
+//        image.setIndicator("Images", getResources().getDrawable(R.drawable.icon_image_tab));
+//        Intent imageIntent = new Intent(this, ImageActivityGroup.class);
+//        image.setContent(imageIntent);
+//        tabHost.addTab( image );
         
-        TabSpec mydiary = tabHost.newTabSpec("My Diary");
-        mydiary.setIndicator("My Diary", getResources().getDrawable(R.drawable.icon_mydiary_tab));
+        TabSpec mydiary = tabHost.newTabSpec("Friends");
+        mydiary.setIndicator("Friends", getResources().getDrawable(R.drawable.icon_mydiary_tab));
         Intent mydiaryIntent = new Intent(this, MyDiaryActivityGroup.class);
         mydiary.setContent(mydiaryIntent);
         tabHost.addTab( mydiary );
@@ -80,7 +80,7 @@ public class PermpingMain extends TabActivity  {
 			@Override
 			public void onTabChanged(String tabId) {
 				// TODO Auto-generated method stub
-				int currentTab = PermpingMain.getCurrentTab();
+				int currentTab = WhyqMain.getCurrentTab();
 		    	if( currentTab == 0){
 					FollowerActivityGroup.isTabChanged = false;
 					ExplorerActivityGroup.isTabChanged = true;
@@ -125,21 +125,21 @@ public class PermpingMain extends TabActivity  {
             }
         });
         
-        // Set the event for Images tab
-        tabHost.getTabWidget().getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
-
-        	@Override
-    		public boolean onTouch(View v, MotionEvent event) {
-        		//do whatever you need
-        		ImageActivityGroup.group.clearHistory();
-        		return false;
-
-            }
-        });
+//        // Set the event for Images tab
+//        tabHost.getTabWidget().getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
+//
+//        	@Override
+//    		public boolean onTouch(View v, MotionEvent event) {
+//        		//do whatever you need
+//        		ImageActivityGroup.group.clearHistory();
+//        		return false;
+//
+//            }
+//        });
         
         // Set the event for MyDiary tab
         //tabHost.getTabWidget().getChildAt(3).setOnTouchListener(new ValidateHandler());
-        tabHost.getTabWidget().getChildAt(3).setOnTouchListener(new View.OnTouchListener() {
+        tabHost.getTabWidget().getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
 
         	@Override
     		public boolean onTouch(View v, MotionEvent event) {
@@ -150,7 +150,7 @@ public class PermpingMain extends TabActivity  {
             }
         }); 
         // Set the event for Profile tab
-        tabHost.getTabWidget().getChildAt(4).setOnTouchListener(new View.OnTouchListener() {
+        tabHost.getTabWidget().getChildAt(3).setOnTouchListener(new View.OnTouchListener() {
 
         	@Override
     		public boolean onTouch(View v, MotionEvent event) {
@@ -166,7 +166,7 @@ public class PermpingMain extends TabActivity  {
     	boolean ret = false;
     	@Override
 		public boolean onTouch(View v, MotionEvent event) {
-	        User user = PermUtils.isAuthenticated(getApplicationContext());
+	        User user = WhyqUtils.isAuthenticated(getApplicationContext());
 	        if (user != null) {
 	        	UID = user.getId();
 	        	getTabHost().setCurrentTab(4);
@@ -185,7 +185,7 @@ public class PermpingMain extends TabActivity  {
     	
     	@Override
 		public boolean onTouch(View v, MotionEvent event) {
-    		User user = PermUtils.isAuthenticated(getApplicationContext());
+    		User user = WhyqUtils.isAuthenticated(getApplicationContext());
 	        if (user != null) {
 	        	// Load following perms of user
 	        	v.findViewById(R.id.permList);
@@ -206,7 +206,7 @@ public class PermpingMain extends TabActivity  {
 			int action = event.getAction();
 			if (action == MotionEvent.ACTION_UP) {
 				/** Load the information from Application (user info) when the page is loaded. */
-		        User user = PermUtils.isAuthenticated(getApplicationContext());
+		        User user = WhyqUtils.isAuthenticated(getApplicationContext());
 		        if (user != null) {
 		        	UID = user.getId();
 		        	tabHost.setCurrentTab(4);
@@ -226,7 +226,7 @@ public class PermpingMain extends TabActivity  {
     }
     public static void showLogin(){
     	closeLoginActivity();
-    	Intent myIntent = new Intent(context, LoginPermActivity.class);
+    	Intent myIntent = new Intent(context, LoginWhyqActivity.class);
     	int currentTab = tabHost.getCurrentTab();
     	if( currentTab == 0){
 			View boardListView = FollowerActivityGroup.group.getLocalActivityManager() .startActivity("detail", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
@@ -323,7 +323,7 @@ public class PermpingMain extends TabActivity  {
     }
 	
 	public static void refeshFollowerActivity() {
-		if(PermpingMain.getCurrentTab() == 0) {
+		if(WhyqMain.getCurrentTab() == 0) {
 			FollowerActivityGroup.group.sendBroadcast("", "");					
 		}
 	}
@@ -333,7 +333,7 @@ public class PermpingMain extends TabActivity  {
 	{
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    } else {
 	    	return super.onKeyDown(keyCode, event);

@@ -13,9 +13,9 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 import twitter4j.http.AccessToken;
-import whyq.PermpingApplication;
+import whyq.WhyqApplication;
 import whyq.activity.FollowerActivity;
-import whyq.activity.NewPermActivity;
+import whyq.activity.NewWhyqActivity;
 import whyq.model.User;
 import whyq.utils.facebook.sdk.DialogError;
 import whyq.utils.facebook.sdk.Facebook;
@@ -51,7 +51,7 @@ import android.widget.TextView;
  * @author Linh Nguyen
  * 
  */
-public class PermUtils {
+public class WhyqUtils {
 	// Write log file
 	public final static String LINE_SEPARATOR = System
 			.getProperty("line.separator");//$NON-NLS-1$
@@ -67,7 +67,7 @@ public class PermUtils {
 	private String mBuffer;
 	public static boolean isFollowRereshData = true;
 	public static User isAuthenticated(Context context) {
-		PermpingApplication state = (PermpingApplication) context
+		WhyqApplication state = (WhyqApplication) context
 				.getApplicationContext();
 		if (state != null) {
 			User user = state.getUser();
@@ -91,7 +91,7 @@ public class PermUtils {
 	 * calculate image size
 	 */
 	public static void calculateImageSize(Context context) {
-		PermpingApplication state = (PermpingApplication) context;
+		WhyqApplication state = (WhyqApplication) context;
 		if (state != null) {
 			DisplayMetrics metrics = state.getDisplayMetrics();
 			int screenWidth = metrics.widthPixels;
@@ -346,21 +346,21 @@ public class PermUtils {
 				String accessToken = values.getString("access_token");
 				saveFacebookToken("oauth_token", accessToken, activity);
 				Message message = handleFbLogin.obtainMessage(
-						NewPermActivity.LOGIN_FACEBOOK, "");
+						NewWhyqActivity.LOGIN_FACEBOOK, "");
 				handleFbLogin.sendMessage(message);
 			}
 
 			@Override
 			public void onFacebookError(FacebookError error) {
 				Message message = handleFbLogin.obtainMessage(
-						NewPermActivity.MESSAGE_LOGIN_FACEBOOK_ERROR, "");
+						NewWhyqActivity.MESSAGE_LOGIN_FACEBOOK_ERROR, "");
 				handleFbLogin.sendMessage(message);
 			}
 
 			@Override
 			public void onError(DialogError e) {
 				Message message = handleFbLogin.obtainMessage(
-						NewPermActivity.MESSAGE_LOGIN_FACEBOOK_ERROR, "");
+						NewWhyqActivity.MESSAGE_LOGIN_FACEBOOK_ERROR, "");
 				handleFbLogin.sendMessage(message);
 			}
 
@@ -368,7 +368,7 @@ public class PermUtils {
 			public void onCancel() {
 				// cancel press or back press
 				Message message = handleFbLogin.obtainMessage(
-						NewPermActivity.MESSAGE_LOGIN_FACEBOOK_ERROR, "");
+						NewWhyqActivity.MESSAGE_LOGIN_FACEBOOK_ERROR, "");
 				handleFbLogin.sendMessage(message);
 			}
 		});

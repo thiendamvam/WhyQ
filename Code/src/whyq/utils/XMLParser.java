@@ -30,8 +30,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import whyq.PermpingApplication;
-import whyq.PermpingMain;
+import whyq.WhyqApplication;
+import whyq.WhyqMain;
 import whyq.handler.BoardHandler;
 import whyq.handler.UserHandler;
 import whyq.interfaces.Create_Board_delegate;
@@ -41,10 +41,10 @@ import whyq.interfaces.HttpAccess;
 import whyq.interfaces.JoinPerm_Delegate;
 import whyq.interfaces.Login_delegate;
 import whyq.interfaces.MyDiary_Delegate;
-import whyq.interfaces.PermList_Delegate;
-import whyq.model.Perm;
-import whyq.model.PermBoard;
-import whyq.model.PermImage;
+import whyq.interfaces.WhyqList_Delegate;
+import whyq.model.Whyq;
+import whyq.model.WhyqBoard;
+import whyq.model.WhyqImage;
 import whyq.model.User;
 
 import android.content.Context;
@@ -208,7 +208,7 @@ public class XMLParser implements HttpAccess {
 		this.doc = doc;
 	}
 
-	public ArrayList<Perm> permListFromNodeList(String parentNode) {
+	public ArrayList<Whyq> permListFromNodeList(String parentNode) {
 
 		try {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -223,7 +223,7 @@ public class XMLParser implements HttpAccess {
 			// StringReader("<data> <section id=\"1\">bla</section> <area>lala</area> </data> ")));
 			xr.parse(new InputSource(new StringReader(this.xml)));
 
-			ArrayList<Perm> permList = dataHandler.getPermList();
+			ArrayList<Whyq> permList = dataHandler.getPermList();
 
 			return permList;
 		} catch (ParserConfigurationException pce) {
@@ -244,13 +244,13 @@ public class XMLParser implements HttpAccess {
 
 		// this holds the data
 
-		private Perm currentPem = null;
+		private Whyq currentPem = null;
 		private User currentUser = null;
-		private ArrayList<Perm> permList = new ArrayList<Perm>();
+		private ArrayList<Whyq> permList = new ArrayList<Whyq>();
 
 		private String currentElement = "";
 
-		public ArrayList<Perm> getPermList() {
+		public ArrayList<Whyq> getPermList() {
 			return this.permList;
 		}
 
@@ -288,7 +288,7 @@ public class XMLParser implements HttpAccess {
 			this.currentElement = localName;
 			if (this.currentElement.equals("item")) {
 				// Create new perm object
-				this.currentPem = new Perm();
+				this.currentPem = new Whyq();
 			}
 
 		}
@@ -334,7 +334,7 @@ public class XMLParser implements HttpAccess {
 				}else if (this.currentElement == "permAudio") {
 					this.currentPem.setPermAudio(chars);
 				}else if (this.currentElement == "permImage") {
-					PermImage imageObject = new PermImage(chars);
+					WhyqImage imageObject = new WhyqImage(chars);
 					this.currentPem.setImage(imageObject);
 
 					User permAuthor = new User("user");
@@ -344,9 +344,9 @@ public class XMLParser implements HttpAccess {
 					this.currentPem.setAuthor(permAuthor);
 
 				} else if (this.currentElement == "permCategory") {
-					PermBoard permBoard = new PermBoard("Board ID ");
-					permBoard.setName(chars);
-					this.currentPem.setBoard(permBoard);
+					WhyqBoard whyqBoard = new WhyqBoard("Board ID ");
+					whyqBoard.setName(chars);
+					this.currentPem.setBoard(whyqBoard);
 				} else if (this.currentElement == "user") {
 					this.currentUser = new User();
 				} else if (this.currentElement == "userId") {
@@ -354,7 +354,7 @@ public class XMLParser implements HttpAccess {
 				} else if (this.currentElement == "userName") {
 					this.currentUser.setName(chars);
 				} else if (this.currentElement == "userAvatar") {
-					PermImage userAvatar = new PermImage(chars);
+					WhyqImage userAvatar = new WhyqImage(chars);
 					this.currentUser.setAvatar(userAvatar);
 					this.currentPem.setAuthor(this.currentUser);
 				}
@@ -598,7 +598,7 @@ public class XMLParser implements HttpAccess {
 	 * Return a list of perms from response (API)
 	 * @return a list of perms
 	 */
-	public List<Perm> getPerms() {
+	public List<Whyq> getPerms() {
 		try {
 			XMLReader xmlReader = initializeReader();
 			BoardHandler boardHandler = new BoardHandler();
@@ -731,8 +731,8 @@ public class XMLParser implements HttpAccess {
 			joinPerm_Delegate.onError();
 			break;
 		case XMLParser.PERMLIST:
-			PermList_Delegate permList_Delegate = (PermList_Delegate)delegate;
-			permList_Delegate.onError();
+			WhyqList_Delegate whyqList_Delegate = (WhyqList_Delegate)delegate;
+			whyqList_Delegate.onError();
 			break;
 		case XMLParser.GET_PERMS_BY_DATE:
 			Get_Perm_Delegate delegates = (Get_Perm_Delegate)delegate;
@@ -777,7 +777,7 @@ public class XMLParser implements HttpAccess {
 			case XMLParser.UPDATE_PROFILE:
 				User user = getUser();
 				if(user != null && context != null) {
-					PermpingApplication state = (PermpingApplication) context.getApplicationContext();
+					WhyqApplication state = (WhyqApplication) context.getApplicationContext();
 					if (state != null) {
 						state.setUser(user);
 						storeAccount();
@@ -806,8 +806,8 @@ public class XMLParser implements HttpAccess {
 				joinPerm_Delegate.onError();
 				break;
 			case XMLParser.PERMLIST:
-				PermList_Delegate permList_Delegate = (PermList_Delegate)delegate;
-				permList_Delegate.onError();
+				WhyqList_Delegate whyqList_Delegate = (WhyqList_Delegate)delegate;
+				whyqList_Delegate.onError();
 				break;
 			case XMLParser.GET_BOARD:
 				Get_Board_delegate getBoardDelegate = (Get_Board_delegate)delegate;
@@ -863,7 +863,7 @@ public class XMLParser implements HttpAccess {
 	private void exeGetPerm(Document doc2) {
 		// TODO Auto-generated method stub
 		Get_Perm_Delegate delegates = (Get_Perm_Delegate)delegate;
-		ArrayList<Perm> boards = new ArrayList<Perm>();
+		ArrayList<Whyq> boards = new ArrayList<Whyq>();
 		NodeList boardNodeList = doc.getElementsByTagName("item");
 		
 		for( int i = 0; i < boardNodeList.getLength(); i ++ ){
@@ -876,8 +876,8 @@ public class XMLParser implements HttpAccess {
 			String boardImage = getValue(boardElement, "permImage");
 			String permUrl = getValue(boardElement, "permUrl");
 			String permAudio = getValue(boardElement, "permAudio");
-			PermImage permImage = new PermImage(boardImage);
-			Perm board = new Perm(boardId, boardName, boardDesc, boardDateMessage, permImage,permUrl,permAudio);
+			WhyqImage whyqImage = new WhyqImage(boardImage);
+			Whyq board = new Whyq(boardId, boardName, boardDesc, boardDateMessage, whyqImage,permUrl,permAudio);
 			boards.add(board);
 		}
 		delegates.onSuccess(boards);
@@ -897,7 +897,7 @@ public class XMLParser implements HttpAccess {
 
 	private void exeGetBoard(Document doc) {
 		// TODO Auto-generated method stub
-		ArrayList<Perm> boards = new ArrayList<Perm>();
+		ArrayList<Whyq> boards = new ArrayList<Whyq>();
 		NodeList boardNodeList = doc.getElementsByTagName("item");
 		
 		for( int i = 0; i < boardNodeList.getLength(); i ++ ){
@@ -910,8 +910,8 @@ public class XMLParser implements HttpAccess {
 			String boardImage = getValue(boardElement, "permImage");
 			String boardUrl = getValue(boardElement, "permUrl");
 			String permAudio = getValue(boardElement, "permAudio");
-			PermImage permImage = new PermImage(boardImage);
-			Perm board = new Perm(boardId, boardName, boardDesc, boardDateMessage, permImage, boardUrl,permAudio);
+			WhyqImage whyqImage = new WhyqImage(boardImage);
+			Whyq board = new Whyq(boardId, boardName, boardDesc, boardDateMessage, whyqImage, boardUrl,permAudio);
 			boards.add(board);
 		}
 		Get_Board_delegate getBoard_delegate = (Get_Board_delegate)delegate;
@@ -920,8 +920,8 @@ public class XMLParser implements HttpAccess {
 
 	private void exePermList(Document doc) {
 		// TODO Auto-generated method stub
-		PermList_Delegate permList_Delegate = (PermList_Delegate)delegate;
-		permList_Delegate.onSuccess(doc);
+		WhyqList_Delegate whyqList_Delegate = (WhyqList_Delegate)delegate;
+		whyqList_Delegate.onSuccess(doc);
 	}
 
 	private void exeJoinPerm(Document doc2) {
@@ -954,12 +954,12 @@ public class XMLParser implements HttpAccess {
 	private void exeLoginTask() {
 		// TODO Auto-generated method stub
 		User user = getUser();
-		if (user != null && context != null && (context.getApplicationContext() instanceof PermpingApplication)) {
+		if (user != null && context != null && (context.getApplicationContext() instanceof WhyqApplication)) {
 			// Store the user object to PermpingApplication
-			PermpingApplication state = (PermpingApplication)context.getApplicationContext();
+			WhyqApplication state = (WhyqApplication)context.getApplicationContext();
 			state.setUser(user);
 			storeAccount();			
-			PermpingMain.UID = user.getId();			
+			WhyqMain.UID = user.getId();			
 			synchronized (this) {
 				if(loginDelegate != null) {
 					loginDelegate.on_success();

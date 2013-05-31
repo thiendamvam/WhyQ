@@ -9,11 +9,11 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import whyq.PermpingMain;
+import whyq.WhyqMain;
 import whyq.controller.AuthorizeController;
 import whyq.interfaces.Login_delegate;
 import whyq.utils.Constants;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import whyq.utils.facebook.FacebookConnector;
 import whyq.utils.facebook.sdk.DialogError;
 import whyq.utils.facebook.sdk.Facebook;
@@ -45,7 +45,7 @@ import com.whyq.R;
  * by user-name and password. Also, it can communicate 
  * to FB and Twitter to do authentication as well
  */
-public class LoginPermActivity extends Activity implements Login_delegate {
+public class LoginWhyqActivity extends Activity implements Login_delegate {
 	
 	EditText email;
 	EditText password;
@@ -56,7 +56,7 @@ public class LoginPermActivity extends Activity implements Login_delegate {
 	public static boolean isTwitter = false;
 //	private ProgressDialog loadingDialog;
 	ProgressBar progressBar;
-	private PermpingMain login_delegate;
+	private WhyqMain login_delegate;
 	SharedPreferences prefs;
 	private FacebookConnector facebookConnector;
 	public static Context context;
@@ -66,7 +66,7 @@ public class LoginPermActivity extends Activity implements Login_delegate {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.permping_login);
+        setContentView(R.layout.whyq_login);
         
         TextView textView = (TextView)findViewById(R.id.permpingTitle);
 		Typeface tf = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
@@ -75,14 +75,14 @@ public class LoginPermActivity extends Activity implements Login_delegate {
 		}
         
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        login_delegate = new PermpingMain();
+        login_delegate = new WhyqMain();
         email         = (EditText) findViewById(R.id.permEmail);
         password      = (EditText) findViewById(R.id.permPassword);
         facebookLogin = (Button) findViewById(R.id.loginfb);
         twitterLogin  = (Button) findViewById(R.id.logintw);
         login         = (Button) findViewById(R.id.loginPerm);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
-        context = LoginPermActivity.this;
+        context = LoginWhyqActivity.this;
         
                 
         // Login button
@@ -95,7 +95,7 @@ public class LoginPermActivity extends Activity implements Login_delegate {
 					nameValuePairs.add(new BasicNameValuePair("oauth_token", ""));
 					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
 					nameValuePairs.add(new BasicNameValuePair("password", password.getText().toString()));
-					AuthorizeController authorizeController = new AuthorizeController(LoginPermActivity.this);
+					AuthorizeController authorizeController = new AuthorizeController(LoginWhyqActivity.this);
 					authorizeController.authorize(v.getContext(), nameValuePairs);
 				}
 			}
@@ -169,7 +169,7 @@ public class LoginPermActivity extends Activity implements Login_delegate {
 					@Override
 					public void onComplete(Bundle values) {
 						//Log.d("", "=====>"+values.toString());
-						PermUtils permutils = new PermUtils();
+						WhyqUtils permutils = new WhyqUtils();
 						String accessToken = values.getString("access_token");
 						permutils.saveFacebookToken("oauth_token", accessToken, getApplication());
 //						// Check on server
@@ -178,7 +178,7 @@ public class LoginPermActivity extends Activity implements Login_delegate {
 						nameValuePairs.add(new BasicNameValuePair("oauth_token", accessToken));
 						nameValuePairs.add(new BasicNameValuePair("email", ""));
 						nameValuePairs.add(new BasicNameValuePair("password", ""));
-						AuthorizeController authorizeController = new AuthorizeController(LoginPermActivity.this);
+						AuthorizeController authorizeController = new AuthorizeController(LoginWhyqActivity.this);
 						authorizeController.authorize(v.getContext(), nameValuePairs);
 //						boolean existed = AuthorizeController.authorize(getApplicationContext(), nameValuePairs, LoginPermActivity.this);
 						isLoginFb = true;
@@ -270,31 +270,31 @@ public void on_success() {
 	if(isLoginFb){
 		FollowerActivity.isLogin = true;
 		isLoginFb = false;
-		if(PermpingMain.getCurrentTab() == 0) {
+		if(WhyqMain.getCurrentTab() == 0) {
 			((FollowerActivityGroup)FollowerActivityGroup.group).createFollowerActivity();
 		} else {
-			PermpingMain.back();
+			WhyqMain.back();
 		}
 	}else if(isTwitter){
 		FollowerActivity.isLogin = true;
 //		Intent intent = new Intent(context, PermpingMain.class);
 //		context.startActivity(intent);
 		isTwitter = false;
-		if(PermpingMain.getCurrentTab() == 0) {
+		if(WhyqMain.getCurrentTab() == 0) {
 			((FollowerActivityGroup)FollowerActivityGroup.group).createFollowerActivity();
 		} else {
-			PermpingMain.back();
+			WhyqMain.back();
 		}
 	}else{
 		FollowerActivity.isLogin = true;
 		dismissLoadingDialog();
-		if(PermpingMain.getCurrentTab() == 4) {
+		if(WhyqMain.getCurrentTab() == 4) {
 			((ProfileActivityGroup)ProfileActivityGroup.group).createUI();
 		} else {
-			if(PermpingMain.getCurrentTab() == 0) {
+			if(WhyqMain.getCurrentTab() == 0) {
 				((FollowerActivityGroup)FollowerActivityGroup.group).createFollowerActivity();
 			} else {
-				PermpingMain.back();
+				WhyqMain.back();
 			}
 		}
 	}
@@ -307,11 +307,11 @@ public void on_error() {
 	//Logger.appendLog("test log", "loginerror");
 	if(isLoginFb){
 		isLoginFb = false;
-		Intent intent = new Intent(getApplicationContext(), JoinPermActivity.class);
+		Intent intent = new Intent(getApplicationContext(), JoinWhyqActivity.class);
 		getParent().startActivity(intent);
 	}else if(isTwitter){
 		isTwitter = false;
-		Intent intent = new Intent(context, JoinPermActivity.class);
+		Intent intent = new Intent(context, JoinWhyqActivity.class);
 		context.startActivity(intent);
 	}else{
 		dismissLoadingDialog();
@@ -343,7 +343,7 @@ public boolean onKeyDown(int keyCode, KeyEvent event)
 {		
     if ((keyCode == KeyEvent.KEYCODE_BACK))
     {
-        PermpingMain.back();
+        WhyqMain.back();
         return true;
     }
     return super.onKeyDown(keyCode, event);

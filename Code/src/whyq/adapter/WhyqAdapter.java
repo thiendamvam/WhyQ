@@ -7,23 +7,23 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import whyq.PermpingApplication;
-import whyq.PermpingMain;
+import whyq.WhyqApplication;
+import whyq.WhyqMain;
 import whyq.activity.FollowerActivity;
 import whyq.activity.FollowerActivityGroup;
 import whyq.activity.GoogleMapActivity;
-import whyq.activity.JoinPermActivity;
-import whyq.activity.NewPermActivity;
+import whyq.activity.JoinWhyqActivity;
+import whyq.activity.NewWhyqActivity;
 import whyq.activity.PrepareRequestTokenActivity;
 import whyq.controller.AuthorizeController;
-import whyq.controller.PermListController;
+import whyq.controller.WhyqListController;
 import whyq.model.Comment;
-import whyq.model.Perm;
+import whyq.model.Whyq;
 import whyq.model.User;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.HttpPermUtils;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import whyq.utils.UrlImageViewHelper;
 import whyq.utils.facebook.FacebookConnector;
 import whyq.utils.facebook.sdk.DialogError;
@@ -60,9 +60,9 @@ import android.widget.Toast;
 
 import com.whyq.R;
 
-public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
+public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 
-	private ArrayList<Perm> items;
+	private ArrayList<Whyq> items;
 	public static final String TAG = "PermAdapter";
 	public Button join;
 	public Button login;
@@ -82,7 +82,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 	private int screenHeight;
 	private Context context;
 	private HashMap<String, View> viewList = new HashMap<String, View>();
-	private HashMap<String, Perm> newPermList = new HashMap<String, Perm>();
+	private HashMap<String, Whyq> newPermList = new HashMap<String, Whyq>();
 	private HashMap<String, TextView> permStateList = new HashMap<String, TextView>();
 	public int count = 11;
 	
@@ -101,8 +101,8 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		super(PermAdapter.getContext(), new SpecialAdapter(perms), R.layout.pending);
 	}
 	*/
-	public PermAdapter(Context context, int textViewResourceId,
-			ArrayList<Perm> items, Activity activity, int screenWidth,
+	public WhyqAdapter(Context context, int textViewResourceId,
+			ArrayList<Whyq> items, Activity activity, int screenWidth,
 			int screenHeight, Boolean header) {
 		super(context, textViewResourceId, items);
 		this.context = context;
@@ -117,8 +117,8 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	public PermAdapter(Context context,FragmentManager fragmentManager, int textViewResourceId,
-			ArrayList<Perm> items, Activity activity, int screenWidth,
+	public WhyqAdapter(Context context,FragmentManager fragmentManager, int textViewResourceId,
+			ArrayList<Whyq> items, Activity activity, int screenWidth,
 			int screenHeight, Boolean header, User user) {
 		super(context, textViewResourceId, items);
 		this.context = context;
@@ -184,10 +184,10 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 
 				}*/
 				
-				if(position == items.size() - 1 && PermListController.isFooterAdded == true) {
-					if(!PermListController.isLoading){
+				if(position == items.size() - 1 && WhyqListController.isFooterAdded == true) {
+					if(!WhyqListController.isLoading){
 						//PermListController.selectedPos = items.size() -1;
-						PermListController.isLoading = true;
+						WhyqListController.isLoading = true;
 						loadMoreItems();
 					}
 					/*if(getNextItems() != -1) {
@@ -222,32 +222,32 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 					
 					return footerView;
 				}
-				final Perm perm = items.get(position);
-				final String viewId = perm.getId();
+				final Whyq whyq = items.get(position);
+				final String viewId = whyq.getId();
 				if(viewId == null || viewId.length() == 0) {
 					return createNullView();
 				}
 				currentPermId = viewId;
 				convertView = viewList.get(viewId);
-				newPermList.put(viewId, perm);
+				newPermList.put(viewId, whyq);
 				if (convertView != null){
 //					Log.i(TAG, "getView() convertView != null");
-					addComments(convertView, perm);
+					addComments(convertView, whyq);
 					return convertView;
 				}else{
 //					Log.i(TAG, "getView() convertView == null");
 					LayoutInflater inflater = (LayoutInflater) this.getContext()
 							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					final View view = inflater.inflate(R.layout.perm_item_1, null);
+					final View view = inflater.inflate(R.layout.whyq_item_1, null);
 		
 					like = (Button) view.findViewById(R.id.btnLike);
 					// Validate Like or Unlike
-					if (perm != null && user!=null){
-						if(perm.getAuthor().getId().equals(user.getId())){
+					if (whyq != null && user!=null){
+						if(whyq.getAuthor().getId().equals(user.getId())){
 							like.setText(textCurrentLike);
 						}else{
-							if (perm.getPermUserLikeCount() != null
-									&& "0".equals(perm.getPermUserLikeCount())) {
+							if (whyq.getPermUserLikeCount() != null
+									&& "0".equals(whyq.getPermUserLikeCount())) {
 								like.setText(R.string.bt_like);
 							} else {
 								like.setText(R.string.bt_unlike);
@@ -259,23 +259,23 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 					like.setTag(viewId);
 					like.setNextFocusDownId(position);
 					
-					if(perm != null && user != null) {
-						if( perm.getAuthor() != null)
-							if(perm.getAuthor().getId().equalsIgnoreCase(user.getId()))
+					if(whyq != null && user != null) {
+						if( whyq.getAuthor() != null)
+							if(whyq.getAuthor().getId().equalsIgnoreCase(user.getId()))
 								like.setText(R.string.delete);
 //								like.setVisibility(View.GONE);
 					}
-					like.setOnClickListener(PermAdapter.this);
+					like.setOnClickListener(WhyqAdapter.this);
 					reperm = (Button) view.findViewById(R.id.btnRepem);
 					reperm.setTag(viewId);
-					reperm.setOnClickListener(PermAdapter.this);
+					reperm.setOnClickListener(WhyqAdapter.this);
 		
 					comment = (Button) view.findViewById(R.id.btnComment);
 					comment.setTag(viewId);
-					comment.setOnClickListener(PermAdapter.this);
+					comment.setOnClickListener(WhyqAdapter.this);
 					ImageView gotoMap = (ImageView)view.findViewById(R.id.btnLocation);
 					gotoMap.setTag(viewId);
-					gotoMap.setOnClickListener(PermAdapter.this);
+					gotoMap.setOnClickListener(WhyqAdapter.this);
 					TextView permViewInfo = (TextView)view.findViewById(R.id.permVoiceInfo);
 //					if(perm.getLon() ==0 && perm.getLat() == 0){
 //						gotoMap.setVisibility(View.INVISIBLE);
@@ -294,11 +294,11 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 						}
 					}
 					
-					if (perm != null) {
+					if (whyq != null) {
 						
 						// Set the nextItems no.
-						if (perm.getNextItem() != null)
-							nextItems = Integer.parseInt(perm.getNextItem());
+						if (whyq.getNextItem() != null)
+							nextItems = Integer.parseInt(whyq.getNextItem());
 						else
 							nextItems = -1;
 						ImageView btnPlayAudio = (ImageView)view.findViewById(R.id.btnVoice);
@@ -308,11 +308,11 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 							@Override
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
-								PermpingMain.gotoTab(6, perm.getPermAudio());
+								WhyqMain.gotoTab(6, whyq.getPermAudio());
 							}
 						});
 						
-						if(perm.getPermAudio() !=null && !perm.getPermAudio().equals("")){
+						if(whyq.getPermAudio() !=null && !whyq.getPermAudio().equals("")){
 							btnPlayAudio.setVisibility(View.VISIBLE);
 							
 						}else{
@@ -320,25 +320,25 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 							
 						}
 						ImageView av = (ImageView) view.findViewById(R.id.authorAvatar);
-						if( perm.getAuthor() != null)
-							if(perm.getAuthor().getAvatar()!=null)
-								if(perm.getAuthor().getAvatar().getUrl() != null)
-									UrlImageViewHelper.setUrlDrawable(av, perm.getAuthor()
+						if( whyq.getAuthor() != null)
+							if(whyq.getAuthor().getAvatar()!=null)
+								if(whyq.getAuthor().getAvatar().getUrl() != null)
+									UrlImageViewHelper.setUrlDrawable(av, whyq.getAuthor()
 								.getAvatar().getUrl());
 		
 						TextView an = (TextView) view.findViewById(R.id.authorName);
 						//holder.authorName.setText(perm.getAuthor().getName());
-						if( perm != null)
-							if(perm.getAuthor() != null)
-								if(perm.getAuthor().getName() != null)
-									an.setText(perm.getAuthor().getName());
+						if( whyq != null)
+							if(whyq.getAuthor() != null)
+								if(whyq.getAuthor().getName() != null)
+									an.setText(whyq.getAuthor().getName());
 						av.setOnClickListener(new View.OnClickListener() {
 							
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
-								Comment comment = new Comment(perm.getAuthor().getId());
-								comment.setAuthor(perm.getAuthor());
-								PermpingMain.gotoTab(4, comment);
+								Comment comment = new Comment(whyq.getAuthor().getId());
+								comment.setAuthor(whyq.getAuthor());
+								WhyqMain.gotoTab(4, comment);
 							}
 						});
 						an.setOnClickListener(new View.OnClickListener() {
@@ -346,17 +346,17 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 							@Override
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
-								Comment comment = new Comment(perm.getAuthor().getId());
-								comment.setAuthor(perm.getAuthor());
-								PermpingMain.gotoTab(4, comment);
+								Comment comment = new Comment(whyq.getAuthor().getId());
+								comment.setAuthor(whyq.getAuthor());
+								WhyqMain.gotoTab(4, comment);
 							}
 						});
 						// Board name
 						TextView bn = (TextView) view.findViewById(R.id.boardName);
 						//holder.boardName.setText(perm.getBoard().getName());
-						if(perm.getBoard() != null)
-							if( perm.getBoard().getName() != null)
-								bn.setText(perm.getBoard().getName());
+						if(whyq.getBoard() != null)
+							if( whyq.getBoard().getName() != null)
+								bn.setText(whyq.getBoard().getName());
 		
 						ImageView imageView = (ImageView) view.findViewById(R.id.permImage);
 						/**
@@ -366,28 +366,28 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 							
 							public void onClick(View arg0) {
 								// TODO Auto-generated method stub
-								String permUrl = perm.getPermUrl();
+								String permUrl = whyq.getPermUrl();
 								if(permUrl != null && permUrl != "")
-									PermpingMain.gotoTab(5, permUrl);
+									WhyqMain.gotoTab(5, permUrl);
 								//Log.d("=====>", "=================>go to Perm Browser >");
 							}
 						});
 					
-						UrlImageViewHelper.setUrlDrawable(imageView, perm.getImage().getUrl() , true ); 
+						UrlImageViewHelper.setUrlDrawable(imageView, whyq.getImage().getUrl() , true ); 
 						TextView pd = (TextView) view.findViewById(R.id.permDesc);
 						//holder.permDesc.setText(perm.getDescription());
-						if(perm != null)
-							if(perm.getDescription() != null)
-								pd.setText(perm.getDescription());
-						String permInfo = perm.getPermDatemessage();
+						if(whyq != null)
+							if(whyq.getDescription() != null)
+								pd.setText(whyq.getDescription());
+						String permInfo = whyq.getPermDatemessage();
 						TextView pi = (TextView) view.findViewById(R.id.permInfo);
 						//holder.permInfo.setText(permInfo);
 						if( permInfo != null)
 							pi.setText(permInfo);
 						
-						String permStat = likeString + ": " + perm.getPermLikeCount()
-								+ " - " + repermString + ": " + perm.getPermRepinCount()
-								+ " - " + commentString + ": " + perm.getPermCommentCount();
+						String permStat = likeString + ": " + whyq.getPermLikeCount()
+								+ " - " + repermString + ": " + whyq.getPermRepinCount()
+								+ " - " + commentString + ": " + whyq.getPermCommentCount();
 						
 						TextView ps = (TextView) view.findViewById(R.id.permStat);
 						permStateList.put(viewId, ps);
@@ -396,10 +396,10 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		
 						LinearLayout comments = (LinearLayout) view
 								.findViewById(R.id.comments);
-						if(perm.getComments() != null){
-							for (int i = 0; i < perm.getComments().size(); i++) {
+						if(whyq.getComments() != null){
+							for (int i = 0; i < whyq.getComments().size(); i++) {
 								View cm = inflater.inflate(R.layout.comment_item, null);
-								final Comment pcm = perm.getComments().get(i);
+								final Comment pcm = whyq.getComments().get(i);
 								if (pcm != null && pcm.getAuthor() != null) {
 			
 									ImageView cma = (ImageView) cm
@@ -408,7 +408,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 										
 										public void onClick(View v) {
 											// TODO Auto-generated method stub
-											PermpingMain.gotoTab(4, pcm);
+											WhyqMain.gotoTab(4, pcm);
 										}
 									});
 									if( pcm.getAuthor() != null)
@@ -434,10 +434,10 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 										@Override
 										public void onClick(View v) {
 											// TODO Auto-generated method stub
-											PermpingMain.gotoTab(4, pcm);	
+											WhyqMain.gotoTab(4, pcm);	
 										}
 									});
-									if (i == (perm.getComments().size() - 1)) {
+									if (i == (whyq.getComments().size() - 1)) {
 										View sp = (View) cm.findViewById(R.id.separator);
 										sp.setVisibility(View.INVISIBLE);
 									}
@@ -449,7 +449,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 						}
 					}
 					//return convertView;
-					viewList.put(perm.getId(), view);
+					viewList.put(whyq.getId(), view);
 					//Log.d("aaa", "================"+view);
 					return view;
 				}
@@ -468,12 +468,12 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		}
 	}
 	
-	public void addComments(View view, Perm perm) {
+	public void addComments(View view, Whyq whyq) {
 		LinearLayout comments = (LinearLayout) view
 				.findViewById(R.id.comments);
-		if(perm != null && comments != null){
-			if(perm.getComments() != null){
-				if(perm.getComments().size() == comments.getChildCount()) {
+		if(whyq != null && comments != null){
+			if(whyq.getComments() != null){
+				if(whyq.getComments().size() == comments.getChildCount()) {
 					return;
 				}				
 			}
@@ -482,10 +482,10 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		comments.removeAllViews();
 		LayoutInflater inflater = (LayoutInflater) this.getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		if(perm.getComments() != null){
-			for (int i = 0; i < perm.getComments().size(); i++) {
+		if(whyq.getComments() != null){
+			for (int i = 0; i < whyq.getComments().size(); i++) {
 				View cm = inflater.inflate(R.layout.comment_item, null);
-				final Comment pcm = perm.getComments().get(i);
+				final Comment pcm = whyq.getComments().get(i);
 				if (pcm != null && pcm.getAuthor() != null) {
 
 					ImageView cma = (ImageView) cm
@@ -494,7 +494,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 						
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
-							PermpingMain.gotoTab(4, pcm);
+							WhyqMain.gotoTab(4, pcm);
 						}
 					});
 					UrlImageViewHelper.setUrlDrawable(cma, pcm.getAuthor()
@@ -507,7 +507,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 						@Override
 						public void onClick(View arg0) {
 							// TODO Auto-generated method stub
-							PermpingMain.gotoTab(4, pcm);
+							WhyqMain.gotoTab(4, pcm);
 						}
 					});
 					if(pcm !=null){
@@ -527,7 +527,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 					 * cmt.setSingleLine(false);
 					 * cmt.setEllipsize(TruncateAt.MARQUEE); }
 					 */
-					if (i == (perm.getComments().size() - 1)) {
+					if (i == (whyq.getComments().size() - 1)) {
 						View sp = (View) cm.findViewById(R.id.separator);
 						sp.setVisibility(View.INVISIBLE);
 					}
@@ -595,7 +595,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 	public View createNullView() {
 		LayoutInflater inflater = (LayoutInflater) this.getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.perm_item_3, null);
+		View view = inflater.inflate(R.layout.whyq_item_3, null);
 		view.setVisibility(view.GONE);
 		return view;
 	}
@@ -621,7 +621,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 			Bitmap bm = null;
 			imageView = params[0];
 			//Log.d("a","==========>"+imageUrl);
-			bm = PermUtils.scaleBitmap(imageUrl);
+			bm = WhyqUtils.scaleBitmap(imageUrl);
 			return bm;
 		}
         @Override
@@ -639,7 +639,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 
 	class CommentDialog extends Dialog implements android.view.View.OnClickListener{
 		
-		Perm perm  = null;
+		Whyq whyq  = null;
 		User user = null;
 		
 		Button btnOK = null;
@@ -647,12 +647,12 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		
 		private ProgressDialog dialog;
 		
-		public CommentDialog(Context context, Perm perm, User user) {
+		public CommentDialog(Context context, Whyq whyq, User user) {
 			super(context);
 			setContentView( R.layout.comment_dialog );
 			this.setTitle( R.string.comment_title );
 			
-			this.perm = perm;
+			this.whyq = whyq;
 			this.user = user;
 			
 			btnOK = (Button) findViewById( R.id.btnOK );
@@ -676,7 +676,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 						HttpPermUtils util = new HttpPermUtils();
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair("cmnt", cmText ) );
-						nameValuePairs.add(new BasicNameValuePair("pid", perm.getId() ) );
+						nameValuePairs.add(new BasicNameValuePair("pid", whyq.getId() ) );
 						nameValuePairs.add(new BasicNameValuePair("uid", user.getId() ) );
 						String response  = util.sendRequest(API.commentUrl, nameValuePairs, false);
 						
@@ -694,8 +694,8 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 			  			if (dialog.isShowing()){
 			  				dialog.dismiss();
 			  				Toast.makeText(context,"Added comment!",Toast.LENGTH_LONG).show();
-			  				int position = items.indexOf(perm);			  				
-			  				Comment comment = new Comment(perm.getId(), cmText);
+			  				int position = items.indexOf(whyq);			  				
+			  				Comment comment = new Comment(whyq.getId(), cmText);
 			  				comment.setAuthor(user);
 			  				//perm.addCommnent(comment);
 			  				items.get(position).addCommnent(comment);
@@ -772,7 +772,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 						@Override
 						public void onComplete(Bundle values) {
 							//Log.d("", "=====>"+values.toString());
-							PermUtils permutils = new PermUtils();
+							WhyqUtils permutils = new WhyqUtils();
 							String accessToken = values.getString("access_token");
 							permutils.saveFacebookToken("oauth_token", accessToken, activity);
 //								// Check on server
@@ -816,7 +816,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 			} else { // Show Join Permping screen
 				prefs.edit().putString(Constants.LOGIN_TYPE,
 						Constants.PERMPING_LOGIN);
-				Intent i = new Intent(context, JoinPermActivity.class);
+				Intent i = new Intent(context, JoinWhyqActivity.class);
 				context.startActivity(i);
 				this.dismiss();
 			}
@@ -855,7 +855,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 	 * @see android.widget.ArrayAdapter#getItem(int)
 	 */
 	@Override
-	public Perm getItem(int position) {
+	public Whyq getItem(int position) {
 		// TODO Auto-generated method stub
 		return super.getItem(position);
 	}
@@ -872,12 +872,12 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 	public View createHeaderView() {
 		LayoutInflater inflater = (LayoutInflater) this.getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.perm_item_2, null);
+		View view = inflater.inflate(R.layout.whyq_item_2, null);
 		// Process buttons
 		join = (Button) view.findViewById(R.id.bt_join);
 		login = (Button) view.findViewById(R.id.bt_login);
-		login.setOnClickListener(PermAdapter.this);
-		join.setOnClickListener(PermAdapter.this);
+		login.setOnClickListener(WhyqAdapter.this);
+		join.setOnClickListener(WhyqAdapter.this);
 		
 		updateHeaderView(view);
 		
@@ -889,7 +889,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		if(loginRow == null) {
 			return;
 		}
-		user = PermUtils.isAuthenticated(view.getContext());
+		user = WhyqUtils.isAuthenticated(view.getContext());
 		if (user != null) {
 			loginRow.setVisibility(View.GONE);
 		} else {
@@ -897,14 +897,14 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		}
 	}
 	
-	public boolean isPermDuplicate(Perm perm) {
-		if(perm == null || perm.getId() == null) {
+	public boolean isPermDuplicate(Whyq whyq) {
+		if(whyq == null || whyq.getId() == null) {
 			return false;
 		}
 		for(int i = 0; i < items.size(); i++) {
-			Perm permItem = items.get(i);
+			Whyq permItem = items.get(i);
 			if(permItem != null && permItem.getId() != null) {
-				if(permItem.getId().equals(perm.getId())) {
+				if(permItem.getId().equals(whyq.getId())) {
 					return true;
 				}
 			}
@@ -960,16 +960,16 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		// TODO Auto-generated method stub
 		String permId = (String)view.getTag();
 		if(permId != null){
-			Perm perm = newPermList.get(permId);
+			Whyq whyq = newPermList.get(permId);
 			Intent googleMap = new Intent(context,
 					GoogleMapActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putFloat("lat", perm.getLat());
-			bundle.putFloat("lon", perm.getLon());
-			bundle.putString("thumbnail", perm.getImage().getUrl());
+			bundle.putFloat("lat", whyq.getLat());
+			bundle.putFloat("lon", whyq.getLon());
+			bundle.putString("thumbnail", whyq.getImage().getUrl());
 			googleMap.putExtra("locationData", bundle);
 			//Log.d("AA+++++============","========="+perm.getImage().getUrl());
-			View view2 = FollowerActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+perm.getId(), googleMap).getDecorView();
+			View view2 = FollowerActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+whyq.getId(), googleMap).getDecorView();
 			FollowerActivityGroup.group.replaceView(view2);
 
 		}	
@@ -979,13 +979,13 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		// TODO Auto-generated method stub
 		String permId = (String)view.getTag();
 		if(permId != null){
-			Perm perm = newPermList.get(permId);
-			user = PermUtils.isAuthenticated(view.getContext());
+			Whyq whyq = newPermList.get(permId);
+			user = WhyqUtils.isAuthenticated(view.getContext());
 			if (user != null) {
 				
-				PermpingApplication state = (PermpingApplication)view.getContext().getApplicationContext();
+				WhyqApplication state = (WhyqApplication)view.getContext().getApplicationContext();
 				
-				CommentDialog commentDialog = new CommentDialog( view.getContext(), perm , state.getUser() );
+				CommentDialog commentDialog = new CommentDialog( view.getContext(), whyq , state.getUser() );
 				commentDialog.show();
 			} else {
 				Toast.makeText(view.getContext(), Constants.NOT_LOGIN, Toast.LENGTH_LONG).show();
@@ -999,16 +999,16 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		// TODO Auto-generated method stub
 		String permId = (String)view.getTag();
 		if(permId != null){
-			Perm perm = newPermList.get(permId);
-			user = PermUtils.isAuthenticated(view.getContext());
+			Whyq whyq = newPermList.get(permId);
+			user = WhyqUtils.isAuthenticated(view.getContext());
 			if (user != null) {
 				Intent myIntent = new Intent(view.getContext(),
-						NewPermActivity.class);
+						NewWhyqActivity.class);
 				myIntent.putExtra("reperm", true);
-				NewPermActivity.boardList = user.getBoards();
-				myIntent.putExtra("boardId", perm.getBoard().getId());
-				myIntent.putExtra("boardDesc", (String) perm.getBoard().getDescription());
-				myIntent.putExtra("permId", (String) perm.getId());
+				NewWhyqActivity.boardList = user.getBoards();
+				myIntent.putExtra("boardId", whyq.getBoard().getId());
+				myIntent.putExtra("boardDesc", (String) whyq.getBoard().getDescription());
+				myIntent.putExtra("permId", (String) whyq.getId());
 				myIntent.putExtra("userId", user.getId());
 				context.startActivity(myIntent);
 			} else {
@@ -1024,8 +1024,8 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		// TODO Auto-generated method stub
 		String permId = (String)v.getTag();
 		if(permId != null){
-			final Perm perm = newPermList.get(permId);
-			user = PermUtils.isAuthenticated(v.getContext());
+			final Whyq whyq = newPermList.get(permId);
+			user = WhyqUtils.isAuthenticated(v.getContext());
 			if (user != null) {
 				// final ProgressDialog dialog =
 				// ProgressDialog.show(v.getContext(),
@@ -1036,19 +1036,19 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 				if(like.getText().toString().equals(likeString) || like.getText().toString().equals(unlikeString)){
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("pid", String
-							.valueOf(perm.getId())));
+							.valueOf(whyq.getId())));
 					nameValuePairs.add(new BasicNameValuePair("uid", String
 							.valueOf(user.getId())));
 					util.sendRequest(API.likeURL, nameValuePairs, false);
 
 					if (v instanceof Button) {
 						String label = ((Button) v).getText().toString();
-						int likeCount = Integer.parseInt(perm
+						int likeCount = Integer.parseInt(whyq
 								.getPermLikeCount());
 						if (label != null && label.equals(likeString)) { // Like
 							// Update the count
 							likeCount++;
-							perm.setPermLikeCount(String.valueOf(likeCount));
+							whyq.setPermLikeCount(String.valueOf(likeCount));
 							// Change the text to "Unlike"
 							((Button)v).setText(R.string.bt_unlike);
 							v.invalidate();
@@ -1056,15 +1056,15 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 							likeCount = likeCount - 1;
 							if (likeCount < 0)
 								likeCount = 0;
-							perm.setPermLikeCount(String.valueOf(likeCount));
+							whyq.setPermLikeCount(String.valueOf(likeCount));
 							((Button)v).setText(R.string.bt_like);
 							v.invalidate();
 						}
 					}
 					
-					String permStatus = likeString + ": " + perm.getPermLikeCount()
-							+ " - " + repermString + ": " + perm.getPermRepinCount()
-							+ " - " + commentString + ": " + perm.getPermCommentCount();
+					String permStatus = likeString + ": " + whyq.getPermLikeCount()
+							+ " - " + repermString + ": " + whyq.getPermRepinCount()
+							+ " - " + commentString + ": " + whyq.getPermCommentCount();
 					TextView txtStatus = permStateList.get(permId);
 					if(permStatus != null)
 						txtStatus.setText(permStatus);
@@ -1075,14 +1075,14 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 					alertDialog.setButton(v.getContext().getString(R.string.yes_delete), new DialogInterface.OnClickListener() {
 					   public void onClick(DialogInterface dialog, int which) {
 					      // here you can add functions
-							viewList.remove(perm.getId());
+							viewList.remove(whyq.getId());
 							int position = v.getNextFocusDownId();
 							if(position >= 0 && items.size() > position)
 								items.remove(position);
 							notifyDataSetChanged();
 							List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 							nameValuePairs.add(new BasicNameValuePair("delid", String
-									.valueOf(perm.getId())));
+									.valueOf(whyq.getId())));
 							nameValuePairs.add(new BasicNameValuePair("uid", String
 									.valueOf(user.getId())));
 							util.sendRequest(API.deleteUrl, nameValuePairs, false);
@@ -1118,7 +1118,7 @@ public class PermAdapter extends ArrayAdapter<Perm> implements OnClickListener {
 		editor.putString(Constants.LOGIN_TYPE,
 				Constants.PERMPING_LOGIN);
 		editor.commit();
-		PermpingMain.showLogin();
+		WhyqMain.showLogin();
 	}
 
 }

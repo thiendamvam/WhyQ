@@ -10,8 +10,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 
-import whyq.PermpingApplication;
-import whyq.PermpingMain;
+import whyq.WhyqApplication;
+import whyq.WhyqMain;
 import whyq.adapter.CategorySpinnerAdapter;
 import whyq.controller.AuthorizeController;
 import whyq.controller.CategoryController;
@@ -72,7 +72,7 @@ public class CreateBoardActivity extends Activity implements Create_Board_delega
 			textView.setTypeface(tf);
 		}
 		
-        PermpingApplication state = (PermpingApplication) getApplicationContext();
+        WhyqApplication state = (WhyqApplication) getApplicationContext();
 		if(state != null)
 			user = state.getUser();
 		CategoryController catController = new CategoryController(CreateBoardActivity.this);
@@ -90,7 +90,7 @@ public class CreateBoardActivity extends Activity implements Create_Board_delega
 		createBoard.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				PermpingApplication state = (PermpingApplication) getApplicationContext();
+				WhyqApplication state = (WhyqApplication) getApplicationContext();
 	        	if (state != null) {
 
 	        		if (user != null) {
@@ -201,7 +201,7 @@ public class CreateBoardActivity extends Activity implements Create_Board_delega
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

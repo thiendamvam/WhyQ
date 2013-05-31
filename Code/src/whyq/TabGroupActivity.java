@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import whyq.activity.FollowerActivity;
 import whyq.activity.FollowerActivityGroup;
 import whyq.model.User;
-import whyq.utils.PermUtils;
+import whyq.utils.WhyqUtils;
 import android.app.ActivityGroup;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -104,7 +104,7 @@ public class TabGroupActivity extends ActivityGroup {
 //				setContentView(history.get(history.size() - 1));
 				if(isAddedToHistory == false) {
 					//login activity
-					User user = PermUtils.isAuthenticated(getApplicationContext());
+					User user = WhyqUtils.isAuthenticated(getApplicationContext());
 					if(user != null) {
 						setContentView(history.get(history.size() - 1));
 					} else {
@@ -159,7 +159,7 @@ public class TabGroupActivity extends ActivityGroup {
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        PermpingMain.back();
+	        WhyqMain.back();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

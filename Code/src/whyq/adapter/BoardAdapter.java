@@ -2,7 +2,7 @@ package whyq.adapter;
 
 import java.util.ArrayList;
 
-import whyq.model.PermBoard;
+import whyq.model.WhyqBoard;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +12,14 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class BoardAdapter extends ArrayAdapter<PermBoard> {
+public class BoardAdapter extends ArrayAdapter<WhyqBoard> {
 
-	private ArrayList<PermBoard> items;
+	private ArrayList<WhyqBoard> items;
 	
 	private int textViewResourceId ;
 	private Context context;
 
-	public BoardAdapter(Context context, int textViewResourceId, ArrayList<PermBoard> items) {
+	public BoardAdapter(Context context, int textViewResourceId, ArrayList<WhyqBoard> items) {
 		super(context, textViewResourceId, items);
 		this.context = context;
 		this.textViewResourceId = textViewResourceId;
@@ -42,7 +42,7 @@ public class BoardAdapter extends ArrayAdapter<PermBoard> {
 			v.findViewById(R.id.categoryItemLayout).setBackgroundResource( R.drawable.explorer_item_bg );
 		}
 		
-		PermBoard o = items.get(position);
+		WhyqBoard o = items.get(position);
 		if (o != null) {
 			TextView an = (TextView) v.findViewById(R.id.categoryName);
 			an.setText(o.getName());
@@ -64,7 +64,7 @@ public class BoardAdapter extends ArrayAdapter<PermBoard> {
 	}
 
 	@Override
-	public PermBoard getItem(int position) {
+	public WhyqBoard getItem(int position) {
 		// TODO Auto-generated method stub
 		return items.get(position);
 	}

@@ -3,9 +3,9 @@ package whyq.view;
 import android.content.Context;
 import android.view.View;
 
-public class Perm extends View {
+public class WhyqList extends View  {
 
-	public Perm(Context context) {
+	public WhyqList(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 	}

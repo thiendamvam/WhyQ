@@ -2,7 +2,7 @@ package whyq.model;
 
 import java.io.Serializable;
 
-public class PermBoard implements Serializable{
+public class WhyqBoard implements Serializable{
 	
 	/**
 	 * Serial version UID
@@ -42,7 +42,7 @@ public class PermBoard implements Serializable{
 	/**
 	 * Default constructor
 	 */
-	public PermBoard() {
+	public WhyqBoard() {
 		
 	}
 	
@@ -50,7 +50,7 @@ public class PermBoard implements Serializable{
 	 * Initialize a new Board with Id
 	 * @param id the board Id
 	 */
-	public PermBoard( String id ){
+	public WhyqBoard( String id ){
 		this.setId(id);
 	}
 	
@@ -59,7 +59,7 @@ public class PermBoard implements Serializable{
 	 * @param id
 	 * @param name
 	 */
-	public PermBoard( String id, String name ){
+	public WhyqBoard( String id, String name ){
 		this.setId(id);
 		this.setName(name);
 	}
@@ -70,7 +70,7 @@ public class PermBoard implements Serializable{
 	 * @param name
 	 * @param description
 	 */
-	public PermBoard( String id, String name, String description){
+	public WhyqBoard( String id, String name, String description){
 		this.setId(id);
 		this.setName( name );
 		this.setDescription( description );
@@ -84,7 +84,7 @@ public class PermBoard implements Serializable{
 	 * @param followers
 	 * @param pins
 	 */
-	public PermBoard(String id, String name, String description, int followers, int pins) {
+	public WhyqBoard(String id, String name, String description, int followers, int pins) {
 		this.setId(id);
 		this.setName( name );
 		this.setDescription( description );
