@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import twitter4j.http.AccessToken;
 import whyq.WhyqApplication;
-import whyq.activity.FollowerActivity;
+import whyq.activity.ListActivity;
 import whyq.activity.NewWhyqActivity;
 import whyq.model.User;
 import whyq.utils.facebook.sdk.DialogError;
@@ -286,8 +286,8 @@ public class WhyqUtils {
 			if (bitmp != null) {
 				int height = bitmp.getHeight();
 				int width = bitmp.getWidth();
-				int deviceSizeHeight = FollowerActivity.screenHeight;
-				int deviceSizeWidth = FollowerActivity.screenWidth;
+				int deviceSizeHeight = ListActivity.screenHeight;
+				int deviceSizeWidth = ListActivity.screenWidth;
 				int imgWidth = 0, imgHeight = 0;
 				if (deviceSizeWidth <= 320) { // 320 x 480
 					// marginLeft = 8;

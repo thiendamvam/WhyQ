@@ -32,6 +32,10 @@ public class Whyq implements Serializable{
 	private String permAudio="";
 	private float lat;
 	private float lon;
+	
+	private String address;
+	private String distant;
+	private ArrayList<User> visitedUser;
 	// TODO :This is not good but for now, I will do it
 	// This is for keeping the value of <nextItem> in the response when get the list of Perm
 	private String nextItem;
@@ -268,5 +272,35 @@ public class Whyq implements Serializable{
 	}
 	public float getLon(){
 		return this.lon;
+	}
+
+
+	public String getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+	public String getDistant() {
+		return distant;
+	}
+
+
+	public void setDistant(String distant) {
+		this.distant = distant;
+	}
+
+
+	public ArrayList<User> getVisitedUser() {
+		return visitedUser;
+	}
+
+
+	public void setVisitedUser(ArrayList<User> visitedUser) {
+		this.visitedUser = visitedUser;
 	}
 }

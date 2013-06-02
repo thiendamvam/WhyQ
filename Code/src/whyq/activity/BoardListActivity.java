@@ -47,12 +47,12 @@ public class BoardListActivity extends Activity {
 		boardView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
 			@SuppressWarnings("deprecation")
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent myIntent = new Intent(view.getContext(), FollowerActivity.class);
+				Intent myIntent = new Intent(view.getContext(), ListActivity.class);
 				WhyqBoard board = boards.get(position);
 				String boardUrl = API.permListFromBoardUrl + board.getId();
 				myIntent.putExtra("boardUrl", boardUrl);
-				View boardListView = ExplorerActivityGroup.group.getLocalActivityManager() .startActivity("BoardListActivity", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
-				ExplorerActivityGroup.group.replaceView(boardListView);
+				View boardListView = FavouritesActivityGroup.group.getLocalActivityManager() .startActivity("BoardListActivity", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
+				FavouritesActivityGroup.group.replaceView(boardListView);
 				//Toast.makeText(getApplicationContext(), boards.get(position).getName() , Toast.LENGTH_SHORT).show();
 			}
 		});

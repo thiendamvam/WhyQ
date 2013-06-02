@@ -2,8 +2,8 @@ package whyq;
 
 import java.util.ArrayList;
 
-import whyq.activity.FollowerActivity;
-import whyq.activity.FollowerActivityGroup;
+import whyq.activity.ListActivity;
+import whyq.activity.ListActivityGroup;
 import whyq.model.User;
 import whyq.utils.WhyqUtils;
 import android.app.ActivityGroup;
@@ -57,9 +57,9 @@ public class TabGroupActivity extends ActivityGroup {
 	}	
 	
 	public static void setTabGroup(TabGroupActivity tabGroup) {
-		if(group instanceof FollowerActivityGroup) {
-			if(!(tabGroup instanceof FollowerActivityGroup)) {
-				((FollowerActivityGroup)group).removeAllData();
+		if(group instanceof ListActivityGroup) {
+			if(!(tabGroup instanceof ListActivityGroup)) {
+				((ListActivityGroup)group).removeAllData();
 			}
 		}
 		group = tabGroup;
@@ -131,7 +131,7 @@ public class TabGroupActivity extends ActivityGroup {
 	    Intent new_intent = new Intent();
 	    new_intent.putExtra("issueId", issueId);
 	    new_intent.putExtra("storyId", storyId);
-	    new_intent.setAction(FollowerActivity.DOWNLOAD_COMPLETED);
+	    new_intent.setAction(ListActivity.DOWNLOAD_COMPLETED);
 	    sendBroadcast(new_intent);
 	}
 	

@@ -40,20 +40,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomTheme"
             android:windowSoftInputMode="adjustPan" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
-            android:name="whyq.activity.ExplorerActivity"
+            android:name="whyq.activity.FavouriteActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="whyq.activity.FollowerActivityGroup"
+            android:name="whyq.activity.ListActivityGroup"
             android:screenOrientation="portrait" />
         <activity
-            android:name="whyq.activity.FollowerActivity"
+            android:name="whyq.activity.ListActivity"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="com.permpings.activity.intent.action.SEND_LOG" />
@@ -65,7 +60,7 @@
             android:name="whyq.activity.BoardListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="whyq.activity.ExplorerActivityGroup"
+            android:name="whyq.activity.FavouritesActivityGroup"
             android:screenOrientation="portrait" />
         <activity
             android:name="whyq.activity.ImageActivityGroup"
@@ -89,10 +84,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="whyq.activity.MyDiaryActivity"
+            android:name="whyq.activity.FriendActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="whyq.activity.MyDiaryActivityGroup"
+            android:name="whyq.activity.FriendActivityGroup"
             android:screenOrientation="portrait" />
         <activity
             android:name="whyq.activity.ProfileActivity"
@@ -107,12 +102,19 @@
             android:name="whyq.activity.JoinWhyqActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
         <activity
             android:name="whyq.activity.LoginWhyqActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="whyq.activity.CreateBoardActivity"
             android:screenOrientation="portrait"
@@ -157,6 +159,13 @@
         </activity>
         <activity
             android:name="whyq.view.ImageDetail"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateVisible" >
+        </activity>
+        <activity
+            android:name="whyq.activity.SimpleActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"

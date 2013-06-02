@@ -20,7 +20,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import whyq.activity.FollowerActivityGroup;
+import whyq.WhyqApplication;
+import whyq.activity.ListActivityGroup;
 
 import android.Manifest;
 import android.app.Activity;
@@ -805,7 +806,7 @@ public class Facebook {
             parameters.putString(TOKEN, getAccessToken());
         }
         String url = endpoint + "?" + Util.encodeUrl(parameters);
-        if (FollowerActivityGroup.context.checkCallingOrSelfPermission(Manifest.permission.INTERNET)
+        if (WhyqApplication.Instance().getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.INTERNET)
                 != PackageManager.PERMISSION_GRANTED) {
             Util.showAlert(context, "Error",
                     "Application requires permission to access the Internet");

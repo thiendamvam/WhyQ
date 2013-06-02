@@ -61,7 +61,7 @@ public class BoardDetailActivity extends Activity {
 			User user = WhyqUtils.isAuthenticated(getApplicationContext());
 //			BoardDetailAdapter boardDetailAdapter = new BoardDetailAdapter(
 //					this, perms, boardName, screenHeight, screenWidth, user);
-			WhyqAdapter boardDetailAdapter =  new WhyqAdapter(MyDiaryActivityGroup.context,
+			WhyqAdapter boardDetailAdapter =  new WhyqAdapter(FriendActivityGroup.context,
 					null,R.layout.whyq_item_1, whyqs, BoardDetailActivity.this, screenHeight, screenWidth, false, user);
 
 			permList.setAdapter(boardDetailAdapter);

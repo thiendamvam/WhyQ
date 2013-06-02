@@ -14,29 +14,28 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
+        android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="5dp"
-        android:paddingTop="15dp"
-        android:gravity="center" >
+        android:paddingTop="15dp" >
 
         <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/login_text1"
-            android:textSize="22dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="22dp" />
+
         <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="22dp"
             android:text="@string/login_text2"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="22dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -65,12 +64,14 @@
             android:text="" />
     </LinearLayout>
 
-    <!-- <View
+    <!--
+         <View
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:background="@android:color/darker_gray" /> -->
+        android:background="@android:color/darker_gray" />
+    -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,7 +81,6 @@
         android:orientation="vertical" >
 
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -92,45 +92,44 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="2" >
+                android:layout_weight="2"
+                android:orientation="vertical" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/email_address" 
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold"
-                    android:textSize="18dp"
-                    android:gravity="center_vertical"
                     android:layout_marginBottom="10dp"
-            		android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/email_address"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <EditText
                     android:id="@+id/permEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
                     android:background="#00000000"
                     android:ems="10"
+                    android:gravity="center_vertical"
                     android:hint="@string/hint_email"
                     android:imeOptions="actionNext"
-                    android:singleLine="true" 
-                    android:textSize="16dp"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp"
-           		 	android:layout_marginTop="10dp"/>
+                    android:singleLine="true"
+                    android:textSize="16dp" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -148,13 +147,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/password" 
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/password"
                     android:textColor="@android:color/black"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp"
-            		android:layout_marginTop="10dp"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -167,32 +166,34 @@
                     android:id="@+id/permPassword"
                     android:layout_width="315dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
                     android:background="#00000000"
+                    android:gravity="center_vertical"
                     android:hint="@string/hint_password"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:singleLine="true"
-                    android:gravity="center_vertical" 
-                    android:textSize="16dp"
-                    android:layout_marginBottom="10dp"
-            		android:layout_marginTop="10dp"/>
+                    android:textSize="16dp" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- <View
+        <!--
+             <View
             android:layout_width="fill_parent"
             android:layout_height="2dp"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="15dp"
-            android:background="@android:color/darker_gray" /> -->
+            android:background="@android:color/darker_gray" />
+        -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical" 
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
 
             <Button
                 android:id="@+id/loginPerm"
@@ -205,18 +206,6 @@
                 android:text="@string/bt_login"
                 android:textColor="#000000"
                 android:textStyle="bold" />
-
-            <!--
-        <Button
-            android:id="@+id/cancelPerm"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/bt_cancel"
-            android:layout_gravity="center"
-        android:textColor="#FFFFFF"
-            android:background="@drawable/button_bg" />
-            -->
         </LinearLayout>
     </LinearLayout>
 

@@ -54,7 +54,7 @@ public class PrepareRequestTokenActivity extends Activity implements Login_deleg
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = PrepareRequestTokenActivity.this;
-		parentActivity = getParent();
+		parentActivity = PrepareRequestTokenActivity.this;//getParent();
     	try {
     		this.consumer = new CommonsHttpOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
     	    this.provider = new CommonsHttpOAuthProvider(Constants.REQUEST_URL,Constants.ACCESS_URL,Constants.AUTHORIZE_URL);

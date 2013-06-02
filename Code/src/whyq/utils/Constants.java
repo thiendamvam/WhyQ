@@ -15,8 +15,8 @@ public class Constants {
 	//public static final String CONSUMER_KEY = "uMtOaN3CLE7dvvVSR1giLA";
 	//public static final String CONSUMER_SECRET= "erVQyuoDUu3cwOG48cgUm5V14puqN3JbjSP4v4NE";
 	
-	public static final String CONSUMER_KEY = "uMtOaN3CLE7dvvVSR1giLA";
-	public static final String CONSUMER_SECRET= "erVQyuoDUu3cwOG48cgUm5V14puqN3JbjSP4v4NE";
+	public static final String CONSUMER_KEY = "mpaQ9GA3ICVbnZTZH2FEdg";
+	public static final String CONSUMER_SECRET= "BH37EUqAHc1vAnxvdS2X4fJsxxuZRCJlT6VtT4avQNI";
 	
 	public static final String REQUEST_URL = "https://api.twitter.com/oauth/request_token";
 	public static final String ACCESS_URL = "https://api.twitter.com/oauth/access_token";
@@ -29,7 +29,7 @@ public class Constants {
 	/**
 	 * Facebook app configuration
 	 */
-	public static final String FACEBOOK_APP_ID = "272022539557655";
+	public static final String FACEBOOK_APP_ID = "429233960446986";
 	public static final String EMAIL = "email";
 	public static final String PUBLISH_STREAM = "publish_stream";
 	

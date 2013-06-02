@@ -9,10 +9,12 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.controller.AuthorizeController;
 import whyq.interfaces.Login_delegate;
 import whyq.utils.Constants;
+import whyq.utils.RSA;
 import whyq.utils.WhyqUtils;
 import whyq.utils.facebook.FacebookConnector;
 import whyq.utils.facebook.sdk.DialogError;
@@ -67,7 +69,7 @@ public class LoginWhyqActivity extends Activity implements Login_delegate {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.whyq_login);
-        
+//        context = WhyqApplication.Instance().getApplicationContext();
         TextView textView = (TextView)findViewById(R.id.permpingTitle);
 		Typeface tf = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
 		if(textView != null) {
@@ -91,10 +93,17 @@ public class LoginWhyqActivity extends Activity implements Login_delegate {
 				if(checkInputData()){
 					showLoadingDialog("Progress", "Please wait");
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);
-					nameValuePairs.add(new BasicNameValuePair("type", Constants.LOGIN_TYPE));
-					nameValuePairs.add(new BasicNameValuePair("oauth_token", ""));
+//					nameValuePairs.add(new BasicNameValuePair("type", Constants.LOGIN_TYPE));
+//					nameValuePairs.add(new BasicNameValuePair("oauth_token", ""));
 					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
-					nameValuePairs.add(new BasicNameValuePair("password", password.getText().toString()));
+					String pass =null;
+					try {
+						RSA rsa = new RSA();
+						pass = rsa.RSAEncrypt(password.getText().toString());
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					nameValuePairs.add(new BasicNameValuePair("password", pass));
 					AuthorizeController authorizeController = new AuthorizeController(LoginWhyqActivity.this);
 					authorizeController.authorize(v.getContext(), nameValuePairs);
 				}
@@ -163,7 +172,7 @@ public class LoginWhyqActivity extends Activity implements Login_delegate {
 			    Facebook mFacebook;
 			    String token = null;
 				mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
-				final Activity activity = getParent();
+				final Activity activity = LoginWhyqActivity.this;//getParent();
 				mFacebook.authorize( activity, new String[] { "email", "status_update",
 						"user_birthday" }, new DialogListener() {
 					@Override
@@ -268,31 +277,31 @@ public void on_success() {
 	// TODO Auto-generated method stub
 	//Logger.appendLog("test log", "LoginSuccess");
 	if(isLoginFb){
-		FollowerActivity.isLogin = true;
+		ListActivity.isLogin = true;
 		isLoginFb = false;
 		if(WhyqMain.getCurrentTab() == 0) {
-			((FollowerActivityGroup)FollowerActivityGroup.group).createFollowerActivity();
+			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
 		} else {
 			WhyqMain.back();
 		}
 	}else if(isTwitter){
-		FollowerActivity.isLogin = true;
+		ListActivity.isLogin = true;
 //		Intent intent = new Intent(context, PermpingMain.class);
 //		context.startActivity(intent);
 		isTwitter = false;
 		if(WhyqMain.getCurrentTab() == 0) {
-			((FollowerActivityGroup)FollowerActivityGroup.group).createFollowerActivity();
+			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
 		} else {
 			WhyqMain.back();
 		}
 	}else{
-		FollowerActivity.isLogin = true;
+		ListActivity.isLogin = true;
 		dismissLoadingDialog();
 		if(WhyqMain.getCurrentTab() == 4) {
 			((ProfileActivityGroup)ProfileActivityGroup.group).createUI();
 		} else {
 			if(WhyqMain.getCurrentTab() == 0) {
-				((FollowerActivityGroup)FollowerActivityGroup.group).createFollowerActivity();
+				((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
 			} else {
 				WhyqMain.back();
 			}

@@ -1,6 +1,6 @@
 package whyq.view;
 
-import whyq.activity.FollowerActivity;
+import whyq.activity.ListActivity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,7 +24,7 @@ public class ImageDetail extends Activity {
 //		setStyle(DialogFragment.STYLE_NO_FRAME, DialogFragment.STYLE_NORMAL);
 //		View v = LayoutInflater.from(getParent()).inflate(R.layout.image_detail, null);
 		setContentView(R.layout.image_detail);
-		FollowerActivity.isRefesh = false;
+		ListActivity.isRefesh = false;
 		this.url = getIntent().getExtras().getString("url");
 		btnClose = (Button)findViewById(R.id.btnClose);
 		webImageView = (WebImageView)findViewById(R.id.thumbnail);

@@ -1,14 +1,23 @@
 package whyq;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import whyq.activity.AudioPlayerActivity;
-import whyq.activity.ExplorerActivityGroup;
-import whyq.activity.FollowerActivity;
-import whyq.activity.FollowerActivityGroup;
+import whyq.activity.FavouritesActivityGroup;
+import whyq.activity.ListActivity;
+import whyq.activity.ListActivityGroup;
 import whyq.activity.ImageActivityGroup;
 import whyq.activity.LoginWhyqActivity;
-import whyq.activity.MyDiaryActivityGroup;
+import whyq.activity.FriendActivityGroup;
 import whyq.activity.ProfileActivityGroup;
+import whyq.activity.SimpleActivity;
 import whyq.model.User;
+import whyq.utils.RSA;
 import whyq.utils.WhyqUtils;
 import android.app.TabActivity;
 import android.content.Context;
@@ -36,23 +45,23 @@ public class WhyqMain extends TabActivity  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
+
         tabHost = getTabHost();
         context = WhyqMain.this;
         tabHost.getTabWidget().setBackgroundResource( R.drawable.tabs_background );
         
         // Tab for followers
         TabSpec followers = tabHost.newTabSpec("List");
-        followers.setIndicator("List", getResources().getDrawable(R.drawable.icon_follower_tab));
-        Intent followersIntent = new Intent(this, FollowerActivityGroup.class);
+        followers.setIndicator("List", getResources().getDrawable(R.drawable.footer_icon1));
+        Intent followersIntent = new Intent(this, ListActivityGroup.class);
         followers.setContent(followersIntent);
         tabHost.addTab( followers );
         
         // Tab for Explorer
         TabSpec explorer = tabHost.newTabSpec("Favourites");
         // setting Title and Icon for the Tab
-        explorer.setIndicator("Favourites", getResources().getDrawable(R.drawable.icon_explorer_tab));
-        Intent explorerIntent = new Intent(this, ExplorerActivityGroup.class);
+        explorer.setIndicator("Favourites", getResources().getDrawable(R.drawable.footer_icon2));
+        Intent explorerIntent = new Intent(this, FavouritesActivityGroup.class);
         explorer.setContent(explorerIntent);
         tabHost.addTab( explorer );
         
@@ -64,13 +73,13 @@ public class WhyqMain extends TabActivity  {
 //        tabHost.addTab( image );
         
         TabSpec mydiary = tabHost.newTabSpec("Friends");
-        mydiary.setIndicator("Friends", getResources().getDrawable(R.drawable.icon_mydiary_tab));
-        Intent mydiaryIntent = new Intent(this, MyDiaryActivityGroup.class);
+        mydiary.setIndicator("Friends", getResources().getDrawable(R.drawable.footer_icon3));
+        Intent mydiaryIntent = new Intent(this, FriendActivityGroup.class);
         mydiary.setContent(mydiaryIntent);
         tabHost.addTab( mydiary );
         
         TabSpec profile = tabHost.newTabSpec("Profile");
-        profile.setIndicator("Profile", getResources().getDrawable(R.drawable.icon_profile_tab));
+        profile.setIndicator("Profile", getResources().getDrawable(R.drawable.footer_icon4));
         Intent profileIntent = new Intent(this, ProfileActivityGroup.class);
         profile.setContent(profileIntent);
         tabHost.addTab( profile );
@@ -82,30 +91,30 @@ public class WhyqMain extends TabActivity  {
 				// TODO Auto-generated method stub
 				int currentTab = WhyqMain.getCurrentTab();
 		    	if( currentTab == 0){
-					FollowerActivityGroup.isTabChanged = false;
-					ExplorerActivityGroup.isTabChanged = true;
+					ListActivityGroup.isTabChanged = false;
+					FavouritesActivityGroup.isTabChanged = true;
 					ProfileActivityGroup.isTabChanged = true;
-					MyDiaryActivityGroup.isTabChanged = true;
+					FriendActivityGroup.isTabChanged = true;
 		    	}else if(currentTab == 1){
-		    		FollowerActivityGroup.isTabChanged = true;
-					ExplorerActivityGroup.isTabChanged = false;
+		    		ListActivityGroup.isTabChanged = true;
+					FavouritesActivityGroup.isTabChanged = false;
 					ProfileActivityGroup.isTabChanged = true;
-					MyDiaryActivityGroup.isTabChanged = true;
+					FriendActivityGroup.isTabChanged = true;
 		    	}else if(currentTab == 2){
-		    		FollowerActivityGroup.isTabChanged = true;
-					ExplorerActivityGroup.isTabChanged = true;
+		    		ListActivityGroup.isTabChanged = true;
+					FavouritesActivityGroup.isTabChanged = true;
 					ProfileActivityGroup.isTabChanged = true;
-					MyDiaryActivityGroup.isTabChanged = true;
+					FriendActivityGroup.isTabChanged = true;
 		    	}else if(currentTab == 3){
-		    		FollowerActivityGroup.isTabChanged = true;
-					ExplorerActivityGroup.isTabChanged = true;
+		    		ListActivityGroup.isTabChanged = true;
+					FavouritesActivityGroup.isTabChanged = true;
 					ProfileActivityGroup.isTabChanged = true;
-					MyDiaryActivityGroup.isTabChanged = false;
+					FriendActivityGroup.isTabChanged = false;
 		    	}else if(currentTab == 4){
-		    		FollowerActivityGroup.isTabChanged = true;
-					ExplorerActivityGroup.isTabChanged = true;
+		    		ListActivityGroup.isTabChanged = true;
+					FavouritesActivityGroup.isTabChanged = true;
 					ProfileActivityGroup.isTabChanged = false;
-					MyDiaryActivityGroup.isTabChanged = true;
+					FriendActivityGroup.isTabChanged = true;
 		    	}
 			}
 		});
@@ -119,7 +128,7 @@ public class WhyqMain extends TabActivity  {
         	@Override
     		public boolean onTouch(View v, MotionEvent event) {
         		//do whatever you need
-        		ExplorerActivityGroup.group.clearHistory();
+        		FavouritesActivityGroup.group.clearHistory();
         		return false;
 
             }
@@ -144,7 +153,7 @@ public class WhyqMain extends TabActivity  {
         	@Override
     		public boolean onTouch(View v, MotionEvent event) {
         		//do whatever you need
-        		MyDiaryActivityGroup.group.clearHistory();
+        		FriendActivityGroup.group.clearHistory();
         		return false;
 
             }
@@ -160,6 +169,25 @@ public class WhyqMain extends TabActivity  {
 
             }
         });        
+        RSA rsa = new RSA();
+        try {
+			rsa.RSAEncrypt("i am thien");
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     private class ProfileHandler implements View.OnTouchListener {
@@ -193,7 +221,7 @@ public class WhyqMain extends TabActivity  {
 	        } else {
 	        	
 	        }
-	        FollowerActivityGroup.group.clearHistory();
+	        ListActivityGroup.group.clearHistory();
 	        return false;
     	}
     }
@@ -218,7 +246,7 @@ public class WhyqMain extends TabActivity  {
 		        	showLogin();
 					ret = false;
 		        }
-		        MyDiaryActivityGroup.group.clearHistory();
+		        FriendActivityGroup.group.clearHistory();
 			}
 			return ret;
 		}
@@ -229,17 +257,17 @@ public class WhyqMain extends TabActivity  {
     	Intent myIntent = new Intent(context, LoginWhyqActivity.class);
     	int currentTab = tabHost.getCurrentTab();
     	if( currentTab == 0){
-			View boardListView = FollowerActivityGroup.group.getLocalActivityManager() .startActivity("detail", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
-			FollowerActivityGroup.group.replaceView(boardListView);
+			View boardListView = ListActivityGroup.group.getLocalActivityManager() .startActivity("detail", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
+			ListActivityGroup.group.replaceView(boardListView);
     	}else if(currentTab == 1){
-			View boardListView = ExplorerActivityGroup.group.getLocalActivityManager() .startActivity("detail", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
-			ExplorerActivityGroup.group.replaceView(boardListView);
+			View boardListView = FavouritesActivityGroup.group.getLocalActivityManager() .startActivity("detail", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
+			FavouritesActivityGroup.group.replaceView(boardListView);
     	}else if(currentTab == 2){
 			View boardListView = ImageActivityGroup.group.getLocalActivityManager() .startActivity("detail", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
 			ImageActivityGroup.group.replaceView(boardListView);
     	}else if(currentTab == 3){
-			View boardListView = MyDiaryActivityGroup.group.getLocalActivityManager() .startActivity("detail", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
-			MyDiaryActivityGroup.group.replaceViewWithoutHistory(boardListView);
+			View boardListView = FriendActivityGroup.group.getLocalActivityManager() .startActivity("detail", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
+			FriendActivityGroup.group.replaceViewWithoutHistory(boardListView);
     	}else if(currentTab == 4){
 			View boardListView = ProfileActivityGroup.group.getLocalActivityManager() .startActivity("detail", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
 			ProfileActivityGroup.group.replaceViewWithoutHistory(boardListView);
@@ -249,15 +277,15 @@ public class WhyqMain extends TabActivity  {
     	
     	int currentTab = tabHost.getCurrentTab();
     	if( currentTab == 0){
-			FollowerActivityGroup.group.back();
+			ListActivityGroup.group.back();
     	}else if(currentTab == 1){
     		//View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "ExplorerActivity", new Intent(context, ExplorerActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
-			ExplorerActivityGroup.group.back();
+			FavouritesActivityGroup.group.back();
     		//ExplorerActivityGroup.group.overrideView(view);
     	}else if(currentTab == 2){
 			ImageActivityGroup.group.back();
     	}else if(currentTab == 3){
-			MyDiaryActivityGroup.group.back();
+			FriendActivityGroup.group.back();
     	}else if(currentTab == 4){
 
     		//View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "ProfileActivity", new Intent(context, ProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
@@ -275,7 +303,7 @@ public class WhyqMain extends TabActivity  {
 		if(tab == 4){			
 			//tabHost.setCurrentTab(tab);
 			isUserProfile = false;
-			FollowerActivityGroup.createProfileActivity(data, false);
+			ListActivityGroup.createProfileActivity(data, false);
 			
 			
 			
@@ -283,21 +311,21 @@ public class WhyqMain extends TabActivity  {
 //			Intent imageDetail = new Intent(context, ImageDetail.class);
 //			imageDetail.putExtra("url", (String) data);
 //			context.startActivity(imageDetail);
-			if(FollowerActivity.loadPermList != null) {
-				FollowerActivity.loadPermList.cancel(true);
+			if(ListActivity.loadPermList != null) {
+				ListActivity.loadPermList.cancel(true);
 			}
 			String link = (String) data;
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-			FollowerActivityGroup.context.startActivity(browserIntent);
-			FollowerActivity.isRefesh = false;
+			ListActivityGroup.context.startActivity(browserIntent);
+			ListActivity.isRefesh = false;
 		}else if(tab==2){
 			tabHost.setCurrentTab(2);
 		} else if(tab == 6){
 			String link = (String) data;
-			Intent playAudioIntent = new Intent(FollowerActivityGroup.context, AudioPlayerActivity.class);
+			Intent playAudioIntent = new Intent(ListActivityGroup.context, AudioPlayerActivity.class);
 			playAudioIntent.putExtra("url", link);
 			//Log.d("permAudio=",""+link);
-			FollowerActivityGroup.context.startActivity(playAudioIntent);
+			ListActivityGroup.context.startActivity(playAudioIntent);
 //			FollowerActivity.isRefesh = false;
 		}
 		
@@ -315,16 +343,16 @@ public class WhyqMain extends TabActivity  {
 	}
 	
 	public static void closeLoginActivity() {
-    	FollowerActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
-    	ExplorerActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
+    	ListActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
+    	FavouritesActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
     	ImageActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
-    	MyDiaryActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
+    	FriendActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
     	ProfileActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
     }
 	
 	public static void refeshFollowerActivity() {
 		if(WhyqMain.getCurrentTab() == 0) {
-			FollowerActivityGroup.group.sendBroadcast("", "");					
+			ListActivityGroup.group.sendBroadcast("", "");					
 		}
 	}
 	

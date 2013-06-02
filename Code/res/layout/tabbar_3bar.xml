@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:weightSum="3" >
+
+    <LinearLayout
+        android:id="@+id/lnCutleryTab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/icon_cat_cutlery"
+        android:gravity="center"
+        android:onClick="onCutleryTabCliked"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lnWineTab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onWineTabCliked"
+        android:background="@drawable/icon_cat_wine"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lnCoffeTab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/icon_cat_coffee"
+        android:baselineAligned="false"
+        android:onClick="onCoffeTabClicked"
+        android:gravity="center"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+</LinearLayout>

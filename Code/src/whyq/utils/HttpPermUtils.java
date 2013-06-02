@@ -20,8 +20,8 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import whyq.interfaces.HttpAccess;
-
 import android.os.AsyncTask;
+import android.util.Log;
 
 
 /**
@@ -142,6 +142,7 @@ public class HttpPermUtils {
 						HttpEntity postResponseEntity = postResponse.getEntity();
 						if (postResponseEntity != null)
 							result =  EntityUtils.toString(postResponseEntity);
+						Log.d("Register reuslt","Result:"+result);
 					}
 
 				} catch (IOException ioe) {

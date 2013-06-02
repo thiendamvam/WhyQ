@@ -9,8 +9,8 @@ import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
-import whyq.activity.FollowerActivity;
-import whyq.activity.FollowerActivityGroup;
+import whyq.activity.ListActivity;
+import whyq.activity.ListActivityGroup;
 import whyq.activity.GoogleMapActivity;
 import whyq.activity.JoinWhyqActivity;
 import whyq.activity.NewWhyqActivity;
@@ -552,7 +552,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 	 * @return
 	 */
 	public void loadMoreItems() {
-		FollowerActivity follow = ((FollowerActivity)activity);
+		ListActivity follow = ((ListActivity)activity);
 		follow.loadNextItems();
 	}
 	
@@ -567,8 +567,8 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(activity instanceof FollowerActivity) {
-					FollowerActivity follow = ((FollowerActivity)activity);
+				if(activity instanceof ListActivity) {
+					ListActivity follow = ((ListActivity)activity);
 					follow.loadPreviousItems();
 				}
 
@@ -582,8 +582,8 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					if(activity instanceof FollowerActivity) {
-						FollowerActivity follow = ((FollowerActivity)activity);
+					if(activity instanceof ListActivity) {
+						ListActivity follow = ((ListActivity)activity);
 						follow.loadNextItems();
 					}
 					}
@@ -767,7 +767,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 				    Facebook mFacebook;
 					mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
 					//final Activity activity = getParent();
-					mFacebook.authorize( FollowerActivityGroup.context, new String[] { "email", "status_update",
+					mFacebook.authorize( ListActivityGroup.context, new String[] { "email", "status_update",
 							"user_birthday" }, new DialogListener() {
 						@Override
 						public void onComplete(Bundle values) {
@@ -781,8 +781,8 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 							nameValuePairs.add(new BasicNameValuePair("oauth_token", accessToken));
 							nameValuePairs.add(new BasicNameValuePair("email", ""));
 							nameValuePairs.add(new BasicNameValuePair("password", ""));
-							if(activity instanceof FollowerActivity) {
-								AuthorizeController authorizeController = new AuthorizeController((FollowerActivity)activity);
+							if(activity instanceof ListActivity) {
+								AuthorizeController authorizeController = new AuthorizeController((ListActivity)activity);
 								authorizeController.authorize(getContext(), nameValuePairs);	
 							}
 														
@@ -969,8 +969,8 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 			bundle.putString("thumbnail", whyq.getImage().getUrl());
 			googleMap.putExtra("locationData", bundle);
 			//Log.d("AA+++++============","========="+perm.getImage().getUrl());
-			View view2 = FollowerActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+whyq.getId(), googleMap).getDecorView();
-			FollowerActivityGroup.group.replaceView(view2);
+			View view2 = ListActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+whyq.getId(), googleMap).getDecorView();
+			ListActivityGroup.group.replaceView(view2);
 
 		}	
 	}

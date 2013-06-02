@@ -89,7 +89,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			if (intent.getAction().equals(FollowerActivity.DOWNLOAD_COMPLETED)) {
+			if (intent.getAction().equals(ListActivity.DOWNLOAD_COMPLETED)) {
 				//Log.d("thien", "======>>>>??????");
 				exeUserProfile();
 			} 
@@ -125,7 +125,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
         followings = (TextView) findViewById(R.id.followings);
         btnAccount = (Button) findViewById(R.id.btAccount);
         btnFollow = (Button) findViewById(R.id.btnFollow);
-		IntentFilter intentFilter = new IntentFilter(FollowerActivity.DOWNLOAD_COMPLETED);
+		IntentFilter intentFilter = new IntentFilter(ListActivity.DOWNLOAD_COMPLETED);
 		registerReceiver(receiver, intentFilter);
 		context = ProfileActivity.this;
 		WhyqApplication state = (WhyqApplication) context.getApplicationContext();
@@ -667,7 +667,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 			//BoardController boardController = new BoardController();
 			//List<Perm> perms = boardController.getPermsByBoardId(board.getId(), ProfileActivity.this);			
 			
-			Intent myIntent = new Intent(view.getContext(), FollowerActivity.class);
+			Intent myIntent = new Intent(view.getContext(), ListActivity.class);
 			String boardUrl = API.permListFromBoardUrl + board.getId();
 			myIntent.putExtra("categoryURL", boardUrl);
 			View boardListView = ProfileActivityGroup.group.getLocalActivityManager() .startActivity("BoardListActivity", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();

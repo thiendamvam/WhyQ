@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-	<color name="blue">#0303ff</color>
-	<color name="grey">#f7f7f7</color>
-	<color
-		name="white">#FFFFFF</color>
-	<color
-		name="black">#000000</color>
-		
-	<color
-		name="symptom_color_selected">#003366</color>
-		
-	<color
-		name="reaction_color_selected">#003366</color>
-<color name="static_text_color">#003366</color>
-<color name="journal_entry_listitem_text_color">#003366</color>
-<color name="note_text_disabled">#333333</color>
+
+    <color name="blue">#0303ff</color>
+    <color name="symptom_color_selected">#003366</color>
+    <color name="reaction_color_selected">#003366</color>
+    <color name="static_text_color">#003366</color>
+    <color name="journal_entry_listitem_text_color">#003366</color>
+    <color name="note_text_disabled">#333333</color>
+    <color name="bgListView">#CCCCCC</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="flu">#80808080</color>
+    <color name="grey">#CCCCCC</color>
+    <color name="red">#CC3300</color>
+
 </resources>

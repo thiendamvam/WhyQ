@@ -58,7 +58,7 @@ public class XMLParser implements HttpAccess {
 	public final static int LOGIN = 0;
     public final static int MYDIARY  = 1;
     public final static int CREATE_BOARD = 2;
-    public final static int JOIN_PERM = 3;
+    public final static int JOIN_WHYQ= 3;
     public final static int PERMLIST = 4;
     public final static int GET_BOARD = 5;
     public final static int GET_PERMS_BY_DATE = 6;
@@ -726,7 +726,7 @@ public class XMLParser implements HttpAccess {
 			Create_Board_delegate createBoardDelegate = (Create_Board_delegate)delegate;
 			createBoardDelegate.onError();
 			break;
-		case XMLParser.JOIN_PERM:
+		case XMLParser.JOIN_WHYQ:
 			JoinPerm_Delegate joinPerm_Delegate = (JoinPerm_Delegate)delegate;
 			joinPerm_Delegate.onError();
 			break;
@@ -762,7 +762,7 @@ public class XMLParser implements HttpAccess {
 			case XMLParser.CREATE_BOARD:
 				exeCreateBoard(doc);
 				break;
-			case XMLParser.JOIN_PERM:
+			case XMLParser.JOIN_WHYQ:
 				exeJoinPerm(doc);
 				break;
 			case XMLParser.PERMLIST:
@@ -801,7 +801,7 @@ public class XMLParser implements HttpAccess {
 				Create_Board_delegate createBoardDelegate = (Create_Board_delegate)delegate;
 				createBoardDelegate.onError();
 				break;
-			case XMLParser.JOIN_PERM:
+			case XMLParser.JOIN_WHYQ:
 				JoinPerm_Delegate joinPerm_Delegate = (JoinPerm_Delegate)delegate;
 				joinPerm_Delegate.onError();
 				break;
