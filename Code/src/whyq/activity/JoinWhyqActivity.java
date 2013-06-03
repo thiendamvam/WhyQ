@@ -3,6 +3,7 @@
  */
 package whyq.activity;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -117,6 +118,9 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 					} catch (BadPaddingException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 					nameValuePairs.add(new BasicNameValuePair("password", pass));
 					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPassword.getText().toString()));
@@ -139,6 +143,9 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (BadPaddingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
