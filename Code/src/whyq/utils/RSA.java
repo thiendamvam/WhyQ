@@ -68,6 +68,7 @@ public class RSA {
 			    encryptedBytes = pkCipher.doFinal(pin.getBytes("UTF-8"));
 			    result = Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
 //			    RSADecrypt(result);
+			    result.replaceFirst(" ", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
