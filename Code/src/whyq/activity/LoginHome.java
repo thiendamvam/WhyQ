@@ -33,6 +33,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,11 +48,11 @@ import com.whyq.R;
  */
 public class LoginHome extends Activity implements Login_delegate {
 	
-	EditText email;
-	EditText password;
+//	EditText email;
+//	EditText password;
 	Button facebookLogin;
 	Button twitterLogin;
-	Button login;
+//	Button login;
 	public static boolean isLoginFb = false;
 	public static boolean isTwitter = false;
 //	private ProgressDialog loadingDialog;
@@ -66,7 +67,7 @@ public class LoginHome extends Activity implements Login_delegate {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.whyq_login);
+        setContentView(R.layout.login_home);
         
         TextView textView = (TextView)findViewById(R.id.permpingTitle);
 		Typeface tf = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
@@ -76,31 +77,31 @@ public class LoginHome extends Activity implements Login_delegate {
         
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         login_delegate = new WhyqMain();
-        email         = (EditText) findViewById(R.id.permEmail);
-        password      = (EditText) findViewById(R.id.permPassword);
-        facebookLogin = (Button) findViewById(R.id.loginfb);
-        twitterLogin  = (Button) findViewById(R.id.logintw);
-        login         = (Button) findViewById(R.id.loginPerm);
+//        email         = (EditText) findViewById(R.id.permEmail);
+//        password      = (EditText) findViewById(R.id.permPassword);
+        facebookLogin = (Button) findViewById(R.id.btnFbLogin);
+        twitterLogin  = (Button) findViewById(R.id.btnLoginTw);
+//        login         = (Button) findViewById(R.id.loginPerm);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         context = LoginHome.this;
         
                 
         // Login button
-        login.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				if(checkInputData()){
-					showLoadingDialog("Progress", "Please wait");
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);
-					nameValuePairs.add(new BasicNameValuePair("type", Constants.LOGIN_TYPE));
-					nameValuePairs.add(new BasicNameValuePair("oauth_token", ""));
-					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
-					nameValuePairs.add(new BasicNameValuePair("password", password.getText().toString()));
-					AuthorizeController authorizeController = new AuthorizeController(LoginHome.this);
-					authorizeController.authorize(v.getContext(), nameValuePairs);
-				}
-			}
-		
-		});
+//        login.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//				if(checkInputData()){
+//					showLoadingDialog("Progress", "Please wait");
+//					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);
+//					nameValuePairs.add(new BasicNameValuePair("type", Constants.LOGIN_TYPE));
+//					nameValuePairs.add(new BasicNameValuePair("oauth_token", ""));
+//					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
+//					nameValuePairs.add(new BasicNameValuePair("password", password.getText().toString()));
+//					AuthorizeController authorizeController = new AuthorizeController(LoginHome.this);
+//					authorizeController.authorize(v.getContext(), nameValuePairs);
+//				}
+//			}
+//		
+//		});
         
         // 
         facebookConnector = new FacebookConnector(Constants.FACEBOOK_APP_ID, 
@@ -163,7 +164,7 @@ public class LoginHome extends Activity implements Login_delegate {
 			    Facebook mFacebook;
 			    String token = null;
 				mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
-				final Activity activity = getParent();
+				final Activity activity = LoginHome.this;
 				mFacebook.authorize( activity, new String[] { "email", "status_update",
 						"user_birthday" }, new DialogListener() {
 					@Override
@@ -241,28 +242,28 @@ public class LoginHome extends Activity implements Login_delegate {
 		super.onDestroy();
 	}
 	
-    public boolean checkInputData()
-    {
-        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-        String user = email.getText().toString();
-        String pass = password.getText().toString();
-        if (user.length() == 0)
-        {
-        	email.setFocusable(true);
-        	email.startAnimation(shake);
-        	email.requestFocus();
-        	return false;
-        } else if (pass.length() == 0)
-        {
-        	password.setFocusable(true);
-        	password.startAnimation(shake);
-        	password.requestFocus();
-        	return false;
-        } else
-        {
-        	return true;
-        }
-    }
+//    public boolean checkInputData()
+//    {
+//        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+//        String user = email.getText().toString();
+//        String pass = password.getText().toString();
+//        if (user.length() == 0)
+//        {
+//        	email.setFocusable(true);
+//        	email.startAnimation(shake);
+//        	email.requestFocus();
+//        	return false;
+//        } else if (pass.length() == 0)
+//        {
+//        	password.setFocusable(true);
+//        	password.startAnimation(shake);
+//        	password.requestFocus();
+//        	return false;
+//        } else
+//        {
+//        	return true;
+//        }
+//    }
 @Override
 public void on_success() {
 	// TODO Auto-generated method stub
@@ -337,6 +338,20 @@ private void dismissLoadingDialog() {
 		progressBar.setVisibility(View.GONE);
 	}
 }
+public void onClickedSignup(View v){
+	Intent intent = new Intent(LoginHome.this, JoinWhyqActivity.class);
+	startActivity(intent);
+}
+public void onClickedLogin(View v){
+	Intent intent = new Intent(LoginHome.this, LoginWhyqActivity.class);
+	startActivity(intent);
+}
+
+public void onClickedSkipLogin(View v){
+	Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+	startActivity(intent);
+}
+
 
 @Override
 public boolean onKeyDown(int keyCode, KeyEvent event)

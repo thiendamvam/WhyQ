@@ -9,11 +9,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="6"
+        android:layout_height="0dp"
+        android:layout_weight="4"
         android:baselineAligned="false"
         android:gravity="center"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:padding="40dp" >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -23,60 +24,82 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_height="0dp"
+        android:layout_weight="6"
         android:baselineAligned="false"
         android:orientation="vertical"
-        android:weightSum="4.8" >
+        android:weightSum="5.8" >
 
-        <LinearLayout
+        <Button
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_margin="10dp"
-            android:layout_weight="1"
+            android:layout_weight="1.1"
             android:background="@drawable/bg_btn_signup"
             android:baselineAligned="false"
-            android:onClick="onClickedSignup" >
-        </LinearLayout>
+            android:gravity="center"
+            android:onClick="onClickedSignup"
+            android:text="Sign Up"
+            android:textColor="#818181" >
+        </Button>
 
-        <LinearLayout
+        <Button
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_margin="10dp"
-            android:layout_weight="1"
+            android:layout_weight="1.1"
             android:background="@drawable/bg_btn_login"
             android:baselineAligned="false"
-            android:onClick="onClickedLogin" >
-        </LinearLayout>
+            android:gravity="center"
+            android:onClick="onClickedLogin"
+            android:text="Sign In"
+            android:textColor="#818181" >
+        </Button>
 
-        <LinearLayout
+        <Button
+            android:id="@+id/btnFbLogin"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_margin="10dp"
-            android:layout_weight="1"
+            android:layout_weight="1.1"
             android:background="@drawable/bg_btn_login_fb"
             android:baselineAligned="false"
-            android:onClick="onClickedLoginFB" >
-        </LinearLayout>
+            android:gravity="center"
+            android:onClick="onClickedLoginFB"
+            android:text="Login with Facebook"
+            android:textColor="#fefefe" >
+        </Button>
 
-        <LinearLayout
+        <Button
+            android:id="@+id/btnLoginTw"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_margin="10dp"
-            android:layout_weight="1"
+            android:layout_weight="1.1"
             android:background="@drawable/bg_btn_login_tw"
             android:baselineAligned="false"
-            android:onClick="onClickedLoginTW" >
-        </LinearLayout>
+            android:gravity="center"
+            android:onClick="onClickedLoginTW"
+            android:text="Login with Twitter"
+            android:textColor="#fefefe" >
+        </Button>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_margin="10dp"
-            android:layout_weight="0.8"
-            android:background="@drawable/ic_launcher"
+            android:layout_weight="1.4"
+            android:background="@android:color/transparent"
             android:baselineAligned="false"
+            android:gravity="center"
             android:onClick="onClickedSkipLogin" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Skip signin and use as guest"
+                android:textColor="#f5f5f5" />
         </LinearLayout>
     </LinearLayout>
 

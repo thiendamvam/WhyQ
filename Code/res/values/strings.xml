@@ -10,7 +10,7 @@
     <string name="bt_twitter">Login with Twitter</string>
     <string name="bt_join_permping">Regrister Account</string>
     <string name="permping_head_title">Permping</string>
-    <string name="hint_email">Your Email</string>
+    <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="bt_cancel">Cancel</string>
     <string name="screen_login">Whyq.com/Login</string>
@@ -41,8 +41,9 @@
     <string name="addnew">All category</string>
     <string name="login_text1">Whyq</string>
     <string name="login_text2"></string>
-    <string name="email_address">Email    :   </string>
-    <string name="password">Password  :  </string>
+    <string name="email_address">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Re-enter Password</string>
     <string name="required">required</string>
     <string name="login">로그인</string>
     <string name="image_take_photo">카메라 촬영</string>
@@ -78,6 +79,6 @@
     <string name="AlertMsgWebExtLoadError">Please check your netword again!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="hint_search">Search name and tag</string>
+    <string name="hint_search">Search</string>
 
 </resources>

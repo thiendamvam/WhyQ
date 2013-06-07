@@ -1,45 +1,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@drawable/bg_tab_normal"
     android:baselineAligned="false"
+    android:gravity="center"
     android:orientation="horizontal"
-    android:padding="10dp"
-    android:weightSum="3" >
+    android:padding="5dp"
+    android:weightSum="5" >
 
-    <LinearLayout
+    <ImageButton
         android:id="@+id/lnCutleryTab"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/icon_cat_cutlery"
+        android:background="@drawable/bg_tab_active"
         android:gravity="center"
         android:onClick="onCutleryTabCliked"
-        android:orientation="vertical" >
-    </LinearLayout>
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:src="@drawable/icon_cat_cutlery" >
+    </ImageButton>
 
-    <LinearLayout
+    <ImageButton
         android:id="@+id/lnWineTab"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:background="@drawable/bg_tab_normal"
+        android:baselineAligned="false"
+        android:gravity="center"
         android:onClick="onWineTabCliked"
-        android:background="@drawable/icon_cat_wine"
-        android:baselineAligned="false"
-        android:gravity="center"
-        android:orientation="vertical" >
-    </LinearLayout>
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:src="@drawable/icon_cat_wine" >
+    </ImageButton>
 
-    <LinearLayout
+    <ImageButton
         android:id="@+id/lnCoffeTab"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/icon_cat_coffee"
+        android:background="@drawable/bg_tab_normal"
         android:baselineAligned="false"
-        android:onClick="onCoffeTabClicked"
         android:gravity="center"
-        android:orientation="vertical" >
-    </LinearLayout>
+        android:onClick="onCoffeTabClicked"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:src="@drawable/icon_cat_coffee" >
+    </ImageButton>
 
 </LinearLayout>

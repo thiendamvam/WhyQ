@@ -7,6 +7,8 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.whyq.R;
+
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.activity.ListActivity;
@@ -173,38 +175,38 @@ public class ListAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					final View view = inflater.inflate(R.layout.whyq_item_new, null);
 		
-					distance = (Button) view.findViewById(R.id.btn);
+					distance = (Button) view.findViewById(R.id.btnDistance);
 					// Validate Like or Unlike
 					if (whyq != null && user!=null){
 						if(whyq.getAuthor().getId().equals(user.getId())){
-							like.setText(textCurrentLike);
+//							like.setText(textCurrentLike);
 						}else{
 							if (whyq.getPermUserLikeCount() != null
 									&& "0".equals(whyq.getPermUserLikeCount())) {
-								like.setText(R.string.bt_like);
+//								like.setText(R.string.bt_like);
 							} else {
-								like.setText(R.string.bt_unlike);
+//								like.setText(R.string.bt_unlike);
 							}
 							
 						}
 					}
 
-					like.setTag(viewId);
-					like.setNextFocusDownId(position);
+//					like.setTag(viewId);
+//					like.setNextFocusDownId(position);
 					
 					if(whyq != null && user != null) {
-						if( whyq.getAuthor() != null)
-							if(whyq.getAuthor().getId().equalsIgnoreCase(user.getId()))
-								like.setText(R.string.delete);
+//						if( whyq.getAuthor() != null)
+//							if(whyq.getAuthor().getId().equalsIgnoreCase(user.getId()))
+//								like.setText(R.string.delete);
 					}
-					like.setOnClickListener(ListAdapter.this);
-					reperm = (Button) view.findViewById(R.id.btnRepem);
-					reperm.setTag(viewId);
-					reperm.setOnClickListener(ListAdapter.this);
-		
-					comment = (Button) view.findViewById(R.id.btnComment);
-					comment.setTag(viewId);
-					comment.setOnClickListener(ListAdapter.this);
+//					like.setOnClickListener(ListAdapter.this);
+//					reperm = (Button) view.findViewById(R.id.btnRepem);
+//					reperm.setTag(viewId);
+//					reperm.setOnClickListener(ListAdapter.this);
+//		
+//					comment = (Button) view.findViewById(R.id.btnComment);
+//					comment.setTag(viewId);
+//					comment.setOnClickListener(ListAdapter.this);
 					ImageView gotoMap = (ImageView)view.findViewById(R.id.btnLocation);
 					gotoMap.setTag(viewId);
 					gotoMap.setOnClickListener(ListAdapter.this);
@@ -798,10 +800,10 @@ public class ListAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.whyq_item_2, null);
 		// Process buttons
-		join = (Button) view.findViewById(R.id.bt_join);
-		login = (Button) view.findViewById(R.id.bt_login);
-		login.setOnClickListener(ListAdapter.this);
-		join.setOnClickListener(ListAdapter.this);
+//		join = (Button) view.findViewById(R.id.bt_join);
+//		login = (Button) view.findViewById(R.id.bt_login);
+//		login.setOnClickListener(ListAdapter.this);
+//		join.setOnClickListener(ListAdapter.this);
 		
 		updateHeaderView(view);
 		
@@ -957,71 +959,71 @@ public class ListAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 
 				final HttpPermUtils util = new HttpPermUtils();
 				//Log.d("aasdfsdss", like.getText().toString()+"======="+R.string.delete);
-				if(like.getText().toString().equals(likeString) || like.getText().toString().equals(unlikeString)){
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("pid", String
-							.valueOf(whyq.getId())));
-					nameValuePairs.add(new BasicNameValuePair("uid", String
-							.valueOf(user.getId())));
-					util.sendRequest(API.likeURL, nameValuePairs, false);
-
-					if (v instanceof Button) {
-						String label = ((Button) v).getText().toString();
-						int likeCount = Integer.parseInt(whyq
-								.getPermLikeCount());
-						if (label != null && label.equals(likeString)) { // Like
-							// Update the count
-							likeCount++;
-							whyq.setPermLikeCount(String.valueOf(likeCount));
-							// Change the text to "Unlike"
-							((Button)v).setText(R.string.bt_unlike);
-							v.invalidate();
-						} else { // Unlike
-							likeCount = likeCount - 1;
-							if (likeCount < 0)
-								likeCount = 0;
-							whyq.setPermLikeCount(String.valueOf(likeCount));
-							((Button)v).setText(R.string.bt_like);
-							v.invalidate();
-						}
-					}
-					
-					String permStatus = likeString + ": " + whyq.getPermLikeCount()
-							+ " - " + repermString + ": " + whyq.getPermRepinCount()
-							+ " - " + commentString + ": " + whyq.getPermCommentCount();
-					TextView txtStatus = permStateList.get(permId);
-					if(permStatus != null)
-						txtStatus.setText(permStatus);
-				}else if(like.getText().toString().equals(textCurrentLike)){
-					AlertDialog alertDialog = new AlertDialog.Builder(context).create();		
+//				if(like.getText().toString().equals(likeString) || like.getText().toString().equals(unlikeString)){
+//					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//					nameValuePairs.add(new BasicNameValuePair("pid", String
+//							.valueOf(whyq.getId())));
+//					nameValuePairs.add(new BasicNameValuePair("uid", String
+//							.valueOf(user.getId())));
+//					util.sendRequest(API.likeURL, nameValuePairs, false);
+//
+//					if (v instanceof Button) {
+//						String label = ((Button) v).getText().toString();
+//						int likeCount = Integer.parseInt(whyq
+//								.getPermLikeCount());
+//						if (label != null && label.equals(likeString)) { // Like
+//							// Update the count
+//							likeCount++;
+//							whyq.setPermLikeCount(String.valueOf(likeCount));
+//							// Change the text to "Unlike"
+//							((Button)v).setText(R.string.bt_unlike);
+//							v.invalidate();
+//						} else { // Unlike
+//							likeCount = likeCount - 1;
+//							if (likeCount < 0)
+//								likeCount = 0;
+//							whyq.setPermLikeCount(String.valueOf(likeCount));
+//							((Button)v).setText(R.string.bt_like);
+//							v.invalidate();
+//						}
+//					}
+//					
+//					String permStatus = likeString + ": " + whyq.getPermLikeCount()
+//							+ " - " + repermString + ": " + whyq.getPermRepinCount()
+//							+ " - " + commentString + ": " + whyq.getPermCommentCount();
+//					TextView txtStatus = permStateList.get(permId);
+//					if(permStatus != null)
+//						txtStatus.setText(permStatus);
+//				}else if(like.getText().toString().equals(textCurrentLike)){
+//					AlertDialog alertDialog = new AlertDialog.Builder(context).create();		
 //					alertDialog.setTitle(AlertDialog);
-					alertDialog.setMessage(v.getContext().getString(R.string.confirm_delete));
-					alertDialog.setButton(v.getContext().getString(R.string.yes_delete), new DialogInterface.OnClickListener() {
-					   public void onClick(DialogInterface dialog, int which) {
-					      // here you can add functions
-							viewList.remove(whyq.getId());
-							int position = v.getNextFocusDownId();
-							if(position >= 0 && items.size() > position)
-								items.remove(position);
-							notifyDataSetChanged();
-							List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-							nameValuePairs.add(new BasicNameValuePair("delid", String
-									.valueOf(whyq.getId())));
-							nameValuePairs.add(new BasicNameValuePair("uid", String
-									.valueOf(user.getId())));
-							util.sendRequest(API.deleteUrl, nameValuePairs, false);
-					   }
-					});
-					alertDialog.setButton2(v.getContext().getString(R.string.no), new DialogInterface.OnClickListener() {
-					   public void onClick(DialogInterface dialog, int which) {
-							      
-					   }
-					});
-					alertDialog.setIcon(R.drawable.icon);
-					alertDialog.show();
-
-					
-				}
+//					alertDialog.setMessage(v.getContext().getString(R.string.confirm_delete));
+//					alertDialog.setButton(v.getContext().getString(R.string.yes_delete), new DialogInterface.OnClickListener() {
+//					   public void onClick(DialogInterface dialog, int which) {
+//					      // here you can add functions
+//							viewList.remove(whyq.getId());
+//							int position = v.getNextFocusDownId();
+//							if(position >= 0 && items.size() > position)
+//								items.remove(position);
+//							notifyDataSetChanged();
+//							List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//							nameValuePairs.add(new BasicNameValuePair("delid", String
+//									.valueOf(whyq.getId())));
+//							nameValuePairs.add(new BasicNameValuePair("uid", String
+//									.valueOf(user.getId())));
+//							util.sendRequest(API.deleteUrl, nameValuePairs, false);
+//					   }
+//					});
+//					alertDialog.setButton2(v.getContext().getString(R.string.no), new DialogInterface.OnClickListener() {
+//					   public void onClick(DialogInterface dialog, int which) {
+//							      
+//					   }
+//					});
+//					alertDialog.setIcon(R.drawable.icon);
+//					alertDialog.show();
+//
+//					
+//				}
 			} else {
 
 			}

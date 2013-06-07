@@ -29,6 +29,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -74,7 +75,9 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	 * Whyq elements
 	 */
 	
-	private LinearLayout lnCutlery, lnWine, lnCoffe;
+	ImageButton lnCutlery;
+	ImageButton lnWine;
+	private ImageButton lnCoffe;
 	
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -102,9 +105,9 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		setContentView(R.layout.list_screen);//
 		
 		whyqListView = (ListView) findViewById(R.id.lvWhyqList);
-		lnCutlery = (LinearLayout) findViewById(R.id.lnCutleryTab);
-		lnWine = (LinearLayout) findViewById(R.id.lnWineTab);
-		lnCoffe = (LinearLayout) findViewById(R.id.lnCoffeTab);
+		lnCutlery = (ImageButton) findViewById(R.id.lnCutleryTab);
+		lnWine = (ImageButton) findViewById(R.id.lnWineTab);
+		lnCoffe = (ImageButton) findViewById(R.id.lnCoffeTab);
 		loadPermList = new LoadPermList();
 		progressBar = new ProgressBar(ListActivity.this);
 		isAddHeader = true;

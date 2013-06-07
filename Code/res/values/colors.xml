@@ -7,7 +7,7 @@
     <color name="static_text_color">#003366</color>
     <color name="journal_entry_listitem_text_color">#003366</color>
     <color name="note_text_disabled">#333333</color>
-    <color name="bgListView">#CCCCCC</color>
+    <color name="bgListView">#ebebeb</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="white">#FFFFFF</color>

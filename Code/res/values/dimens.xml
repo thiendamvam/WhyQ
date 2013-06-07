@@ -13,5 +13,5 @@
         <dimen name="text_size_perm_description">17dp</dimen>
         <dimen name="text_size_like_button">17dp</dimen>
         <dimen name="text_size_location">15dp</dimen>
-        <dimen name="text_size_header">35dp</dimen>
+        <dimen name="text_size_header">16dp</dimen>
     </resources>
