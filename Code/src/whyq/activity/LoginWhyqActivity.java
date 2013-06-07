@@ -69,6 +69,7 @@ public class LoginWhyqActivity extends Activity implements Login_delegate {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.whyq_login);
+        context = LoginWhyqActivity.this;
 //        context = WhyqApplication.Instance().getApplicationContext();
         TextView textView = (TextView)findViewById(R.id.permpingTitle);
 		Typeface tf = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
@@ -83,8 +84,8 @@ public class LoginWhyqActivity extends Activity implements Login_delegate {
 //        facebookLogin = (Button) findViewById(R.id.loginfb);
 //        twitterLogin  = (Button) findViewById(R.id.logintw);
         login         = (Button) findViewById(R.id.loginPerm);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
-        context = LoginWhyqActivity.this;
+        progressBar = new ProgressBar(context);
+    
         
                 
         // Login button

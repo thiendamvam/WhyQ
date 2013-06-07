@@ -54,6 +54,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 	EditText password;
 	EditText confirmPassword;
 	private SharedPreferences prefs;
+	private Button createAccount;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,83 +81,89 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
         //confirmPassword.addTextChangedListener(this);
         
 
-//        createAccount = (Button) findViewById(R.id.createAccount);
-//        createAccount.setOnClickListener(new View.OnClickListener() {
-//			
-//			public void onClick(View v) {
-//				// Send request to server to create new account along with its params
-//				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);				
-////				nameValuePairs.add(new BasicNameValuePair("type", prefs.getString(Constants.LOGIN_TYPE, "")));
-//				if (prefs.getString(Constants.LOGIN_TYPE, "").equals(Constants.FACEBOOK_LOGIN)) {// Facebook
-//					nameValuePairs.add(new BasicNameValuePair("oauth_token", prefs.getString(Constants.ACCESS_TOKEN, "")));
-//					nameValuePairs.add(new BasicNameValuePair("first_name",firstName.getText().toString()));//prefs.getString(Constants.ACCESS_TOKEN, ""))
-//					nameValuePairs.add(new BasicNameValuePair("last_name", lastName.getText().toString()));
-//					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
-//					nameValuePairs.add(new BasicNameValuePair("password", password.getText().toString()));
-//					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPassword.getText().toString()));
-//				} else if(prefs.getString(Constants.LOGIN_TYPE, "").equals(Constants.TWITTER_LOGIN)) { // Twitter
-//					nameValuePairs.add(new BasicNameValuePair("oauth_token", prefs.getString(OAuth.OAUTH_TOKEN, "")));
-//					nameValuePairs.add(new BasicNameValuePair("oauth_token_secret", prefs.getString(OAuth.OAUTH_TOKEN_SECRET, "")));
-//					nameValuePairs.add(new BasicNameValuePair("first_name",firstName.getText().toString()));//prefs.getString(Constants.ACCESS_TOKEN, ""))
-//					nameValuePairs.add(new BasicNameValuePair("last_name", lastName.getText().toString()));
-//					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
-//					RSA rsa = new RSA();
-//					String pass = null;
-//					try {
-//						pass = rsa.RSAEncrypt(password.getText().toString());
-//					} catch (InvalidKeyException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (NoSuchAlgorithmException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (NoSuchPaddingException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (IllegalBlockSizeException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (BadPaddingException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					nameValuePairs.add(new BasicNameValuePair("password", pass));
-//					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPassword.getText().toString()));
-//				} else { // Whyq
-//					RSA rsa = new RSA();
-//					String pass="", confirmPass = "";
-//					try {
-//						pass = rsa.RSAEncrypt(password.getText().toString());
+        createAccount = (Button) findViewById(R.id.loginPerm);
+        createAccount.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				// Send request to server to create new account along with its params
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);				
+//				nameValuePairs.add(new BasicNameValuePair("type", prefs.getString(Constants.LOGIN_TYPE, "")));
+				if (prefs.getString(Constants.LOGIN_TYPE, "").equals(Constants.FACEBOOK_LOGIN)) {// Facebook
+					nameValuePairs.add(new BasicNameValuePair("oauth_token", prefs.getString(Constants.ACCESS_TOKEN, "")));
+					nameValuePairs.add(new BasicNameValuePair("first_name",firstName.getText().toString()));//prefs.getString(Constants.ACCESS_TOKEN, ""))
+					nameValuePairs.add(new BasicNameValuePair("last_name", lastName.getText().toString()));
+					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
+					nameValuePairs.add(new BasicNameValuePair("password", password.getText().toString()));
+					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPassword.getText().toString()));
+				} else if(prefs.getString(Constants.LOGIN_TYPE, "").equals(Constants.TWITTER_LOGIN)) { // Twitter
+					nameValuePairs.add(new BasicNameValuePair("oauth_token", prefs.getString(OAuth.OAUTH_TOKEN, "")));
+					nameValuePairs.add(new BasicNameValuePair("oauth_token_secret", prefs.getString(OAuth.OAUTH_TOKEN_SECRET, "")));
+					nameValuePairs.add(new BasicNameValuePair("first_name",firstName.getText().toString()));//prefs.getString(Constants.ACCESS_TOKEN, ""))
+					nameValuePairs.add(new BasicNameValuePair("last_name", lastName.getText().toString()));
+					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
+					RSA rsa = new RSA();
+					String pass = null;
+					try {
+						pass = rsa.RSAEncrypt(password.getText().toString());
+					} catch (InvalidKeyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchPaddingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalBlockSizeException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (BadPaddingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					nameValuePairs.add(new BasicNameValuePair("password", pass));
+					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPassword.getText().toString()));
+				} else { // Whyq
+					RSA rsa = new RSA();
+					String pass="", confirmPass = "";
+					try {
+						pass = rsa.RSAEncrypt(password.getText().toString());
 //						confirmPass = rsa.RSAEncrypt(confirmPassword.getText().toString());
-//					} catch (InvalidKeyException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (NoSuchAlgorithmException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (NoSuchPaddingException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (IllegalBlockSizeException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (BadPaddingException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					
-//					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
-//					nameValuePairs.add(new BasicNameValuePair("password", pass));
-////					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPass));
-//					nameValuePairs.add(new BasicNameValuePair("first_name",firstName.getText().toString()));//prefs.getString(Constants.ACCESS_TOKEN, ""))
-//					nameValuePairs.add(new BasicNameValuePair("last_name", lastName.getText().toString()));
-//
-//				}
-//				
-//				XMLParser parser = new XMLParser(XMLParser.JOIN_WHYQ, JoinWhyqActivity.this, API.createAccountURL, nameValuePairs);
-//				User user = parser.getUser();
-//			}
-//		});
+					} catch (InvalidKeyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchPaddingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalBlockSizeException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (BadPaddingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
+					nameValuePairs.add(new BasicNameValuePair("password", pass));
+//					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPass));
+					nameValuePairs.add(new BasicNameValuePair("first_name",firstName.getText().toString()));//prefs.getString(Constants.ACCESS_TOKEN, ""))
+					nameValuePairs.add(new BasicNameValuePair("last_name", lastName.getText().toString()));
+
+				}
+				
+				XMLParser parser = new XMLParser(XMLParser.JOIN_WHYQ, JoinWhyqActivity.this, API.createAccountURL, nameValuePairs);
+				User user = parser.getUser();
+			}
+		});
 
 	}
 	
