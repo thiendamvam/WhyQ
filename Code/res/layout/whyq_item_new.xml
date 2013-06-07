@@ -170,7 +170,7 @@
             android:layout_toRightOf="@+id/imgDiscountIcon"
             android:singleLine="true"
             android:text="Discount:"
-            android:text="" />
+             />
 
         <TextView
             android:id="@+id/tvNumberDiscount"
@@ -181,7 +181,7 @@
             android:layout_toRightOf="@+id/imgDiscountTitle"
             android:singleLine="true"
             android:text="0%"
-            android:text="" />
+            />
     </RelativeLayout>
 
 </LinearLayout>

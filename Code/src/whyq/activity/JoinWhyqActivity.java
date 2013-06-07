@@ -3,6 +3,7 @@
  */
 package whyq.activity;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -78,6 +79,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 		confirmPassword = (EditText) findViewById(R.id.confirm_password);
         //confirmPassword.addTextChangedListener(this);
         
+
 //        createAccount = (Button) findViewById(R.id.createAccount);
 //        createAccount.setOnClickListener(new View.OnClickListener() {
 //			
@@ -155,6 +157,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 //				User user = parser.getUser();
 //			}
 //		});
+
 	}
 	
 	public void afterTextChanged(Editable s) {
