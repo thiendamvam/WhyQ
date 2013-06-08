@@ -68,6 +68,7 @@ public class XMLParser implements HttpAccess {
     public static final String STORE_USER_PASS = "UserPass";
     public static final String STORE_LAST_TIME_LOGIN = "LastTimeLogin";
     public static final long ACCOUNT_TIME_OUT = 3 * 60 * 60 * 1000;
+	private static final String STORE_USER_TOKEN = "TOKEN";
 	private Document doc = null;
 	private String xml = "<empty></empty>";
 	public int type;
@@ -780,7 +781,7 @@ public class XMLParser implements HttpAccess {
 					WhyqApplication state = (WhyqApplication) context.getApplicationContext();
 					if (state != null) {
 						state.setUser(user);
-						storeAccount();
+						storeAccount(user);
 					}
 				}
 			default:
@@ -819,11 +820,12 @@ public class XMLParser implements HttpAccess {
 		}
 	}
 	
-	public static void storePermpingAccount(Context context, String userEmail, String userPass) {
+	public static void storePermpingAccount(Context context, String userEmail, String userPass, String token) {
 		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = account.edit();
 		editor.putString(STORE_USER_EMAIL, userEmail);
 		editor.putString(STORE_USER_PASS, userPass);
+		editor.putString(STORE_USER_TOKEN, token);
 		editor.putLong(STORE_LAST_TIME_LOGIN, System.currentTimeMillis());
 		editor.commit();
 	}
@@ -837,27 +839,34 @@ public class XMLParser implements HttpAccess {
 		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 		return account.getString(STORE_USER_PASS, "");		
 	}
-	
+	public static String getToken(Context context) {
+		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+		return account.getString(STORE_USER_TOKEN, "");		
+	}
 	public static long getLastTimeLogin(Context context) {
 		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 		return account.getLong(STORE_LAST_TIME_LOGIN, System.currentTimeMillis());		
 	}
 	
-	private void storeAccount() {
-		if(nameValuePairs != null && nameValuePairs.size() > 0) {
-			String userEmail = "";
-			String userPass = "";
-			for(int i=0; i < nameValuePairs.size(); i++) {
-				BasicNameValuePair pair = (BasicNameValuePair) nameValuePairs.get(i);
-				if(pair != null && pair.getName().equals("email")) {
-					userEmail = pair.getValue();
-				}
-				if(pair != null && pair.getName().equals("password")) {
-					userPass = pair.getValue();
-				}
-			}
-			storePermpingAccount(context, userEmail, userPass);
-		}
+	private void storeAccount(User user) {
+//		if(nameValuePairs != null && nameValuePairs.size() > 0) {
+//			String userEmail = "";
+//			String userPass = "";
+//			String token = null;
+//			for(int i=0; i < nameValuePairs.size(); i++) {
+//				BasicNameValuePair pair = (BasicNameValuePair) nameValuePairs.get(i);
+//				if(pair != null && pair.getName().equals("email")) {
+//					userEmail = pair.getValue();
+//				}
+//				if(pair != null && pair.getName().equals("password")) {
+//					userPass = pair.getValue();
+//				}
+//				if(pair != null && pair.getName().equals("token")) {
+//					token = pair.getValue();
+//				}
+//			}
+			storePermpingAccount(context, user.getEmail(), "", user.getToken());
+//		}
 	}
 	
 	private void exeGetPerm(Document doc2) {
@@ -958,7 +967,7 @@ public class XMLParser implements HttpAccess {
 			// Store the user object to PermpingApplication
 			WhyqApplication state = (WhyqApplication)context.getApplicationContext();
 			state.setUser(user);
-			storeAccount();			
+			storeAccount(user);			
 			WhyqMain.UID = user.getId();			
 			synchronized (this) {
 				if(loginDelegate != null) {

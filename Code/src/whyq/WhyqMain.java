@@ -20,6 +20,7 @@ import whyq.activity.SimpleActivity;
 import whyq.model.User;
 import whyq.utils.RSA;
 import whyq.utils.WhyqUtils;
+import whyq.utils.XMLParser;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -41,16 +42,18 @@ public class WhyqMain extends TabActivity  {
 	public static Context context;
 	public static boolean isUserProfile = true;
 	public static boolean isKakao = false;
+	private String token;
+	private RSA rsa;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
+       
         tabHost = getTabHost();
         context = WhyqMain.this;
         tabHost.getTabWidget().setBackgroundResource( R.drawable.tabs_background );
-        
+        token = XMLParser.getToken(WhyqApplication.Instance().getApplicationContext());
         // Tab for followers
         TabSpec followers = tabHost.newTabSpec("List");
         followers.setIndicator("List", getResources().getDrawable(R.drawable.footer_icon1));
@@ -170,28 +173,12 @@ public class WhyqMain extends TabActivity  {
 
             }
         });        
-        RSA rsa = new RSA();
-        try {
-			rsa.RSAEncrypt("i am thien");
-		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        tabHost.setCurrentTab(0);
+        rsa = new RSA();
+        if(token ==null){
+        	Intent intent = new Intent(WhyqMain.this, LoginWhyqActivity.class);
+        	startActivity(intent);
+        }
     }
     
     private class ProfileHandler implements View.OnTouchListener {

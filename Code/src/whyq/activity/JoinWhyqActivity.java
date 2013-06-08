@@ -206,7 +206,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 			state.setUser(user);
 			if(getApplicationContext() != null && email != null && password != null) {
 				if(email.getText().toString().length() > 0 && password.getText().toString().length() > 0) {
-					XMLParser.storePermpingAccount(getApplicationContext(), email.getText().toString(), password.getText().toString());
+					XMLParser.storePermpingAccount(getApplicationContext(), email.getText().toString(), password.getText().toString(), user.getToken());
 				}
 			}			
 			if(user != null) ListActivity.isLogin = true;		

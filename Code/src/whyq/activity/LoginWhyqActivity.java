@@ -298,15 +298,18 @@ public void on_success() {
 	}else{
 		ListActivity.isLogin = true;
 		dismissLoadingDialog();
-		if(WhyqMain.getCurrentTab() == 4) {
-			((ProfileActivityGroup)ProfileActivityGroup.group).createUI();
-		} else {
-			if(WhyqMain.getCurrentTab() == 0) {
-				((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
-			} else {
-				WhyqMain.back();
-			}
-		}
+		finish();
+//		Intent intent = new Intent(LoginWhyqActivity.this, WhyqMain.class);
+//		startActivity(intent);
+//		if(WhyqMain.getCurrentTab() == 4) {
+//			((ProfileActivityGroup)ProfileActivityGroup.group).createUI();
+//		} else {
+//			if(WhyqMain.getCurrentTab() == 0) {
+//				((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
+//			} else {
+//				WhyqMain.back();
+//			}
+//		}
 	}
 
 }

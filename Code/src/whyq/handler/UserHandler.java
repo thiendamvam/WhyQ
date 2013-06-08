@@ -22,7 +22,7 @@ import whyq.utils.Constants;
  */
 public class UserHandler extends DefaultHandler {
 	
-	private User user;
+	private User user = new User();;
 	private List<WhyqBoard> boards;
 	private WhyqBoard whyqBoard;
 	
@@ -37,39 +37,105 @@ public class UserHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
-	
-		if (localName.equals(Constants.USER_ID)) {
-			user.setId(buffer.toString());
-		} else if (localName.equals(Constants.USER_NAME)) {
-			user.setName(buffer.toString());
-		} else if (localName.equals(Constants.USER_AVATAR)) {
-			WhyqImage avatar = new WhyqImage(buffer.toString());
-			user.setAvatar(avatar);
-		} else if (localName.equals(Constants.FOLLOWING_COUNT)) {
-			user.setFollowings(Integer.parseInt(buffer.toString()));			
-		} else if (localName.equals(Constants.FOLLOWER_COUNT)) {
-			user.setFriends(Integer.parseInt(buffer.toString()));
-		} else if (localName.equals(Constants.PIN_COUNT)) {
-			user.setPin(Integer.parseInt(buffer.toString()));
-		} else if (localName.equals(Constants.LIKE_COUNT)) {
-			user.setLike(Integer.parseInt(buffer.toString()));
-		} else if (localName.equals(Constants.BOARD_COUNT)) {
-			user.setBoard(Integer.parseInt(buffer.toString()));
-		} else if (localName.equals(Constants.BOARDS)) {
-			user.setBoards(boards);
-		} else if (localName.equals(Constants.ITEM)) {
-			boards.add(whyqBoard);
-		} else if (localName.equals(Constants.ID)) {
-			whyqBoard.setId(buffer.toString());
-		} else if (localName.equals(Constants.NAME)) {
-			whyqBoard.setName(buffer.toString());
-		} else if (localName.equals(Constants.DESCRIPTION)) {
-			whyqBoard.setDescription(buffer.toString());
-		} else if (localName.equals(Constants.FOLLOWERS)) {
-			whyqBoard.setFollowers(Integer.parseInt(buffer.toString()));
-		} else if (localName.equals(Constants.PINS)) {
-			whyqBoard.setPins(Integer.parseInt(buffer.toString()));
-		}
+//	
+//		if (localName.equals(Constants.USER_ID)) {
+//			user.setId(buffer.toString());
+//		} else if (localName.equals(Constants.USER_NAME)) {
+//			user.setName(buffer.toString());
+//		} else if (localName.equals(Constants.USER_AVATAR)) {
+//			WhyqImage avatar = new WhyqImage(buffer.toString());
+//			user.setAvatar(avatar);
+//		} else if (localName.equals(Constants.FOLLOWING_COUNT)) {
+//			user.setFollowings(Integer.parseInt(buffer.toString()));			
+//		} else if (localName.equals(Constants.FOLLOWER_COUNT)) {
+//			user.setFriends(Integer.parseInt(buffer.toString()));
+//		} else if (localName.equals(Constants.PIN_COUNT)) {
+//			user.setPin(Integer.parseInt(buffer.toString()));
+//		} else if (localName.equals(Constants.LIKE_COUNT)) {
+//			user.setLike(Integer.parseInt(buffer.toString()));
+//		} else if (localName.equals(Constants.BOARD_COUNT)) {
+//			user.setBoard(Integer.parseInt(buffer.toString()));
+//		} else if (localName.equals(Constants.BOARDS)) {
+//			user.setBoards(boards);
+//		} else if (localName.equals(Constants.ITEM)) {
+//			boards.add(whyqBoard);
+//		} else if (localName.equals(Constants.ID)) {
+//			whyqBoard.setId(buffer.toString());
+//		} else if (localName.equals(Constants.NAME)) {
+//			whyqBoard.setName(buffer.toString());
+//		} else if (localName.equals(Constants.DESCRIPTION)) {
+//			whyqBoard.setDescription(buffer.toString());
+//		} else if (localName.equals(Constants.FOLLOWERS)) {
+//			whyqBoard.setFollowers(Integer.parseInt(buffer.toString()));
+//		} else if (localName.equals(Constants.PINS)) {
+//			whyqBoard.setPins(Integer.parseInt(buffer.toString()));
+//		}
+		
+		String value  = buffer.toString();
+		if (localName.equals("Version")) {
+			user.setVersion(value);
+		} else if (localName.equals("Status")) {
+			user.setStatus(value);
+		} else if (localName.equals("Message")) {
+		} else if (localName.equals("Token")){
+			user.setToken(value);
+		} else if (localName.equals("id")) {
+			user.setId(value);
+		} else if (localName.equals("email")) {
+			user.setEmail(value);
+		} else if (localName.equals("role_id")) {
+			user.setRoleId(value);
+		} else if (localName.equals("is_active")) {
+			user.setIshowEmail(value.equals("1")?true:false);
+		} else if (localName.equals("total_money")) {
+			user.setTotalMoney(value);
+		} else if (localName.equals("total_saving_money")) {
+			user.setTotalSavingMoney(value);
+		} else if (localName.equals("total_comment")) {
+			user.setTotalComment(value);
+		} else if (localName.equals("total_comment_like")) {
+			user.setTotalCommentLike(value);
+		} else if (localName.equals("total_friend")) {
+			user.setTotalFriend(value);
+		} else if (localName.equals("total_favourite")) {
+			user.setTotalFavourite(value);
+		} else if (localName.equals("total_check_bill")) {
+			user.setTotalCheckBill(value);
+		} else if (localName.equals("status")) {
+			user.setStatus(value);
+		} else if (localName.equals("createdate")) {
+			user.setCreateDate(value);
+		} else if (localName.equals("updatedate")) {
+			user.setUpdateDate(value);
+		} else if (localName.equals("first_name")) {
+			user.setFirstName(value);
+		} else if (localName.equals("last_name")) {
+			user.setLastName(value);
+		} else if (localName.equals("gender")) {
+			user.setGender(Integer.parseInt(value));
+		} else if (localName.equals("avatar")) {
+			user.setUrlAvatar(value);
+		} else if (localName.equals("status_user")) {
+			user.setStatusUser(value);
+		} else if (localName.equals("total_count")) {
+			user.setTotalCount(value);
+		} else if (localName.equals("id")) {
+			user.setId(value);
+		} else if (localName.equals("is_receive_notification")) {
+			user.setReceiveNotification(value.equals("1")?true:false);
+		} else if (localName.equals("is_show_email")) {
+			user.setIshowEmail(value.equals("1")? true:false);
+		} else if (localName.equals("is_show_favorite")) {
+			user.setShowFavorite(value.equals("1")?true:false);
+		} else if (localName.equals("is_show_friend")) {
+			user.setShowFriend(value.equals("1")?true:false);
+		} else if (localName.equals("is_receive_promotion_notification")) {
+			user.setReceivePromotionNotification(value.equals("1")?true:false);
+		} else if (localName.equals("createdate")) {
+			user.setCreateDate(value);
+		} else if (localName.equals("updatedate")) {
+			user.setUpdateDate(value);
+		} 
 	}
 
 	@Override

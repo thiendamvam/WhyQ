@@ -19,7 +19,35 @@ public class User implements Serializable {
 	private int like;
 	private int board;
 	List<WhyqBoard> boards;
-
+	private String version;
+	private String email;
+	private String roleId;
+	private boolean isAcive;
+	private String totalMoney;
+	private String totalSavingMoney;
+	private String totalComment;
+	private String totalCommentLike;
+	private String totalFriend;
+	private String totalFavourite;
+	private String totalCheckBill;
+	private String token;
+	private String createDate;
+	private String updateDate;
+	private String firstName;
+	private String lastName;
+	private int gender;
+	private String urlAvatar;
+	private String statusUser;
+	private String totalCount;
+	private String notificationId;
+	private boolean isReceiveNotification;
+	private boolean ishowEmail;
+	private boolean isShowFavorite;
+	private boolean isShowFriend;
+	private boolean isReceivePromotionNotification;
+	private int notiCreateDate;
+	private int notiUpdateDate;
+	
 	/**
 	 * Default constructor
 	 */
@@ -181,6 +209,393 @@ public class User implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the roleId
+	 */
+	public String getRoleId() {
+		return roleId;
+	}
+
+	/**
+	 * @param roleId the roleId to set
+	 */
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+
+	/**
+	 * @return the isAcive
+	 */
+	public boolean isAcive() {
+		return isAcive;
+	}
+
+	/**
+	 * @param isAcive the isAcive to set
+	 */
+	public void setAcive(boolean isAcive) {
+		this.isAcive = isAcive;
+	}
+
+	/**
+	 * @return the totalMoney
+	 */
+	public String getTotalMoney() {
+		return totalMoney;
+	}
+
+	/**
+	 * @param totalMoney the totalMoney to set
+	 */
+	public void setTotalMoney(String totalMoney) {
+		this.totalMoney = totalMoney;
+	}
+
+	/**
+	 * @return the totalSavingMoney
+	 */
+	public String getTotalSavingMoney() {
+		return totalSavingMoney;
+	}
+
+	/**
+	 * @param totalSavingMoney the totalSavingMoney to set
+	 */
+	public void setTotalSavingMoney(String totalSavingMoney) {
+		this.totalSavingMoney = totalSavingMoney;
+	}
+
+	/**
+	 * @return the totalComment
+	 */
+	public String getTotalComment() {
+		return totalComment;
+	}
+
+	/**
+	 * @param totalComment the totalComment to set
+	 */
+	public void setTotalComment(String totalComment) {
+		this.totalComment = totalComment;
+	}
+
+	/**
+	 * @return the totalCommentLike
+	 */
+	public String getTotalCommentLike() {
+		return totalCommentLike;
+	}
+
+	/**
+	 * @param totalCommentLike the totalCommentLike to set
+	 */
+	public void setTotalCommentLike(String totalCommentLike) {
+		this.totalCommentLike = totalCommentLike;
+	}
+
+	/**
+	 * @return the totalFriend
+	 */
+	public String getTotalFriend() {
+		return totalFriend;
+	}
+
+	/**
+	 * @param totalFriend the totalFriend to set
+	 */
+	public void setTotalFriend(String totalFriend) {
+		this.totalFriend = totalFriend;
+	}
+
+	/**
+	 * @return the totalFavourite
+	 */
+	public String getTotalFavourite() {
+		return totalFavourite;
+	}
+
+	/**
+	 * @param totalFavourite the totalFavourite to set
+	 */
+	public void setTotalFavourite(String totalFavourite) {
+		this.totalFavourite = totalFavourite;
+	}
+
+	/**
+	 * @return the totalCheckBill
+	 */
+	public String getTotalCheckBill() {
+		return totalCheckBill;
+	}
+
+	/**
+	 * @param totalCheckBill the totalCheckBill to set
+	 */
+	public void setTotalCheckBill(String totalCheckBill) {
+		this.totalCheckBill = totalCheckBill;
+	}
+
+	/**
+	 * @return the token
+	 */
+	public String getToken() {
+		return token;
+	}
+
+	/**
+	 * @param token the token to set
+	 */
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	/**
+	 * @return the createDate
+	 */
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	/**
+	 * @param createDate the createDate to set
+	 */
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
+
+	/**
+	 * @return the updateDate
+	 */
+	public String getUpdateDate() {
+		return updateDate;
+	}
+
+	/**
+	 * @param updateDate the updateDate to set
+	 */
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * @return the gender
+	 */
+	public int getGender() {
+		return gender;
+	}
+
+	/**
+	 * @param gender the gender to set
+	 */
+	public void setGender(int gender) {
+		this.gender = gender;
+	}
+
+	/**
+	 * @return the urlAvatar
+	 */
+	public String getUrlAvatar() {
+		return urlAvatar;
+	}
+
+	/**
+	 * @param urlAvatar the urlAvatar to set
+	 */
+	public void setUrlAvatar(String urlAvatar) {
+		this.urlAvatar = urlAvatar;
+	}
+
+	/**
+	 * @return the statusUser
+	 */
+	public String getStatusUser() {
+		return statusUser;
+	}
+
+	/**
+	 * @param statusUser the statusUser to set
+	 */
+	public void setStatusUser(String statusUser) {
+		this.statusUser = statusUser;
+	}
+
+	/**
+	 * @return the totalCount
+	 */
+	public String getTotalCount() {
+		return totalCount;
+	}
+
+	/**
+	 * @param totalCount the totalCount to set
+	 */
+	public void setTotalCount(String totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	/**
+	 * @return the notificationId
+	 */
+	public String getNotificationId() {
+		return notificationId;
+	}
+
+	/**
+	 * @param notificationId the notificationId to set
+	 */
+	public void setNotificationId(String notificationId) {
+		this.notificationId = notificationId;
+	}
+
+	/**
+	 * @return the isReceiveNotification
+	 */
+	public boolean isReceiveNotification() {
+		return isReceiveNotification;
+	}
+
+	/**
+	 * @param isReceiveNotification the isReceiveNotification to set
+	 */
+	public void setReceiveNotification(boolean isReceiveNotification) {
+		this.isReceiveNotification = isReceiveNotification;
+	}
+
+	/**
+	 * @return the ishowEmail
+	 */
+	public boolean isIshowEmail() {
+		return ishowEmail;
+	}
+
+	/**
+	 * @param ishowEmail the ishowEmail to set
+	 */
+	public void setIshowEmail(boolean ishowEmail) {
+		this.ishowEmail = ishowEmail;
+	}
+
+	/**
+	 * @return the isShowFavorite
+	 */
+	public boolean isShowFavorite() {
+		return isShowFavorite;
+	}
+
+	/**
+	 * @param isShowFavorite the isShowFavorite to set
+	 */
+	public void setShowFavorite(boolean isShowFavorite) {
+		this.isShowFavorite = isShowFavorite;
+	}
+
+	/**
+	 * @return the isReceivePromotionNotification
+	 */
+	public boolean isReceivePromotionNotification() {
+		return isReceivePromotionNotification;
+	}
+
+	/**
+	 * @param isReceivePromotionNotification the isReceivePromotionNotification to set
+	 */
+	public void setReceivePromotionNotification(
+			boolean isReceivePromotionNotification) {
+		this.isReceivePromotionNotification = isReceivePromotionNotification;
+	}
+
+	/**
+	 * @return the notiCreateDate
+	 */
+	public int getNotiCreateDate() {
+		return notiCreateDate;
+	}
+
+	/**
+	 * @param notiCreateDate the notiCreateDate to set
+	 */
+	public void setNotiCreateDate(int notiCreateDate) {
+		this.notiCreateDate = notiCreateDate;
+	}
+
+	/**
+	 * @return the notiUpdateDate
+	 */
+	public int getNotiUpdateDate() {
+		return notiUpdateDate;
+	}
+
+	/**
+	 * @param notiUpdateDate the notiUpdateDate to set
+	 */
+	public void setNotiUpdateDate(int notiUpdateDate) {
+		this.notiUpdateDate = notiUpdateDate;
+	}
+
+	/**
+	 * @return the isShowFriend
+	 */
+	public boolean isShowFriend() {
+		return isShowFriend;
+	}
+
+	/**
+	 * @param isShowFriend the isShowFriend to set
+	 */
+	public void setShowFriend(boolean isShowFriend) {
+		this.isShowFriend = isShowFriend;
 	}
 	
 	
