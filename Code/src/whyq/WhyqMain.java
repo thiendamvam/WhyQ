@@ -175,13 +175,20 @@ public class WhyqMain extends TabActivity  {
         });        
         tabHost.setCurrentTab(0);
         rsa = new RSA();
-        if(token ==null){
+        if(token ==null || token.equals("")){
         	Intent intent = new Intent(WhyqMain.this, LoginWhyqActivity.class);
         	startActivity(intent);
+        }else{
+        	getListData();
         }
     }
     
-    private class ProfileHandler implements View.OnTouchListener {
+    private void getListData() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private class ProfileHandler implements View.OnTouchListener {
     	boolean ret = false;
     	@Override
 		public boolean onTouch(View v, MotionEvent event) {

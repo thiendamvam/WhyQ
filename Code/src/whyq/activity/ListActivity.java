@@ -159,7 +159,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		// TODO Auto-generated method stub
 		if(isFirst){
 	    	clearData();
-	    	permListMain.clear();
+	    	if(permListMain !=null)
+	    		permListMain.clear();
 	    	isFirst = false;
 		}
 		DisplayMetrics metrics = new DisplayMetrics();
