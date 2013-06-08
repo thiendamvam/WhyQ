@@ -298,9 +298,8 @@ public void on_success() {
 	}else{
 		ListActivity.isLogin = true;
 		dismissLoadingDialog();
-		finish();
-//		Intent intent = new Intent(LoginWhyqActivity.this, WhyqMain.class);
-//		startActivity(intent);
+		Intent intent = new Intent(LoginWhyqActivity.this, WhyqMain.class);
+		startActivity(intent);
 //		if(WhyqMain.getCurrentTab() == 4) {
 //			((ProfileActivityGroup)ProfileActivityGroup.group).createUI();
 //		} else {

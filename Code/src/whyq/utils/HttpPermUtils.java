@@ -73,6 +73,7 @@ public class HttpPermUtils {
 						HttpEntity postResponseEntity = postResponse.getEntity();
 						if (postResponseEntity != null)
 							result =  EntityUtils.toString(postResponseEntity);
+						Log.d("result", "Result: "+result);
 					}
 
 				} catch (IOException ioe) {

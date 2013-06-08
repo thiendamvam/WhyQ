@@ -13,6 +13,7 @@ import whyq.activity.FavouritesActivityGroup;
 import whyq.activity.ListActivity;
 import whyq.activity.ListActivityGroup;
 import whyq.activity.ImageActivityGroup;
+import whyq.activity.LoginHome;
 import whyq.activity.LoginWhyqActivity;
 import whyq.activity.FriendActivityGroup;
 import whyq.activity.ProfileActivityGroup;
@@ -176,7 +177,7 @@ public class WhyqMain extends TabActivity  {
         tabHost.setCurrentTab(0);
         rsa = new RSA();
         if(token ==null || token.equals("")){
-        	Intent intent = new Intent(WhyqMain.this, LoginWhyqActivity.class);
+        	Intent intent = new Intent(WhyqMain.this, LoginHome.class);
         	startActivity(intent);
         }else{
         	getListData();

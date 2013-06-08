@@ -14,8 +14,10 @@ import whyq.interfaces.Login_delegate;
 import whyq.model.Whyq;
 import whyq.model.User;
 import whyq.utils.API;
+import whyq.utils.RSA;
 import whyq.utils.WhyqUtils;
 import whyq.utils.UrlImageViewHelper;
+import whyq.utils.XMLParser;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -320,15 +322,19 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 //						isCalendar =false;
 					}
 
-					permList = whyqListController.getPermList(url, nameValuePairs);
+					permList = whyqListController.getBusinessList(url, nameValuePairs);
 				} else {
 					if(isCalendar){
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair("uid", WhyqMain.UID));
-						permList = whyqListController.getPermList(url,nameValuePairs);
+						permList = whyqListController.getBusinessList(url,nameValuePairs);
 						
 					}else{
-						permList = whyqListController.getPermList(url);	
+						RSA rsa = new RSA();
+						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
+						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+						permList = whyqListController.getBusinessList(url, nameValuePairs);	
 					}
 					
 				}

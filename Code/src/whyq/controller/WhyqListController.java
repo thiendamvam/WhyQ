@@ -40,13 +40,13 @@ public class WhyqListController implements WhyqList_Delegate {
 	/**
 	 * @TODO simulate perm lists
 	 */
-	public ArrayList<Whyq> getPermList( String url ){
+	public ArrayList<Whyq> getBusinessList( String url ){
 
 		
 		ArrayList<Whyq> permList = new ArrayList<Whyq>();
 		
 		if( url == "" ) {
-			url = API.popularPermsURL;
+			url = API.popularBusinessListURL;
 			//permList.add(new Perm());
 		}/* else {
 			if(PermpingMain.getCurrentTab() == 0) {
@@ -171,13 +171,13 @@ public class WhyqListController implements WhyqList_Delegate {
 	 * @param nameValuePairs
 	 * @return
 	 */
-	public ArrayList<Whyq> getPermList(String url, List<NameValuePair> nameValuePairs){
+	public ArrayList<Whyq> getBusinessList(String url, List<NameValuePair> nameValuePairs){
 
 		
 		ArrayList<Whyq> permList = new ArrayList<Whyq>();
 		
 		if( url == "" ) {
-			url = API.popularPermsURL;
+			url = API.popularBusinessListURL;
 			//permList.add(new Perm());
 		}/* else {
 			if(PermpingMain.getCurrentTab() == 0) {
