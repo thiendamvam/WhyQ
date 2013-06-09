@@ -9,6 +9,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import whyq.activity.AudioPlayerActivity;
+import whyq.activity.FacebookFriendsActivity;
 import whyq.activity.FavouritesActivityGroup;
 import whyq.activity.ListActivity;
 import whyq.activity.ListActivityGroup;
@@ -79,7 +80,7 @@ public class WhyqMain extends TabActivity  {
         
         TabSpec mydiary = tabHost.newTabSpec("Friends");
         mydiary.setIndicator("Friends", getResources().getDrawable(R.drawable.footer_icon3));
-        Intent mydiaryIntent = new Intent(this, FriendActivityGroup.class);
+        Intent mydiaryIntent = new Intent(this, FacebookFriendsActivity.class);
         mydiary.setContent(mydiaryIntent);
         tabHost.addTab( mydiary );
         
