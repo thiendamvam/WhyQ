@@ -72,11 +72,11 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 		final ImageView btnLocation = (ImageView)view.findViewById(R.id.btLocation);
 		// Validate Like or Unlike
 		if (whyq != null) {
-			if (whyq.getPermUserLikeCount() != null && "0".equals(whyq.getPermUserLikeCount())) {
-				like.setText(Constants.LIKE);
-			} else {
-				like.setText(Constants.UNLIKE);
-			}
+//			if (whyq.getPermUserLikeCount() != null && "0".equals(whyq.getPermUserLikeCount())) {
+//				like.setText(Constants.LIKE);
+//			} else {
+//				like.setText(Constants.UNLIKE);
+//			}
 		}
 		like.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -86,26 +86,26 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 					nameValuePairs.add(new BasicNameValuePair("pid", String.valueOf(whyq.getId())));
 					nameValuePairs.add(new BasicNameValuePair("uid", String.valueOf(user.getId()))); 
 					httpPermUtils.sendRequest(API.likeURL, nameValuePairs, false);
-					if (v instanceof Button) {
-						String label = ((Button) v).getText().toString();
-						int likeCount = Integer.parseInt(whyq.getPermLikeCount());
-						if (label != null && label.equals(Constants.LIKE)) { // Like
-							// Update the count
-							likeCount++;
-	    					whyq.setPermLikeCount(String.valueOf(likeCount));
-	    					// Change the text to "Unlike"
-	    					like.setText(Constants.UNLIKE);
-						} else { // Unlike
-							likeCount = likeCount - 1;
-							if (likeCount < 0) 
-								likeCount = 0;
-							whyq.setPermLikeCount(String.valueOf(likeCount));
-							like.setText(Constants.LIKE);
-						}
-					}
-					String permStatus = "Like: " + whyq.getPermLikeCount() + " - Repin: " + whyq.getPermRepinCount() + " - Comment: " + whyq.getPermCommentCount();
-		            TextView txtStatus = (TextView) view.findViewById(R.id.permStatus);
-		            txtStatus.setText(permStatus);
+//					if (v instanceof Button) {
+//						String label = ((Button) v).getText().toString();
+////						int likeCount = Integer.parseInt(whyq.getPermLikeCount());
+//						if (label != null && label.equals(Constants.LIKE)) { // Like
+//							// Update the count
+//							likeCount++;
+//	    					whyq.setPermLikeCount(String.valueOf(likeCount));
+//	    					// Change the text to "Unlike"
+//	    					like.setText(Constants.UNLIKE);
+//						} else { // Unlike
+//							likeCount = likeCount - 1;
+//							if (likeCount < 0) 
+//								likeCount = 0;
+//							whyq.setPermLikeCount(String.valueOf(likeCount));
+//							like.setText(Constants.LIKE);
+//						}
+//					}
+//					String permStatus = "Like: " + whyq.getCountFavaouriteMember()+ " - Repin: " + whyq.getPermRepinCount() + " - Comment: " + whyq.getPermCommentCount();
+//		            TextView txtStatus = (TextView) view.findViewById(R.id.permStatus);
+//		            txtStatus.setText(permStatus);
 				} else {
 					Toast.makeText(v.getContext(), Constants.NOT_LOGIN, Toast.LENGTH_LONG).show();
 				}
@@ -150,75 +150,75 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 				Intent googleMap = new Intent(context,
 						GoogleMapActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putFloat("lat", whyq.getLat());
-				bundle.putFloat("lon", whyq.getLon());
-				bundle.putString("thumbnail", whyq.getImage().getUrl());
+				bundle.putFloat("lat", Float.parseFloat(whyq.getLatitude()));
+				bundle.putFloat("lon", Float.parseFloat(whyq.getLongitude()));
+				bundle.putString("thumbnail", whyq.getLogo());
 				googleMap.putExtra("locationData", bundle);
 				//Log.d("AA+++++============","========="+perm.getImage().getUrl());
 				View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "PrGoogleMapActivity"+whyq.getId(), googleMap).getDecorView();
 				ProfileActivityGroup.group.replaceView(view);	
 			}
 		});
-		if(whyq.getLon() ==0 && whyq.getLat() == 0){
-			btnLocation.setVisibility(View.GONE);
-		}else{
-			btnLocation.setVisibility(View.VISIBLE);
-		}
+//		if(whyq.getLon() ==0 && whyq.getLat() == 0){
+//			btnLocation.setVisibility(View.GONE);
+//		}else{
+//			btnLocation.setVisibility(View.VISIBLE);
+//		}
 		if (whyq != null) {
 			// The Board Name
 			TextView txtBoardName = (TextView) view.findViewById(R.id.boardName);
 			if (boardName != null) {
 				txtBoardName.setText(boardName);
 			} else {
-				WhyqBoard board = whyq.getBoard();
-				if (board != null) {
-					txtBoardName.setText(board.getName());
-				} else {
-					txtBoardName.setText("N/A");
-				}
+//				WhyqBoard board = whyq.getBoard();
+//				if (board != null) {
+//					txtBoardName.setText(board.getName());
+//				} else {
+//					txtBoardName.setText("N/A");
+//				}
 			}
 			
 			// The image of perm
-			final ImageView permImage = (ImageView) view.findViewById(R.id.permImage);
-			UrlImageViewHelper.setUrlDrawable(permImage, whyq.getImage().getUrl());
-			//PermUtils.scaleImage(permImage, screenWidth, screenHeight);
-			
-			// Perm Description
-			TextView txtPermDescription = (TextView) view.findViewById(R.id.permDescription);
-			txtPermDescription.setText(whyq.getDescription());
-			
-//			// Perm Information
-//			TextView txtPermInfo = (TextView) view.findViewById(R.id.permInfo);
-//			txtPermInfo.setText("via " + perm.getAuthor().getName() + " on to " + boardName);
-			
-			// Status
-			String permStatus = "Like: " + whyq.getPermLikeCount() + " - Repin: " + whyq.getPermRepinCount() + " - Comment: " + whyq.getPermCommentCount();
-            TextView txtStatus = (TextView) view.findViewById(R.id.permStatus );
-            txtStatus.setText(permStatus);
+//			final ImageView permImage = (ImageView) view.findViewById(R.id.permImage);
+//			UrlImageViewHelper.setUrlDrawable(permImage, whyq.getImage().getUrl());
+//			//PermUtils.scaleImage(permImage, screenWidth, screenHeight);
+//			
+//			// Perm Description
+//			TextView txtPermDescription = (TextView) view.findViewById(R.id.permDescription);
+//			txtPermDescription.setText(whyq.getDescription());
+//			
+////			// Perm Information
+////			TextView txtPermInfo = (TextView) view.findViewById(R.id.permInfo);
+////			txtPermInfo.setText("via " + perm.getAuthor().getName() + " on to " + boardName);
+//			
+//			// Status
+//			String permStatus = "Like: " + whyq.getPermLikeCount() + " - Repin: " + whyq.getPermRepinCount() + " - Comment: " + whyq.getPermCommentCount();
+//            TextView txtStatus = (TextView) view.findViewById(R.id.permStatus );
+//            txtStatus.setText(permStatus);
             
-            LinearLayout comments = (LinearLayout) view.findViewById(R.id.comments);
-            if(whyq.getComments() != null){
-            	for(int i = 0; i < whyq.getComments().size(); i ++){
-                    View cm = inflater.inflate(R.layout.comment_item, null );
-                    Comment comment = whyq.getComments().get(i);
-                    if(comment != null && comment.getAuthor() != null) {
-                       
-                 		   ImageView cma = (ImageView) cm.findViewById(R.id.commentAvatar);
-                 		   UrlImageViewHelper.setUrlDrawable(cma, comment.getAuthor().getAvatar().getUrl());
-                 	   
-    	                   
-    	               TextView cmt = (TextView) cm.findViewById(R.id.commentContent);
-    	               cmt.setText(comment.getContent());
-    	                   
-    	               if( i == (whyq.getComments().size() -1)){
-    	            	   View sp = (View) cm.findViewById(R.id.separator);
-    	            	   sp.setVisibility(View.INVISIBLE);
-    	               }
-    	               comments.addView(cm);
-                    }
-                }
-	
-            }
+//            LinearLayout comments = (LinearLayout) view.findViewById(R.id.comments);
+//            if(whyq.getComments() != null){
+//            	for(int i = 0; i < whyq.getComments().size(); i ++){
+//                    View cm = inflater.inflate(R.layout.comment_item, null );
+//                    Comment comment = whyq.getComments().get(i);
+//                    if(comment != null && comment.getAuthor() != null) {
+//                       
+//                 		   ImageView cma = (ImageView) cm.findViewById(R.id.commentAvatar);
+//                 		   UrlImageViewHelper.setUrlDrawable(cma, comment.getAuthor().getAvatar().getUrl());
+//                 	   
+//    	                   
+//    	               TextView cmt = (TextView) cm.findViewById(R.id.commentContent);
+//    	               cmt.setText(comment.getContent());
+//    	                   
+//    	               if( i == (whyq.getComments().size() -1)){
+//    	            	   View sp = (View) cm.findViewById(R.id.separator);
+//    	            	   sp.setVisibility(View.INVISIBLE);
+//    	               }
+//    	               comments.addView(cm);
+//                    }
+//                }
+//	
+//            }
             
     		
 		}

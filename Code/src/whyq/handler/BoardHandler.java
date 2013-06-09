@@ -51,20 +51,20 @@ public class BoardHandler extends DefaultHandler {
 		} else if (localName != null && localName.equals(Constants.PERM_ID)) {
 			whyq.setId(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_DESCRIPTION)) {
-			whyq.setDescription(buffer.toString());
+//			whyq.setDescription(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_CATEGORY)) {
-			whyq.setCategory(buffer.toString());
+//			whyq.setCategory(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_IMAGE)) {
 			WhyqImage whyqImage = new WhyqImage(buffer.toString());
-			whyq.setImage(whyqImage);
+//			whyq.setImage(whyqImage);
 		} else if (localName != null && localName.equals(Constants.PERM_COMMENTS)) {
-			whyq.setComments(comments);
+//			whyq.setComments(comments);
 		} else if (localName != null && localName.equals(Constants.COMMENT)) {
 			comments.add(comment);
 		} else if (localName != null && localName.equals(Constants.ID)) {
 			comment.setId(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.USER)) {
-			whyq.setAuthor(user);
+//			whyq.setAuthor(user);
 		} else if (localName != null && localName.equals(Constants.L_USER)) {
 			comment.setAuthor(commentAuthor);
 		} else if (localName != null && localName.equals(Constants.USER_ID)) {
@@ -90,15 +90,15 @@ public class BoardHandler extends DefaultHandler {
 		} else if (localName != null && localName.equals(Constants.IS_MORE)) {
 			comment.setIsMore(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_REPINCOUNT)) {
-			whyq.setPermRepinCount(buffer.toString());
+//			whyq.setPermRepinCount(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_LIKECOUNT)) {
-			whyq.setPermLikeCount(buffer.toString());
+//			whyq.setPermLikeCount(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_COMMENTCOUNT)) {
-			whyq.setPermCommentCount(buffer.toString());
+//			whyq.setPermCommentCount(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_USERLIKECOUNT)) {
-			whyq.setPermUserLikeCount(buffer.toString());
+//			whyq.setPermUserLikeCount(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.NEXT_ITEM)) {
-			whyq.setNextItem(buffer.toString());
+//			whyq.setNextItem(buffer.toString());
 		}
 	}
 

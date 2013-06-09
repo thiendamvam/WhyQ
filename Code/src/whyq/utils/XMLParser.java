@@ -331,23 +331,23 @@ public class XMLParser implements HttpAccess {
 					// Perm id
 					this.currentPem.setId(chars);
 				}else if (this.currentElement == "permUrl") {
-					this.currentPem.setPermUrl(chars);
+//					this.currentPem.setPermUrl(chars);
 				}else if (this.currentElement == "permAudio") {
-					this.currentPem.setPermAudio(chars);
+//					this.currentPem.setPermAudio(chars);
 				}else if (this.currentElement == "permImage") {
 					WhyqImage imageObject = new WhyqImage(chars);
-					this.currentPem.setImage(imageObject);
+//					this.currentPem.setImage(imageObject);
 
 					User permAuthor = new User("user");
 					permAuthor.setName("Author ");
 					permAuthor.setAvatar(imageObject);
 
-					this.currentPem.setAuthor(permAuthor);
+//					this.currentPem.setAuthor(permAuthor);
 
 				} else if (this.currentElement == "permCategory") {
 					WhyqBoard whyqBoard = new WhyqBoard("Board ID ");
 					whyqBoard.setName(chars);
-					this.currentPem.setBoard(whyqBoard);
+//					this.currentPem.setBoard(whyqBoard);
 				} else if (this.currentElement == "user") {
 					this.currentUser = new User();
 				} else if (this.currentElement == "userId") {
@@ -357,7 +357,7 @@ public class XMLParser implements HttpAccess {
 				} else if (this.currentElement == "userAvatar") {
 					WhyqImage userAvatar = new WhyqImage(chars);
 					this.currentUser.setAvatar(userAvatar);
-					this.currentPem.setAuthor(this.currentUser);
+//					this.currentPem.setAuthor(this.currentUser);
 				}
 			}
 
@@ -886,8 +886,8 @@ public class XMLParser implements HttpAccess {
 			String permUrl = getValue(boardElement, "permUrl");
 			String permAudio = getValue(boardElement, "permAudio");
 			WhyqImage whyqImage = new WhyqImage(boardImage);
-			Whyq board = new Whyq(boardId, boardName, boardDesc, boardDateMessage, whyqImage,permUrl,permAudio);
-			boards.add(board);
+//			Whyq board = new Whyq(boardId, boardName, boardDesc, boardDateMessage, whyqImage,permUrl,permAudio);
+//			boards.add(board);
 		}
 		delegates.onSuccess(boards);
 	}
@@ -920,8 +920,8 @@ public class XMLParser implements HttpAccess {
 			String boardUrl = getValue(boardElement, "permUrl");
 			String permAudio = getValue(boardElement, "permAudio");
 			WhyqImage whyqImage = new WhyqImage(boardImage);
-			Whyq board = new Whyq(boardId, boardName, boardDesc, boardDateMessage, whyqImage, boardUrl,permAudio);
-			boards.add(board);
+//			Whyq board = new Whyq(boardId, boardName, boardDesc, boardDateMessage, whyqImage, boardUrl,permAudio);
+//			boards.add(board);
 		}
 		Get_Board_delegate getBoard_delegate = (Get_Board_delegate)delegate;
 		getBoard_delegate.onSuccess(boards);

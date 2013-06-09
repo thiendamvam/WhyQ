@@ -15,6 +15,7 @@ import whyq.activity.GoogleMapActivity;
 import whyq.activity.JoinWhyqActivity;
 import whyq.activity.NewWhyqActivity;
 import whyq.activity.PrepareRequestTokenActivity;
+import whyq.adapter.WhyqItemAdapterNew.ViewHolder;
 import whyq.controller.AuthorizeController;
 import whyq.controller.WhyqListController;
 import whyq.model.Comment;
@@ -64,12 +65,16 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 
 	private ArrayList<Whyq> items;
 	public static final String TAG = "PermAdapter";
-	public Button join;
-	public Button login;
-	public Button like;
-	public Button reperm;
-	public Button comment;
-
+//	public Button join;
+//	public Button login;
+//	public Button like;
+//	public Button reperm;
+//	public Button comment;
+	static class ViewHolder {
+		public ImageView imgThumb ;
+		private TextView tvItemName, tvNumberFavourite,tvItemAddress, tvVisited, tvDiscoutNumber;
+		private Button btnDistance;
+	}
 	private Activity activity;
 	private Boolean header;
 	private User user;
@@ -96,6 +101,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 	final String repermString = this.getContext().getResources().getString(R.string.bt_reperm);
 	final String commentString = this.getContext().getResources().getString(R.string.bt_comment);
 	final String textCurrentLike = this.getContext().getResources().getString(R.string.delete);
+//	private ArrayList<Whyq> listProducts;
 /*	
 	PermAdapter(ArrayList<Perm> perms) {
 		super(PermAdapter.getContext(), new SpecialAdapter(perms), R.layout.pending);
@@ -232,51 +238,69 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 				newPermList.put(viewId, whyq);
 				if (convertView != null){
 //					Log.i(TAG, "getView() convertView != null");
-					addComments(convertView, whyq);
+//					addComments(convertView, whyq);
 					return convertView;
 				}else{
 //					Log.i(TAG, "getView() convertView == null");
-					LayoutInflater inflater = (LayoutInflater) this.getContext()
-							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					final View view = inflater.inflate(R.layout.whyq_item_1, null);
+//					LayoutInflater inflater = (LayoutInflater) this.getContext()
+//							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//					final View view = inflater.inflate(R.layout.whyq_item_1, null);
 		
-					like = (Button) view.findViewById(R.id.btnLike);
+//					like = (Button) view.findViewById(R.id.btnLike);
 					// Validate Like or Unlike
-					if (whyq != null && user!=null){
-						if(whyq.getAuthor().getId().equals(user.getId())){
-							like.setText(textCurrentLike);
-						}else{
-							if (whyq.getPermUserLikeCount() != null
-									&& "0".equals(whyq.getPermUserLikeCount())) {
-								like.setText(R.string.bt_like);
-							} else {
-								like.setText(R.string.bt_unlike);
-							}
-							
-						}
-					}
+//					if (whyq != null && user!=null){
+//						if(whyq.getAuthor().getId().equals(user.getId())){
+//							like.setText(textCurrentLike);
+//						}else{
+//							if (whyq.getPermUserLikeCount() != null
+//									&& "0".equals(whyq.getPermUserLikeCount())) {
+//								like.setText(R.string.bt_like);
+//							} else {
+//								like.setText(R.string.bt_unlike);
+//							}
+//							
+//						}
+//					}
+					Whyq item = items.get(position);
+					LayoutInflater inflater = (LayoutInflater) context
+							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					View rowView = inflater.inflate(R.layout.whyq_item_new, null);
+					ViewHolder viewHolder = new ViewHolder();
+					viewHolder.imgThumb = (ImageView) rowView.findViewById(R.id.imgThumbnal2);
+					viewHolder.tvItemName = (TextView) rowView.findViewById(R.id.tvItemName);
+					viewHolder.tvItemAddress = (TextView)rowView.findViewById(R.id.tvItemAddress);
+					viewHolder.tvNumberFavourite = (TextView)rowView.findViewById(R.id.tvNumberFavourite);
+					viewHolder.tvVisited = (TextView)rowView.findViewById(R.id.tvVisited);
+					viewHolder.tvDiscoutNumber = (TextView)rowView.findViewById(R.id.tvNumberDiscount);
+					viewHolder.btnDistance = (Button)rowView.findViewById(R.id.btnDistance);
 
-					like.setTag(viewId);
-					like.setNextFocusDownId(position);
+					viewHolder.tvItemName.setText(item.getNameStore());
+					viewHolder.tvItemAddress.setText(item.getAddress());
+					viewHolder.tvNumberFavourite.setText(""+item.getCountFavaouriteMember());
+					viewHolder.btnDistance.setText("");
+					UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
+					rowView.setTag(viewHolder);
+//					like.setTag(viewId);
+//					like.setNextFocusDownId(position);
 					
-					if(whyq != null && user != null) {
-						if( whyq.getAuthor() != null)
-							if(whyq.getAuthor().getId().equalsIgnoreCase(user.getId()))
-								like.setText(R.string.delete);
-//								like.setVisibility(View.GONE);
-					}
-					like.setOnClickListener(WhyqAdapter.this);
-					reperm = (Button) view.findViewById(R.id.btnRepem);
-					reperm.setTag(viewId);
-					reperm.setOnClickListener(WhyqAdapter.this);
-		
-					comment = (Button) view.findViewById(R.id.btnComment);
-					comment.setTag(viewId);
-					comment.setOnClickListener(WhyqAdapter.this);
-					ImageView gotoMap = (ImageView)view.findViewById(R.id.btnLocation);
-					gotoMap.setTag(viewId);
-					gotoMap.setOnClickListener(WhyqAdapter.this);
-					TextView permViewInfo = (TextView)view.findViewById(R.id.permVoiceInfo);
+//					if(whyq != null && user != null) {
+//						if( whyq.getAuthor() != null)
+//							if(whyq.getAuthor().getId().equalsIgnoreCase(user.getId()))
+//								like.setText(R.string.delete);
+////								like.setVisibility(View.GONE);
+//					}
+//					like.setOnClickListener(WhyqAdapter.this);
+//					reperm = (Button) view.findViewById(R.id.btnRepem);
+//					reperm.setTag(viewId);
+//					reperm.setOnClickListener(WhyqAdapter.this);
+//		
+//					comment = (Button) view.findViewById(R.id.btnComment);
+//					comment.setTag(viewId);
+//					comment.setOnClickListener(WhyqAdapter.this);
+//					ImageView gotoMap = (ImageView)view.findViewById(R.id.btnLocation);
+//					gotoMap.setTag(viewId);
+//					gotoMap.setOnClickListener(WhyqAdapter.this);
+//					TextView permViewInfo = (TextView)view.findViewById(R.id.permVoiceInfo);
 //					if(perm.getLon() ==0 && perm.getLat() == 0){
 //						gotoMap.setVisibility(View.INVISIBLE);
 ////						permViewInfo.setVisibility(View.GONE);
@@ -285,173 +309,173 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 ////						gotoMap.setVisibility(View.VISIBLE);
 ////						permViewInfo.setVisibility(View.VISIBLE);
 //					}
-						gotoMap.setVisibility(View.INVISIBLE);
-					
-					if(position == items.size() - 1) {
-						View seperatorLine = (View) view.findViewById(R.id.item_separator);
-						if(seperatorLine != null) {
-							seperatorLine.setVisibility(View.GONE);
-						}
-					}
+//						gotoMap.setVisibility(View.INVISIBLE);
+//					
+//					if(position == items.size() - 1) {
+//						View seperatorLine = (View) view.findViewById(R.id.item_separator);
+//						if(seperatorLine != null) {
+//							seperatorLine.setVisibility(View.GONE);
+//						}
+//					}
 					
 					if (whyq != null) {
 						
 						// Set the nextItems no.
-						if (whyq.getNextItem() != null)
-							nextItems = Integer.parseInt(whyq.getNextItem());
-						else
-							nextItems = -1;
-						ImageView btnPlayAudio = (ImageView)view.findViewById(R.id.btnVoice);
-						btnPlayAudio.setTag(viewId);
-						btnPlayAudio.setOnClickListener(new View.OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								WhyqMain.gotoTab(6, whyq.getPermAudio());
-							}
-						});
-						
-						if(whyq.getPermAudio() !=null && !whyq.getPermAudio().equals("")){
-							btnPlayAudio.setVisibility(View.VISIBLE);
-							
-						}else{
-							btnPlayAudio.setVisibility(View.GONE);
-							
-						}
-						ImageView av = (ImageView) view.findViewById(R.id.authorAvatar);
-						if( whyq.getAuthor() != null)
-							if(whyq.getAuthor().getAvatar()!=null)
-								if(whyq.getAuthor().getAvatar().getUrl() != null)
-									UrlImageViewHelper.setUrlDrawable(av, whyq.getAuthor()
-								.getAvatar().getUrl());
-		
-						TextView an = (TextView) view.findViewById(R.id.authorName);
-						//holder.authorName.setText(perm.getAuthor().getName());
-						if( whyq != null)
-							if(whyq.getAuthor() != null)
-								if(whyq.getAuthor().getName() != null)
-									an.setText(whyq.getAuthor().getName());
-						av.setOnClickListener(new View.OnClickListener() {
-							
-							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								Comment comment = new Comment(whyq.getAuthor().getId());
-								comment.setAuthor(whyq.getAuthor());
-								WhyqMain.gotoTab(4, comment);
-							}
-						});
-						an.setOnClickListener(new View.OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								Comment comment = new Comment(whyq.getAuthor().getId());
-								comment.setAuthor(whyq.getAuthor());
-								WhyqMain.gotoTab(4, comment);
-							}
-						});
+//						if (whyq.getNextItem() != null)
+//							nextItems = Integer.parseInt(whyq.getNextItem());
+//						else
+//							nextItems = -1;
+//						ImageView btnPlayAudio = (ImageView)view.findViewById(R.id.btnVoice);
+//						btnPlayAudio.setTag(viewId);
+//						btnPlayAudio.setOnClickListener(new View.OnClickListener() {
+//							
+//							@Override
+//							public void onClick(View v) {
+//								// TODO Auto-generated method stub
+//								WhyqMain.gotoTab(6, whyq.getPermAudio());
+//							}
+//						});
+//						
+//						if(whyq.getPermAudio() !=null && !whyq.getPermAudio().equals("")){
+//							btnPlayAudio.setVisibility(View.VISIBLE);
+//							
+//						}else{
+//							btnPlayAudio.setVisibility(View.GONE);
+//							
+//						}
+//						ImageView av = (ImageView) view.findViewById(R.id.authorAvatar);
+//						if( whyq.getAuthor() != null)
+//							if(whyq.getAuthor().getAvatar()!=null)
+//								if(whyq.getAuthor().getAvatar().getUrl() != null)
+//									UrlImageViewHelper.setUrlDrawable(av, whyq.getAuthor()
+//								.getAvatar().getUrl());
+//		
+//						TextView an = (TextView) view.findViewById(R.id.authorName);
+//						//holder.authorName.setText(perm.getAuthor().getName());
+//						if( whyq != null)
+//							if(whyq.getAuthor() != null)
+//								if(whyq.getAuthor().getName() != null)
+//									an.setText(whyq.getAuthor().getName());
+//						av.setOnClickListener(new View.OnClickListener() {
+//							
+//							public void onClick(View v) {
+//								// TODO Auto-generated method stub
+//								Comment comment = new Comment(whyq.getAuthor().getId());
+//								comment.setAuthor(whyq.getAuthor());
+//								WhyqMain.gotoTab(4, comment);
+//							}
+//						});
+//						an.setOnClickListener(new View.OnClickListener() {
+//							
+//							@Override
+//							public void onClick(View v) {
+//								// TODO Auto-generated method stub
+//								Comment comment = new Comment(whyq.getAuthor().getId());
+//								comment.setAuthor(whyq.getAuthor());
+//								WhyqMain.gotoTab(4, comment);
+//							}
+//						});
 						// Board name
-						TextView bn = (TextView) view.findViewById(R.id.boardName);
-						//holder.boardName.setText(perm.getBoard().getName());
-						if(whyq.getBoard() != null)
-							if( whyq.getBoard().getName() != null)
-								bn.setText(whyq.getBoard().getName());
-		
-						ImageView imageView = (ImageView) view.findViewById(R.id.permImage);
-						/**
-						 * MSA
-						 */
-						imageView.setOnClickListener(new View.OnClickListener() {
-							
-							public void onClick(View arg0) {
-								// TODO Auto-generated method stub
-								String permUrl = whyq.getPermUrl();
-								if(permUrl != null && permUrl != "")
-									WhyqMain.gotoTab(5, permUrl);
-								//Log.d("=====>", "=================>go to Perm Browser >");
-							}
-						});
+//						TextView bn = (TextView) view.findViewById(R.id.boardName);
+//						//holder.boardName.setText(perm.getBoard().getName());
+//						if(whyq.getBoard() != null)
+//							if( whyq.getBoard().getName() != null)
+//								bn.setText(whyq.getBoard().getName());
+//		
+//						ImageView imageView = (ImageView) view.findViewById(R.id.permImage);
+//						/**
+//						 * MSA
+//						 */
+//						imageView.setOnClickListener(new View.OnClickListener() {
+//							
+//							public void onClick(View arg0) {
+//								// TODO Auto-generated method stub
+//								String permUrl = whyq.getPermUrl();
+//								if(permUrl != null && permUrl != "")
+//									WhyqMain.gotoTab(5, permUrl);
+//								//Log.d("=====>", "=================>go to Perm Browser >");
+//							}
+//						});
 					
-						UrlImageViewHelper.setUrlDrawable(imageView, whyq.getImage().getUrl() , true ); 
-						TextView pd = (TextView) view.findViewById(R.id.permDesc);
+//						UrlImageViewHelper.setUrlDrawable(imageView, whyq.getImage().getUrl() , true ); 
+//						TextView pd = (TextView) view.findViewById(R.id.permDesc);
 						//holder.permDesc.setText(perm.getDescription());
-						if(whyq != null)
-							if(whyq.getDescription() != null)
-								pd.setText(whyq.getDescription());
-						String permInfo = whyq.getPermDatemessage();
-						TextView pi = (TextView) view.findViewById(R.id.permInfo);
-						//holder.permInfo.setText(permInfo);
-						if( permInfo != null)
-							pi.setText(permInfo);
-						
-						String permStat = likeString + ": " + whyq.getPermLikeCount()
-								+ " - " + repermString + ": " + whyq.getPermRepinCount()
-								+ " - " + commentString + ": " + whyq.getPermCommentCount();
-						
-						TextView ps = (TextView) view.findViewById(R.id.permStat);
-						permStateList.put(viewId, ps);
-						if(permStat !=null)
-							ps.setText(permStat);
+//						if(whyq != null)
+//							if(whyq.getDescription() != null)
+//								pd.setText(whyq.getDescription());
+//						String permInfo = whyq.getPermDatemessage();
+//						TextView pi = (TextView) view.findViewById(R.id.permInfo);
+//						//holder.permInfo.setText(permInfo);
+//						if( permInfo != null)
+//							pi.setText(permInfo);
+//						
+//						String permStat = likeString + ": " + whyq.getPermLikeCount()
+//								+ " - " + repermString + ": " + whyq.getPermRepinCount()
+//								+ " - " + commentString + ": " + whyq.getPermCommentCount();
+//						
+//						TextView ps = (TextView) view.findViewById(R.id.permStat);
+//						permStateList.put(viewId, ps);
+//						if(permStat !=null)
+//							ps.setText(permStat);
 		
-						LinearLayout comments = (LinearLayout) view
-								.findViewById(R.id.comments);
-						if(whyq.getComments() != null){
-							for (int i = 0; i < whyq.getComments().size(); i++) {
-								View cm = inflater.inflate(R.layout.comment_item, null);
-								final Comment pcm = whyq.getComments().get(i);
-								if (pcm != null && pcm.getAuthor() != null) {
-			
-									ImageView cma = (ImageView) cm
-											.findViewById(R.id.commentAvatar);
-									cma.setOnClickListener(new View.OnClickListener() {
-										
-										public void onClick(View v) {
-											// TODO Auto-generated method stub
-											WhyqMain.gotoTab(4, pcm);
-										}
-									});
-									if( pcm.getAuthor() != null)
-										if(pcm.getAuthor().getAvatar()!=null)
-											if(pcm.getAuthor().getAvatar().getUrl() != null)
-												UrlImageViewHelper.setUrlDrawable(cma, pcm.getAuthor()
-											.getAvatar().getUrl());
-			
-									TextView authorName = (TextView) cm
-											.findViewById(R.id.commentAuthor);
-									if(pcm !=null){
-										if(pcm.getAuthor() != null)
-											if(pcm.getAuthor().getName() != null)
-												authorName.setText(pcm.getAuthor().getName());
-			
-										TextView cmt = (TextView) cm
-											.findViewById(R.id.commentContent);
-										if(pcm.getContent() != null)
-											cmt.setText(pcm.getContent());
-									}
-									authorName.setOnClickListener(new View.OnClickListener() {
-										
-										@Override
-										public void onClick(View v) {
-											// TODO Auto-generated method stub
-											WhyqMain.gotoTab(4, pcm);	
-										}
-									});
-									if (i == (whyq.getComments().size() - 1)) {
-										View sp = (View) cm.findViewById(R.id.separator);
-										sp.setVisibility(View.INVISIBLE);
-									}
-
-									comments.addView(cm);
-								}
-							}
-							
-						}
+//						LinearLayout comments = (LinearLayout) view
+//								.findViewById(R.id.comments);
+//						if(whyq.getComments() != null){
+//							for (int i = 0; i < whyq.getComments().size(); i++) {
+//								View cm = inflater.inflate(R.layout.comment_item, null);
+//								final Comment pcm = whyq.getComments().get(i);
+//								if (pcm != null && pcm.getAuthor() != null) {
+//			
+//									ImageView cma = (ImageView) cm
+//											.findViewById(R.id.commentAvatar);
+//									cma.setOnClickListener(new View.OnClickListener() {
+//										
+//										public void onClick(View v) {
+//											// TODO Auto-generated method stub
+//											WhyqMain.gotoTab(4, pcm);
+//										}
+//									});
+//									if( pcm.getAuthor() != null)
+//										if(pcm.getAuthor().getAvatar()!=null)
+//											if(pcm.getAuthor().getAvatar().getUrl() != null)
+//												UrlImageViewHelper.setUrlDrawable(cma, pcm.getAuthor()
+//											.getAvatar().getUrl());
+//			
+//									TextView authorName = (TextView) cm
+//											.findViewById(R.id.commentAuthor);
+//									if(pcm !=null){
+//										if(pcm.getAuthor() != null)
+//											if(pcm.getAuthor().getName() != null)
+//												authorName.setText(pcm.getAuthor().getName());
+//			
+//										TextView cmt = (TextView) cm
+//											.findViewById(R.id.commentContent);
+//										if(pcm.getContent() != null)
+//											cmt.setText(pcm.getContent());
+//									}
+//									authorName.setOnClickListener(new View.OnClickListener() {
+//										
+//										@Override
+//										public void onClick(View v) {
+//											// TODO Auto-generated method stub
+//											WhyqMain.gotoTab(4, pcm);	
+//										}
+//									});
+//									if (i == (whyq.getComments().size() - 1)) {
+//										View sp = (View) cm.findViewById(R.id.separator);
+//										sp.setVisibility(View.INVISIBLE);
+//									}
+//
+//									comments.addView(cm);
+//								}
+//							}
+//							
+//						}
 					}
 					//return convertView;
-					viewList.put(whyq.getId(), view);
+					viewList.put(whyq.getId(), rowView);
 					//Log.d("aaa", "================"+view);
-					return view;
+					return rowView;
 				}
 			}
 			else{
@@ -471,80 +495,80 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 	public void addComments(View view, Whyq whyq) {
 		LinearLayout comments = (LinearLayout) view
 				.findViewById(R.id.comments);
-		if(whyq != null && comments != null){
-			if(whyq.getComments() != null){
-				if(whyq.getComments().size() == comments.getChildCount()) {
-					return;
-				}				
-			}
-		}
+//		if(whyq != null && comments != null){
+//			if(whyq.getComments() != null){
+//				if(whyq.getComments().size() == comments.getChildCount()) {
+//					return;
+//				}				
+//			}
+//		}
 
 		comments.removeAllViews();
 		LayoutInflater inflater = (LayoutInflater) this.getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		if(whyq.getComments() != null){
-			for (int i = 0; i < whyq.getComments().size(); i++) {
-				View cm = inflater.inflate(R.layout.comment_item, null);
-				final Comment pcm = whyq.getComments().get(i);
-				if (pcm != null && pcm.getAuthor() != null) {
-
-					ImageView cma = (ImageView) cm
-							.findViewById(R.id.commentAvatar);
-					cma.setOnClickListener(new View.OnClickListener() {
-						
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							WhyqMain.gotoTab(4, pcm);
-						}
-					});
-					UrlImageViewHelper.setUrlDrawable(cma, pcm.getAuthor()
-							.getAvatar().getUrl());
-
-					TextView authorName = (TextView) cm
-							.findViewById(R.id.commentAuthor);
-					authorName.setOnClickListener(new View.OnClickListener() {
-						
-						@Override
-						public void onClick(View arg0) {
-							// TODO Auto-generated method stub
-							WhyqMain.gotoTab(4, pcm);
-						}
-					});
-					if(pcm !=null){
-						if(pcm.getAuthor() != null)
-							if(pcm.getAuthor().getName() != null)
-								authorName.setText(pcm.getAuthor().getName());
-
-						TextView cmt = (TextView) cm
-							.findViewById(R.id.commentContent);
-						if(pcm.getContent() != null)
-							cmt.setText(pcm.getContent());
-					}
-					/*
-					 * boolean isWrapped = PermUtils.isTextWrapped(activity,
-					 * cmt.getText().toString(), cmt.getContext()); if
-					 * (isWrapped) { cmt.setMaxLines(5);
-					 * cmt.setSingleLine(false);
-					 * cmt.setEllipsize(TruncateAt.MARQUEE); }
-					 */
-					if (i == (whyq.getComments().size() - 1)) {
-						View sp = (View) cm.findViewById(R.id.separator);
-						sp.setVisibility(View.INVISIBLE);
-					}
-					/*
-					 * EllipsizingTextView cmt = (EllipsizingTextView) cm
-					 * .findViewById(R.id.commentContent);
-					 * cmt.setText(pcm.getContent());
-					 * 
-					 * if (i == (perm.getComments().size() - 1)) { View sp =
-					 * (View) cm.findViewById(R.id.separator);
-					 * sp.setVisibility(View.INVISIBLE); }
-					 */
-					comments.addView(cm);
-				}
-			}
-			
-		}
+//		if(whyq.getComments() != null){
+//			for (int i = 0; i < whyq.getComments().size(); i++) {
+//				View cm = inflater.inflate(R.layout.comment_item, null);
+//				final Comment pcm = whyq.getComments().get(i);
+//				if (pcm != null && pcm.getAuthor() != null) {
+//
+//					ImageView cma = (ImageView) cm
+//							.findViewById(R.id.commentAvatar);
+//					cma.setOnClickListener(new View.OnClickListener() {
+//						
+//						public void onClick(View v) {
+//							// TODO Auto-generated method stub
+//							WhyqMain.gotoTab(4, pcm);
+//						}
+//					});
+//					UrlImageViewHelper.setUrlDrawable(cma, pcm.getAuthor()
+//							.getAvatar().getUrl());
+//
+//					TextView authorName = (TextView) cm
+//							.findViewById(R.id.commentAuthor);
+//					authorName.setOnClickListener(new View.OnClickListener() {
+//						
+//						@Override
+//						public void onClick(View arg0) {
+//							// TODO Auto-generated method stub
+//							WhyqMain.gotoTab(4, pcm);
+//						}
+//					});
+//					if(pcm !=null){
+//						if(pcm.getAuthor() != null)
+//							if(pcm.getAuthor().getName() != null)
+//								authorName.setText(pcm.getAuthor().getName());
+//
+//						TextView cmt = (TextView) cm
+//							.findViewById(R.id.commentContent);
+//						if(pcm.getContent() != null)
+//							cmt.setText(pcm.getContent());
+//					}
+//					/*
+//					 * boolean isWrapped = PermUtils.isTextWrapped(activity,
+//					 * cmt.getText().toString(), cmt.getContext()); if
+//					 * (isWrapped) { cmt.setMaxLines(5);
+//					 * cmt.setSingleLine(false);
+//					 * cmt.setEllipsize(TruncateAt.MARQUEE); }
+//					 */
+//					if (i == (whyq.getComments().size() - 1)) {
+//						View sp = (View) cm.findViewById(R.id.separator);
+//						sp.setVisibility(View.INVISIBLE);
+//					}
+//					/*
+//					 * EllipsizingTextView cmt = (EllipsizingTextView) cm
+//					 * .findViewById(R.id.commentContent);
+//					 * cmt.setText(pcm.getContent());
+//					 * 
+//					 * if (i == (perm.getComments().size() - 1)) { View sp =
+//					 * (View) cm.findViewById(R.id.separator);
+//					 * sp.setVisibility(View.INVISIBLE); }
+//					 */
+//					comments.addView(cm);
+//				}
+//			}
+//			
+//		}
 	}
 	
 	/**
@@ -698,7 +722,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 			  				Comment comment = new Comment(whyq.getId(), cmText);
 			  				comment.setAuthor(user);
 			  				//perm.addCommnent(comment);
-			  				items.get(position).addCommnent(comment);
+//			  				items.get(position).addCommnent(comment);
 			  				
 			  				if(activity != null) {
 			  					ListView list = (ListView) activity.findViewById(R.id.permList);
@@ -874,10 +898,10 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.whyq_item_2, null);
 		// Process buttons
-		join = (Button) view.findViewById(R.id.bt_join);
-		login = (Button) view.findViewById(R.id.bt_login);
-		login.setOnClickListener(WhyqAdapter.this);
-		join.setOnClickListener(WhyqAdapter.this);
+//		join = (Button) view.findViewById(R.id.bt_join);
+//		login = (Button) view.findViewById(R.id.bt_login);
+//		login.setOnClickListener(WhyqAdapter.this);
+//		join.setOnClickListener(WhyqAdapter.this);
 		
 		updateHeaderView(view);
 		
@@ -937,7 +961,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 			exeJoin();
 			break;
 		case R.id.btnLike:
-			exeLike(v);
+//			exeLike(v);
 			break;
 		case R.id.btnRepem:
 			exeReperm(v);
@@ -964,9 +988,9 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 			Intent googleMap = new Intent(context,
 					GoogleMapActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putFloat("lat", whyq.getLat());
-			bundle.putFloat("lon", whyq.getLon());
-			bundle.putString("thumbnail", whyq.getImage().getUrl());
+			bundle.putFloat("lat", Float.parseFloat(whyq.getLatitude()));
+			bundle.putFloat("lon", Float.parseFloat(whyq.getLongitude()));
+			bundle.putString("thumbnail", whyq.getLogo());
 			googleMap.putExtra("locationData", bundle);
 			//Log.d("AA+++++============","========="+perm.getImage().getUrl());
 			View view2 = ListActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+whyq.getId(), googleMap).getDecorView();
@@ -1001,109 +1025,109 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 		if(permId != null){
 			Whyq whyq = newPermList.get(permId);
 			user = WhyqUtils.isAuthenticated(view.getContext());
-			if (user != null) {
-				Intent myIntent = new Intent(view.getContext(),
-						NewWhyqActivity.class);
-				myIntent.putExtra("reperm", true);
-				NewWhyqActivity.boardList = user.getBoards();
-				myIntent.putExtra("boardId", whyq.getBoard().getId());
-				myIntent.putExtra("boardDesc", (String) whyq.getBoard().getDescription());
-				myIntent.putExtra("permId", (String) whyq.getId());
-				myIntent.putExtra("userId", user.getId());
-				context.startActivity(myIntent);
-			} else {
-				Toast.makeText(view.getContext(), Constants.NOT_LOGIN,
-						Toast.LENGTH_LONG).show();
-			}
+//			if (user != null) {
+//				Intent myIntent = new Intent(view.getContext(),
+//						NewWhyqActivity.class);
+//				myIntent.putExtra("reperm", true);
+//				NewWhyqActivity.boardList = user.getBoards();
+//				myIntent.putExtra("boardId", whyq.getBoard().getId());
+//				myIntent.putExtra("boardDesc", (String) whyq.getBoard().getDescription());
+//				myIntent.putExtra("permId", (String) whyq.getId());
+//				myIntent.putExtra("userId", user.getId());
+//				context.startActivity(myIntent);
+//			} else {
+//				Toast.makeText(view.getContext(), Constants.NOT_LOGIN,
+//						Toast.LENGTH_LONG).show();
+//			}
 			
 		}
 	
 	}
 
-	private void exeLike(final View v) {
-		// TODO Auto-generated method stub
-		String permId = (String)v.getTag();
-		if(permId != null){
-			final Whyq whyq = newPermList.get(permId);
-			user = WhyqUtils.isAuthenticated(v.getContext());
-			if (user != null) {
-				// final ProgressDialog dialog =
-				// ProgressDialog.show(v.getContext(),
-				// "Loading","Please wait...", true);
-
-				final HttpPermUtils util = new HttpPermUtils();
-				//Log.d("aasdfsdss", like.getText().toString()+"======="+R.string.delete);
-				if(like.getText().toString().equals(likeString) || like.getText().toString().equals(unlikeString)){
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("pid", String
-							.valueOf(whyq.getId())));
-					nameValuePairs.add(new BasicNameValuePair("uid", String
-							.valueOf(user.getId())));
-					util.sendRequest(API.likeURL, nameValuePairs, false);
-
-					if (v instanceof Button) {
-						String label = ((Button) v).getText().toString();
-						int likeCount = Integer.parseInt(whyq
-								.getPermLikeCount());
-						if (label != null && label.equals(likeString)) { // Like
-							// Update the count
-							likeCount++;
-							whyq.setPermLikeCount(String.valueOf(likeCount));
-							// Change the text to "Unlike"
-							((Button)v).setText(R.string.bt_unlike);
-							v.invalidate();
-						} else { // Unlike
-							likeCount = likeCount - 1;
-							if (likeCount < 0)
-								likeCount = 0;
-							whyq.setPermLikeCount(String.valueOf(likeCount));
-							((Button)v).setText(R.string.bt_like);
-							v.invalidate();
-						}
-					}
-					
-					String permStatus = likeString + ": " + whyq.getPermLikeCount()
-							+ " - " + repermString + ": " + whyq.getPermRepinCount()
-							+ " - " + commentString + ": " + whyq.getPermCommentCount();
-					TextView txtStatus = permStateList.get(permId);
-					if(permStatus != null)
-						txtStatus.setText(permStatus);
-				}else if(like.getText().toString().equals(textCurrentLike)){
-					AlertDialog alertDialog = new AlertDialog.Builder(context).create();		
-//					alertDialog.setTitle(AlertDialog);
-					alertDialog.setMessage(v.getContext().getString(R.string.confirm_delete));
-					alertDialog.setButton(v.getContext().getString(R.string.yes_delete), new DialogInterface.OnClickListener() {
-					   public void onClick(DialogInterface dialog, int which) {
-					      // here you can add functions
-							viewList.remove(whyq.getId());
-							int position = v.getNextFocusDownId();
-							if(position >= 0 && items.size() > position)
-								items.remove(position);
-							notifyDataSetChanged();
-							List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-							nameValuePairs.add(new BasicNameValuePair("delid", String
-									.valueOf(whyq.getId())));
-							nameValuePairs.add(new BasicNameValuePair("uid", String
-									.valueOf(user.getId())));
-							util.sendRequest(API.deleteUrl, nameValuePairs, false);
-					   }
-					});
-					alertDialog.setButton2(v.getContext().getString(R.string.no), new DialogInterface.OnClickListener() {
-					   public void onClick(DialogInterface dialog, int which) {
-							      
-					   }
-					});
-					alertDialog.setIcon(R.drawable.icon);
-					alertDialog.show();
-
-					
-				}
-			} else {
-
-			}
-
-		}	
-	}
+//	private void exeLike(final View v) {
+//		// TODO Auto-generated method stub
+//		String permId = (String)v.getTag();
+//		if(permId != null){
+//			final Whyq whyq = newPermList.get(permId);
+//			user = WhyqUtils.isAuthenticated(v.getContext());
+//			if (user != null) {
+//				// final ProgressDialog dialog =
+//				// ProgressDialog.show(v.getContext(),
+//				// "Loading","Please wait...", true);
+//
+//				final HttpPermUtils util = new HttpPermUtils();
+//				//Log.d("aasdfsdss", like.getText().toString()+"======="+R.string.delete);
+//				if(like.getText().toString().equals(likeString) || like.getText().toString().equals(unlikeString)){
+//					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//					nameValuePairs.add(new BasicNameValuePair("pid", String
+//							.valueOf(whyq.getId())));
+//					nameValuePairs.add(new BasicNameValuePair("uid", String
+//							.valueOf(user.getId())));
+//					util.sendRequest(API.likeURL, nameValuePairs, false);
+//
+//					if (v instanceof Button) {
+//						String label = ((Button) v).getText().toString();
+//						int likeCount = Integer.parseInt(whyq
+//								.getPermLikeCount());
+//						if (label != null && label.equals(likeString)) { // Like
+//							// Update the count
+//							likeCount++;
+//							whyq.setPermLikeCount(String.valueOf(likeCount));
+//							// Change the text to "Unlike"
+//							((Button)v).setText(R.string.bt_unlike);
+//							v.invalidate();
+//						} else { // Unlike
+//							likeCount = likeCount - 1;
+//							if (likeCount < 0)
+//								likeCount = 0;
+//							whyq.setPermLikeCount(String.valueOf(likeCount));
+//							((Button)v).setText(R.string.bt_like);
+//							v.invalidate();
+//						}
+//					}
+//					
+//					String permStatus = likeString + ": " + whyq.getPermLikeCount()
+//							+ " - " + repermString + ": " + whyq.getPermRepinCount()
+//							+ " - " + commentString + ": " + whyq.getPermCommentCount();
+//					TextView txtStatus = permStateList.get(permId);
+//					if(permStatus != null)
+//						txtStatus.setText(permStatus);
+//				}else if(like.getText().toString().equals(textCurrentLike)){
+//					AlertDialog alertDialog = new AlertDialog.Builder(context).create();		
+////					alertDialog.setTitle(AlertDialog);
+//					alertDialog.setMessage(v.getContext().getString(R.string.confirm_delete));
+//					alertDialog.setButton(v.getContext().getString(R.string.yes_delete), new DialogInterface.OnClickListener() {
+//					   public void onClick(DialogInterface dialog, int which) {
+//					      // here you can add functions
+//							viewList.remove(whyq.getId());
+//							int position = v.getNextFocusDownId();
+//							if(position >= 0 && items.size() > position)
+//								items.remove(position);
+//							notifyDataSetChanged();
+//							List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//							nameValuePairs.add(new BasicNameValuePair("delid", String
+//									.valueOf(whyq.getId())));
+//							nameValuePairs.add(new BasicNameValuePair("uid", String
+//									.valueOf(user.getId())));
+//							util.sendRequest(API.deleteUrl, nameValuePairs, false);
+//					   }
+//					});
+//					alertDialog.setButton2(v.getContext().getString(R.string.no), new DialogInterface.OnClickListener() {
+//					   public void onClick(DialogInterface dialog, int which) {
+//							      
+//					   }
+//					});
+//					alertDialog.setIcon(R.drawable.icon);
+//					alertDialog.show();
+//
+//					
+//				}
+//			} else {
+//
+//			}
+//
+//		}	
+//	}
 
 	private void exeJoin() {
 		// TODO Auto-generated method stub

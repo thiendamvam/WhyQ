@@ -260,16 +260,16 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 					}
 				}
 			}
-			if(permListAdapter != null && permListAdapter.getCount() > 0) {
-					if(isAddHeader) {
-						headerView = permListAdapter.createHeaderView();
-						whyqListView.addHeaderView(headerView);
-						isAddHeader = false;
-					}
-					if(headerView != null) {
-						permListAdapter.updateHeaderView(headerView);
-					}									
-			}
+//			if(permListAdapter != null && permListAdapter.getCount() > 0) {
+//					if(isAddHeader) {
+//						headerView = permListAdapter.createHeaderView();
+//						whyqListView.addHeaderView(headerView);
+//						isAddHeader = false;
+//					}
+//					if(headerView != null) {
+//						permListAdapter.updateHeaderView(headerView);
+//					}									
+//			}
 			
 			whyqListView.setAdapter(permListAdapter);
 			int selected = permListAdapter.getCount() - permListMain.size() - 2;
@@ -339,6 +339,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 					
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				// TODO: handle exception
 //				if (dialog != null && dialog.isShowing()) {
 //					dialog.dismiss();

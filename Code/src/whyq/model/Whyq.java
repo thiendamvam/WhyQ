@@ -1,306 +1,430 @@
-/**
- * 
- */
 package whyq.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-public class Whyq implements Serializable{
+public class Whyq {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	
 	private String id;
-	private String name;
-	private String description;
-	private String permDateMessage;
-	private WhyqImage image;
-	private List<Comment> comments;
-	private User author;
-	private WhyqBoard board;
-	private String category;
-	
-	private String permRepinCount = "0";
-	private String permLikeCount = "0";
-	private String permCommentCount = "0";
-	private String permUserLikeCount = "0";
-	private String permUrl = "";
-	private String permAudio="";
-	private float lat;
-	private float lon;
-	
+	private String storeId;
 	private String address;
-	private String distant;
-	private ArrayList<User> visitedUser;
-	// TODO :This is not good but for now, I will do it
-	// This is for keeping the value of <nextItem> in the response when get the list of Perm
-	private String nextItem;
+	private String longitude;
+	private String latitude;
+	private String status;
+	private String radius;
+	private String freeChargeOutRadiusDelieverPerKm;
+	private String createdate;
+	private String updatedate;
+	private String cateid;
+	private String userId;
+	private String nameStore;
+	private String introStore;
+	private String phoneStore;
+	private String logo;
+	private String style;
+	private String startTime;
+	private String endTime;
+	private boolean isHomeDeliver;
+	private boolean isHotelDeliver;
+	private boolean isTakeAway;
+	private boolean isAtPlace;
+	private String tableQuantity;
+	private int countFavaouriteMember;
+	private int coutBill;
+	private int income;
+	private String nameCate;
 	
-	private String previousItem;	
-	
+	public Whyq() {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
-	 * Constructor
+	 * @return the id
 	 */
-	
-	public Whyq(){
-		
-	}
-	
-	
-	public Whyq( String id){
-		this.setId(id);
-	}
-	
-	public Whyq( String id, String name, String description, String permDateMessage, WhyqImage image, String permUrl, String permAduio ){
-		this.setId(id);
-		this.setName(name);
-		this.setDescription(description);
-		this.setImage(image);
-		this.setPermDateMessage(permDateMessage);
-		this.setPermUrl(permUrl);
-		this.setPermAudio(permAduio);
-	}
-	
-	
-	private void setPermDateMessage( String permDateMessage) {
-		// TODO Auto-generated method stub
-		this.permDateMessage = permDateMessage;
-	}
-
-
-	public Whyq( String id, WhyqBoard board, String description, String permDateMessage, WhyqImage image , ArrayList<Comment> comments, String permUrl, String permAudio){
-		this.setId(id);
-		this.setBoard(board);
-		this.setDescription(description);
-		this.setImage(image);
-		this.setComments( comments );
-		this.setPermDateMessage(permDateMessage);
-		this.setPermUrl(permUrl);
-		this.setPermAudio(permAudio);
-	}
-	
-	
-	
-	public String toString(){
-		return this.id;
-	}
-	
-	/**
-	 * Getters / Setters
-	 */
-	
-	public void setComments(List<Comment> comments){
-		this.comments = comments;
-	}
-	
-	public List<Comment> getComments(){
-		return this.comments;
-	}
-	
-	public void addCommnent(Comment comment) {
-		this.comments.add(comment);
-		this.permCommentCount += 1;
-	}
-
-	public WhyqImage getImage() {
-		return image;
-	}
-
-	public void setImage(WhyqImage image) {
-		this.image = image;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-	public String getPermDatemessage() {
-		return permDateMessage;
-	}	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * @param id the id to set
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
-	public User getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(User author) {
-		this.author = author;
-	}
-
-	public WhyqBoard getBoard() {
-		return board;
-	}
-
-	public void setBoard(WhyqBoard board) {
-		this.board = board;
-	}
-	public void setPermUrl( String url) {
-		this.permUrl = url;
-	}
-	public String getPermUrl(){
-		return this.permUrl;
-	}
-	public void setPermAudio( String url) {
-		this.permAudio = url;
-	}
-	public String getPermAudio(){
-		return this.permAudio;
-	}
 	/**
-	 * @return the permRepinCount
+	 * @return the address
 	 */
-	public String getPermRepinCount() {
-		return permRepinCount;
-	}
-
-
-	/**
-	 * @param permRepinCount the permRepinCount to set
-	 */
-	public void setPermRepinCount(String permRepinCount) {
-		this.permRepinCount = permRepinCount;
-	}
-
-
-	/**
-	 * @return the permLikecount
-	 */
-	public String getPermLikeCount() {
-		return permLikeCount;
-	}
-
-
-	/**
-	 * @param permLikecount the permLikecount to set
-	 */
-	public void setPermLikeCount(String permLikecount) {
-		this.permLikeCount = permLikecount;
-	}
-
-
-	/**
-	 * @return the permCommentCount
-	 */
-	public String getPermCommentCount() {
-		return permCommentCount;
-	}
-
-
-	/**
-	 * @param permCommentCount the permCommentCount to set
-	 */
-	public void setPermCommentCount(String permCommentCount) {
-		this.permCommentCount = permCommentCount;
-	}
-
-
-	public String getCategory() {
-		return category;
-	}
-
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-
-	public String getNextItem() {
-		return nextItem;
-	}
-
-
-	public void setNextItem(String nextItem) {
-		this.nextItem = nextItem;
-	}
-
-	public String getPreviousItem() {
-		return previousItem;
-	}
-
-
-	public void setPreviousItem(String previousItem) {
-		this.previousItem = previousItem;
-	}
-
-	/**
-	 * @return the permUserLikeCount
-	 */
-	public String getPermUserLikeCount() {
-		return permUserLikeCount;
-	}
-
-
-	/**
-	 * @param permUserLikeCount the permUserLikeCount to set
-	 */
-	public void setPermUserLikeCount(String permUserLikeCount) {
-		this.permUserLikeCount = permUserLikeCount;
-	}
-	
-
-	public void setLat(float value) {
-		// TODO Auto-generated method stub
-		this.lat = value;
-	}
-	public void setLon(float value) {
-		// TODO Auto-generated method stub
-		this.lon = value;
-	}
-	public float getLat(){
-		return this.lat;
-	}
-	public float getLon(){
-		return this.lon;
-	}
-
-
 	public String getAddress() {
 		return address;
 	}
 
-
+	/**
+	 * @param address the address to set
+	 */
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
-
-	public String getDistant() {
-		return distant;
+	/**
+	 * @return the storeId
+	 */
+	public String getStoreId() {
+		return storeId;
 	}
 
-
-	public void setDistant(String distant) {
-		this.distant = distant;
+	/**
+	 * @param storeId the storeId to set
+	 */
+	public void setStoreId(String storeId) {
+		this.storeId = storeId;
 	}
 
-
-	public ArrayList<User> getVisitedUser() {
-		return visitedUser;
+	/**
+	 * @return the longitude
+	 */
+	public String getLongitude() {
+		return longitude;
 	}
 
+	/**
+	 * @param longitude the longitude to set
+	 */
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
 
-	public void setVisitedUser(ArrayList<User> visitedUser) {
-		this.visitedUser = visitedUser;
+	/**
+	 * @return the latitude
+	 */
+	public String getLatitude() {
+		return latitude;
+	}
+
+	/**
+	 * @param latitude the latitude to set
+	 */
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the radius
+	 */
+	public String getRadius() {
+		return radius;
+	}
+
+	/**
+	 * @param radius the radius to set
+	 */
+	public void setRadius(String radius) {
+		this.radius = radius;
+	}
+
+	/**
+	 * @return the freeChargeOutRadiusDelieverPerKm
+	 */
+	public String getFreeChargeOutRadiusDelieverPerKm() {
+		return freeChargeOutRadiusDelieverPerKm;
+	}
+
+	/**
+	 * @param freeChargeOutRadiusDelieverPerKm the freeChargeOutRadiusDelieverPerKm to set
+	 */
+	public void setFreeChargeOutRadiusDelieverPerKm(
+			String freeChargeOutRadiusDelieverPerKm) {
+		this.freeChargeOutRadiusDelieverPerKm = freeChargeOutRadiusDelieverPerKm;
+	}
+
+	/**
+	 * @return the createdate
+	 */
+	public String getCreatedate() {
+		return createdate;
+	}
+
+	/**
+	 * @param createdate2 the createdate to set
+	 */
+	public void setCreatedate(String createdate2) {
+		this.createdate = createdate2;
+	}
+
+	/**
+	 * @return the updatedate
+	 */
+	public String getUpdatedate() {
+		return updatedate;
+	}
+
+	/**
+	 * @param updatedate2 the updatedate to set
+	 */
+	public void setUpdatedate(String updatedate2) {
+		this.updatedate = updatedate2;
+	}
+
+	/**
+	 * @return the cateid
+	 */
+	public String getCateid() {
+		return cateid;
+	}
+
+	/**
+	 * @param cateid the cateid to set
+	 */
+	public void setCateid(String cateid) {
+		this.cateid = cateid;
+	}
+
+	/**
+	 * @return the nameStore
+	 */
+	public String getNameStore() {
+		return nameStore;
+	}
+
+	/**
+	 * @param nameStore the nameStore to set
+	 */
+	public void setNameStore(String nameStore) {
+		this.nameStore = nameStore;
+	}
+
+	/**
+	 * @return the userId
+	 */
+	public String getUserId() {
+		return userId;
+	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	/**
+	 * @return the phoneStore
+	 */
+	public String getPhoneStore() {
+		return phoneStore;
+	}
+
+	/**
+	 * @param phoneStore the phoneStore to set
+	 */
+	public void setPhoneStore(String phoneStore) {
+		this.phoneStore = phoneStore;
+	}
+
+	/**
+	 * @return the introStore
+	 */
+	public String getIntroStore() {
+		return introStore;
+	}
+
+	/**
+	 * @param introStore the introStore to set
+	 */
+	public void setIntroStore(String introStore) {
+		this.introStore = introStore;
+	}
+
+	/**
+	 * @return the logo
+	 */
+	public String getLogo() {
+		return logo;
+	}
+
+	/**
+	 * @param logo the logo to set
+	 */
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	/**
+	 * @return the style
+	 */
+	public String getStyle() {
+		return style;
+	}
+
+	/**
+	 * @param style the style to set
+	 */
+	public void setStyle(String style) {
+		this.style = style;
+	}
+
+	/**
+	 * @return the startTime
+	 */
+	public String getStartTime() {
+		return startTime;
+	}
+
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	/**
+	 * @return the endTime
+	 */
+	public String getEndTime() {
+		return endTime;
+	}
+
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	/**
+	 * @return the isHomeDeliver
+	 */
+	public boolean isHomeDeliver() {
+		return isHomeDeliver;
+	}
+
+	/**
+	 * @param isHomeDeliver the isHomeDeliver to set
+	 */
+	public void setHomeDeliver(boolean isHomeDeliver) {
+		this.isHomeDeliver = isHomeDeliver;
+	}
+
+	/**
+	 * @return the isHotelDeliver
+	 */
+	public boolean isHotelDeliver() {
+		return isHotelDeliver;
+	}
+
+	/**
+	 * @param isHotelDeliver the isHotelDeliver to set
+	 */
+	public void setHotelDeliver(boolean isHotelDeliver) {
+		this.isHotelDeliver = isHotelDeliver;
+	}
+
+	/**
+	 * @return the isTakeAway
+	 */
+	public boolean isTakeAway() {
+		return isTakeAway;
+	}
+
+	/**
+	 * @param isTakeAway the isTakeAway to set
+	 */
+	public void setTakeAway(boolean isTakeAway) {
+		this.isTakeAway = isTakeAway;
+	}
+
+	/**
+	 * @return the isAtPlace
+	 */
+	public boolean isAtPlace() {
+		return isAtPlace;
+	}
+
+	/**
+	 * @param isAtPlace the isAtPlace to set
+	 */
+	public void setAtPlace(boolean isAtPlace) {
+		this.isAtPlace = isAtPlace;
+	}
+
+	/**
+	 * @return the tableQuantity
+	 */
+	public String getTableQuantity() {
+		return tableQuantity;
+	}
+
+	/**
+	 * @param tableQuantity the tableQuantity to set
+	 */
+	public void setTableQuantity(String tableQuantity) {
+		this.tableQuantity = tableQuantity;
+	}
+
+	/**
+	 * @return the countFavaouriteMember
+	 */
+	public int getCountFavaouriteMember() {
+		return countFavaouriteMember;
+	}
+
+	/**
+	 * @param countFavouriteMemebr the countFavaouriteMember to set
+	 */
+	public void setCountFavaouriteMember(int countFavouriteMemebr) {
+		this.countFavaouriteMember = countFavouriteMemebr;
+	}
+
+	/**
+	 * @return the coutBill
+	 */
+	public int getCoutBill() {
+		return coutBill;
+	}
+
+	/**
+	 * @param coutBill the coutBill to set
+	 */
+	public void setCoutBill(int coutBill) {
+		this.coutBill = coutBill;
+	}
+
+	/**
+	 * @return the income
+	 */
+	public int getIncome() {
+		return income;
+	}
+
+	/**
+	 * @param income the income to set
+	 */
+	public void setIncome(int income) {
+		this.income = income;
+	}
+
+	/**
+	 * @return the nameCate
+	 */
+	public String getNameCate() {
+		return nameCate;
+	}
+
+	/**
+	 * @param nameCate the nameCate to set
+	 */
+	public void setNameCate(String nameCate) {
+		this.nameCate = nameCate;
 	}
 }
