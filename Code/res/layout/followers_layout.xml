@@ -9,7 +9,7 @@
         layout="@layout/title_bar" />
 
     <TableLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+       
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:stretchColumns="0" >
@@ -18,7 +18,7 @@
             android:layout_marginBottom="59dp" >
 
             <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
+               
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_span="2"
