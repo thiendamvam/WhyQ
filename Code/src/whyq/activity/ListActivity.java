@@ -9,20 +9,21 @@ import org.apache.http.message.BasicNameValuePair;
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.adapter.WhyqAdapter;
+import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
 import whyq.interfaces.Login_delegate;
-import whyq.model.Whyq;
 import whyq.model.User;
+import whyq.model.Whyq;
 import whyq.utils.API;
 import whyq.utils.RSA;
-import whyq.utils.WhyqUtils;
 import whyq.utils.UrlImageViewHelper;
+import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -30,14 +31,11 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.whyq.R;
 
@@ -60,7 +58,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public static boolean isCalendar = false;
 	int nextItem = -1;
 //	FragmentManager t = ggetSupportFragmentManager();
-//	private ProgressDialog dialog;
+	private ProgressDialog dialog;
 	
 	ListView whyqListView;
 //	Button btnRefesh;
@@ -91,6 +89,26 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			} 
 		}
 	};
+	
+	
+	private OnItemClickListener onStoreItemListener = new OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> adapter, View view,
+				int position, long id) {
+			try {
+				ViewHolder store = ((ViewHolder) view.getTag());
+				if(store !=null){
+					String storeId = store.id;
+					if(storeId !=null)
+						gotoStoreDetail(storeId);
+				}
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+	};
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -101,8 +119,17 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(ListActivity.this.getIntent());
+    	dialog = ProgressDialog.show(getParent(), "", "progressing...",
+    			true);
+    	showProgress();
 	}
 	
+	protected void gotoStoreDetail(String storeId) {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent(ListActivity.this, StoreDetailActivity.class);
+		startActivity(intent);
+	}
+
 	public void createUI() {
 		setContentView(R.layout.list_screen);//
 		
@@ -150,12 +177,11 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
     	super.onPause();
     	isFirst = true;
     	nextItem = -1;
-    	if(progressBar.getVisibility() == View.VISIBLE){
-    		progressBar.setVisibility(View.GONE);
-//    		btnRefesh.setVisibility(View.VISIBLE);
-    	}
+    	showProgress();
     	
     }
+
+
 
 	public void exeListActivity() {
 		// TODO Auto-generated method stub
@@ -191,13 +217,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			this.url = (String) extras.get("categoryURL");
 			this.header = false;
 		} else if (user != null) {
-			this.url = API.followingPerm + String.valueOf(user.getId());
+//			this.url = API.followingPerm + String.valueOf(user.getId());
+			this.url = API.popularBusinessListURL;
 			this.header = false;
 		}
 		clearData();
 //		btnRefesh.setVisibility(View.GONE);
-		progressBar.setVisibility(View.VISIBLE);
-
+//		progressBar.setVisibility(View.VISIBLE);
+		showProgress();
 
 		loadPermList = new LoadPermList();
 		loadPermList.execute();
@@ -206,10 +233,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private void timeoutDialog() {
 		// TODO Auto-generated method stub
 
-		if(progressBar.getVisibility()==View.VISIBLE){
-			progressBar.setVisibility(View.GONE);
-//			btnRefesh.setVisibility(View.VISIBLE);
-		}
+		hideProgress();
 	}
 	public void loadPreviousItems() {
 		if(nextItem > -1) {
@@ -218,6 +242,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 //			btnRefesh.setVisibility(View.GONE);
 //			progressBar.setVisibility(View.VISIBLE);
+			showProgress();
 			
 			loadPermList = new LoadPermList();
 			loadPermList.execute();
@@ -229,10 +254,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		if(permListAdapter != null) {
 			nextItem = permListAdapter.getNextItems();
 			//clearData();
-//	    	dialog = ProgressDialog.show(getParent(), "Loading more", "Please wait...",
-//	    			true);
+
 //			btnRefesh.setVisibility(View.GONE);
-			progressBar.setVisibility(View.VISIBLE);
+//			progressBar.setVisibility(View.VISIBLE);
+			showProgress();
 	    	loadPermList = new LoadPermList();
 			loadPermList.execute();
 		}		
@@ -272,13 +297,16 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 //			}
 			
 			whyqListView.setAdapter(permListAdapter);
+
 			int selected = permListAdapter.getCount() - permListMain.size() - 2;
 			if(selected >= 0) {
 				whyqListView.setSelection(selected);
 			} else {
 				whyqListView.setSelection(0);
 			}
-			//whyqListView.setSelection(PermListController.selectedPos);	
+			//whyqListView.setSelection(PermListController.selectedPos);
+//			whyqListView.setClickable(true);
+//			whyqListView.setOnItemClickListener(onStoreItemListener);
 		}else{
 			
 			
@@ -348,6 +376,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 					progressBar.setVisibility(View.GONE);
 					btnRefesh.setVisibility(View.VISIBLE);
 				}*/
+				hideProgress();
 			}
 			/*if(permList != null){
 				for(int i = 0; i < permList.size(); i++) {
@@ -384,10 +413,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 //			if (dialog != null && dialog.isShowing()) {
 //				dialog.dismiss();
 //			}
-			if(progressBar.getVisibility()==View.VISIBLE){
-				progressBar.setVisibility(View.GONE);
-//				btnRefesh.setVisibility(View.VISIBLE);
-			}
+			hideProgress();
 			if(permListAdapter != null) {
 				permListAdapter.notifyDataSetChanged();
 			}
@@ -439,19 +465,26 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		
 		switch (index) {
 		case 1:
-			lnCutlery.setBackgroundResource(R.drawable.ic_launcher);
-			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
-			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
+			
+			lnWine.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
+//			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
+//			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
 			break;
 		case 2:
-			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
-			lnWine.setBackgroundResource(R.drawable.ic_launcher);
-			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);			
+			lnWine.setBackgroundResource(R.drawable.bg_tab_active);
+			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
+//			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
+//			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			break;
 		case 3:
-			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
-			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
-			lnCoffe.setBackgroundResource(R.drawable.ic_launcher);
+			lnCoffe.setBackgroundResource(R.drawable.bg_tab_active);
+			lnWine.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
+//			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
+//			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			break;
 
 		default:
@@ -472,5 +505,25 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	public void onCoffeTabClicked(View v){
 		resetTabBarFocus(3);
+	}
+	
+	
+	private void hideProgress() {
+		// TODO Auto-generated method stub
+//    	if(progressBar.getVisibility() == View.VISIBLE){
+//    		progressBar.setVisibility(View.GONE);
+//    	}
+		if (dialog != null && dialog.isShowing()) {
+			dialog.dismiss();
+		}
+	}
+	private void showProgress() {
+		// TODO Auto-generated method stub
+//    	if(progressBar.getVisibility() != View.VISIBLE){
+//    		progressBar.setVisibility(View.VISIBLE);
+//    	}
+		if (dialog != null && dialog.isShowing()) {
+			dialog.show();
+		}
 	}
 }

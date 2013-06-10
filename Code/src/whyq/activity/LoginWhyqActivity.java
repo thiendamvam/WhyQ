@@ -299,6 +299,7 @@ public void on_success() {
 		ListActivity.isLogin = true;
 		dismissLoadingDialog();
 		Intent intent = new Intent(LoginWhyqActivity.this, WhyqMain.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 //		if(WhyqMain.getCurrentTab() == 4) {
 //			((ProfileActivityGroup)ProfileActivityGroup.group).createUI();

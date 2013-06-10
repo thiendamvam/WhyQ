@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_alignParentBottom="true"
-            android:background="#3e3e3e"
+            android:background="@drawable/bg_footer_bar"
             android:gravity="bottom"
             android:tabStripEnabled="false" />
 

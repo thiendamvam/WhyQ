@@ -15,6 +15,7 @@ import whyq.activity.GoogleMapActivity;
 import whyq.activity.JoinWhyqActivity;
 import whyq.activity.NewWhyqActivity;
 import whyq.activity.PrepareRequestTokenActivity;
+import whyq.activity.StoreDetailActivity;
 import whyq.adapter.WhyqItemAdapterNew.ViewHolder;
 import whyq.controller.AuthorizeController;
 import whyq.controller.WhyqListController;
@@ -70,10 +71,11 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 //	public Button like;
 //	public Button reperm;
 //	public Button comment;
-	static class ViewHolder {
+	public static class ViewHolder {
 		public ImageView imgThumb ;
 		private TextView tvItemName, tvNumberFavourite,tvItemAddress, tvVisited, tvDiscoutNumber;
 		private Button btnDistance;
+		public String id;
 	}
 	private Activity activity;
 	private Boolean header;
@@ -266,6 +268,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					View rowView = inflater.inflate(R.layout.whyq_item_new, null);
 					ViewHolder viewHolder = new ViewHolder();
+					viewHolder.id = item.getStoreId();
 					viewHolder.imgThumb = (ImageView) rowView.findViewById(R.id.imgThumbnal2);
 					viewHolder.tvItemName = (TextView) rowView.findViewById(R.id.tvItemName);
 					viewHolder.tvItemAddress = (TextView)rowView.findViewById(R.id.tvItemAddress);
@@ -972,10 +975,19 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 		case R.id.btnLocation:
 			exeGotoMap(v);
 			break;
+		case R.id.lvRowView:
+			exeGotoDetail(v);
+			break;
 		default:
 			break;
 		}
 		
+	}
+
+	private void exeGotoDetail(View v) {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent(context, StoreDetailActivity.class);
+		context.startActivity(intent);
 	}
 
 	private void exeGotoMap(View view) {
