@@ -268,37 +268,42 @@ public class LoginHome extends Activity implements Login_delegate {
 public void on_success() {
 	// TODO Auto-generated method stub
 	//Logger.appendLog("test log", "LoginSuccess");
-	if(isLoginFb){
-		ListActivity.isLogin = true;
-		isLoginFb = false;
-		if(WhyqMain.getCurrentTab() == 0) {
-			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
-		} else {
-			WhyqMain.back();
-		}
-	}else if(isTwitter){
-		ListActivity.isLogin = true;
-//		Intent intent = new Intent(context, PermpingMain.class);
-//		context.startActivity(intent);
-		isTwitter = false;
-		if(WhyqMain.getCurrentTab() == 0) {
-			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
-		} else {
-			WhyqMain.back();
-		}
-	}else{
-		ListActivity.isLogin = true;
-		dismissLoadingDialog();
-		if(WhyqMain.getCurrentTab() == 4) {
-			((ProfileActivityGroup)ProfileActivityGroup.group).createUI();
-		} else {
-			if(WhyqMain.getCurrentTab() == 0) {
-				((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
-			} else {
-				WhyqMain.back();
-			}
-		}
-	}
+//	if(isLoginFb){
+//		ListActivity.isLogin = true;
+//		isLoginFb = false;
+//		if(WhyqMain.getCurrentTab() == 0) {
+//			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
+//		} else {
+//			WhyqMain.back();
+//		}
+//	}else if(isTwitter){
+//		ListActivity.isLogin = true;
+////		Intent intent = new Intent(context, PermpingMain.class);
+////		context.startActivity(intent);
+//		isTwitter = false;
+//		if(WhyqMain.getCurrentTab() == 0) {
+//			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
+//		} else {
+//			WhyqMain.back();
+//		}
+//	}else{
+//		ListActivity.isLogin = true;
+//		dismissLoadingDialog();
+//		if(WhyqMain.getCurrentTab() == 4) {
+//			((ProfileActivityGroup)ProfileActivityGroup.group).createUI();
+//		} else {
+//			if(WhyqMain.getCurrentTab() == 0) {
+//				((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
+//			} else {
+//				WhyqMain.back();
+//			}
+//		}
+//	}
+	ListActivity.isLogin = true;
+//	dismissLoadingDialog();
+	Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	startActivity(intent);
 
 }
 

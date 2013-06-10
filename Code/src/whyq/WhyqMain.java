@@ -51,135 +51,136 @@ public class WhyqMain extends TabActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
        
-        tabHost = getTabHost();
-        context = WhyqMain.this;
-        tabHost.getTabWidget().setBackgroundResource( R.drawable.tabs_background );
         token = XMLParser.getToken(WhyqApplication.Instance().getApplicationContext());
-        // Tab for followers
-        TabSpec followers = tabHost.newTabSpec("List");
-        followers.setIndicator("List", getResources().getDrawable(R.drawable.footer_icon1));
-        Intent followersIntent = new Intent(this, ListActivityGroup.class);
-        followers.setContent(followersIntent);
-        tabHost.addTab( followers );
-        
-        // Tab for Explorer
-        TabSpec explorer = tabHost.newTabSpec("Favourites");
-        // setting Title and Icon for the Tab
-        explorer.setIndicator("Favourites", getResources().getDrawable(R.drawable.footer_icon2));
-        Intent explorerIntent = new Intent(this, FavouritesActivityGroup.class);
-        explorer.setContent(explorerIntent);
-        tabHost.addTab( explorer );
-        
-//        // Tab for Image
-//        TabSpec image = tabHost.newTabSpec("Friends");
-//        image.setIndicator("Images", getResources().getDrawable(R.drawable.icon_image_tab));
-//        Intent imageIntent = new Intent(this, ImageActivityGroup.class);
-//        image.setContent(imageIntent);
-//        tabHost.addTab( image );
-        
-        TabSpec mydiary = tabHost.newTabSpec("Friends");
-        mydiary.setIndicator("Friends", getResources().getDrawable(R.drawable.footer_icon3));
-        Intent mydiaryIntent = new Intent(this, FriendActivityGroup.class);
-        mydiary.setContent(mydiaryIntent);
-        tabHost.addTab( mydiary );
-        
-        TabSpec profile = tabHost.newTabSpec("Profile");
-        profile.setIndicator("Profile", getResources().getDrawable(R.drawable.footer_icon4));
-        Intent profileIntent = new Intent(this, ProfileActivityGroup.class);
-        profile.setContent(profileIntent);
-        tabHost.addTab( profile );
-        
-        tabHost.setOnTabChangedListener(new OnTabChangeListener() {
-			
-			@Override
-			public void onTabChanged(String tabId) {
-				// TODO Auto-generated method stub
-				int currentTab = WhyqMain.getCurrentTab();
-		    	if( currentTab == 0){
-					ListActivityGroup.isTabChanged = false;
-					FavouritesActivityGroup.isTabChanged = true;
-					ProfileActivityGroup.isTabChanged = true;
-					FriendActivityGroup.isTabChanged = true;
-		    	}else if(currentTab == 1){
-		    		ListActivityGroup.isTabChanged = true;
-					FavouritesActivityGroup.isTabChanged = false;
-					ProfileActivityGroup.isTabChanged = true;
-					FriendActivityGroup.isTabChanged = true;
-		    	}else if(currentTab == 2){
-		    		ListActivityGroup.isTabChanged = true;
-					FavouritesActivityGroup.isTabChanged = true;
-					ProfileActivityGroup.isTabChanged = true;
-					FriendActivityGroup.isTabChanged = true;
-		    	}else if(currentTab == 3){
-		    		ListActivityGroup.isTabChanged = true;
-					FavouritesActivityGroup.isTabChanged = true;
-					ProfileActivityGroup.isTabChanged = true;
-					FriendActivityGroup.isTabChanged = false;
-		    	}else if(currentTab == 4){
-		    		ListActivityGroup.isTabChanged = true;
-					FavouritesActivityGroup.isTabChanged = true;
-					ProfileActivityGroup.isTabChanged = false;
-					FriendActivityGroup.isTabChanged = true;
-		    	}
-			}
-		});
-        
-        // Set the event for Followers tab
-        tabHost.getTabWidget().getChildAt(0).setOnTouchListener(new FollowerHandler());
-        
-        // Set the event for Explorer tab
-        tabHost.getTabWidget().getChildAt(1).setOnTouchListener(new View.OnTouchListener() {
-
-        	@Override
-    		public boolean onTouch(View v, MotionEvent event) {
-        		//do whatever you need
-        		FavouritesActivityGroup.group.clearHistory();
-        		return false;
-
-            }
-        });
-        
-//        // Set the event for Images tab
-//        tabHost.getTabWidget().getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
-//
-//        	@Override
-//    		public boolean onTouch(View v, MotionEvent event) {
-//        		//do whatever you need
-//        		ImageActivityGroup.group.clearHistory();
-//        		return false;
-//
-//            }
-//        });
-        
-        // Set the event for MyDiary tab
-        //tabHost.getTabWidget().getChildAt(3).setOnTouchListener(new ValidateHandler());
-        tabHost.getTabWidget().getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
-
-        	@Override
-    		public boolean onTouch(View v, MotionEvent event) {
-        		//do whatever you need
-        		FriendActivityGroup.group.clearHistory();
-        		return false;
-
-            }
-        }); 
-        // Set the event for Profile tab
-        tabHost.getTabWidget().getChildAt(3).setOnTouchListener(new View.OnTouchListener() {
-
-        	@Override
-    		public boolean onTouch(View v, MotionEvent event) {
-        		//do whatever you need
-        		ProfileActivityGroup.group.clearHistory();
-        		return false;
-
-            }
-        });        
-        tabHost.setCurrentTab(0);
-        rsa = new RSA();
         if(token ==null || token.equals("")){
         	Intent intent = new Intent(WhyqMain.this, LoginHome.class);
         	startActivity(intent);
         }else{
+            tabHost = getTabHost();
+            context = WhyqMain.this;
+            tabHost.getTabWidget().setBackgroundResource( R.drawable.tabs_background );
+
+            // Tab for followers
+            TabSpec followers = tabHost.newTabSpec("List");
+            followers.setIndicator("List", getResources().getDrawable(R.drawable.footer_icon1));
+            Intent followersIntent = new Intent(this, ListActivityGroup.class);
+            followers.setContent(followersIntent);
+            tabHost.addTab( followers );
+            
+            // Tab for Explorer
+            TabSpec explorer = tabHost.newTabSpec("Favourites");
+            // setting Title and Icon for the Tab
+            explorer.setIndicator("Favourites", getResources().getDrawable(R.drawable.footer_icon2));
+            Intent explorerIntent = new Intent(this, FavouritesActivityGroup.class);
+            explorer.setContent(explorerIntent);
+            tabHost.addTab( explorer );
+            
+//            // Tab for Image
+//            TabSpec image = tabHost.newTabSpec("Friends");
+//            image.setIndicator("Images", getResources().getDrawable(R.drawable.icon_image_tab));
+//            Intent imageIntent = new Intent(this, ImageActivityGroup.class);
+//            image.setContent(imageIntent);
+//            tabHost.addTab( image );
+            
+            TabSpec mydiary = tabHost.newTabSpec("Friends");
+            mydiary.setIndicator("Friends", getResources().getDrawable(R.drawable.footer_icon3));
+            Intent mydiaryIntent = new Intent(this, FriendActivityGroup.class);
+            mydiary.setContent(mydiaryIntent);
+            tabHost.addTab( mydiary );
+            
+            TabSpec profile = tabHost.newTabSpec("Profile");
+            profile.setIndicator("Profile", getResources().getDrawable(R.drawable.footer_icon4));
+            Intent profileIntent = new Intent(this, ProfileActivityGroup.class);
+            profile.setContent(profileIntent);
+            tabHost.addTab( profile );
+            
+            tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+    			
+    			@Override
+    			public void onTabChanged(String tabId) {
+    				// TODO Auto-generated method stub
+    				int currentTab = WhyqMain.getCurrentTab();
+    		    	if( currentTab == 0){
+    					ListActivityGroup.isTabChanged = false;
+    					FavouritesActivityGroup.isTabChanged = true;
+    					ProfileActivityGroup.isTabChanged = true;
+    					FriendActivityGroup.isTabChanged = true;
+    		    	}else if(currentTab == 1){
+    		    		ListActivityGroup.isTabChanged = true;
+    					FavouritesActivityGroup.isTabChanged = false;
+    					ProfileActivityGroup.isTabChanged = true;
+    					FriendActivityGroup.isTabChanged = true;
+    		    	}else if(currentTab == 2){
+    		    		ListActivityGroup.isTabChanged = true;
+    					FavouritesActivityGroup.isTabChanged = true;
+    					ProfileActivityGroup.isTabChanged = true;
+    					FriendActivityGroup.isTabChanged = true;
+    		    	}else if(currentTab == 3){
+    		    		ListActivityGroup.isTabChanged = true;
+    					FavouritesActivityGroup.isTabChanged = true;
+    					ProfileActivityGroup.isTabChanged = true;
+    					FriendActivityGroup.isTabChanged = false;
+    		    	}else if(currentTab == 4){
+    		    		ListActivityGroup.isTabChanged = true;
+    					FavouritesActivityGroup.isTabChanged = true;
+    					ProfileActivityGroup.isTabChanged = false;
+    					FriendActivityGroup.isTabChanged = true;
+    		    	}
+    			}
+    		});
+            
+            // Set the event for Followers tab
+            tabHost.getTabWidget().getChildAt(0).setOnTouchListener(new FollowerHandler());
+            
+            // Set the event for Explorer tab
+            tabHost.getTabWidget().getChildAt(1).setOnTouchListener(new View.OnTouchListener() {
+
+            	@Override
+        		public boolean onTouch(View v, MotionEvent event) {
+            		//do whatever you need
+            		FavouritesActivityGroup.group.clearHistory();
+            		return false;
+
+                }
+            });
+            
+//            // Set the event for Images tab
+//            tabHost.getTabWidget().getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
+    //
+//            	@Override
+//        		public boolean onTouch(View v, MotionEvent event) {
+//            		//do whatever you need
+//            		ImageActivityGroup.group.clearHistory();
+//            		return false;
+    //
+//                }
+//            });
+            
+            // Set the event for MyDiary tab
+            //tabHost.getTabWidget().getChildAt(3).setOnTouchListener(new ValidateHandler());
+            tabHost.getTabWidget().getChildAt(2).setOnTouchListener(new View.OnTouchListener() {
+
+            	@Override
+        		public boolean onTouch(View v, MotionEvent event) {
+            		//do whatever you need
+            		FriendActivityGroup.group.clearHistory();
+            		return false;
+
+                }
+            }); 
+            // Set the event for Profile tab
+            tabHost.getTabWidget().getChildAt(3).setOnTouchListener(new View.OnTouchListener() {
+
+            	@Override
+        		public boolean onTouch(View v, MotionEvent event) {
+            		//do whatever you need
+            		ProfileActivityGroup.group.clearHistory();
+            		return false;
+
+                }
+            });        
+            tabHost.setCurrentTab(0);
+            rsa = new RSA();
         	getListData();
         }
     }

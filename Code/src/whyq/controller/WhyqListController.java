@@ -263,7 +263,7 @@ public class WhyqListController implements WhyqList_Delegate {
 		}*/
 		XMLParser parser = new XMLParser(XMLParser.PERMLIST, WhyqListController.this, url, nameValuePairs, true);
 		Document doc = parser.getDoc();
-		NodeList responseNodeList = doc.getElementsByTagName("response"); // TODO: actually, only 1 response in the list.
+//		NodeList responseNodeList = doc.getElementsByTagName("response"); // TODO: actually, only 1 response in the list.
 //		String nextItem = "-1";
 //		for (int i = 0; i < responseNodeList.getLength(); i++) {
 //			Element e = (Element) responseNodeList.item(i);

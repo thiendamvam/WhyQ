@@ -865,7 +865,7 @@ public class XMLParser implements HttpAccess {
 //					token = pair.getValue();
 //				}
 //			}
-			storePermpingAccount(context, user.getEmail(), "", user.getToken());
+			storePermpingAccount(WhyqApplication.Instance().getApplicationContext(), user.getEmail(), "", user.getToken());
 //		}
 	}
 	

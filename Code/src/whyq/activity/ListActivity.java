@@ -217,7 +217,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			this.url = (String) extras.get("categoryURL");
 			this.header = false;
 		} else if (user != null) {
-			this.url = API.followingPerm + String.valueOf(user.getId());
+//			this.url = API.followingPerm + String.valueOf(user.getId());
+			this.url = API.popularBusinessListURL;
 			this.header = false;
 		}
 		clearData();
