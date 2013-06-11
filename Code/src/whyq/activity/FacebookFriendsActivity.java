@@ -54,14 +54,6 @@ public class FacebookFriendsActivity extends NavigationActivity {
 
 		findViewById(R.id.searchField).getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 		
-		findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(FacebookFriendsActivity.this, CommentActivity.class));
-			}
-		});
-
 		mImageWorker = new ImageWorker(this);
 		mImageWorker.initCache(this, WhyqApplication.DISK_CACHE_DIR, 0.25f);
 
