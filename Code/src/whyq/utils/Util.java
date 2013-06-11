@@ -9,10 +9,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import whyq.WhyqApplication;
 import android.content.Context;
@@ -166,6 +173,16 @@ public class Util {
 		return deviceUuid.toString();
 
 		// Maybe save this: deviceUuid.toString()); to the preferences.
+	}
+	
+	public static String encryptToken(String token) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+		RSA rsa = new RSA();
+		return rsa.RSAEncrypt(token);
+	}
+	
+	public static String decryptToken(String token) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+		RSA rsa = new RSA();
+		return rsa.RSADecrypt(token);
 	}
 
 

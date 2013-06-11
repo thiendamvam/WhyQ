@@ -72,28 +72,6 @@ public class NavigationActivity extends FragmentActivity {
 		WhyqApplication.sBaseViewHeight = displaymetrics.heightPixels / 10;
 	}
 
-	protected String getToken() {
-		String token = XMLParser.getToken(this);
-		RSA rsa = new RSA();
-		try {
-			Log.d("NavigationActivity", "token: " + token);
-			return rsa.RSAEncrypt(token);
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	protected void setExtraView(View view) {
 		FrameLayout extraContainer = (FrameLayout) findViewById(R.id.extraContainer);
 		extraContainer.addView(view, new FrameLayout.LayoutParams(

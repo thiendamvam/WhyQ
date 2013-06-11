@@ -91,8 +91,8 @@ public class RSA {
 			    byte[] dectyptedText = null;
 			    Cipher cipher = Cipher.getInstance("RSA");
 			    cipher.init(Cipher.DECRYPT_MODE, pkPublic);
-			    dectyptedText = cipher.doFinal(Base64.decode(pin, Base64.DEFAULT));
-			    result = Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
+			    dectyptedText = cipher.doFinal(Base64.decode(pin,  Base64.DEFAULT));
+			    result = Base64.encodeToString(dectyptedText, Base64.DEFAULT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

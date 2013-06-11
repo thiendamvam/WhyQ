@@ -171,7 +171,7 @@ public class LoginHome extends Activity implements Login_delegate {
 					public void onComplete(Bundle values) {
 						//Log.d("", "=====>"+values.toString());
 						WhyqUtils permutils = new WhyqUtils();
-						String accessToken = values.getString("access_token");
+						String accessToken = values.getString(Facebook.TOKEN);
 						permutils.saveFacebookToken("oauth_token", accessToken, getApplication());
 //						// Check on server
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
@@ -183,6 +183,7 @@ public class LoginHome extends Activity implements Login_delegate {
 						authorizeController.authorize(v.getContext(), nameValuePairs);
 //						boolean existed = AuthorizeController.authorize(getApplicationContext(), nameValuePairs, LoginPermActivity.this);
 						isLoginFb = true;
+						finish();
 					}
 
 					@Override

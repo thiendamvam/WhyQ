@@ -1,12 +1,25 @@
 package whyq.activity;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import whyq.WhyqApplication;
+import whyq.interfaces.IServiceListener;
 import whyq.mockup.MockupDataLoader;
 import whyq.model.FacebookFriend;
+import whyq.service.Service;
+import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
+import whyq.utils.Util;
+import whyq.utils.WhyqUtils;
+import whyq.utils.XMLParser;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -40,6 +53,14 @@ public class FacebookFriendsActivity extends NavigationActivity {
 		setTitle(R.string.friend_from_facebook);
 
 		findViewById(R.id.searchField).getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+		
+		findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(FacebookFriendsActivity.this, CommentActivity.class));
+			}
+		});
 
 		mImageWorker = new ImageWorker(this);
 		mImageWorker.initCache(this, WhyqApplication.DISK_CACHE_DIR, 0.25f);
@@ -57,20 +78,9 @@ public class FacebookFriendsActivity extends NavigationActivity {
 			}
 		});
 
-		mLoadDataTask = new LoadDataTask();
-		mLoadDataTask.execute();
+		 mLoadDataTask = new LoadDataTask();
+		 mLoadDataTask.execute();
 
-		// Service service = new Service();
-		// service.addListener(new IServiceListener() {
-		//
-		// @Override
-		// public void onCompleted(Service service, ServiceResponse result) {
-		// if (result != null) {
-		// Log.d("FriendFacebook", String.valueOf(result));
-		// }
-		// }
-		// });
-		// service.getFriendsFacebook(getToken());
 	}
 
 	@Override

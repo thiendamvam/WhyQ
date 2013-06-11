@@ -14,8 +14,8 @@ import whyq.model.ActivityItem.ActivityType;
 
 public class MockupDataLoader {
 
-	static final String mockAvatarUrl = "http://205.196.121.136/2769ds3m3s9g/5grk18uexk6e3zr/avatar.jpg";
-	static final String mockThumUrl = "http://205.196.123.198/8zcwfkywoftg/0x81ecbp1ruf4r9/thumb.png";
+	static final String mockAvatarUrl = "http://199.91.154.146/oigpco36anvg/5grk18uexk6e3zr/avatar.jpg";
+	static final String mockThumUrl = "http://205.196.120.211/c5r6b9wwxbeg/0x81ecbp1ruf4r9/thumb.png";
 
 	public static List<FacebookFriend> loadFacebookFriends() {
 		try {
