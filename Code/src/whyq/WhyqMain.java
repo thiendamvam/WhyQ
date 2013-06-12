@@ -19,12 +19,15 @@ import whyq.activity.FriendActivityGroup;
 import whyq.activity.ProfileActivityGroup;
 import whyq.activity.SimpleActivity;
 import whyq.model.User;
+import whyq.utils.MyLocationListener;
 import whyq.utils.RSA;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -179,9 +182,16 @@ public class WhyqMain extends TabActivity  {
 
                 }
             });        
+            LocationManager locationManager = (LocationManager) 
+            		getSystemService(Context.LOCATION_SERVICE);
+            LocationListener locationListener = new MyLocationListener();  
+            locationManager.requestLocationUpdates(  
+            LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
+            
             tabHost.setCurrentTab(0);
             rsa = new RSA();
         	getListData();
+        	
         }
     }
     
@@ -254,7 +264,7 @@ public class WhyqMain extends TabActivity  {
     }
     public static void showLogin(){
     	closeLoginActivity();
-    	Intent myIntent = new Intent(context, LoginWhyqActivity.class);
+    	Intent myIntent = new Intent(context, LoginHome.class);
     	int currentTab = tabHost.getCurrentTab();
     	if( currentTab == 0){
 			View boardListView = ListActivityGroup.group.getLocalActivityManager() .startActivity("detail", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
@@ -345,7 +355,7 @@ public class WhyqMain extends TabActivity  {
 	public static void closeLoginActivity() {
     	ListActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
     	FavouritesActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
-    	ImageActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
+//    	ImageActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
     	FriendActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
     	ProfileActivityGroup.group.getLocalActivityManager().destroyActivity("detail", true);
     }

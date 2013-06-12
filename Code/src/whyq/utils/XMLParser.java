@@ -40,6 +40,7 @@ import whyq.interfaces.Get_Perm_Delegate;
 import whyq.interfaces.HttpAccess;
 import whyq.interfaces.JoinPerm_Delegate;
 import whyq.interfaces.Login_delegate;
+import whyq.interfaces.LogoutDelegate;
 import whyq.interfaces.MyDiary_Delegate;
 import whyq.interfaces.WhyqList_Delegate;
 import whyq.model.Whyq;
@@ -56,6 +57,7 @@ public class XMLParser implements HttpAccess {
 
 	// private String TAG = "XML_PARSER";
 	public final static int LOGIN = 0;
+	public final static int LOGOUT = 8;
     public final static int MYDIARY  = 1;
     public final static int CREATE_BOARD = 2;
     public final static int JOIN_WHYQ= 3;
@@ -718,6 +720,10 @@ public class XMLParser implements HttpAccess {
 		case XMLParser.LOGIN:
 			loginDelegate.on_error();
 			break;
+		case XMLParser.LOGOUT:
+			LogoutDelegate logoutDelegate = (LogoutDelegate)delegate;
+			logoutDelegate.on_error();
+			break;
 		case XMLParser.MYDIARY:
 			//Log.d("delegate====:", "delegate ======>:");
 			MyDiary_Delegate myDialyDelegate = (MyDiary_Delegate)delegate;
@@ -757,6 +763,9 @@ public class XMLParser implements HttpAccess {
 			case XMLParser.LOGIN:
 				exeLoginTask();
 				break;
+			case XMLParser.LOGOUT:
+				exeLogoutTask(doc);
+				break;
 			case XMLParser.MYDIARY:
 				exeMyDiary(doc, id);
 				break;
@@ -793,6 +802,10 @@ public class XMLParser implements HttpAccess {
 			case XMLParser.LOGIN:
 				loginDelegate.on_error();
 				break;
+			case XMLParser.LOGOUT:
+				LogoutDelegate logoutDelegate = (LogoutDelegate)delegate;
+				logoutDelegate.on_error();
+				break;
 			case XMLParser.MYDIARY:
 				//Log.d("delegate====:", "delegate ======>:");
 				MyDiary_Delegate myDialyDelegate = (MyDiary_Delegate)delegate;
@@ -820,6 +833,40 @@ public class XMLParser implements HttpAccess {
 		}
 	}
 	
+	private void exeLogoutTask(Document doc) {
+		// TODO Auto-generated method stub
+		boolean isSuccess = getLogoutStatus(doc);
+		if(isSuccess){
+			WhyqApplication state = (WhyqApplication)context.getApplicationContext();
+			state.setUser(null);
+			XMLParser.storePermpingAccount(context, "", "", XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
+			WhyqMain.back();
+			WhyqMain.showLogin();
+		}else{
+			
+		}
+
+		
+	}
+
+	private boolean getLogoutStatus(Document doc ) {
+		// TODO Auto-generated method stub
+		try {
+//			ArrayList<Whyq> boards = new ArrayList<Whyq>();
+			NodeList boardNodeList = doc.getElementsByTagName("item");
+			
+			for( int i = 0; i < boardNodeList.getLength(); i ++ ){
+				Element boardElement = (Element) boardNodeList.item(i);
+
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		return false;
+	}
+
 	public static void storePermpingAccount(Context context, String userEmail, String userPass, String token) {
 		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = account.edit();

@@ -43,6 +43,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 	
 	public static final String DOWNLOAD_COMPLETED = "DOWNLOAD_COMPLETED";
+	public static final String COFFE = "";
 	public String url = "";
 	public Boolean header = true;
 
@@ -122,6 +123,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
     	dialog = ProgressDialog.show(getParent(), "", "progressing...",
     			true);
     	showProgress();
+//    	Intent intent = new Intent(ListActivity.this, WhyqLogout.class);
+//    	startActivity(intent);
 	}
 	
 	protected void gotoStoreDetail(String storeId) {
@@ -285,16 +288,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 					}
 				}
 			}
-//			if(permListAdapter != null && permListAdapter.getCount() > 0) {
-//					if(isAddHeader) {
-//						headerView = permListAdapter.createHeaderView();
-//						whyqListView.addHeaderView(headerView);
-//						isAddHeader = false;
-//					}
-//					if(headerView != null) {
-//						permListAdapter.updateHeaderView(headerView);
-//					}									
-//			}
+
 			
 			whyqListView.setAdapter(permListAdapter);
 
@@ -304,9 +298,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			} else {
 				whyqListView.setSelection(0);
 			}
-			//whyqListView.setSelection(PermListController.selectedPos);
-//			whyqListView.setClickable(true);
-//			whyqListView.setOnItemClickListener(onStoreItemListener);
+
 		}else{
 			
 			
@@ -490,6 +482,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		default:
 			break;
 		}
+		
 	}
 /*
  * Clicked Listener

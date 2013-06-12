@@ -45,7 +45,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            
         </activity>
         <activity
             android:name="whyq.activity.FavouriteActivity"
@@ -56,8 +55,9 @@
         <activity
             android:name="whyq.activity.StoreDetailActivity"
             android:screenOrientation="portrait" />
-        
-        
+        <activity
+            android:name="whyq.activity.WhyqLogout"
+            android:screenOrientation="portrait" />
         <activity
             android:name="whyq.activity.ListActivity"
             android:screenOrientation="portrait" >

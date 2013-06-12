@@ -27,8 +27,10 @@ import org.apache.http.protocol.HTTP;
 
 import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
+import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.Util;
+import whyq.utils.XMLParser;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -51,7 +53,10 @@ public class Service implements Runnable {
 	private boolean _isBitmap;
 	private boolean _isPostDirect;
 	private HttpClient httpclient;
-
+	
+	public Service() {
+		this(null);
+	}
 	public void getProductList(){
 		_action = ServiceAction.ActionGetRetaurentList;
 		Map<String, String> params = new HashMap<String, String>();
@@ -59,8 +64,13 @@ public class Service implements Runnable {
 		request("/v1/shop/purchase", params, true, false);
 	}
 	
-	public Service() {
-		this(null);
+
+	public void logout() {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionLogout;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
+		request("/m/business", params, true, false);
 	}
 
 	final Handler handler = new Handler() {
@@ -176,7 +186,9 @@ public class Service implements Runnable {
 			case ActionGetRetaurentList:
 				resObj = parser.parseRetaurentList();
 				break;
-
+			case ActionLogout:
+				resObj = parser.parseLogout();
+				break;
 			}
 		}
 		if (resObj == null)
@@ -224,14 +236,14 @@ public class Service implements Runnable {
 			if (_isPostDirect) {
 				String data = getParamsString(_params);
 				if (_includeHost)
-					urlString = Constants.API_HOST + urlString;
+					urlString = API.hostURL + urlString;
 				urlString = urlString + "?" + data;
 				request = (_isGet) ? new HttpGet(urlString) : new HttpPost(
 						urlString);
 
 			} else {
 				if (_includeHost)
-					urlString = Constants.API_HOST + urlString;
+					urlString = API.hostURL + urlString;
 				request = (_isGet) ? new HttpGet(urlString) : new HttpPost(
 						urlString);
 
@@ -267,14 +279,6 @@ public class Service implements Runnable {
 				}
 			// Set default headers
 			HttpResponse response = httpclient.execute(request);
-
-			/*
-			 * InputStream in1 = new BufferedInputStream(response.getEntity()
-			 * .getContent()); Log.v("Hehe", "2"); String temp1 =
-			 * CommonUtil.convertStreamToString(in1);
-			 * 
-			 * Log.v("Hehe", "3"); Log.v("Hehe", temp1);
-			 */
 
 			InputStream in = null;
 
@@ -322,6 +326,7 @@ public class Service implements Runnable {
 	public int getConnectionTimeout() {
 		return _connection.getConnectTimeout();
 	}
+
 
 
 

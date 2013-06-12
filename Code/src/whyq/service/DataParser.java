@@ -37,4 +37,11 @@ public class DataParser {
 		return null;
 	}
 
+	public Object parseLogout() {
+		// TODO Auto-generated method stub
+//		result.setSuccess(_root.optBoolean("success", false));
+//		return null
+		return null;
+	}
+
 }
