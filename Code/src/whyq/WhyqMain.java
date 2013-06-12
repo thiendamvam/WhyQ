@@ -204,10 +204,9 @@ public class WhyqMain extends TabActivity {
 
 			tabHost.setCurrentTab(0);
 			rsa = new RSA();
+			getListData();
 		}
-		tabHost.setCurrentTab(0);
-		rsa = new RSA();
-		getListData();
+
 
 	}
 
