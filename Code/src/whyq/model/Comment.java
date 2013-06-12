@@ -7,6 +7,7 @@ public class Comment implements Serializable{
 	private String id;
 	private String content;
 	private User author;
+	private String thumbUrl;
 	
 	// TODO :This is not good but for now, I will do it
 	// This is for keeping the value of <nextItem> in the response when get the list of Perm
@@ -58,6 +59,14 @@ public class Comment implements Serializable{
 
 	public void setIsMore(String isMore) {
 		this.isMore = isMore;
+	}
+
+	public String getThumbUrl() {
+		return thumbUrl;
+	}
+
+	public void setThumbUrl(String thumbUrl) {
+		this.thumbUrl = thumbUrl;
 	}
 
 }

@@ -26,6 +26,10 @@ public class WhyqApplication extends Application {
 	public static final String REFESH_TOKEN = "refresh_token";
 	public static final String TOKEN_EXPIRED_TIME = "expires_in";
 	public static String DEVICE_ID = "noID";
+	public static final String DISK_CACHE_DIR = "images";
+	public static int sScreenWidth;
+	public static int sScreenHeight;
+	public static int sBaseViewHeight;
 
 	/**
 	 * The current login type 

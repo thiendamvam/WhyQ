@@ -106,5 +106,5 @@ public class Constants {
 	public static final String UNLIKE = "Unlike";
 	public static final String NOT_LOGIN = "You are not logged in!";
 	public static final String CURRENT_BOARD = "current_board";
-	
+
 }

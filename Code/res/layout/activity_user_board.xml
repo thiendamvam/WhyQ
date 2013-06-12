@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="8dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <include
+            android:id="@+id/check_bill"
+            layout="@layout/category_item1" />
+
+        <include
+            android:id="@+id/history"
+            layout="@layout/category_item1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <include
+            android:id="@+id/saving"
+            layout="@layout/category_item1" />
+
+        <include
+            android:id="@+id/comment"
+            layout="@layout/category_item1" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/base_padding"
+        android:layout_marginTop="@dimen/base_padding"
+        android:drawableLeft="@drawable/icon_clock_gray"
+        android:drawablePadding="@dimen/base_padding"
+        android:text="@string/recent_activities"
+        android:textAllCaps="true"
+        android:textColor="@color/black" />
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:cacheColorHint="@null" >
+    </ListView>
+
+</LinearLayout>

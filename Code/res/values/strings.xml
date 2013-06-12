@@ -80,5 +80,14 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="hint_search">Search</string>
+    <string name="invite">Invite</string>
+    <string name="friend_all">Friend all</string>
+    <string name="add">Add</string>
+    <string name="back">Back</string>
+    <string name="view_bill">View Bill</string>
+    <string name="view_place">View Place</string>
+    <string name="friend_from_facebook">Friends from Facebook</string>
+    <string name="checked_bills">Checked Bills</string>
+    <string name="recent_activities">Recent activities</string>
 
 </resources>

@@ -3,6 +3,8 @@ package whyq.service;
 public enum ServiceAction {
     ActionNone,
     ActionInitApp,
-    ActionGetRetaurentList, 
-    ActionLogout
+    ActionLogout,
+    ActionGetRetaurentList,
+    ActionGetFriendsFacebook,
+
 }

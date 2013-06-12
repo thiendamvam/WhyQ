@@ -31,12 +31,12 @@ import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
+import whyq.utils.facebook.sdk.Facebook;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-
 
 public class Service implements Runnable {
 
@@ -53,11 +53,9 @@ public class Service implements Runnable {
 	private boolean _isBitmap;
 	private boolean _isPostDirect;
 	private HttpClient httpclient;
-	
-	public Service() {
-		this(null);
-	}
-	public void getProductList(){
+
+
+	public void getProductList() {
 		_action = ServiceAction.ActionGetRetaurentList;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("deviceType", "kindle-fire");
@@ -71,6 +69,27 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
 		request("/m/business", params, true, false);
+	}
+
+	public void getComments(String token , String store_id, int page , int count) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", token);
+		params.put("store_id", store_id);
+		params.put("page", String.valueOf(page));
+		params.put("store_id", store_id);
+		request("/m/member/friend", params, true, false);
+	}
+
+	public void getFriendsFacebook(String encryptedToken, String accessToken) {
+		_action = ServiceAction.ActionGetFriendsFacebook;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("access_token", accessToken);
+		request("/m/member/friend/facebook", params, true, false);
+	}
+
+	public Service() {
+		this(null);
 	}
 
 	final Handler handler = new Handler() {
@@ -189,6 +208,10 @@ public class Service implements Runnable {
 			case ActionLogout:
 				resObj = parser.parseLogout();
 				break;
+			case ActionGetFriendsFacebook:
+				resObj = result;
+				break;
+
 			}
 		}
 		if (resObj == null)
@@ -251,8 +274,8 @@ public class Service implements Runnable {
 
 			// if user already login ==> has token ==> add token to header
 			String token = WhyqApplication.Instance().getToken();
-			if (token != null ){
-//				request.addHeader("Authorization", ""+token);
+			if (token != null) {
+				// request.addHeader("Authorization", ""+token);
 				request.setHeader("Content-Type", "x-zip");
 				request.setHeader("Authorization", "OAuth " + token);
 			}
@@ -275,6 +298,8 @@ public class Service implements Runnable {
 						}
 
 						((HttpPost) request).setEntity(entity);
+						Log.d("Post URI: ", request.getURI().toString()
+								+ " params: " + request.getParams().toString());
 					}
 				}
 			// Set default headers
@@ -301,9 +326,7 @@ public class Service implements Runnable {
 					dispatchResult(bm);
 				} else {
 					String temp = Util.convertStreamToString(in);// text.toString();
-					Log.d(_action.toString(),"=="+ temp + "");
-					// Log.v("Service", "temp = " + temp);
-					System.out.print(temp);
+					Log.d(_action.toString(), "==" + temp + "");
 					in.close();
 					dispatchResult(temp);
 				}
@@ -326,9 +349,5 @@ public class Service implements Runnable {
 	public int getConnectionTimeout() {
 		return _connection.getConnectTimeout();
 	}
-
-
-
-
 
 }
