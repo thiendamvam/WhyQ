@@ -19,6 +19,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
+import whyq.WhyqMain;
 import whyq.interfaces.JoinPerm_Delegate;
 import whyq.model.User;
 import whyq.utils.API;
@@ -26,6 +27,8 @@ import whyq.utils.Constants;
 import whyq.utils.RSA;
 import whyq.utils.XMLParser;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -55,12 +58,15 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 	EditText confirmPassword;
 	private SharedPreferences prefs;
 	private Button createAccount;
+	private ProgressDialog dialog;
+	private JoinWhyqActivity context;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.whyq_join);
         
+        context = JoinWhyqActivity.this;
         TextView textView = (TextView)findViewById(R.id.permpingTitle);
 		Typeface tf = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
 		if(textView != null) {
@@ -68,7 +74,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 		}
 		
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        
+        dialog = new ProgressDialog(context);
         firstName = (EditText) findViewById(R.id.first_name);
         lastName = (EditText) findViewById(R.id.last_name);
 		//name.addTextChangedListener(this);
@@ -85,6 +91,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
         createAccount.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				showProgress();
 				// Send request to server to create new account along with its params
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);				
 //				nameValuePairs.add(new BasicNameValuePair("type", prefs.getString(Constants.LOGIN_TYPE, "")));
@@ -209,14 +216,19 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 					XMLParser.storePermpingAccount(getApplicationContext(), email.getText().toString(), password.getText().toString(), user.getToken());
 				}
 			}			
-			if(user != null) ListActivity.isLogin = true;		
+			ListActivity.isLogin = true;
+			ListActivity.loginType = 0;
+			Intent intent = new Intent(JoinWhyqActivity.this, WhyqMain.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+//			finish();
 		} else {
 			Toast toast = Toast.makeText(getApplicationContext(), "Joined perm failed! Please try again.", Toast.LENGTH_LONG);
 	    	toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 300);
 	    	toast.show();
 
 		}
-		this.finish();
+		
 	}
 
 	@Override
@@ -226,6 +238,26 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
     	toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 300);
     	toast.show();
     	this.finish();
+	}
+
+	
+	private void hideProgress() {
+		// TODO Auto-generated method stub
+//    	if(progressBar.getVisibility() == View.VISIBLE){
+//    		progressBar.setVisibility(View.GONE);
+//    	}
+		if (dialog != null && dialog.isShowing()) {
+			dialog.dismiss();
+		}
+	}
+	private void showProgress() {
+		// TODO Auto-generated method stub
+//    	if(progressBar.getVisibility() != View.VISIBLE){
+//    		progressBar.setVisibility(View.VISIBLE);
+//    	}
+		if (dialog != null && dialog.isShowing()) {
+			dialog.show();
+		}
 	}
 	
 	@Override

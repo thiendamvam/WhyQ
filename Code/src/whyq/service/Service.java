@@ -68,7 +68,7 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionLogout;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
-		request("/m/business", params, true, false);
+		request("/m/logout", params, true, false);
 	}
 
 	public void getComments(String token , String store_id, int page , int count) {
@@ -208,6 +208,11 @@ public class Service implements Runnable {
 			case ActionLogout:
 				resObj = parser.parseLogout();
 				break;
+			case ActionLoginFacebook:
+				resObj = parser.parserLoginData();
+			case ActionLoginTwitter:
+				resObj = parser.parserLoginData();
+				break;
 			case ActionGetFriendsFacebook:
 				resObj = result;
 				break;
@@ -273,7 +278,7 @@ public class Service implements Runnable {
 			}
 
 			// if user already login ==> has token ==> add token to header
-			String token = WhyqApplication.Instance().getToken();
+			String token = XMLParser.getToken(WhyqApplication.Instance().getApplicationContext());//WhyqApplication.Instance().getToken();
 			if (token != null) {
 				// request.addHeader("Authorization", ""+token);
 				request.setHeader("Content-Type", "x-zip");
@@ -348,6 +353,25 @@ public class Service implements Runnable {
 
 	public int getConnectionTimeout() {
 		return _connection.getConnectTimeout();
+	}
+
+
+	public void loginFacebook(String accessToken) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionLoginFacebook;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("access_token", accessToken);
+		request("/m/login/fb", params, true, false);
+	}
+
+
+	public void loginTwitter(String oauthToken, String oauthTokenSecret) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionLoginTwitter;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("access_token", oauthToken);
+		params.put("access_token", oauthTokenSecret);
+		request("/m/login/tw", params, true, false);
 	}
 
 }

@@ -3,15 +3,13 @@
  */
 package whyq.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
+import twitter4j.http.AccessToken;
 import whyq.WhyqMain;
-import whyq.controller.AuthorizeController;
-import whyq.interfaces.Login_delegate;
+import whyq.interfaces.IServiceListener;
+import whyq.interfaces.LoginTWDelegate;
+import whyq.service.Service;
+import whyq.service.ServiceAction;
+import whyq.service.ServiceResponse;
 import whyq.utils.Constants;
 import whyq.utils.WhyqUtils;
 import whyq.utils.facebook.FacebookConnector;
@@ -26,347 +24,216 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Gravity;
+import android.preference.PreferenceManager.OnActivityResultListener;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.whyq.R;
 
 /**
- * @author Linh Nguyen
- * This activity supports to authenticate the user
- * by user-name and password. Also, it can communicate 
- * to FB and Twitter to do authentication as well
+ * @author Linh Nguyen This activity supports to authenticate the user by
+ *         user-name and password. Also, it can communicate to FB and Twitter to
+ *         do authentication as well
  */
-public class LoginHome extends Activity implements Login_delegate {
-	
-//	EditText email;
-//	EditText password;
-	Button facebookLogin;
-	Button twitterLogin;
-//	Button login;
+public class LoginHome extends Activity
+		implements IServiceListener,LoginTWDelegate {
+
+	static final int LOGIN_TWITTER = 1;
+	private Button facebookLogin;
+	private Button twitterLogin;
 	public static boolean isLoginFb = false;
 	public static boolean isTwitter = false;
-//	private ProgressDialog loadingDialog;
-	ProgressBar progressBar;
-	private WhyqMain login_delegate;
-	SharedPreferences prefs;
+	// private ProgressDialog loadingDialog;
+	private ProgressBar progressBar;
+	private SharedPreferences prefs;
 	private FacebookConnector facebookConnector;
 	public static Context context;
-//	public LoginPermActivity(Login_delegate loginDelegate){
-//		login_delegate = loginDelegate;
-//	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_home);
-        
-        TextView textView = (TextView)findViewById(R.id.permpingTitle);
-		Typeface tf = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
-		if(textView != null) {
+		setContentView(R.layout.login_home);
+
+		TextView textView = (TextView) findViewById(R.id.permpingTitle);
+		Typeface tf = Typeface.createFromAsset(getAssets(),
+				"ufonts.com_franklin-gothic-demi-cond-2.ttf");
+		if (textView != null) {
 			textView.setTypeface(tf);
 		}
-        
-        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        login_delegate = new WhyqMain();
-//        email         = (EditText) findViewById(R.id.permEmail);
-//        password      = (EditText) findViewById(R.id.permPassword);
-        facebookLogin = (Button) findViewById(R.id.btnFbLogin);
-        twitterLogin  = (Button) findViewById(R.id.btnLoginTw);
-//        login         = (Button) findViewById(R.id.loginPerm);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
-        context = LoginHome.this;
-        
-                
-        // Login button
-//        login.setOnClickListener(new View.OnClickListener() {
-//			public void onClick(View v) {
-//				if(checkInputData()){
-//					showLoadingDialog("Progress", "Please wait");
-//					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);
-//					nameValuePairs.add(new BasicNameValuePair("type", Constants.LOGIN_TYPE));
-//					nameValuePairs.add(new BasicNameValuePair("oauth_token", ""));
-//					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
-//					nameValuePairs.add(new BasicNameValuePair("password", password.getText().toString()));
-//					AuthorizeController authorizeController = new AuthorizeController(LoginHome.this);
-//					authorizeController.authorize(v.getContext(), nameValuePairs);
-//				}
-//			}
-//		
-//		});
-        
-        // 
-        facebookConnector = new FacebookConnector(Constants.FACEBOOK_APP_ID, 
-        		this, getApplicationContext(), new String[] {Constants.EMAIL, Constants.PUBLISH_STREAM});
-        //Login with Facebook button
-        facebookLogin.setOnClickListener(new View.OnClickListener() {
-			
+		context = LoginHome.this;
+		prefs = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		facebookLogin = (Button) findViewById(R.id.btnFbLogin);
+		twitterLogin = (Button) findViewById(R.id.btnLoginTw);
+		// login = (Button) findViewById(R.id.loginPerm);
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		facebookConnector = new FacebookConnector(Constants.FACEBOOK_APP_ID,
+				this, getApplicationContext(), new String[] { Constants.EMAIL,
+						Constants.PUBLISH_STREAM });
+		// Login with Facebook button
+		facebookLogin.setOnClickListener(new View.OnClickListener() {
+
 			public void onClick(final View v) {
 				// TODO Auto-generated method stub
-				// Clear FB info to show the login again
-//				try {
-//					facebookConnector.getFacebook().logout(v.getContext());
-//				} catch (MalformedURLException me) {
-//					me.printStackTrace();
-//				} catch (IOException ioe) {
-//					ioe.printStackTrace();
-//				}
-//				
-//				PermpingApplication state = (PermpingApplication) context.getApplicationContext();
-//				try {
-//					if (!facebookConnector.getFacebook().isSessionValid()) {
-//						AuthListener authListener = new AuthListener() {
-//							
-//							public void onAuthSucceed() {							
-//								//Edit Preferences and update facebook access token
-//								SharedPreferences.Editor editor = prefs.edit();
-//								editor.putString(Constants.LOGIN_TYPE, Constants.FACEBOOK_LOGIN);
-//								editor.putString(Constants.ACCESS_TOKEN, facebookConnector.getFacebook().getAccessToken());
-//								editor.putLong(Constants.ACCESS_EXPIRES, facebookConnector.getFacebook().getAccessExpires());
-//								editor.commit();
-//							
-//
-//								// Check on server
-//								List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-//								nameValuePairs.add(new BasicNameValuePair("type", Constants.FACEBOOK_LOGIN));
-//								nameValuePairs.add(new BasicNameValuePair("oauth_token", prefs.getString(Constants.ACCESS_TOKEN, "")));
-//								nameValuePairs.add(new BasicNameValuePair("email", ""));
-//								nameValuePairs.add(new BasicNameValuePair("password", ""));
-//								AuthorizeController authorizeController = new AuthorizeController(LoginPermActivity.this);
-//								authorizeController.authorize(v.getContext(), nameValuePairs);
-////								boolean existed = AuthorizeController.authorize(getApplicationContext(), nameValuePairs, LoginPermActivity.this);
-//								isLoginFb = true;
-//							}
-//							
-//							public void onAuthFail(String error) {
-//								// TODO Auto-generated method stub							
-//							}
-//						};
-//						
-//						SessionEvents.addAuthListener(authListener);
-//						facebookConnector.login();
-//						
-//					}
-//		
-//				} catch (Exception e) {
-//					// TODO: handle exception
-//					Logger.appendLog(e.toString(), "facebooklog");
-//				}
-			
-			    Facebook mFacebook;
-			    String token = null;
+
+
+				Facebook mFacebook;
+				String token = null;
 				mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
 				final Activity activity = LoginHome.this;
-				mFacebook.authorize( activity, new String[] { "email", "status_update",
-						"user_birthday" }, new DialogListener() {
-					@Override
-					public void onComplete(Bundle values) {
-						//Log.d("", "=====>"+values.toString());
-						WhyqUtils permutils = new WhyqUtils();
-						String accessToken = values.getString(Facebook.TOKEN);
-						permutils.saveFacebookToken("oauth_token", accessToken, getApplication());
-//						// Check on server
-						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-						nameValuePairs.add(new BasicNameValuePair("type", Constants.FACEBOOK_LOGIN));
-						nameValuePairs.add(new BasicNameValuePair("oauth_token", accessToken));
-						nameValuePairs.add(new BasicNameValuePair("email", ""));
-						nameValuePairs.add(new BasicNameValuePair("password", ""));
-						AuthorizeController authorizeController = new AuthorizeController(LoginHome.this);
-						authorizeController.authorize(v.getContext(), nameValuePairs);
-//						boolean existed = AuthorizeController.authorize(getApplicationContext(), nameValuePairs, LoginPermActivity.this);
-						isLoginFb = true;
-						finish();
-					}
+				mFacebook.authorize(activity, new String[] { "email",
+						"status_update", "user_birthday" },
+						new DialogListener() {
+							@Override
+							public void onComplete(Bundle values) {
+								// Log.d("", "=====>"+values.toString());
+								WhyqUtils permutils = new WhyqUtils();
+								String accessToken = values
+										.getString(Facebook.TOKEN);
+								permutils.saveFacebookToken("oauth_token",
+										accessToken, getApplication());
+								// // Check on server
+								exeLoginFacebook(accessToken);
+							}
 
-					@Override
-					public void onFacebookError(FacebookError error) {
+							@Override
+							public void onFacebookError(FacebookError error) {
 
-					}
+							}
 
-					@Override
-					public void onError(DialogError e) {
+							@Override
+							public void onError(DialogError e) {
 
-					}
+							}
 
-					@Override
-					public void onCancel() {
-						// cancel press or back press
-					}
-				});
+							@Override
+							public void onCancel() {
+								// cancel press or back press
+							}
+						});
 			}
-        });
-        
-        // Twitter Login button
-        twitterLogin.setOnClickListener(new View.OnClickListener() {
-			
+		});
+
+		// Twitter Login button
+		twitterLogin.setOnClickListener(new View.OnClickListener() {
+
 			public void onClick(View v) {
 				isTwitter = true;
 				Intent i = new Intent(v.getContext(), PrepareRequestTokenActivity.class);
-				v.getContext().startActivity(i);	
+				startActivityForResult(i, LOGIN_TWITTER);
 			}
 		});
 	}
 	@Override
-	public void onResume(){
-		super.onResume();
-//		if(isTwitter){
-//			PermUtils permUtils = new PermUtils();
-//			AccessToken accessToken = permUtils.getTwitterAccess(getApplicationContext());
-//			if(accessToken != null){
-//				String token = accessToken.getToken();//prefs.getString(OAuth.OAUTH_TOKEN, "");
-//				String secret = accessToken.getTokenSecret();//prefs.getString(OAuth.OAUTH_TOKEN_SECRET, "");
-//				String oauth_verifier = prefs.getString(OAuth.OAUTH_VERIFIER, "");
-//				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
-//				nameValuePairs.add(new BasicNameValuePair("type", "twitter"));
-//				nameValuePairs.add(new BasicNameValuePair("oauth_token", token));
-//				nameValuePairs.add(new BasicNameValuePair("oauth_token_secret", secret));
-//				nameValuePairs.add(new BasicNameValuePair("oath_verifier", oauth_verifier));
-//				AuthorizeController authorize = new AuthorizeController(LoginPermActivity.this);
-//				authorize.authorize(context, nameValuePairs);
-//				
-//			}
-//		}
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    // Check which request we're responding to
+	    if (requestCode == LOGIN_TWITTER) {
+	        // Make sure the request was successful
+	        if (resultCode == RESULT_OK) {
+	        	String token = data.getStringExtra("token");
+	        	String tokenSecret = data.getStringExtra("token_secret");
+	        	exeLoginTwitter(token, tokenSecret);
+	        }
+	    }
 	}
+	@Override
+	public void onResume() {
+		super.onResume();
+
+	}
+
 	public void onPause() {
 		super.onPause();
 	}
-	
+
 	public void onDestroy() {
 		super.onDestroy();
 	}
-	
-//    public boolean checkInputData()
-//    {
-//        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-//        String user = email.getText().toString();
-//        String pass = password.getText().toString();
-//        if (user.length() == 0)
-//        {
-//        	email.setFocusable(true);
-//        	email.startAnimation(shake);
-//        	email.requestFocus();
-//        	return false;
-//        } else if (pass.length() == 0)
-//        {
-//        	password.setFocusable(true);
-//        	password.startAnimation(shake);
-//        	password.requestFocus();
-//        	return false;
-//        } else
-//        {
-//        	return true;
-//        }
-//    }
-@Override
-public void on_success() {
-	// TODO Auto-generated method stub
-	//Logger.appendLog("test log", "LoginSuccess");
-//	if(isLoginFb){
-//		ListActivity.isLogin = true;
-//		isLoginFb = false;
-//		if(WhyqMain.getCurrentTab() == 0) {
-//			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
-//		} else {
-//			WhyqMain.back();
-//		}
-//	}else if(isTwitter){
-//		ListActivity.isLogin = true;
-////		Intent intent = new Intent(context, PermpingMain.class);
-////		context.startActivity(intent);
-//		isTwitter = false;
-//		if(WhyqMain.getCurrentTab() == 0) {
-//			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
-//		} else {
-//			WhyqMain.back();
-//		}
-//	}else{
-//		ListActivity.isLogin = true;
-//		dismissLoadingDialog();
-//		if(WhyqMain.getCurrentTab() == 4) {
-//			((ProfileActivityGroup)ProfileActivityGroup.group).createUI();
-//		} else {
-//			if(WhyqMain.getCurrentTab() == 0) {
-//				((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
-//			} else {
-//				WhyqMain.back();
-//			}
-//		}
-//	}
-	ListActivity.isLogin = true;
-//	dismissLoadingDialog();
-	Intent intent = new Intent(LoginHome.this, WhyqMain.class);
-	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	startActivity(intent);
 
-}
+	private void showLoadingDialog(String title, String msg) {
+		// loadingDialog = new ProgressDialog(getParent());
+		// loadingDialog.setMessage(msg);
+		// loadingDialog.setTitle(title);
+		// loadingDialog.setCancelable(true);
+		// loadingDialog.show();
+		progressBar.setVisibility(View.VISIBLE);
+	}
 
-@Override
-public void on_error() {
-	// TODO Auto-generated method stub
-	//Logger.appendLog("test log", "loginerror");
-	if(isLoginFb){
-		isLoginFb = false;
-		Intent intent = new Intent(getApplicationContext(), JoinWhyqActivity.class);
-		getParent().startActivity(intent);
-	}else if(isTwitter){
-		isTwitter = false;
-		Intent intent = new Intent(context, JoinWhyqActivity.class);
-		context.startActivity(intent);
-	}else{
-		dismissLoadingDialog();
-		Toast toast = Toast.makeText(getApplicationContext(), "Authentication failed!. Please try again!", Toast.LENGTH_LONG);
-		toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 300);
-		toast.show();
+	private void dismissLoadingDialog() {
+		// if (loadingDialog != null && loadingDialog.isShowing())
+		// loadingDialog.dismiss();
+		if (progressBar.getVisibility() == View.VISIBLE) {
+			progressBar.setVisibility(View.GONE);
+		}
+	}
+
+	public void onClickedSignup(View v) {
+		Intent intent = new Intent(LoginHome.this, JoinWhyqActivity.class);
+		startActivity(intent);
+	}
+
+	public void onClickedLogin(View v) {
+		Intent intent = new Intent(LoginHome.this, LoginWhyqActivity.class);
+		startActivity(intent);
+	}
+
+	public void onClickedSkipLogin(View v) {
+		Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+		startActivity(intent);
+	}
+
+	public void exeLoginFacebook(String accessToken) {
+		Service service = new Service(LoginHome.this);
+		service.loginFacebook(accessToken);
+	}
+
+	public void exeLoginTwitter(String oauthToken, String oauthTokenSecret) {
+		Service service = new Service(LoginHome.this);
+		service.loginTwitter(oauthToken, oauthTokenSecret);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			WhyqMain.back();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onCompleted(Service service, ServiceResponse result) {
+		// TODO Auto-generated method stub
+		if (result.isSuccess() == true  && result.getAction() == ServiceAction.ActionLoginFacebook) {
+			ListActivity.isLogin = true;
+			ListActivity.loginType = 1;
+			isLoginFb = true;
+			dismissLoadingDialog();
+			Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		} else if (result.isSuccess() == true && result.getAction() == ServiceAction.ActionLoginTwitter) {
+			ListActivity.isLogin = true;
+			ListActivity.loginType = 2;
+			dismissLoadingDialog();
+			Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		}
+	}
+
+	@Override
+	public void onLoginTWSuccess(AccessToken accessToken) {
+		// TODO Auto-generated method stub
 		
 	}
-}
-private void showLoadingDialog(String title, String msg) {
-//	loadingDialog = new ProgressDialog(getParent());
-//	loadingDialog.setMessage(msg);
-//	loadingDialog.setTitle(title);
-//	loadingDialog.setCancelable(true);
-//	loadingDialog.show();
-	progressBar.setVisibility(View.VISIBLE);
-}
 
-private void dismissLoadingDialog() {
-//	if (loadingDialog != null && loadingDialog.isShowing())
-//		loadingDialog.dismiss();
-	if(progressBar.getVisibility()==View.VISIBLE){
-		progressBar.setVisibility(View.GONE);
+	@Override
+	public void onLoginTWError() {
+		// TODO Auto-generated method stub
+		
 	}
-}
-public void onClickedSignup(View v){
-	Intent intent = new Intent(LoginHome.this, JoinWhyqActivity.class);
-	startActivity(intent);
-}
-public void onClickedLogin(View v){
-	Intent intent = new Intent(LoginHome.this, LoginWhyqActivity.class);
-	startActivity(intent);
-}
-
-public void onClickedSkipLogin(View v){
-	Intent intent = new Intent(LoginHome.this, WhyqMain.class);
-	startActivity(intent);
-}
-
-
-@Override
-public boolean onKeyDown(int keyCode, KeyEvent event)
-{		
-    if ((keyCode == KeyEvent.KEYCODE_BACK))
-    {
-        WhyqMain.back();
-        return true;
-    }
-    return super.onKeyDown(keyCode, event);
-}
 }

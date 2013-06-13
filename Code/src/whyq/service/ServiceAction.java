@@ -5,6 +5,8 @@ public enum ServiceAction {
     ActionInitApp,
     ActionLogout,
     ActionGetRetaurentList,
+    ActionLoginFacebook,
+    ActionLoginTwitter,
     ActionGetFriendsFacebook,
 
 }

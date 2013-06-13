@@ -55,6 +55,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public static int screenWidth;
 	public static int screenHeight;
 	public static boolean isLogin = false;
+	public static int loginType = 0;
 	public static boolean isRefesh = true;
 	public static boolean isCalendar = false;
 	int nextItem = -1;
@@ -123,8 +124,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
     	dialog = ProgressDialog.show(getParent(), "", "progressing...",
     			true);
     	showProgress();
-//    	Intent intent = new Intent(ListActivity.this, WhyqLogout.class);
-//    	startActivity(intent);
+    	Intent intent = new Intent(ListActivity.this, WhyqLogout.class);
+    	startActivity(intent);
 	}
 	
 	protected void gotoStoreDetail(String storeId) {

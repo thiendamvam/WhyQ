@@ -15,6 +15,7 @@ import org.apache.http.message.BasicNameValuePair;
 import twitter4j.http.AccessToken;
 import whyq.WhyqMain;
 import whyq.controller.AuthorizeController;
+import whyq.interfaces.LoginTWDelegate;
 import whyq.interfaces.Login_delegate;
 import whyq.utils.Constants;
 import whyq.utils.WhyqUtils;
@@ -42,7 +43,7 @@ import android.util.Log;
  * After the request is authorized, a callback is made here.
  * 
  */
-public class PrepareRequestTokenActivity extends Activity implements Login_delegate{
+public class PrepareRequestTokenActivity extends Activity {
 
 	final String TAG = getClass().getName();
 	
@@ -50,6 +51,7 @@ public class PrepareRequestTokenActivity extends Activity implements Login_deleg
     private OAuthProvider provider;
     private Activity parentActivity;
     private Context context;  
+    private LoginTWDelegate loginDelegate;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -131,13 +133,18 @@ public class PrepareRequestTokenActivity extends Activity implements Login_deleg
 				//TODO: validate user before forwarding to new page.
 				// Check on server
 				if(LoginWhyqActivity.isTwitter){
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
-					nameValuePairs.add(new BasicNameValuePair("type", "twitter"));
-					nameValuePairs.add(new BasicNameValuePair("oauth_token", token));
-					nameValuePairs.add(new BasicNameValuePair("oauth_token_secret", secret));
-					nameValuePairs.add(new BasicNameValuePair("oath_verifier", oauth_verifier));
-					AuthorizeController authorize = new AuthorizeController(PrepareRequestTokenActivity.this);
-					authorize.authorize(context, nameValuePairs);
+					Intent data = new Intent();
+					data.putExtra("token", token);
+					data.putExtra("token_secret", secret);
+					setResult(RESULT_OK, data);
+					finish();
+//					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+//					nameValuePairs.add(new BasicNameValuePair("type", "twitter"));
+//					nameValuePairs.add(new BasicNameValuePair("oauth_token", token));
+//					nameValuePairs.add(new BasicNameValuePair("oauth_token_secret", secret));
+//					nameValuePairs.add(new BasicNameValuePair("oath_verifier", oauth_verifier));
+//					AuthorizeController authorize = new AuthorizeController(PrepareRequestTokenActivity.this);
+//					authorize.authorize(context, nameValuePairs);
 					
 				}
 			
@@ -161,21 +168,5 @@ public class PrepareRequestTokenActivity extends Activity implements Login_deleg
 		}*/
 	}
 
-	@Override
-	public void on_success() {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent(context, WhyqMain.class);
-		context.startActivity(intent);
-		LoginWhyqActivity.isTwitter =false;
-		finish();
-	}
-	@Override
-	public void on_error() {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent(context, JoinWhyqActivity.class);
-		context.startActivity(intent);
-		LoginWhyqActivity.isTwitter = false;
-		finish();
-	}	
 	
 }

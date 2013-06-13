@@ -37,40 +37,7 @@ public class UserHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
-//	
-//		if (localName.equals(Constants.USER_ID)) {
-//			user.setId(buffer.toString());
-//		} else if (localName.equals(Constants.USER_NAME)) {
-//			user.setName(buffer.toString());
-//		} else if (localName.equals(Constants.USER_AVATAR)) {
-//			WhyqImage avatar = new WhyqImage(buffer.toString());
-//			user.setAvatar(avatar);
-//		} else if (localName.equals(Constants.FOLLOWING_COUNT)) {
-//			user.setFollowings(Integer.parseInt(buffer.toString()));			
-//		} else if (localName.equals(Constants.FOLLOWER_COUNT)) {
-//			user.setFriends(Integer.parseInt(buffer.toString()));
-//		} else if (localName.equals(Constants.PIN_COUNT)) {
-//			user.setPin(Integer.parseInt(buffer.toString()));
-//		} else if (localName.equals(Constants.LIKE_COUNT)) {
-//			user.setLike(Integer.parseInt(buffer.toString()));
-//		} else if (localName.equals(Constants.BOARD_COUNT)) {
-//			user.setBoard(Integer.parseInt(buffer.toString()));
-//		} else if (localName.equals(Constants.BOARDS)) {
-//			user.setBoards(boards);
-//		} else if (localName.equals(Constants.ITEM)) {
-//			boards.add(whyqBoard);
-//		} else if (localName.equals(Constants.ID)) {
-//			whyqBoard.setId(buffer.toString());
-//		} else if (localName.equals(Constants.NAME)) {
-//			whyqBoard.setName(buffer.toString());
-//		} else if (localName.equals(Constants.DESCRIPTION)) {
-//			whyqBoard.setDescription(buffer.toString());
-//		} else if (localName.equals(Constants.FOLLOWERS)) {
-//			whyqBoard.setFollowers(Integer.parseInt(buffer.toString()));
-//		} else if (localName.equals(Constants.PINS)) {
-//			whyqBoard.setPins(Integer.parseInt(buffer.toString()));
-//		}
-		
+
 		String value  = buffer.toString();
 		if (localName.equals("Version")) {
 			user.setVersion(value);
