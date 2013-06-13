@@ -124,8 +124,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
     	dialog = ProgressDialog.show(getParent(), "", "progressing...",
     			true);
     	showProgress();
-    	Intent intent = new Intent(ListActivity.this, WhyqLogout.class);
-    	startActivity(intent);
+//    	Intent intent = new Intent(ListActivity.this, WhyqLogout.class);
+//    	startActivity(intent);
 	}
 	
 	protected void gotoStoreDetail(String storeId) {
