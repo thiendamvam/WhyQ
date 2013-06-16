@@ -25,10 +25,9 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class CheckedBillActivity extends NavigationActivity {
+public class CheckedBillActivity extends ImageWorkerActivity {
 
 	private BillAdapter mAdapter;
-	private ImageWorker mImageWorker;
 	private LoadDataTask mLoadDataTask;
 
 	@Override
@@ -41,8 +40,6 @@ public class CheckedBillActivity extends NavigationActivity {
 
 		findViewById(R.id.radioGroupContainer).getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 		findViewById(R.id.radioGroup).getLayoutParams().width = WhyqApplication.sScreenWidth * 3 / 5;
-		mImageWorker = new ImageWorker(this);
-		mImageWorker.initCache(this, WhyqApplication.DISK_CACHE_DIR, 0.25f);
 
 		mAdapter = new BillAdapter(this, mImageWorker);
 		ListView listview = (ListView) findViewById(R.id.listview);
@@ -71,24 +68,6 @@ public class CheckedBillActivity extends NavigationActivity {
 		// }
 		// });
 		// service.getFriendsFacebook(getToken());
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mImageWorker.setExitTasksEarly(false);
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		mImageWorker.setExitTasksEarly(true);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mImageWorker.clearCache();
 	}
 
 	class LoadDataTask extends AsyncTask<Void, Void, List<BillItem>> {

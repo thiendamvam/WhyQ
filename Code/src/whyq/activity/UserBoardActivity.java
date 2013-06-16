@@ -7,6 +7,8 @@ import whyq.WhyqApplication;
 import whyq.mockup.MockupDataLoader;
 import whyq.model.ActivityItem;
 import whyq.model.ActivityItem.ActivityType;
+import whyq.service.Service;
+import whyq.service.ServiceResponse;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,15 +18,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.whyq.R;
 
-public class UserBoardActivity extends NavigationActivity {
+public class UserBoardActivity extends ImageWorkerActivity {
 
+	public static final String ARG_USER_ID = "arg_user_id";
+	public static final String ARG_FIRST_NAME = "arg_first_name";
+	public static final String ARG_AVATAR = "arg_avatar";
+	private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 	private ActivitiesAdapter mAdapter;
 
 	@Override
@@ -32,12 +40,35 @@ public class UserBoardActivity extends NavigationActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_user_board);
+
 		initCategory();
+
+		final Intent i = getIntent();
+		final String firstName = i.getStringExtra(ARG_FIRST_NAME);
+		if (firstName != null) {
+			setTitle(firstName);
+		}
+		final String avatar = i.getStringExtra(ARG_AVATAR);
+		if (avatar != null) {
+			ImageView imageView = (ImageView) findViewById(R.id.avatar);
+			LayoutParams LP = imageView.getLayoutParams();
+			LP.width = AVATAR_SIZE;
+			LP.height = AVATAR_SIZE;
+			mImageWorker.loadImage(avatar, imageView, AVATAR_SIZE, AVATAR_SIZE);
+		}
 
 		mAdapter = new ActivitiesAdapter(this);
 		((ListView) findViewById(R.id.listview)).setAdapter(mAdapter);
-
-		new LoadDataTask().execute();
+		
+		final String userId = i.getStringExtra(ARG_USER_ID);
+		Service service = getService();
+		service.getUserActivities(getEncryptedToken(), userId);
+	}
+	
+	@Override
+	public void onCompleted(Service service, ServiceResponse result) {
+		super.onCompleted(service, result);
+		setLoading(false);
 	}
 
 	private void initCategory() {
@@ -93,35 +124,15 @@ public class UserBoardActivity extends NavigationActivity {
 		textviewBottom.setText(textBottom);
 	}
 
-	class LoadDataTask extends AsyncTask<Void, Void, List<ActivityItem>> {
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			setLoading(true);
-		}
-
-		@Override
-		protected List<ActivityItem> doInBackground(Void... params) {
-			Log.d("LoadDataTask", "Start loading.. ");
-			return MockupDataLoader.loadActivities();
-		}
-
-		@Override
-		protected void onPostExecute(List<ActivityItem> result) {
-			super.onPostExecute(result);
-			setLoading(false);
-			if (isCancelled()) {
-				return;
-			}
-
-			if (mAdapter != null) {
-				Log.d("LoadDataTask", "Result loaded size: " + result.size());
-				mAdapter.setItems(result);
-			}
-
-		}
-
+	@Override
+	protected View getTitleView() {
+		LinearLayout titleView = (LinearLayout) getLayoutInflater().inflate(
+				R.layout.navigation_title_include_avatar, null);
+		View title = super.getTitleView();
+		LinearLayout.LayoutParams LP = new LinearLayout.LayoutParams(0,
+				LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+		titleView.addView(title, 1, LP);
+		return titleView;
 	}
 
 	static class ActivitiesAdapter extends BaseAdapter {

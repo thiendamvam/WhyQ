@@ -1,45 +1,27 @@
 package whyq.service;
 
+import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import whyq.handler.FriendFacebookHandler;
 import whyq.handler.UserHandler;
-
-import android.content.Context;
-import android.os.Message;
-import android.util.Log;
+import whyq.interfaces.FriendFacebookController;
 
 public class DataParser {
 
 	public static String issueIntro = "";
-	private String issueString;
-	private JSONObject _root;
 
 	// private StoreIssueDataControler issueControler;
 	public DataParser() {
 		// issueController.resetStorySetData();
-	}
-
-	public boolean parse(String input) {
-		try {
-			issueString = input;
-			_root = new JSONObject(input);
-			return true;
-		} catch (JSONException e) {
-			return false;
-		}
 	}
 
 	public Object parseRetaurentList() {
@@ -54,14 +36,14 @@ public class DataParser {
 		return null;
 	}
 
-	public Object parserLoginData() {
+	public Object parserLoginData(String inputString) {
 		// TODO Auto-generated method stub
 		try {
 			XMLReader xmlReader = initializeReader();
 			UserHandler userHandler = new UserHandler();
 			// assign the handler
 			xmlReader.setContentHandler(userHandler);
-			xmlReader.parse(new InputSource(new StringReader(issueString)));
+			xmlReader.parse(new InputSource(new StringReader(inputString)));
 			return userHandler.getUser();
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -70,8 +52,26 @@ public class DataParser {
 		}
 	}
 
-	private XMLReader initializeReader() throws ParserConfigurationException,
-			SAXException {
+	public static final FriendFacebookController parseFriendFacebook(
+			String inputString) {
+		try {
+			XMLReader xmlReader = initializeReader();
+			FriendFacebookHandler handler = new FriendFacebookHandler();
+			xmlReader.setContentHandler(handler);
+			xmlReader.parse(new InputSource(new StringReader(inputString)));
+			return handler;
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private static XMLReader initializeReader()
+			throws ParserConfigurationException, SAXException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		// Create a parser
 		SAXParser parser = factory.newSAXParser();

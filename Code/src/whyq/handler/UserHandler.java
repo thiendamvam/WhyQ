@@ -22,7 +22,7 @@ import whyq.utils.Constants;
  */
 public class UserHandler extends DefaultHandler {
 	
-	private User user = new User();;
+	private User user = new User();
 	private List<WhyqBoard> boards;
 	private WhyqBoard whyqBoard;
 	

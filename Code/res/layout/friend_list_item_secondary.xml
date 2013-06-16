@@ -9,20 +9,13 @@
     android:paddingBottom="@dimen/base_padding"
     android:paddingTop="@dimen/base_padding" >
 
-    <ImageView
-        android:id="@+id/avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingRight="@dimen/base_padding"
-        android:scaleType="centerCrop" />
-
     <TextView
         android:id="@+id/name"
-        style="@style/listview_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:layout_weight="1"
-        android:singleLine="true" />
+        android:maxLines="2" />
 
     <Button
         android:id="@+id/action"

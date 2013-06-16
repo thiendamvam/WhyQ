@@ -7,6 +7,8 @@ public enum ServiceAction {
     ActionGetRetaurentList,
     ActionLoginFacebook,
     ActionLoginTwitter,
-    ActionGetFriendsFacebook,
+    ActionGetFriendsFacebook, 
+    ActionGetFriends, 
+    ActionGetUserActivities,
 
 }
