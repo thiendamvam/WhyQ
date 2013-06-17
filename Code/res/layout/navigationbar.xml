@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_ationbar"
-    android:baselineAligned="false"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="@dimen/base_padding" >
@@ -19,18 +18,7 @@
         android:id="@+id/titleContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="4" >
-
-        <TextView
-            android:id="@+id/textviewTitle"
-            style="@style/text_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ellipsize="marquee"
-            android:gravity="center"
-            android:singleLine="true" />
-    </FrameLayout>
+        android:layout_weight="4" />
 
     <FrameLayout
         android:id="@+id/extraContainer"

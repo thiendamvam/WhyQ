@@ -4,14 +4,17 @@
 package whyq.activity;
 
 import twitter4j.http.AccessToken;
+import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.interfaces.IServiceListener;
 import whyq.interfaces.LoginTWDelegate;
+import whyq.model.User;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.Constants;
 import whyq.utils.WhyqUtils;
+import whyq.utils.XMLParser;
 import whyq.utils.facebook.FacebookConnector;
 import whyq.utils.facebook.sdk.DialogError;
 import whyq.utils.facebook.sdk.Facebook;
@@ -24,7 +27,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceManager.OnActivityResultListener;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -211,7 +214,9 @@ public class LoginHome extends Activity
 			ListActivity.isLogin = true;
 			ListActivity.loginType = 1;
 			isLoginFb = true;
-			dismissLoadingDialog();
+			Log.d("LoginHome by Facebook", "result: " + result.getData());
+			User user = (User) result.getData();
+			XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(), user.getEmail(), "", user.getToken());
 			Intent intent = new Intent(LoginHome.this, WhyqMain.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);

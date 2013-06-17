@@ -184,7 +184,7 @@
             android:windowSoftInputMode="adjustPan|stateVisible" >
         </activity>
         <activity
-            android:name="whyq.activity.FacebookFriendsActivity"
+            android:name="whyq.activity.FriendsFacebookActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity

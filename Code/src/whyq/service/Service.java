@@ -2,8 +2,9 @@ package whyq.service;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,11 +14,11 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -28,18 +29,21 @@ import org.apache.http.protocol.HTTP;
 import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
 import whyq.utils.API;
-import whyq.utils.Constants;
+import whyq.utils.Logger;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
-import whyq.utils.facebook.sdk.Facebook;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class Service implements Runnable {
 
+	private static final String TAG = Service.class.getSimpleName();
 	private HttpURLConnection _connection;
 	private ServiceAction _action;
 	private ArrayList<IServiceListener> _listener;
@@ -54,29 +58,36 @@ public class Service implements Runnable {
 	private boolean _isPostDirect;
 	private HttpClient httpclient;
 
-
 	public void getProductList() {
 		_action = ServiceAction.ActionGetRetaurentList;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("deviceType", "kindle-fire");
 		request("/v1/shop/purchase", params, true, false);
 	}
-	
 
 	public void logout() {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionLogout;
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("token", XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
+		params.put("token", XMLParser.getToken(WhyqApplication.Instance()
+				.getApplicationContext()));
 		request("/m/logout", params, true, false);
 	}
 
-	public void getComments(String token , String store_id, int page , int count) {
+	public void getComments(String encryptedToken, String store_id, int page, int count) {
+		_action = ServiceAction.ActionLogout;
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("token", token);
+		params.put("token", encryptedToken);
 		params.put("store_id", store_id);
 		params.put("page", String.valueOf(page));
-		params.put("store_id", store_id);
+		params.put("count", String.valueOf(count));
+		request("/m/member/comment", params, true, false);
+	}
+
+	public void getFriends(String token, String user_id) {
+		_action = ServiceAction.ActionGetFriends;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", token);
 		request("/m/member/friend", params, true, false);
 	}
 
@@ -86,6 +97,14 @@ public class Service implements Runnable {
 		params.put("token", encryptedToken);
 		params.put("access_token", accessToken);
 		request("/m/member/friend/facebook", params, true, false);
+	}
+	
+	public void getUserActivities(String encryptedToken, String userId) {
+		_action = ServiceAction.ActionGetUserActivities;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("user_id", userId);
+		request("/m/member/recent/activity", params, true, false);
 	}
 
 	public Service() {
@@ -194,30 +213,27 @@ public class Service implements Runnable {
 		Object resObj = null;
 		ServiceResponse response = null;
 		DataParser parser = new DataParser();
-		// Log.v("Response", "1");
-		// Log.v("Response", result);
-		boolean isSuccess = parser.parse(result);
-		if (isSuccess) {
-			switch (act) {
-			// TODO
-			case ActionNone:
-				break;
-			case ActionGetRetaurentList:
-				resObj = parser.parseRetaurentList();
-				break;
-			case ActionLogout:
-				resObj = parser.parseLogout();
-				break;
-			case ActionLoginFacebook:
-				resObj = parser.parserLoginData();
-			case ActionLoginTwitter:
-				resObj = parser.parserLoginData();
-				break;
-			case ActionGetFriendsFacebook:
-				resObj = result;
-				break;
-
-			}
+		switch (act) {
+		// TODO
+		case ActionNone:
+			break;
+		case ActionGetRetaurentList:
+			resObj = parser.parseRetaurentList();
+			break;
+		case ActionLogout:
+			resObj = parser.parseLogout();
+			break;
+		case ActionLoginFacebook:
+			resObj = parser.parserLoginData(result);
+		case ActionLoginTwitter:
+			resObj = parser.parserLoginData(result);
+			break;
+		case ActionGetFriendsFacebook:
+			resObj = result;
+			break;
+		case ActionGetUserActivities:
+			resObj = result;
+			break;
 		}
 		if (resObj == null)
 			response = new ServiceResponse(act, null, ResultCode.Failed);
@@ -259,54 +275,24 @@ public class Service implements Runnable {
 		HttpConnectionParams.setSoTimeout(httpParameters, 600000);
 		HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 		try {
-			String urlString = _actionURI;
-			HttpUriRequest request = null;
-			if (_isPostDirect) {
-				String data = getParamsString(_params);
-				if (_includeHost)
-					urlString = API.hostURL + urlString;
-				urlString = urlString + "?" + data;
-				request = (_isGet) ? new HttpGet(urlString) : new HttpPost(
-						urlString);
+			final String urlString = _includeHost ? API.hostURL + _actionURI
+					: _actionURI;
+			HttpRequestBase request = null;
 
-			} else {
-				if (_includeHost)
-					urlString = API.hostURL + urlString;
-				request = (_isGet) ? new HttpGet(urlString) : new HttpPost(
-						urlString);
-
-			}
-
-			// if user already login ==> has token ==> add token to header
-			String token = XMLParser.getToken(WhyqApplication.Instance().getApplicationContext());//WhyqApplication.Instance().getToken();
-			if (token != null) {
-				// request.addHeader("Authorization", ""+token);
-				request.setHeader("Content-Type", "x-zip");
-				request.setHeader("Authorization", "OAuth " + token);
-			}
-			String data = getParamsString(_params);
-			if (data != null)
-				if (!data.equals("")) {
-					if (_isGet)
-						urlString = urlString + "?" + data;
-					else {
-						List<NameValuePair> params = new ArrayList<NameValuePair>();
-						for (String key : _params.keySet()) {
-							params.add(new BasicNameValuePair(key, _params
-									.get(key)));
-						}
-						UrlEncodedFormEntity entity = null;
-						try {
-							entity = new UrlEncodedFormEntity(params,
-									HTTP.UTF_8);
-						} catch (UnsupportedEncodingException e) {
-						}
-
-						((HttpPost) request).setEntity(entity);
-						Log.d("Post URI: ", request.getURI().toString()
-								+ " params: " + request.getParams().toString());
-					}
+			if (_isGet) {
+				request = new HttpGet();
+				if (_params != null) {
+					attachUriWithQuery(request, Uri.parse(urlString), _params);
 				}
+			} else {
+				request = new HttpPost(urlString);
+				if (_params != null) {
+					UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(
+							paramsToList(_params), HTTP.UTF_8);
+					((HttpPost) request).setEntity(formEntity);
+				}
+			}
+
 			// Set default headers
 			HttpResponse response = httpclient.execute(request);
 
@@ -355,15 +341,12 @@ public class Service implements Runnable {
 		return _connection.getConnectTimeout();
 	}
 
-
 	public void loginFacebook(String accessToken) {
-		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionLoginFacebook;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("access_token", accessToken);
 		request("/m/login/fb", params, true, false);
 	}
-
 
 	public void loginTwitter(String oauthToken, String oauthTokenSecret) {
 		// TODO Auto-generated method stub
@@ -373,5 +356,44 @@ public class Service implements Runnable {
 		params.put("access_token", oauthTokenSecret);
 		request("/m/login/tw", params, true, false);
 	}
+	
+	private void attachUriWithQuery(HttpRequestBase request, Uri uri, Map<String, String> params) {
+        try {
+            if (params == null) {
+                // No params were given or they have already been
+                // attached to the Uri.
+                request.setURI(new URI(uri.toString()));
+            }
+            else {
+                Uri.Builder uriBuilder = uri.buildUpon();
+                
+                // Loop through our params and append them to the Uri.
+                for (BasicNameValuePair param : paramsToList(params)) {
+                    uriBuilder.appendQueryParameter(param.getName(), param.getValue());
+                }
+                
+                uri = uriBuilder.build();
+                request.setURI(new URI(uri.toString()));
+            }
+        }
+        catch (URISyntaxException e) {
+            Log.e(TAG, "URI syntax was incorrect: "+ uri.toString());
+        }
+    }
+	
+	private static List<BasicNameValuePair> paramsToList(Map<String, String> params) {
+        ArrayList<BasicNameValuePair> formList = new ArrayList<BasicNameValuePair>(params.size());
+        
+        for (String key : params.keySet()) {
+            Object value = params.get(key);
+            
+            // We can only put Strings in a form entity, so we call the toString()
+            // method to enforce. We also probably don't need to check for null here
+            // but we do anyway because Bundle.get() can return null.
+            if (value != null) formList.add(new BasicNameValuePair(key, value.toString()));
+        }
+        
+        return formList;
+    }
 
 }

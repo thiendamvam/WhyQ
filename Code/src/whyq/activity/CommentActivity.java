@@ -1,12 +1,24 @@
 package whyq.activity;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import whyq.WhyqApplication;
+import whyq.interfaces.IServiceListener;
 import whyq.mockup.MockupDataLoader;
 import whyq.model.Comment;
+import whyq.service.Service;
+import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
+import whyq.utils.Util;
+import whyq.utils.XMLParser;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,14 +30,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whyq.R;
 
-public class CommentActivity extends NavigationActivity {
+public class CommentActivity extends ImageWorkerActivity {
 
 	private CommentAdapter mAdapter;
-	private ImageWorker mImageWorker;
-	private LoadDataTask mLoadDataTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,34 +46,14 @@ public class CommentActivity extends NavigationActivity {
 
 		setTitle(R.string.comment_title);
 
-		mImageWorker = new ImageWorker(this);
-		mImageWorker.initCache(this, WhyqApplication.DISK_CACHE_DIR, 0.25f);
 		mAdapter = new CommentAdapter(this, mImageWorker);
 
 		ListView listview = (ListView) findViewById(R.id.listview);
 		listview.setAdapter(mAdapter);
 
-		mLoadDataTask = new LoadDataTask();
-		mLoadDataTask.execute();
-
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mImageWorker.setExitTasksEarly(false);
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		mImageWorker.setExitTasksEarly(true);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mImageWorker.clearCache();
+		Service service = getService();
+		setLoading(true);
+		service.getComments(getEncryptedToken(), "21", 0, 20);
 	}
 
 	class LoadDataTask extends AsyncTask<Void, Void, List<Comment>> {

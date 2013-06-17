@@ -1,20 +1,9 @@
 package whyq.activity;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
 import whyq.WhyqApplication;
-import whyq.utils.RSA;
-import whyq.utils.XMLParser;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -35,6 +24,9 @@ public class NavigationActivity extends FragmentActivity {
 		setContentView(R.layout.activity_navigation);
 
 		initScreenSize();
+
+		FrameLayout titleContainer = (FrameLayout) findViewById(R.id.titleContainer);
+		titleContainer.addView(getTitleView());
 
 		textviewTitle = (TextView) findViewById(R.id.textviewTitle);
 
@@ -62,6 +54,26 @@ public class NavigationActivity extends FragmentActivity {
 					}
 				});
 
+	}
+
+	@Override
+	public void setContentView(int layoutResID) {
+		if (layoutResID == R.layout.activity_navigation) {
+			super.setContentView(layoutResID);
+		} else {
+			((ViewGroup) findViewById(R.id.contentView))
+					.addView(getLayoutInflater().inflate(layoutResID, null));
+		}
+	}
+
+	@Override
+	public void setContentView(View view) {
+		((ViewGroup) findViewById(R.id.contentView)).addView(view);
+	}
+
+	@Override
+	public void setContentView(View view, LayoutParams params) {
+		((ViewGroup) findViewById(R.id.contentView)).addView(view, params);
 	}
 
 	private void initScreenSize() {
@@ -108,36 +120,13 @@ public class NavigationActivity extends FragmentActivity {
 		}
 	}
 
-	protected void setTitleView(View view) {
-		FrameLayout titleContainer = (FrameLayout) findViewById(R.id.titleContainer);
-		titleContainer.removeViewAt(0);
-		if (view != null) {
-			titleContainer.addView(view);
-		}
-	}
-
 	protected void onExtraButtonPressed() {
 
 	}
 
-	@Override
-	public void setContentView(int layoutResID) {
-		if (layoutResID == R.layout.activity_navigation) {
-			super.setContentView(layoutResID);
-		} else {
-			((ViewGroup) findViewById(R.id.contentView))
-					.addView(getLayoutInflater().inflate(layoutResID, null));
-		}
-	}
-
-	@Override
-	public void setContentView(View view) {
-		((ViewGroup) findViewById(R.id.contentView)).addView(view);
-	}
-
-	@Override
-	public void setContentView(View view, LayoutParams params) {
-		((ViewGroup) findViewById(R.id.contentView)).addView(view, params);
+	protected View getTitleView() {
+		return getLayoutInflater()
+				.inflate(R.layout.navigation_title_text, null);
 	}
 
 }

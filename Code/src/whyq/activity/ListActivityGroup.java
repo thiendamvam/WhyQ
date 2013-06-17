@@ -34,45 +34,45 @@ public class ListActivityGroup extends TabGroupActivity implements Login_delegat
 		String userPass = XMLParser.getUserPass(this);
 		long lastTimeLogin = XMLParser.getLastTimeLogin(this);
 		long timeout = System.currentTimeMillis() - lastTimeLogin;
-		if(userEmail.length() > 0 && userPass.length() > 0) {
-			//if(timeout < XMLParser.ACCOUNT_TIME_OUT) {
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);
-				nameValuePairs.add(new BasicNameValuePair("type", Constants.LOGIN_TYPE));
-				nameValuePairs.add(new BasicNameValuePair("oauth_token", ""));
-				nameValuePairs.add(new BasicNameValuePair("email", userEmail));
-				nameValuePairs.add(new BasicNameValuePair("password", userPass));
-				AuthorizeController authorizeController = new AuthorizeController(ListActivityGroup.this);
-				authorizeController.authorize(this, nameValuePairs);
-				isReload = true;
-			/*} 
-			else {
-				PermpingApplication state = (PermpingApplication) getApplicationContext();
-				User user = state.getUser();
-				if (user != null) {
-					AuthorizeController authorizeController = new AuthorizeController();
-					authorizeController.logout(user.getId());
-					state.setUser(null);
-					XMLParser.storePermpingAccount(this, "", "");
-				}				
-			}*/
-		} else {
-			WhyqUtils whyqUtils = new WhyqUtils();
-			String facebookToken = whyqUtils.getFacebookToken(getApplicationContext());
-			if (facebookToken != null && facebookToken.length() > 0) {
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-				nameValuePairs.add(new BasicNameValuePair("type", Constants.FACEBOOK_LOGIN));
-				nameValuePairs.add(new BasicNameValuePair("oauth_token", facebookToken));
-				nameValuePairs.add(new BasicNameValuePair("email", ""));
-				nameValuePairs.add(new BasicNameValuePair("password", ""));
-				AuthorizeController authorizeController = new AuthorizeController(ListActivityGroup.this);
-				authorizeController.authorize(this, nameValuePairs);
-				isReload = true;
-				LoginWhyqActivity.isLoginFb = true;
-			}
-			
-		}
-		createFollowerActivity();		
-		//replaceView(view);
+//		if(userEmail.length() > 0 && userPass.length() > 0) {
+//			//if(timeout < XMLParser.ACCOUNT_TIME_OUT) {
+//				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);
+//				nameValuePairs.add(new BasicNameValuePair("type", Constants.LOGIN_TYPE));
+//				nameValuePairs.add(new BasicNameValuePair("oauth_token", ""));
+//				nameValuePairs.add(new BasicNameValuePair("email", userEmail));
+//				nameValuePairs.add(new BasicNameValuePair("password", userPass));
+//				AuthorizeController authorizeController = new AuthorizeController(ListActivityGroup.this);
+//				authorizeController.authorize(this, nameValuePairs);
+//				isReload = true;
+//			/*} 
+//			else {
+//				PermpingApplication state = (PermpingApplication) getApplicationContext();
+//				User user = state.getUser();
+//				if (user != null) {
+//					AuthorizeController authorizeController = new AuthorizeController();
+//					authorizeController.logout(user.getId());
+//					state.setUser(null);
+//					XMLParser.storePermpingAccount(this, "", "");
+//				}				
+//			}*/
+//		} else {
+//			WhyqUtils whyqUtils = new WhyqUtils();
+//			String facebookToken = whyqUtils.getFacebookToken(getApplicationContext());
+//			if (facebookToken != null && facebookToken.length() > 0) {
+//				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+//				nameValuePairs.add(new BasicNameValuePair("type", Constants.FACEBOOK_LOGIN));
+//				nameValuePairs.add(new BasicNameValuePair("oauth_token", facebookToken));
+//				nameValuePairs.add(new BasicNameValuePair("email", ""));
+//				nameValuePairs.add(new BasicNameValuePair("password", ""));
+//				AuthorizeController authorizeController = new AuthorizeController(ListActivityGroup.this);
+//				authorizeController.authorize(this, nameValuePairs);
+//				isReload = true;
+//				LoginWhyqActivity.isLoginFb = true;
+//			}
+//			
+//		}
+//		createFollowerActivity();		
+//		//replaceView(view);
 	}
 	
 	public void onPause() {
