@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
@@ -30,16 +28,13 @@ import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
 import whyq.model.Store;
 import whyq.utils.API;
-import whyq.utils.Logger;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 
 public class Service implements Runnable {
@@ -56,7 +51,6 @@ public class Service implements Runnable {
 	private boolean _isGet;
 	private Service _service;
 	private boolean _isBitmap;
-	private boolean _isPostDirect;
 	private HttpClient httpclient;
 
 	public void getProductList() {
@@ -75,7 +69,8 @@ public class Service implements Runnable {
 		request("/m/logout", params, true, false);
 	}
 
-	public void getComments(String encryptedToken, String store_id, int page, int count) {
+	public void getComments(String encryptedToken, String store_id, int page,
+			int count) {
 		_action = ServiceAction.ActionLogout;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
@@ -99,7 +94,28 @@ public class Service implements Runnable {
 		params.put("access_token", accessToken);
 		request("/m/member/friend/facebook", params, true, false);
 	}
+
+	public void searchFriendsFacebook(String encryptedToken, String key,
+			String accessToken) {
+		_action = ServiceAction.ActionSearchFriendsFacebook;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("key", key);
+		params.put("search", "facebook");
+		params.put("access_token", accessToken);
+		request("/m/member/search/friend", params, true, false);
+	}
 	
+	public void inviteFriendsFacebook(String encryptedToken, String userId,
+			String accessToken) {
+		_action = ServiceAction.ActionInviteFriendsFacebook;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("user_id", userId);
+		params.put("access_token", accessToken);
+		request("/m/member/friend/facebook/invite", params, true, false);
+	}
+
 	public void getUserActivities(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetUserActivities;
 		Map<String, String> params = new HashMap<String, String>();
@@ -108,8 +124,14 @@ public class Service implements Runnable {
 		request("/m/member/recent/activity", params, true, false);
 	}
 
-	public Service() {
-		this(null);
+	public void postComment(String encryptedToken, String content,
+			String photoFile) {
+		_action = ServiceAction.ActionPostComment;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("content", content);
+		params.put("photo", photoFile);
+		request("/m/member/comment/post", params, true, false);
 	}
 
 	final Handler handler = new Handler() {
@@ -144,19 +166,6 @@ public class Service implements Runnable {
 		return _connecting;
 	}
 
-	private void cleanUp() {
-		if (_connection != null) {
-			try {
-				_connection.disconnect();
-			} catch (Exception ex) {
-				// do nothing
-			}
-			_connection = null;
-		}
-		_action = ServiceAction.ActionNone;
-		_connecting = false;
-	}
-
 	public void stop() {
 		// cleanUp();
 		if (httpclient != null)
@@ -183,17 +192,6 @@ public class Service implements Runnable {
 		_thread = new Thread(this);
 		_thread.start();
 		return true;
-	}
-
-	private String getParamsString(Map<String, String> params) {
-		if (params == null)
-			return null;
-		String ret = "";
-		for (String key : params.keySet()) {
-			String value = params.get(key);
-			ret += key + "=" + URLEncoder.encode(value) + "&";
-		}
-		return ret;
 	}
 
 	private void processError(ResultCode errorCode) {
@@ -233,6 +231,9 @@ public class Service implements Runnable {
 			resObj = result;
 			break;
 		case ActionGetUserActivities:
+			resObj = result;
+			break;
+		case ActionSearchFriendsFacebook:
 			resObj = result;
 			break;
 		case ActionGetBusinessDetail:
@@ -360,45 +361,50 @@ public class Service implements Runnable {
 		params.put("access_token", oauthTokenSecret);
 		request("/m/login/tw", params, true, false);
 	}
-	
-	private void attachUriWithQuery(HttpRequestBase request, Uri uri, Map<String, String> params) {
-        try {
-            if (params == null) {
-                // No params were given or they have already been
-                // attached to the Uri.
-                request.setURI(new URI(uri.toString()));
-            }
-            else {
-                Uri.Builder uriBuilder = uri.buildUpon();
-                
-                // Loop through our params and append them to the Uri.
-                for (BasicNameValuePair param : paramsToList(params)) {
-                    uriBuilder.appendQueryParameter(param.getName(), param.getValue());
-                }
-                
-                uri = uriBuilder.build();
-                request.setURI(new URI(uri.toString()));
-            }
-        }
-        catch (URISyntaxException e) {
-            Log.e(TAG, "URI syntax was incorrect: "+ uri.toString());
-        }
-    }
-	
-	private static List<BasicNameValuePair> paramsToList(Map<String, String> params) {
-        ArrayList<BasicNameValuePair> formList = new ArrayList<BasicNameValuePair>(params.size());
-        
-        for (String key : params.keySet()) {
-            Object value = params.get(key);
-            
-            // We can only put Strings in a form entity, so we call the toString()
-            // method to enforce. We also probably don't need to check for null here
-            // but we do anyway because Bundle.get() can return null.
-            if (value != null) formList.add(new BasicNameValuePair(key, value.toString()));
-        }
-        
-        return formList;
-    }
+
+	private void attachUriWithQuery(HttpRequestBase request, Uri uri,
+			Map<String, String> params) {
+		try {
+			if (params == null) {
+				// No params were given or they have already been
+				// attached to the Uri.
+				request.setURI(new URI(uri.toString()));
+			} else {
+				Uri.Builder uriBuilder = uri.buildUpon();
+
+				// Loop through our params and append them to the Uri.
+				for (BasicNameValuePair param : paramsToList(params)) {
+					uriBuilder.appendQueryParameter(param.getName(),
+							param.getValue());
+				}
+
+				uri = uriBuilder.build();
+				request.setURI(new URI(uri.toString()));
+			}
+		} catch (URISyntaxException e) {
+			Log.e(TAG, "URI syntax was incorrect: " + uri.toString());
+		}
+	}
+
+	private static List<BasicNameValuePair> paramsToList(
+			Map<String, String> params) {
+		ArrayList<BasicNameValuePair> formList = new ArrayList<BasicNameValuePair>(
+				params.size());
+
+		for (String key : params.keySet()) {
+			Object value = params.get(key);
+
+			// We can only put Strings in a form entity, so we call the
+			// toString()
+			// method to enforce. We also probably don't need to check for null
+			// here
+			// but we do anyway because Bundle.get() can return null.
+			if (value != null)
+				formList.add(new BasicNameValuePair(key, value.toString()));
+		}
+
+		return formList;
+	}
 
 	public void getBusinessDetail(String id) {
 		// TODO Auto-generated method stub

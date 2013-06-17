@@ -40,7 +40,6 @@
         android:drawableLeft="@drawable/icon_clock_gray"
         android:drawablePadding="@dimen/base_padding"
         android:text="@string/recent_activities"
-        android:textAllCaps="true"
         android:textColor="@color/black" />
 
     <ListView
@@ -48,7 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:cacheColorHint="@null" >
+        android:cacheColorHint="@null"
+        android:divider="@null" >
     </ListView>
 
 </LinearLayout>

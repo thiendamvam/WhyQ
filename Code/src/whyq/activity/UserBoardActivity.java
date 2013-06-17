@@ -6,14 +6,13 @@ import java.util.List;
 import whyq.WhyqApplication;
 import whyq.mockup.MockupDataLoader;
 import whyq.model.ActivityItem;
-import whyq.model.ActivityItem.ActivityType;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
+import whyq.utils.SpannableUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +33,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 	public static final String ARG_AVATAR = "arg_avatar";
 	private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 	private ActivitiesAdapter mAdapter;
+	private String mUserFirstName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +44,9 @@ public class UserBoardActivity extends ImageWorkerActivity {
 		initCategory();
 
 		final Intent i = getIntent();
-		final String firstName = i.getStringExtra(ARG_FIRST_NAME);
-		if (firstName != null) {
-			setTitle(firstName);
+		mUserFirstName = i.getStringExtra(ARG_FIRST_NAME);
+		if (mUserFirstName != null) {
+			setTitle(mUserFirstName);
 		}
 		final String avatar = i.getStringExtra(ARG_AVATAR);
 		if (avatar != null) {
@@ -59,12 +59,40 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 		mAdapter = new ActivitiesAdapter(this);
 		((ListView) findViewById(R.id.listview)).setAdapter(mAdapter);
-		
-		final String userId = i.getStringExtra(ARG_USER_ID);
-		Service service = getService();
-		service.getUserActivities(getEncryptedToken(), userId);
+
+		// final Service service = getService();
+		//
+		// final String userId = i.getStringExtra(ARG_USER_ID);
+		// service.getUserActivities(getEncryptedToken(), userId);
+
+		new AsyncTask<Void, Void, List<ActivityItem>>() {
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				setLoading(true);
+			}
+
+			@Override
+			protected List<ActivityItem> doInBackground(Void... params) {
+				try {
+					Thread.sleep(1000);
+					return MockupDataLoader.loadActivities();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(List<ActivityItem> result) {
+				setLoading(false);
+				super.onPostExecute(result);
+				mAdapter.setItems(result);
+			}
+		}.execute();
 	}
-	
+
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
@@ -135,7 +163,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 		return titleView;
 	}
 
-	static class ActivitiesAdapter extends BaseAdapter {
+	class ActivitiesAdapter extends BaseAdapter {
 
 		private Context mContext;
 		private List<ActivityItem> mItems;
@@ -179,16 +207,15 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			ViewHolder holder = getViewHolder(convertView);
 			ActivityItem item = mItems.get(position);
 
-			holder.activity.setText(item.getName());
-			if (item.getType() == ActivityType.comment) {
-				holder.activity.setCompoundDrawablesWithIntrinsicBounds(
-						R.drawable.icon_quote, 0, 0, 0);
-				holder.comment.setVisibility(View.VISIBLE);
-			} else {
-				holder.activity.setCompoundDrawablesWithIntrinsicBounds(
-						R.drawable.followers, 0, 0, 0);
-				holder.comment.setVisibility(View.GONE);
-			}
+			final String activity = mUserFirstName + " " + item.getAction()
+					+ " " + item.getSubject();
+			holder.activity.setText(SpannableUtils.stylistTextBold(
+					activity,
+					item.getAction(),
+					mContext.getResources().getColor(
+							android.R.color.darker_gray)));
+			holder.activity.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.icon_quote, 0, 0, 0);
 
 			return convertView;
 		}
@@ -204,11 +231,9 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 		class ViewHolder {
 			TextView activity;
-			View comment;
 
 			public ViewHolder(View view) {
 				activity = (TextView) view.findViewById(R.id.activity);
-				comment = view.findViewById(R.id.comment);
 			}
 		}
 

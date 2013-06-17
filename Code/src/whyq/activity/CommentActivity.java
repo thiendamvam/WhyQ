@@ -1,24 +1,14 @@
 package whyq.activity;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
 import whyq.WhyqApplication;
-import whyq.interfaces.IServiceListener;
 import whyq.mockup.MockupDataLoader;
 import whyq.model.Comment;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
-import whyq.utils.Util;
-import whyq.utils.XMLParser;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,7 +20,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.whyq.R;
 
@@ -54,6 +43,12 @@ public class CommentActivity extends ImageWorkerActivity {
 		Service service = getService();
 		setLoading(true);
 		service.getComments(getEncryptedToken(), "21", 0, 20);
+	}
+	
+	@Override
+	public void onCompleted(Service service, ServiceResponse result) {
+		super.onCompleted(service, result);
+		setLoading(false);
 	}
 
 	class LoadDataTask extends AsyncTask<Void, Void, List<Comment>> {

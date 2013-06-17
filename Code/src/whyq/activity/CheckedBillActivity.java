@@ -8,7 +8,6 @@ import whyq.mockup.MockupDataLoader;
 import whyq.model.BillItem;
 import whyq.utils.ImageWorker;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,8 +48,6 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				startActivity(new Intent(CheckedBillActivity.this,
-						CommentActivity.class));
 			}
 		});
 

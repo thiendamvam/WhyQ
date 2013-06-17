@@ -10,7 +10,10 @@ import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
+import whyq.utils.SpannableUtils;
 import whyq.utils.WhyqUtils;
+import whyq.view.SearchField;
+import whyq.view.SearchField.QueryCallback;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,7 +34,8 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class FriendsFacebookActivity extends ImageWorkerActivity {
+public class FriendsFacebookActivity extends ImageWorkerActivity implements
+		QueryCallback {
 
 	private FriendsFacebookAdapter mAdapter;
 
@@ -43,7 +47,11 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 
 		setTitle(R.string.friend_from_facebook);
 
-		findViewById(R.id.searchField).getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+		SearchField searchField = (SearchField) findViewById(R.id.searchField);
+
+		searchField.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+
+		searchField.setQueryCallback(this);
 
 		mAdapter = new FriendsFacebookAdapter(this, mImageWorker);
 		ListView listview = (ListView) findViewById(R.id.listview);
@@ -56,33 +64,58 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 				final Object item = mAdapter.getItem(arg2);
 				if (item instanceof FriendFacebook) {
 					final FriendFacebook friend = (FriendFacebook) item;
-					Intent i = new Intent(FriendsFacebookActivity.this, UserBoardActivity.class);
+					Intent i = new Intent(FriendsFacebookActivity.this,
+							UserBoardActivity.class);
 					i.putExtra(UserBoardActivity.ARG_USER_ID, friend.getId());
-					i.putExtra(UserBoardActivity.ARG_FIRST_NAME, friend.getFirstName());
+					i.putExtra(UserBoardActivity.ARG_FIRST_NAME,
+							friend.getFirstName());
 					i.putExtra(UserBoardActivity.ARG_AVATAR, friend.getAvatar());
 					startActivity(i);
 				}
 			}
 		});
 
-		final WhyqUtils mPermutils = new WhyqUtils();
-		String access_token = mPermutils.getFacebookToken(this);
-		if (access_token != null) {
+		final String access_token = getAccessToken();
+		if (access_token != null && access_token.length() > 0) {
 			getFriends(access_token);
 		}
 
 	}
-	
+
+	private String getAccessToken() {
+		final WhyqUtils mPermutils = new WhyqUtils();
+		return mPermutils.getFacebookToken(this);
+	}
+
+	@Override
+	public void onQuery(String queryString) {
+		if (queryString != null && queryString.length() > 0) {
+			searchFriends(getAccessToken(), queryString);
+		} else {
+			getFriends(getAccessToken());
+		}
+	}
+
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
 		setLoading(false);
 		if (result != null) {
 			FriendFacebookController handler = DataParser
-					.parseFriendFacebook(String.valueOf(result
-							.getData()));
+					.parseFriendFacebook(String.valueOf(result.getData()));
 			mAdapter.setController(handler);
 		}
+	}
+
+	private void searchFriends(String accessToken, String queryString) {
+		if (accessToken == null || accessToken.length() == 0) {
+			return;
+		}
+
+		Service service = getService();
+		setLoading(true);
+		service.searchFriendsFacebook(getEncryptedToken(), queryString,
+				accessToken);
 	}
 
 	private void getFriends(String access_token) {
@@ -143,38 +176,22 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 			}
 
 			if (position == 0) {
-				return "You have " + countListWhyq
-						+ " facebook friends had joined WHY Q.";
+				final String key = countListWhyq + " facebook friends";
+				final String result = "You have " + key + " had joined WHY Q.";
+				return SpannableUtils.stylistTextBold(result, key, mContext
+						.getResources().getColor(R.color.orange));
 			} else if (position == countListWhyq + 1) {
-				return "And "
-						+ countListNotJoinWhyq
-						+ " facebook friends haven't joined WHY Q. Invite your friend to join this app!";
+				final String key = countListNotJoinWhyq + " facebook friends";
+				final String result = "And "
+						+ key
+						+ " haven't joined WHY Q. Invite your friend to join this app!";
+				return SpannableUtils.stylistTextBold(result, key, mContext
+						.getResources().getColor(R.color.orange));
 			} else if (position <= countListWhyq) {
 				return listWhyq.get(position - 1);
 			} else {
 				return listNotJoinWhyq.get(position - countListWhyq - 2);
 			}
-		}
-
-		private static final String YOU_HAVE = "You have ";
-		private static final String AND = "And ";
-		private static final String FACE_BOOK_FRIEND = " facebook friends";
-
-		private Spannable stylistText(String input) {
-			Spannable result = new SpannableString(input);
-
-			final int start, end;
-			if (input.startsWith(YOU_HAVE)) {
-				start = YOU_HAVE.length();
-			} else {
-				start = AND.length();
-			}
-			end = input.indexOf(FACE_BOOK_FRIEND) + FACE_BOOK_FRIEND.length();
-			result.setSpan(new ForegroundColorSpan(0xffff8822), start, end,
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			result.setSpan(new StyleSpan(android.graphics.Typeface.BOLD),
-					start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			return result;
 		}
 
 		@Override
@@ -226,7 +243,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 				}
 
 			} else {
-				holder.name.setText(stylistText(String.valueOf(item)));
+				holder.name.setText((Spannable) item);
 				if (position == 0 && countListWhyq > 0) {
 					holder.action.setText(R.string.friend_all);
 					holder.action.setVisibility(View.VISIBLE);
@@ -265,4 +282,5 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 		}
 
 	}
+
 }

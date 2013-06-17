@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include
+    <whyq.view.SearchField
+        android:id="@+id/searchField"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        layout="@layout/search_field" />
+        android:background="@drawable/title"/>
 
     <ListView
         android:id="@+id/listview"

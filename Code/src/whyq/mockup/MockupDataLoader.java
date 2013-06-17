@@ -10,7 +10,6 @@ import whyq.model.FacebookFriend;
 import whyq.model.User;
 import whyq.model.WhyqBoard;
 import whyq.model.WhyqImage;
-import whyq.model.ActivityItem.ActivityType;
 
 public class MockupDataLoader {
 
@@ -97,9 +96,9 @@ public class MockupDataLoader {
 		List<ActivityItem> mItems = new ArrayList<ActivityItem>();
 		for (int i = 0; i < 10; i++) {
 			if (i % 2 == 0) {
-				mItems.add(new ActivityItem(ActivityType.comment, "Van Pham Comment on Sushi Bar"));
+				mItems.add(new ActivityItem("đã kết bạn với", "Vit con"));
 			} else {
-				mItems.add(new ActivityItem(ActivityType.like, "Van Pham liked a comment of on Sushi Bar"));
+				mItems.add(new ActivityItem("đã kết bạn với", "Andy Nguyen"));
 			}
 		}
 		return mItems;

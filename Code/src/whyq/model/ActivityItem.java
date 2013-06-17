@@ -2,23 +2,19 @@ package whyq.model;
 
 public class ActivityItem {
 
-	public enum ActivityType {
-		like, comment
+	private final String subject;
+	private final String action;
+
+	public ActivityItem(String action, String subject) {
+		this.action = action;
+		this.subject = subject;
 	}
 
-	private final String name;
-	private final ActivityType type;
-
-	public ActivityItem(ActivityType type, String name) {
-		this.name = name;
-		this.type = type;
+	public String getAction() {
+		return action;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public ActivityType getType() {
-		return type;
+	public String getSubject() {
+		return subject;
 	}
 }
