@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whyq.WhyqApplication;
-import whyq.mockup.MockupDataLoader;
 import whyq.model.ActivityItem;
 import whyq.model.ActivityItem.ActivityType;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,12 +56,26 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 		mAdapter = new ActivitiesAdapter(this);
 		((ListView) findViewById(R.id.listview)).setAdapter(mAdapter);
-		
+
+		final Service service = getService();
+
+		// TODO: remove after test
+		findViewById(R.id.postComment).setOnClickListener(
+				new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						service.postComment(
+								getEncryptedToken(),
+								"This is just comment to test "
+										+ System.currentTimeMillis(), "Photo");
+					}
+				});
+
 		final String userId = i.getStringExtra(ARG_USER_ID);
-		Service service = getService();
 		service.getUserActivities(getEncryptedToken(), userId);
 	}
-	
+
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);

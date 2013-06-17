@@ -11,6 +11,8 @@ import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
 import whyq.utils.WhyqUtils;
+import whyq.view.SearchField;
+import whyq.view.SearchField.QueryCallback;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,7 +33,8 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class FriendsFacebookActivity extends ImageWorkerActivity {
+public class FriendsFacebookActivity extends ImageWorkerActivity implements
+		QueryCallback {
 
 	private FriendsFacebookAdapter mAdapter;
 
@@ -43,7 +46,11 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 
 		setTitle(R.string.friend_from_facebook);
 
-		findViewById(R.id.searchField).getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+		SearchField searchField = (SearchField) findViewById(R.id.searchField);
+
+		searchField.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+
+		searchField.setQueryCallback(this);
 
 		mAdapter = new FriendsFacebookAdapter(this, mImageWorker);
 		ListView listview = (ListView) findViewById(R.id.listview);
@@ -56,33 +63,58 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 				final Object item = mAdapter.getItem(arg2);
 				if (item instanceof FriendFacebook) {
 					final FriendFacebook friend = (FriendFacebook) item;
-					Intent i = new Intent(FriendsFacebookActivity.this, UserBoardActivity.class);
+					Intent i = new Intent(FriendsFacebookActivity.this,
+							UserBoardActivity.class);
 					i.putExtra(UserBoardActivity.ARG_USER_ID, friend.getId());
-					i.putExtra(UserBoardActivity.ARG_FIRST_NAME, friend.getFirstName());
+					i.putExtra(UserBoardActivity.ARG_FIRST_NAME,
+							friend.getFirstName());
 					i.putExtra(UserBoardActivity.ARG_AVATAR, friend.getAvatar());
 					startActivity(i);
 				}
 			}
 		});
 
-		final WhyqUtils mPermutils = new WhyqUtils();
-		String access_token = mPermutils.getFacebookToken(this);
-		if (access_token != null) {
+		final String access_token = getAccessToken();
+		if (access_token != null && access_token.length() > 0) {
 			getFriends(access_token);
 		}
 
 	}
-	
+
+	private String getAccessToken() {
+		final WhyqUtils mPermutils = new WhyqUtils();
+		return mPermutils.getFacebookToken(this);
+	}
+
+	@Override
+	public void onQuery(String queryString) {
+		if (queryString != null && queryString.length() > 0) {
+			searchFriends(getAccessToken(), queryString);
+		} else {
+			getFriends(getAccessToken());
+		}
+	}
+
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
 		setLoading(false);
 		if (result != null) {
 			FriendFacebookController handler = DataParser
-					.parseFriendFacebook(String.valueOf(result
-							.getData()));
+					.parseFriendFacebook(String.valueOf(result.getData()));
 			mAdapter.setController(handler);
 		}
+	}
+
+	private void searchFriends(String accessToken, String queryString) {
+		if (accessToken == null || accessToken.length() == 0) {
+			return;
+		}
+
+		Service service = getService();
+		setLoading(true);
+		service.searchFriendsFacebook(getEncryptedToken(), queryString,
+				accessToken);
 	}
 
 	private void getFriends(String access_token) {
@@ -265,4 +297,5 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 		}
 
 	}
+
 }

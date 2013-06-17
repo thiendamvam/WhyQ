@@ -2,7 +2,6 @@
     android:id="@+id/searchField"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/title"
     android:baselineAligned="false"
     android:padding="5dp" >
 

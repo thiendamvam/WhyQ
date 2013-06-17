@@ -32,6 +32,12 @@
             layout="@layout/category_item1" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/postComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Post comment" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
