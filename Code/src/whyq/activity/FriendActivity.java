@@ -15,7 +15,7 @@ import org.apache.http.message.BasicNameValuePair;
 import whyq.WhyqMain;
 import whyq.interfaces.Get_Perm_Delegate;
 import whyq.interfaces.MyDiary_Delegate;
-import whyq.model.Whyq;
+import whyq.model.Store;
 import whyq.model.Transporter;
 import whyq.utils.API;
 import whyq.utils.Constants;
@@ -690,10 +690,10 @@ public class FriendActivity extends Activity implements View.OnClickListener , M
 	    return super.onKeyDown(keyCode, event);
 	}
 	@Override
-	public void onSuccess(ArrayList<Whyq> whyqs) {
+	public void onSuccess(ArrayList<Store> stores) {
 		// TODO Auto-generated method stub
 		Transporter transporter = new Transporter();
-		transporter.setPerms(whyqs);
+		transporter.setPerms(stores);
 
 		
 		// Go to the Board Detail screen

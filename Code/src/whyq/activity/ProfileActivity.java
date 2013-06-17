@@ -29,7 +29,7 @@ import whyq.WhyqMain;
 import whyq.adapter.BoardAdapter;
 import whyq.interfaces.Get_Board_delegate;
 import whyq.model.Comment;
-import whyq.model.Whyq;
+import whyq.model.Store;
 import whyq.model.WhyqBoard;
 import whyq.model.WhyqImage;
 import whyq.model.Transporter;
@@ -689,11 +689,11 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 //			loadingDialog.dismiss();
 //	}
 	@Override
-	public void onSuccess(ArrayList<Whyq> whyqs) {
+	public void onSuccess(ArrayList<Store> stores) {
 		// TODO Auto-generated method stub
 		
 		Transporter transporter = new Transporter();
-		transporter.setPerms(whyqs);
+		transporter.setPerms(stores);
 		transporter.setBoardName(board.getName());
 		
 		// Go to the Board Detail screen

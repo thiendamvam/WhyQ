@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.whyq.R;
 
-import whyq.model.Whyq;
+import whyq.model.Store;
 import whyq.utils.UrlImageViewHelper;
 
 import android.content.Context;
@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 public class WhyqItemAdapterNew extends BaseAdapter {
 	private Context context;
-	private ArrayList<Whyq> listProducts;
+	private ArrayList<Store> listProducts;
 
 	static class ViewHolder {
 		public ImageView imgThumb ;
@@ -33,7 +33,7 @@ public class WhyqItemAdapterNew extends BaseAdapter {
 		private Button btnDistance;
 	}
 
-	public WhyqItemAdapterNew(Context context, ArrayList<Whyq> productList) {
+	public WhyqItemAdapterNew(Context context, ArrayList<Store> productList) {
 		// super(context);
 		this.context = context;
 		listProducts = productList;
@@ -43,7 +43,7 @@ public class WhyqItemAdapterNew extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
 		if (rowView == null) {
-			Whyq item = listProducts.get(position);
+			Store item = listProducts.get(position);
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			rowView = inflater.inflate(R.layout.whyq_item_new, null);
@@ -88,15 +88,15 @@ public class WhyqItemAdapterNew extends BaseAdapter {
 		return position;
 	}
 
-	public ArrayList<Whyq> getListNews() {
+	public ArrayList<Store> getListNews() {
 		return listProducts;
 	}
 
-	public void setListProducts(ArrayList<Whyq> listProducts) {
+	public void setListProducts(ArrayList<Store> listProducts) {
 		this.listProducts = listProducts;
 	}
 
-	public Whyq getFirstProducts() {
+	public Store getFirstProducts() {
 		return listProducts.get(0);
 	}
 

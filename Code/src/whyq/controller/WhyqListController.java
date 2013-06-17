@@ -11,8 +11,8 @@ import org.w3c.dom.NodeList;
 
 import whyq.interfaces.WhyqList_Delegate;
 import whyq.model.Comment;
-import whyq.model.Whyq;
-import whyq.model.Whyq;
+import whyq.model.Store;
+import whyq.model.Store;
 import whyq.model.WhyqBoard;
 import whyq.model.WhyqImage;
 import whyq.model.User;
@@ -41,10 +41,10 @@ public class WhyqListController implements WhyqList_Delegate {
 	/**
 	 * @TODO simulate perm lists
 	 */
-	public ArrayList<Whyq> getBusinessList( String url ){
+	public ArrayList<Store> getBusinessList( String url ){
 
 		
-		ArrayList<Whyq> permList = new ArrayList<Whyq>();
+		ArrayList<Store> permList = new ArrayList<Store>();
 		
 		if( url == "" ) {
 			url = API.popularBusinessListURL;
@@ -167,14 +167,14 @@ public class WhyqListController implements WhyqList_Delegate {
 		
 	}
 	
-	private ArrayList<Whyq> parsePermListFromDoc(Document doc) {
+	private ArrayList<Store> parsePermListFromDoc(Document doc) {
 		// TODO Auto-generated method stub
-		ArrayList<Whyq> permList = new ArrayList<Whyq>();
+		ArrayList<Store> permList = new ArrayList<Store>();
 		NodeList permNodeList =  doc.getElementsByTagName("obj");
 		
 		for( int i = 0; i< permNodeList.getLength(); i++ ){
 			Element permElement = (Element ) permNodeList.item(i);
-			Whyq item = new Whyq();
+			Store item = new Store();
 			String id = getValue(permElement, "id");
 			String storeId = getValue(permElement, "store_id");
 			String address = getValue(permElement, "address");
@@ -247,10 +247,10 @@ public class WhyqListController implements WhyqList_Delegate {
 	 * @param nameValuePairs
 	 * @return
 	 */
-	public ArrayList<Whyq> getBusinessList(String url, List<NameValuePair> nameValuePairs){
+	public ArrayList<Store> getBusinessList(String url, List<NameValuePair> nameValuePairs){
 
 		
-		ArrayList<Whyq> permList = new ArrayList<Whyq>();
+		ArrayList<Store> permList = new ArrayList<Store>();
 		
 		if( url == "" ) {
 			url = API.popularBusinessListURL;
@@ -280,7 +280,7 @@ public class WhyqListController implements WhyqList_Delegate {
 			try {
 
 				Element permElement = (Element ) permNodeList.item(i);
-				Whyq item = new Whyq();
+				Store item = new Store();
 				String id = getValue(permElement, "id");
 				String storeId = getValue(permElement, "store_id");
 				String address = getValue(permElement, "address");

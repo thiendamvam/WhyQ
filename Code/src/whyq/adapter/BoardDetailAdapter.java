@@ -13,7 +13,7 @@ import whyq.activity.GoogleMapActivity;
 import whyq.activity.NewWhyqActivity;
 import whyq.activity.ProfileActivityGroup;
 import whyq.model.Comment;
-import whyq.model.Whyq;
+import whyq.model.Store;
 import whyq.model.WhyqBoard;
 import whyq.model.User;
 import whyq.utils.API;
@@ -44,17 +44,17 @@ import com.whyq.R;
 public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 
 	private Activity activity;
-	private List<Whyq> whyqs;
+	private List<Store> stores;
 	private String boardName;
 	private int screenWidth;
 	private int screenHeight;
 	private User user;
 	private Context context;
-	public BoardDetailAdapter(Activity activity, List<Whyq> whyqs, String boardName, 
+	public BoardDetailAdapter(Activity activity, List<Store> stores, String boardName, 
 			int screenWidth, int screenHeight, User user) {
 		this.activity = activity;
 		this.context = activity.getParent();
-		this.whyqs = whyqs;
+		this.stores = stores;
 		this.boardName = boardName;
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
@@ -66,12 +66,12 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 		final LayoutInflater inflater = activity.getLayoutInflater();
 		final View view = inflater.inflate(R.layout.profile_perm_layout, null);
 		
-		final Whyq whyq = whyqs.get(position);
+		final Store store = stores.get(position);
 		final Button like = (Button) view.findViewById(R.id.btLike);
 		final Button rePerm = (Button) view.findViewById(R.id.btReperm);
 		final ImageView btnLocation = (ImageView)view.findViewById(R.id.btLocation);
 		// Validate Like or Unlike
-		if (whyq != null) {
+		if (store != null) {
 //			if (whyq.getPermUserLikeCount() != null && "0".equals(whyq.getPermUserLikeCount())) {
 //				like.setText(Constants.LIKE);
 //			} else {
@@ -80,10 +80,10 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 		}
 		like.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (user != null && whyq != null) {
+				if (user != null && store != null) {
 					HttpPermUtils httpPermUtils = new HttpPermUtils();
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("pid", String.valueOf(whyq.getId())));
+					nameValuePairs.add(new BasicNameValuePair("pid", String.valueOf(store.getId())));
 					nameValuePairs.add(new BasicNameValuePair("uid", String.valueOf(user.getId()))); 
 					httpPermUtils.sendRequest(API.likeURL, nameValuePairs, false);
 //					if (v instanceof Button) {
@@ -117,10 +117,10 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 			
 			public void onClick(View v) {
 				// Get the id of perm
-				if (whyq != null) {
+				if (store != null) {
 					
 					Intent myIntent = new Intent(view.getContext(), NewWhyqActivity.class);
-					myIntent.putExtra("permID", (String) whyq.getId() );
+					myIntent.putExtra("permID", (String) store.getId() );
 					View repermView = ProfileActivityGroup.group.getLocalActivityManager() .startActivity("RepermActivity", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
 					ProfileActivityGroup.group.replaceView( repermView );
 					
@@ -150,12 +150,12 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 				Intent googleMap = new Intent(context,
 						GoogleMapActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putFloat("lat", Float.parseFloat(whyq.getLatitude()));
-				bundle.putFloat("lon", Float.parseFloat(whyq.getLongitude()));
-				bundle.putString("thumbnail", whyq.getLogo());
+				bundle.putFloat("lat", Float.parseFloat(store.getLatitude()));
+				bundle.putFloat("lon", Float.parseFloat(store.getLongitude()));
+				bundle.putString("thumbnail", store.getLogo());
 				googleMap.putExtra("locationData", bundle);
 				//Log.d("AA+++++============","========="+perm.getImage().getUrl());
-				View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "PrGoogleMapActivity"+whyq.getId(), googleMap).getDecorView();
+				View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "PrGoogleMapActivity"+store.getId(), googleMap).getDecorView();
 				ProfileActivityGroup.group.replaceView(view);	
 			}
 		});
@@ -164,7 +164,7 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 //		}else{
 //			btnLocation.setVisibility(View.VISIBLE);
 //		}
-		if (whyq != null) {
+		if (store != null) {
 			// The Board Name
 			TextView txtBoardName = (TextView) view.findViewById(R.id.boardName);
 			if (boardName != null) {
@@ -228,13 +228,13 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 	
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return whyqs.size();
+		return stores.size();
 	}
 	
 	
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return whyqs.get(position);
+		return stores.get(position);
 	}
 	
 	

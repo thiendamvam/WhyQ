@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import whyq.WhyqMain;
 import whyq.adapter.WhyqAdapter;
-import whyq.model.Whyq;
+import whyq.model.Store;
 import whyq.model.Transporter;
 import whyq.model.User;
 import whyq.utils.Constants;
@@ -37,10 +37,10 @@ public class BoardDetailActivity extends Activity {
 		if(extras != null)
 			transporter = (Transporter) extras
 				.get(Constants.TRANSPORTER);
-		ArrayList<Whyq> whyqs = null;
+		ArrayList<Store> stores = null;
 		String boardName = null;
 		if(transporter != null){
-			whyqs = transporter.getPerms();
+			stores = transporter.getPerms();
 			boardName = transporter.getBoardName();
 		}
 		// Get the screen's size.
@@ -50,7 +50,7 @@ public class BoardDetailActivity extends Activity {
 		screenHeight = metrics.heightPixels;
 		screenWidth = metrics.widthPixels;
 
-		if (whyqs == null || whyqs.size() == 0) {
+		if (stores == null || stores.size() == 0) {
 			// Display man hinh No Perms Found
 			setContentView(R.layout.profile_emptyperm_layout);
 			message = (TextView) findViewById(R.id.message);
@@ -62,7 +62,7 @@ public class BoardDetailActivity extends Activity {
 //			BoardDetailAdapter boardDetailAdapter = new BoardDetailAdapter(
 //					this, perms, boardName, screenHeight, screenWidth, user);
 			WhyqAdapter boardDetailAdapter =  new WhyqAdapter(FriendActivityGroup.context,
-					null,R.layout.whyq_item_1, whyqs, BoardDetailActivity.this, screenHeight, screenWidth, false, user);
+					null,R.layout.whyq_item_1, stores, BoardDetailActivity.this, screenHeight, screenWidth, false, user);
 
 			permList.setAdapter(boardDetailAdapter);
 		}

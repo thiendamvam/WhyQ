@@ -13,7 +13,7 @@ import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
 import whyq.interfaces.Login_delegate;
 import whyq.model.User;
-import whyq.model.Whyq;
+import whyq.model.Store;
 import whyq.utils.API;
 import whyq.utils.RSA;
 import whyq.utils.UrlImageViewHelper;
@@ -45,7 +45,7 @@ public class WhyqListActivity extends FragmentActivity implements Login_delegate
 	public static final String DOWNLOAD_COMPLETED = "DOWNLOAD_COMPLETED";
 	public String url = "";
 	public Boolean header = true;
-	private ArrayList<Whyq> permListMain = new ArrayList<Whyq>();
+	private ArrayList<Store> permListMain = new ArrayList<Store>();
 
 	public static int screenWidth;
 	public static int screenHeight;
@@ -264,9 +264,9 @@ public class WhyqListActivity extends FragmentActivity implements Login_delegate
 					getSupportFragmentManager(),R.layout.whyq_item_1, permListMain, this, screenWidth, screenHeight, header, user);
 			} else {
 				for(int i = 0; i < permListMain.size(); i++) {
-					Whyq whyq = permListMain.get(i);
-					if(!permListAdapter.isPermDuplicate(whyq)) {
-						permListAdapter.add(whyq);
+					Store store = permListMain.get(i);
+					if(!permListAdapter.isPermDuplicate(store)) {
+						permListAdapter.add(store);
 					}
 				}
 			}
@@ -308,13 +308,13 @@ public class WhyqListActivity extends FragmentActivity implements Login_delegate
 	
 	// AsyncTask task for upload file
 
-	public class LoadPermList extends AsyncTask<ArrayList<Whyq>, Void, ArrayList<Whyq>> {
+	public class LoadPermList extends AsyncTask<ArrayList<Store>, Void, ArrayList<Store>> {
 
 		@Override
-		protected ArrayList<Whyq> doInBackground(ArrayList<Whyq>... params) {
+		protected ArrayList<Store> doInBackground(ArrayList<Store>... params) {
 			// TODO Auto-generated method stub
 			WhyqListController whyqListController = new WhyqListController();
-			ArrayList<Whyq> permList = null;
+			ArrayList<Store> permList = null;
 			try {				
 				if (nextItem != -1) {
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -376,7 +376,7 @@ public class WhyqListActivity extends FragmentActivity implements Login_delegate
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList< Whyq> sResponse) {
+		protected void onPostExecute(ArrayList< Store> sResponse) {
 			/**
 			 * MSA
 			 */

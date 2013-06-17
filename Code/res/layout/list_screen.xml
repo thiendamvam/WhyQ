@@ -48,65 +48,84 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:background="@color/black"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="10dp"
-            android:padding="15dp"
-            android:orientation="vertical" >
+            android:background="@drawable/bg_black"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            android:padding="15dp" >
 
             <RelativeLayout
+                android:id="@+id/rlViewAll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:onClick="toggle"
+                android:orientation="horizontal"
+                android:padding="5dp" >
 
                 <ImageView
                     android:id="@+id/imgCbAll"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_tag" />
 
-                <CheckedTextView
+                <TextView
                     android:id="@+id/cktViewAll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/imgCbAll"
+                    android:paddingLeft="5dp"
                     android:text="View All"
-                    android:onClick="toggle"
                     android:textColor="#805504" />
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rlFavourite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:onClick="toggle"
+                android:orientation="horizontal"
+                android:padding="5dp" >
 
                 <ImageView
                     android:id="@+id/imgCbFavourite"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_tag"
+                    android:visibility="invisible" />
 
-                <CheckedTextView
+                <TextView
                     android:id="@+id/cktViewFavourite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/imgCbFavourite"
+                    android:checkMark="@drawable/icon_cat_coffee"
+                    android:paddingLeft="5dp"
                     android:text="View Favourite" />
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rlVisited"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:onClick="toggle"
+                android:orientation="horizontal"
+                android:padding="5dp" >
 
                 <ImageView
                     android:id="@+id/imgCbVisited"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_tag"
+                    android:visibility="invisible" />
 
-                <CheckedTextView
+                <TextView
                     android:id="@+id/cktViewVisited"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/imgCbVisited"
+                    android:checkMark="@drawable/icon_cat_coffee"
+                    android:paddingLeft="5dp"
                     android:text="View Visited" />
             </RelativeLayout>
         </LinearLayout>

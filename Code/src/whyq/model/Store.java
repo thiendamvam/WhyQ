@@ -1,6 +1,6 @@
 package whyq.model;
 
-public class Whyq {
+public class Store {
 
 	private String id;
 	private String storeId;
@@ -31,7 +31,7 @@ public class Whyq {
 	private int income;
 	private String nameCate;
 	
-	public Whyq() {
+	public Store() {
 		// TODO Auto-generated constructor stub
 	}
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whyq.interfaces.Get_Board_delegate;
-import whyq.model.Whyq;
+import whyq.model.Store;
 import whyq.model.WhyqBoard;
 import whyq.utils.API;
 import whyq.utils.XMLParser;
@@ -31,7 +31,7 @@ public class BoardController {
 	 * @param boardId the board id.
 	 * @return the list of perms.
 	 */
-	public List<Whyq> getPermsByBoardId(String boardId, Get_Board_delegate delegate) {
+	public List<Store> getPermsByBoardId(String boardId, Get_Board_delegate delegate) {
 		if (boardId == null || "".equals(boardId))
 			return null;
 		XMLParser parser = new XMLParser(API.permListFromBoardUrl + boardId, delegate, XMLParser.GET_BOARD);

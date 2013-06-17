@@ -19,6 +19,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import whyq.activity.ListActivity;
 import whyq.interfaces.HttpAccess;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -56,6 +57,9 @@ public class HttpPermUtils {
 				HttpPost postRequest = new HttpPost(url);
 				try {			
 					if (nameValuePairs != null) {
+//						postRequest.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+					}
+					if(ListActivity.isSearch){
 						postRequest.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
 					}
 					client = new DefaultHttpClient();

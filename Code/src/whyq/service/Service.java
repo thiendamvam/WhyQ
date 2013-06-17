@@ -28,6 +28,7 @@ import org.apache.http.protocol.HTTP;
 
 import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
+import whyq.model.Store;
 import whyq.utils.API;
 import whyq.utils.Logger;
 import whyq.utils.Util;
@@ -234,6 +235,9 @@ public class Service implements Runnable {
 		case ActionGetUserActivities:
 			resObj = result;
 			break;
+		case ActionGetBusinessDetail:
+			resObj = parser.parseBusinessDetail(result);
+			break;
 		}
 		if (resObj == null)
 			response = new ServiceResponse(act, null, ResultCode.Failed);
@@ -395,5 +399,14 @@ public class Service implements Runnable {
         
         return formList;
     }
+
+	public void getBusinessDetail(String id) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionGetBusinessDetail;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", WhyqApplication.Instance().getRSAToken());
+		params.put("store_id", id);
+		request("/m/business/show", params, true, false);
+	}
 
 }

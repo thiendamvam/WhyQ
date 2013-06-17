@@ -101,6 +101,10 @@
             android:name="whyq.activity.FriendActivityGroup"
             android:screenOrientation="portrait" />
         <activity
+            android:name="whyq.activity.ListDetailActivity"
+            android:screenOrientation="portrait" />
+        
+        <activity
             android:name="whyq.activity.ProfileActivity"
             android:screenOrientation="portrait" />
         <activity

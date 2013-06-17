@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import twitter4j.util.ImageUpload.ImgLyOAuthUploader;
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.adapter.WhyqAdapter;
@@ -13,7 +14,7 @@ import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
 import whyq.interfaces.Login_delegate;
 import whyq.model.User;
-import whyq.model.Whyq;
+import whyq.model.Store;
 import whyq.utils.API;
 import whyq.utils.RSA;
 import whyq.utils.UrlImageViewHelper;
@@ -29,7 +30,10 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,7 +63,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	/**
 	 * MSA
 	 */
-	private ArrayList<Whyq> permListMain = new ArrayList<Whyq>();
+	private ArrayList<Store> permListMain = new ArrayList<Store>();
 
 	public static int screenWidth;
 	public static int screenHeight;
@@ -81,7 +85,13 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private boolean isFirst = true;
 	public static LoadPermList loadPermList;
 	public boolean isAddHeader = false;
-	
+	private ImageView bntFilter;
+	private LinearLayout lnFilter;
+	private EditText etTextSearch;
+	private TextView cktViewAll;
+	private TextView cktFriednVised;
+	private TextView cktFriendFavourtie;
+	/** Called when the activity is first created. */
 	/*
 	 * Whyq elements
 	 */
@@ -92,13 +102,13 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	
 	private String searchKey="";
-	private String longitude;
-	private String latgitude;
+	private String longitude="";
+	private String latgitude="";
 	private String filter="0"; 
 	private String friendFavourite;
 	private String friendVisited;
 	private String cateId="0";
-	private boolean isSearch = false;
+	public static boolean isSearch = false;
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
 		@Override
@@ -129,13 +139,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			}
 		}
 	};
-	private ImageView bntFilter;
-	private LinearLayout lnFilter;
-	private EditText etTextSearch;
-	private CheckedTextView cktViewAll;
-	private CheckedTextView cktFriednVised;
-	private CheckedTextView cktFriendFavourtie;
-	/** Called when the activity is first created. */
+	private ImageView imgCheckedAll;
+	private ImageView imgCheckedFavorite;
+	private ImageView imgCheckedVisited;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -171,11 +178,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		progressBar = new ProgressBar(ListActivity.this);
 		etTextSearch =(EditText) findViewById(R.id.etTextSearch);
 		isAddHeader = true;
-		cktViewAll = (CheckedTextView) findViewById(R.id.cktViewAll);
-		cktFriednVised = (CheckedTextView)findViewById(R.id.cktViewVisited);
-		cktFriendFavourtie = (CheckedTextView) findViewById(R.id.cktViewFavourite);
-				
-
+		cktViewAll = (TextView) findViewById(R.id.cktViewAll);
+		cktFriednVised = (TextView)findViewById(R.id.cktViewVisited);
+		cktFriendFavourtie = (TextView) findViewById(R.id.cktViewFavourite);
+		imgCheckedAll = (ImageView) findViewById(R.id.imgCbAll);
+		imgCheckedFavorite = (ImageView)findViewById(R.id.imgCbFavourite);
+		imgCheckedVisited = (ImageView) findViewById(R.id.imgCbVisited);
+		
+		whyqListView.setOnItemClickListener(onStoreItemListener);
 		etTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId,
@@ -185,7 +195,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 					imm.hideSoftInputFromWindow(etTextSearch
 							.getApplicationWindowToken(), 0);
 					try {
-						exeSearch(etTextSearch.getText().toString());
+						String text = etTextSearch.getText().toString();
+						if(text.equals(""))
+						{
+							isSearch = false;
+						}else{
+							isSearch = true;
+						}
+						exeSearch(text);
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
@@ -194,7 +211,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 				return false;
 			}
 		});
-		
+		etTextSearch.addTextChangedListener(mTextEditorWatcher);
+
 	}
 	
 	protected void exeSearch(String string) {
@@ -247,8 +265,9 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 	public void exeListActivity(boolean isSearch) {
 		// TODO Auto-generated method stub
+		showProgress();
 		if(isFirst){
-	    	clearData();
+//	    	clearData();
 	    	if(permListMain !=null)
 	    		permListMain.clear();
 	    	isFirst = false;
@@ -280,13 +299,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			this.header = false;
 		} else if (user != null) {
 //			this.url = API.followingPerm + String.valueOf(user.getId());
-			if(isSearch){
-				this.url = API.searchBusinessListURL;
-				this.header = false;
-			}else{
-				this.url = API.popularBusinessListURL;
-				this.header = false;
-			}
+
+		}
+		if(isSearch){
+			this.url = API.searchBusinessListURL;
+			this.header = false;
+		}else{
+			this.url = API.popularBusinessListURL;
+			this.header = false;
 		}
 		clearData();
 //		btnRefesh.setVisibility(View.GONE);
@@ -339,16 +359,16 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private void loadPerms() {
 		User user = WhyqUtils.isAuthenticated(getApplicationContext());		
 		if(permListMain != null && !permListMain.isEmpty()){
-			//clearData();
+//			clearData();
 			//createUI();
 			if(this.permListAdapter == null) {
 				this.permListAdapter = new WhyqAdapter(ListActivityGroup.context,
 					getSupportFragmentManager(),R.layout.whyq_item_1, permListMain, this, screenWidth, screenHeight, header, user);
 			} else {
 				for(int i = 0; i < permListMain.size(); i++) {
-					Whyq whyq = permListMain.get(i);
-					if(!permListAdapter.isPermDuplicate(whyq)) {
-						permListAdapter.add(whyq);
+					Store store = permListMain.get(i);
+					if(!permListAdapter.isPermDuplicate(store)) {
+						permListAdapter.add(store);
 					}
 				}
 			}
@@ -356,12 +376,12 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			
 			whyqListView.setAdapter(permListAdapter);
 
-			int selected = permListAdapter.getCount() - permListMain.size() - 2;
-			if(selected >= 0) {
-				whyqListView.setSelection(selected);
-			} else {
-				whyqListView.setSelection(0);
-			}
+//			int selected = permListAdapter.getCount() - permListMain.size() - 2;
+//			if(selected >= 0) {
+//				whyqListView.setSelection(selected);
+//			} else {
+//				whyqListView.setSelection(0);
+//			}
 
 		}else{
 			
@@ -372,7 +392,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	public void clearData() {
 		if(permListAdapter != null && !permListAdapter.isEmpty()) {
-			//permListAdapter.clear();
+			permListAdapter.clear();
 			UrlImageViewHelper.clearAllImageView();				
 		}
 		if(whyqListView != null && headerView != null) {
@@ -390,7 +410,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	// AsyncTask task for upload file
 
-	public class LoadPermList extends AsyncTask<ArrayList<Whyq>, Void, ArrayList<Whyq>> {
+	public class LoadPermList extends AsyncTask<ArrayList<Store>, Void, ArrayList<Store>> {
 
 		public boolean isSearch;
 
@@ -399,10 +419,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		}
 		
 		@Override
-		protected ArrayList<Whyq> doInBackground(ArrayList<Whyq>... params) {
+		protected ArrayList<Store> doInBackground(ArrayList<Store>... params) {
 			// TODO Auto-generated method stub
 			WhyqListController whyqListController = new WhyqListController();
-			ArrayList<Whyq> permList = null;
+			ArrayList<Store> permList = null;
 			try {				
 				if (nextItem != -1) {
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -433,7 +453,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 							
 							
 						}else{
-							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
+//							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
 							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
 							if(friendVisited !=null){
 								nameValuePairs.add(new BasicNameValuePair("friend_visit", friendVisited));
@@ -483,7 +503,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList< Whyq> sResponse) {
+		protected void onPostExecute(ArrayList< Store> sResponse) {
 			/**
 			 * MSA
 			 */
@@ -588,7 +608,35 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public void onCoffeTabClicked(View v){
 		resetTabBarFocus(3);
 	}
-	
+	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+		}
+
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			// This sets a textview to the current length
+
+			try {
+				String text = s.toString();
+				Log.d("Text serch","Text "+text);
+				if(text.equals(""))
+				{
+					isSearch = false;
+					exeListActivity(false);
+				}else{
+					isSearch = true;
+					exeSearch(text);
+				}
+			
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+
+		public void afterTextChanged(Editable s) {
+		}
+	};
 	
 	private void hideProgress() {
 		// TODO Auto-generated method stub
@@ -608,7 +656,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			dialog.show();
 		}
 	}
-	public void onFilter(View v){
+	public void onFilterClicked(View v){
 		if(lnFilter.getVisibility()==View.VISIBLE){
 			hideFilterView();
 		}else{
@@ -618,20 +666,58 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	}
 	public void toggle(View v)
 	{
-//	    CheckedTextView cView = (CheckedTextView) v.findViewById(R.id.cktViewAll);
-//	        if (cView.isSelected())
-//	        {
-//	            cView.setSelected(false);
-//	            cView.setCheckMarkDrawable (R.drawable.ic_launcher);
-//	        }
-//	        else
-//	        {
-//	            cView.setSelected(true);
-//	            cView.setCheckMarkDrawable (R.drawable.icon_cat_cutlery);
-//	        }
-		CheckedTextView view = (CheckedTextView) v;
-		view.setTextColor(Color.RED);
+		int id =v.getId();
+		switch (id) {
+		case R.id.rlViewAll:
+			initCheckAll();
+			break;
+		case R.id.rlFavourite:
+			initCheckFavourite();
+			break;
+		case R.id.rlVisited:
+			initCheckVisited();
+			break;
+			
+		default:
+			break;
+		}
+
 	}
+	private void initCheckAll() {
+		// TODO Auto-generated method stub
+		cateId = "0";
+		cktViewAll.setTextColor(Color.parseColor("#805504"));	
+		cktFriendFavourtie.setTextColor(getResources().getColor(R.color.white));
+		cktFriednVised.setTextColor(getResources().getColor(R.color.white));
+		imgCheckedFavorite.setVisibility(View.INVISIBLE);
+		imgCheckedVisited.setVisibility(View.INVISIBLE);
+		imgCheckedAll.setVisibility(View.VISIBLE);
+	}
+
+	private void initCheckFavourite() {
+		// TODO Auto-generated method stub
+		cateId = "1";
+		cktFriendFavourtie.setTextColor(Color.parseColor("#805504"));
+		cktViewAll.setTextColor(getResources().getColor(R.color.white));
+		cktFriednVised.setTextColor(getResources().getColor(R.color.white));
+		
+		imgCheckedAll.setVisibility(View.INVISIBLE);
+		imgCheckedVisited.setVisibility(View.INVISIBLE);
+		imgCheckedFavorite.setVisibility(View.VISIBLE);
+	}
+
+	private void initCheckVisited() {
+		// TODO Auto-generated method stub
+		cateId = "2";
+		cktFriednVised.setTextColor(Color.parseColor("#805504"));
+		cktViewAll.setTextColor(getResources().getColor(R.color.white));
+		cktFriendFavourtie.setTextColor(getResources().getColor(R.color.white));
+		
+		imgCheckedAll.setVisibility(View.INVISIBLE);
+		imgCheckedFavorite.setVisibility(View.INVISIBLE);
+		imgCheckedVisited.setVisibility(View.VISIBLE);
+	}
+
 	private void showFilterView() {
 		// TODO Auto-generated method stub
 		lnFilter.setVisibility(View.VISIBLE);

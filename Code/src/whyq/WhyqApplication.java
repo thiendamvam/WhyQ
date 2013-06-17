@@ -4,7 +4,9 @@
 package whyq;
 
 import whyq.model.User;
+import whyq.utils.RSA;
 import whyq.utils.Util;
+import whyq.utils.XMLParser;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -50,7 +52,17 @@ public class WhyqApplication extends Application {
 	/*
 	 * Current screen info
 	 */
-	
+	public static String getRSAToken(){
+		
+		try {
+			RSA rsa = new RSA();
+			String token = rsa.RSAEncrypt(XMLParser.getToken(Instance().getApplicationContext()));
+			return token;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+	}
 	public String getToken() {
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());

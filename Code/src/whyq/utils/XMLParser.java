@@ -43,7 +43,7 @@ import whyq.interfaces.Login_delegate;
 import whyq.interfaces.LogoutDelegate;
 import whyq.interfaces.MyDiary_Delegate;
 import whyq.interfaces.WhyqList_Delegate;
-import whyq.model.Whyq;
+import whyq.model.Store;
 import whyq.model.WhyqBoard;
 import whyq.model.WhyqImage;
 import whyq.model.User;
@@ -211,7 +211,7 @@ public class XMLParser implements HttpAccess {
 		this.doc = doc;
 	}
 
-	public ArrayList<Whyq> permListFromNodeList(String parentNode) {
+	public ArrayList<Store> permListFromNodeList(String parentNode) {
 
 		try {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -226,7 +226,7 @@ public class XMLParser implements HttpAccess {
 			// StringReader("<data> <section id=\"1\">bla</section> <area>lala</area> </data> ")));
 			xr.parse(new InputSource(new StringReader(this.xml)));
 
-			ArrayList<Whyq> permList = dataHandler.getPermList();
+			ArrayList<Store> permList = dataHandler.getPermList();
 
 			return permList;
 		} catch (ParserConfigurationException pce) {
@@ -247,13 +247,13 @@ public class XMLParser implements HttpAccess {
 
 		// this holds the data
 
-		private Whyq currentPem = null;
+		private Store currentPem = null;
 		private User currentUser = null;
-		private ArrayList<Whyq> permList = new ArrayList<Whyq>();
+		private ArrayList<Store> permList = new ArrayList<Store>();
 
 		private String currentElement = "";
 
-		public ArrayList<Whyq> getPermList() {
+		public ArrayList<Store> getPermList() {
 			return this.permList;
 		}
 
@@ -291,7 +291,7 @@ public class XMLParser implements HttpAccess {
 			this.currentElement = localName;
 			if (this.currentElement.equals("item")) {
 				// Create new perm object
-				this.currentPem = new Whyq();
+				this.currentPem = new Store();
 			}
 
 		}
@@ -601,7 +601,7 @@ public class XMLParser implements HttpAccess {
 	 * Return a list of perms from response (API)
 	 * @return a list of perms
 	 */
-	public List<Whyq> getPerms() {
+	public List<Store> getPerms() {
 		try {
 			XMLReader xmlReader = initializeReader();
 			BoardHandler boardHandler = new BoardHandler();
@@ -919,7 +919,7 @@ public class XMLParser implements HttpAccess {
 	private void exeGetPerm(Document doc2) {
 		// TODO Auto-generated method stub
 		Get_Perm_Delegate delegates = (Get_Perm_Delegate)delegate;
-		ArrayList<Whyq> boards = new ArrayList<Whyq>();
+		ArrayList<Store> boards = new ArrayList<Store>();
 		NodeList boardNodeList = doc.getElementsByTagName("item");
 		
 		for( int i = 0; i < boardNodeList.getLength(); i ++ ){
@@ -953,7 +953,7 @@ public class XMLParser implements HttpAccess {
 
 	private void exeGetBoard(Document doc) {
 		// TODO Auto-generated method stub
-		ArrayList<Whyq> boards = new ArrayList<Whyq>();
+		ArrayList<Store> boards = new ArrayList<Store>();
 		NodeList boardNodeList = doc.getElementsByTagName("item");
 		
 		for( int i = 0; i < boardNodeList.getLength(); i ++ ){

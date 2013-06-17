@@ -9,35 +9,32 @@ import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
-import whyq.activity.ListActivity;
-import whyq.activity.ListActivityGroup;
 import whyq.activity.GoogleMapActivity;
 import whyq.activity.JoinWhyqActivity;
-import whyq.activity.NewWhyqActivity;
+import whyq.activity.ListActivity;
+import whyq.activity.ListActivityGroup;
+import whyq.activity.ListDetailActivity;
 import whyq.activity.PrepareRequestTokenActivity;
 import whyq.activity.StoreDetailActivity;
-import whyq.adapter.WhyqItemAdapterNew.ViewHolder;
 import whyq.controller.AuthorizeController;
 import whyq.controller.WhyqListController;
 import whyq.model.Comment;
-import whyq.model.Whyq;
 import whyq.model.User;
+import whyq.model.Store;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.HttpPermUtils;
-import whyq.utils.WhyqUtils;
 import whyq.utils.UrlImageViewHelper;
+import whyq.utils.WhyqUtils;
 import whyq.utils.facebook.FacebookConnector;
 import whyq.utils.facebook.sdk.DialogError;
 import whyq.utils.facebook.sdk.Facebook;
 import whyq.utils.facebook.sdk.Facebook.DialogListener;
 import whyq.utils.facebook.sdk.FacebookError;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -45,6 +42,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,9 +60,9 @@ import android.widget.Toast;
 
 import com.whyq.R;
 
-public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
+public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener {
 
-	private ArrayList<Whyq> items;
+	private ArrayList<Store> items;
 	public static final String TAG = "PermAdapter";
 //	public Button join;
 //	public Button login;
@@ -89,7 +87,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 	private int screenHeight;
 	private Context context;
 	private HashMap<String, View> viewList = new HashMap<String, View>();
-	private HashMap<String, Whyq> newPermList = new HashMap<String, Whyq>();
+	private HashMap<String, Store> newPermList = new HashMap<String, Store>();
 	private HashMap<String, TextView> permStateList = new HashMap<String, TextView>();
 	public int count = 11;
 	
@@ -110,7 +108,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 	}
 	*/
 	public WhyqAdapter(Context context, int textViewResourceId,
-			ArrayList<Whyq> items, Activity activity, int screenWidth,
+			ArrayList<Store> items, Activity activity, int screenWidth,
 			int screenHeight, Boolean header) {
 		super(context, textViewResourceId, items);
 		this.context = context;
@@ -126,7 +124,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 	}
 
 	public WhyqAdapter(Context context,FragmentManager fragmentManager, int textViewResourceId,
-			ArrayList<Whyq> items, Activity activity, int screenWidth,
+			ArrayList<Store> items, Activity activity, int screenWidth,
 			int screenHeight, Boolean header, User user) {
 		super(context, textViewResourceId, items);
 		this.context = context;
@@ -156,114 +154,33 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		try {
 
-			//ViewHolder holder;
-			/*if (position == 0 && this.header == true) {
-				LayoutInflater inflater = (LayoutInflater) this.getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				final View view = inflater.inflate(R.layout.perm_item_2, null);
-
-				// Process buttons
-				join = (Button) view.findViewById(R.id.bt_join);
-				login = (Button) view.findViewById(R.id.bt_login);
-				login.setOnClickListener(PermAdapter.this);
-				join.setOnClickListener(PermAdapter.this);
-				return view;
-			} else*/
 			if(items != null && !items.isEmpty() && position < items.size()){
-				/*if(position == 0) {
-					if( PermpingMain.getCurrentTab() == 0 || PermpingMain.getCurrentTab()==1){
-						LayoutInflater inflater = (LayoutInflater) this.getContext()
-								.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-						final View view = inflater.inflate(R.layout.perm_item_2, null);
-							
-						join = (Button) view.findViewById(R.id.bt_join);
-						login = (Button) view.findViewById(R.id.bt_login);
-						// Process buttons					
-						login.setOnClickListener(PermAdapter.this);
-						join.setOnClickListener(PermAdapter.this);
-
-						if(this.header == false) {
-							//remove button
-							TableRow loginRow = (TableRow) view.findViewById(R.id.loginBar);
-							loginRow.setVisibility(View.GONE);
-						}
-						return view;
-					}
-
-				}*/
 				
 				if(position == items.size() - 1 && WhyqListController.isFooterAdded == true) {
 					if(!WhyqListController.isLoading){
-						//PermListController.selectedPos = items.size() -1;
 						WhyqListController.isLoading = true;
 						loadMoreItems();
 					}
-					/*if(getNextItems() != -1) {
-						loadMoreItems();
-					}*/
-					//View footerView = createFooterView();
+
 					View footerView = createNullView();
-					/*if(getNextItems() == -1) {						
-						ImageButton nextButton = (ImageButton) footerView.findViewById(R.id.next);
-						nextButton.setVisibility(View.INVISIBLE);
-					}
-					if(getNextItems() == 2) {
-						//currently, the page is 1, so no page is previous page
-						ImageButton previousButton = (ImageButton) footerView.findViewById(R.id.previous);
-						previousButton.setVisibility(View.INVISIBLE);
-					}
-					*/
-					
-					//disable the separator view
-					/*int previousPosition = position - 1;
-					if(previousPosition < items.size() && previousPosition >= 0) {
-						Perm perm = items.get(previousPosition);
-						String viewId = perm.getId();
-						View previousView = viewList.get(viewId);
-						if(previousView != null) {
-							View seperatorLine = (View) previousView.findViewById(R.id.item_separator);
-							if(seperatorLine != null) {
-								seperatorLine.setVisibility(View.GONE);
-							}
-						}
-					}*/
+
 					
 					return footerView;
 				}
-				final Whyq whyq = items.get(position);
-				final String viewId = whyq.getId();
+				final Store store = items.get(position);
+				final String viewId = store.getId();
 				if(viewId == null || viewId.length() == 0) {
 					return createNullView();
 				}
 				currentPermId = viewId;
 				convertView = viewList.get(viewId);
-				newPermList.put(viewId, whyq);
+				newPermList.put(viewId, store);
 				if (convertView != null){
-//					Log.i(TAG, "getView() convertView != null");
-//					addComments(convertView, whyq);
+
 					return convertView;
 				}else{
-//					Log.i(TAG, "getView() convertView == null");
-//					LayoutInflater inflater = (LayoutInflater) this.getContext()
-//							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//					final View view = inflater.inflate(R.layout.whyq_item_1, null);
-		
-//					like = (Button) view.findViewById(R.id.btnLike);
-					// Validate Like or Unlike
-//					if (whyq != null && user!=null){
-//						if(whyq.getAuthor().getId().equals(user.getId())){
-//							like.setText(textCurrentLike);
-//						}else{
-//							if (whyq.getPermUserLikeCount() != null
-//									&& "0".equals(whyq.getPermUserLikeCount())) {
-//								like.setText(R.string.bt_like);
-//							} else {
-//								like.setText(R.string.bt_unlike);
-//							}
-//							
-//						}
-//					}
-					Whyq item = items.get(position);
+
+					Store item = items.get(position);
 					LayoutInflater inflater = (LayoutInflater) context
 							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					View rowView = inflater.inflate(R.layout.whyq_item_new, null);
@@ -283,219 +200,39 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 					viewHolder.btnDistance.setText("");
 					UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
 					rowView.setTag(viewHolder);
-//					like.setTag(viewId);
-//					like.setNextFocusDownId(position);
-					
-//					if(whyq != null && user != null) {
-//						if( whyq.getAuthor() != null)
-//							if(whyq.getAuthor().getId().equalsIgnoreCase(user.getId()))
-//								like.setText(R.string.delete);
-////								like.setVisibility(View.GONE);
-//					}
-//					like.setOnClickListener(WhyqAdapter.this);
-//					reperm = (Button) view.findViewById(R.id.btnRepem);
-//					reperm.setTag(viewId);
-//					reperm.setOnClickListener(WhyqAdapter.this);
-//		
-//					comment = (Button) view.findViewById(R.id.btnComment);
-//					comment.setTag(viewId);
-//					comment.setOnClickListener(WhyqAdapter.this);
-//					ImageView gotoMap = (ImageView)view.findViewById(R.id.btnLocation);
-//					gotoMap.setTag(viewId);
-//					gotoMap.setOnClickListener(WhyqAdapter.this);
-//					TextView permViewInfo = (TextView)view.findViewById(R.id.permVoiceInfo);
-//					if(perm.getLon() ==0 && perm.getLat() == 0){
-//						gotoMap.setVisibility(View.INVISIBLE);
-////						permViewInfo.setVisibility(View.GONE);
-//						
-//					}else{
-////						gotoMap.setVisibility(View.VISIBLE);
-////						permViewInfo.setVisibility(View.VISIBLE);
-//					}
-//						gotoMap.setVisibility(View.INVISIBLE);
-//					
-//					if(position == items.size() - 1) {
-//						View seperatorLine = (View) view.findViewById(R.id.item_separator);
-//						if(seperatorLine != null) {
-//							seperatorLine.setVisibility(View.GONE);
-//						}
-//					}
-					
-					if (whyq != null) {
+					rowView.setOnClickListener(new View.OnClickListener() {
 						
-						// Set the nextItems no.
-//						if (whyq.getNextItem() != null)
-//							nextItems = Integer.parseInt(whyq.getNextItem());
-//						else
-//							nextItems = -1;
-//						ImageView btnPlayAudio = (ImageView)view.findViewById(R.id.btnVoice);
-//						btnPlayAudio.setTag(viewId);
-//						btnPlayAudio.setOnClickListener(new View.OnClickListener() {
-//							
-//							@Override
-//							public void onClick(View v) {
-//								// TODO Auto-generated method stub
-//								WhyqMain.gotoTab(6, whyq.getPermAudio());
-//							}
-//						});
-//						
-//						if(whyq.getPermAudio() !=null && !whyq.getPermAudio().equals("")){
-//							btnPlayAudio.setVisibility(View.VISIBLE);
-//							
-//						}else{
-//							btnPlayAudio.setVisibility(View.GONE);
-//							
-//						}
-//						ImageView av = (ImageView) view.findViewById(R.id.authorAvatar);
-//						if( whyq.getAuthor() != null)
-//							if(whyq.getAuthor().getAvatar()!=null)
-//								if(whyq.getAuthor().getAvatar().getUrl() != null)
-//									UrlImageViewHelper.setUrlDrawable(av, whyq.getAuthor()
-//								.getAvatar().getUrl());
-//		
-//						TextView an = (TextView) view.findViewById(R.id.authorName);
-//						//holder.authorName.setText(perm.getAuthor().getName());
-//						if( whyq != null)
-//							if(whyq.getAuthor() != null)
-//								if(whyq.getAuthor().getName() != null)
-//									an.setText(whyq.getAuthor().getName());
-//						av.setOnClickListener(new View.OnClickListener() {
-//							
-//							public void onClick(View v) {
-//								// TODO Auto-generated method stub
-//								Comment comment = new Comment(whyq.getAuthor().getId());
-//								comment.setAuthor(whyq.getAuthor());
-//								WhyqMain.gotoTab(4, comment);
-//							}
-//						});
-//						an.setOnClickListener(new View.OnClickListener() {
-//							
-//							@Override
-//							public void onClick(View v) {
-//								// TODO Auto-generated method stub
-//								Comment comment = new Comment(whyq.getAuthor().getId());
-//								comment.setAuthor(whyq.getAuthor());
-//								WhyqMain.gotoTab(4, comment);
-//							}
-//						});
-						// Board name
-//						TextView bn = (TextView) view.findViewById(R.id.boardName);
-//						//holder.boardName.setText(perm.getBoard().getName());
-//						if(whyq.getBoard() != null)
-//							if( whyq.getBoard().getName() != null)
-//								bn.setText(whyq.getBoard().getName());
-//		
-//						ImageView imageView = (ImageView) view.findViewById(R.id.permImage);
-//						/**
-//						 * MSA
-//						 */
-//						imageView.setOnClickListener(new View.OnClickListener() {
-//							
-//							public void onClick(View arg0) {
-//								// TODO Auto-generated method stub
-//								String permUrl = whyq.getPermUrl();
-//								if(permUrl != null && permUrl != "")
-//									WhyqMain.gotoTab(5, permUrl);
-//								//Log.d("=====>", "=================>go to Perm Browser >");
-//							}
-//						});
-					
-//						UrlImageViewHelper.setUrlDrawable(imageView, whyq.getImage().getUrl() , true ); 
-//						TextView pd = (TextView) view.findViewById(R.id.permDesc);
-						//holder.permDesc.setText(perm.getDescription());
-//						if(whyq != null)
-//							if(whyq.getDescription() != null)
-//								pd.setText(whyq.getDescription());
-//						String permInfo = whyq.getPermDatemessage();
-//						TextView pi = (TextView) view.findViewById(R.id.permInfo);
-//						//holder.permInfo.setText(permInfo);
-//						if( permInfo != null)
-//							pi.setText(permInfo);
-//						
-//						String permStat = likeString + ": " + whyq.getPermLikeCount()
-//								+ " - " + repermString + ": " + whyq.getPermRepinCount()
-//								+ " - " + commentString + ": " + whyq.getPermCommentCount();
-//						
-//						TextView ps = (TextView) view.findViewById(R.id.permStat);
-//						permStateList.put(viewId, ps);
-//						if(permStat !=null)
-//							ps.setText(permStat);
-		
-//						LinearLayout comments = (LinearLayout) view
-//								.findViewById(R.id.comments);
-//						if(whyq.getComments() != null){
-//							for (int i = 0; i < whyq.getComments().size(); i++) {
-//								View cm = inflater.inflate(R.layout.comment_item, null);
-//								final Comment pcm = whyq.getComments().get(i);
-//								if (pcm != null && pcm.getAuthor() != null) {
-//			
-//									ImageView cma = (ImageView) cm
-//											.findViewById(R.id.commentAvatar);
-//									cma.setOnClickListener(new View.OnClickListener() {
-//										
-//										public void onClick(View v) {
-//											// TODO Auto-generated method stub
-//											WhyqMain.gotoTab(4, pcm);
-//										}
-//									});
-//									if( pcm.getAuthor() != null)
-//										if(pcm.getAuthor().getAvatar()!=null)
-//											if(pcm.getAuthor().getAvatar().getUrl() != null)
-//												UrlImageViewHelper.setUrlDrawable(cma, pcm.getAuthor()
-//											.getAvatar().getUrl());
-//			
-//									TextView authorName = (TextView) cm
-//											.findViewById(R.id.commentAuthor);
-//									if(pcm !=null){
-//										if(pcm.getAuthor() != null)
-//											if(pcm.getAuthor().getName() != null)
-//												authorName.setText(pcm.getAuthor().getName());
-//			
-//										TextView cmt = (TextView) cm
-//											.findViewById(R.id.commentContent);
-//										if(pcm.getContent() != null)
-//											cmt.setText(pcm.getContent());
-//									}
-//									authorName.setOnClickListener(new View.OnClickListener() {
-//										
-//										@Override
-//										public void onClick(View v) {
-//											// TODO Auto-generated method stub
-//											WhyqMain.gotoTab(4, pcm);	
-//										}
-//									});
-//									if (i == (whyq.getComments().size() - 1)) {
-//										View sp = (View) cm.findViewById(R.id.separator);
-//										sp.setVisibility(View.INVISIBLE);
-//									}
-//
-//									comments.addView(cm);
-//								}
-//							}
-//							
-//						}
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Log.d("fdsfsfsdfs","fdsfsdfsf");
+							Intent intent = new Intent(context, ListDetailActivity.class);
+							intent.putExtra("id", store.getId());
+							context.startActivity(intent);
+						}
+					});
+					if (store != null) {
+						
+
 					}
-					//return convertView;
-					viewList.put(whyq.getId(), rowView);
-					//Log.d("aaa", "================"+view);
+					rowView.setEnabled(true);
+					viewList.put(store.getId(), rowView);
 					return rowView;
 				}
 			}
 			else{
-				//position > items.size
-				//try to create a null view				
+		
 				return createNullView();
 			}
 			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			//Log.d("aaa", "=========asdfsfsd======="+e.toString());
 			return createNullView();
 		}
 	}
 	
-	public void addComments(View view, Whyq whyq) {
+	public void addComments(View view, Store store) {
 		LinearLayout comments = (LinearLayout) view
 				.findViewById(R.id.comments);
 //		if(whyq != null && comments != null){
@@ -666,7 +403,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 
 	class CommentDialog extends Dialog implements android.view.View.OnClickListener{
 		
-		Whyq whyq  = null;
+		Store store  = null;
 		User user = null;
 		
 		Button btnOK = null;
@@ -674,12 +411,12 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 		
 		private ProgressDialog dialog;
 		
-		public CommentDialog(Context context, Whyq whyq, User user) {
+		public CommentDialog(Context context, Store store, User user) {
 			super(context);
 			setContentView( R.layout.comment_dialog );
 			this.setTitle( R.string.comment_title );
 			
-			this.whyq = whyq;
+			this.store = store;
 			this.user = user;
 			
 			btnOK = (Button) findViewById( R.id.btnOK );
@@ -703,7 +440,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 						HttpPermUtils util = new HttpPermUtils();
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair("cmnt", cmText ) );
-						nameValuePairs.add(new BasicNameValuePair("pid", whyq.getId() ) );
+						nameValuePairs.add(new BasicNameValuePair("pid", store.getId() ) );
 						nameValuePairs.add(new BasicNameValuePair("uid", user.getId() ) );
 						String response  = util.sendRequest(API.commentUrl, nameValuePairs, false);
 						
@@ -721,8 +458,8 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 			  			if (dialog.isShowing()){
 			  				dialog.dismiss();
 			  				Toast.makeText(context,"Added comment!",Toast.LENGTH_LONG).show();
-			  				int position = items.indexOf(whyq);			  				
-			  				Comment comment = new Comment(whyq.getId(), cmText);
+			  				int position = items.indexOf(store);			  				
+			  				Comment comment = new Comment(store.getId(), cmText);
 			  				comment.setAuthor(user);
 			  				//perm.addCommnent(comment);
 //			  				items.get(position).addCommnent(comment);
@@ -882,7 +619,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 	 * @see android.widget.ArrayAdapter#getItem(int)
 	 */
 	@Override
-	public Whyq getItem(int position) {
+	public Store getItem(int position) {
 		// TODO Auto-generated method stub
 		return super.getItem(position);
 	}
@@ -924,14 +661,14 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 		}
 	}
 	
-	public boolean isPermDuplicate(Whyq whyq) {
-		if(whyq == null || whyq.getId() == null) {
+	public boolean isPermDuplicate(Store store) {
+		if(store == null || store.getId() == null) {
 			return false;
 		}
 		for(int i = 0; i < items.size(); i++) {
-			Whyq permItem = items.get(i);
+			Store permItem = items.get(i);
 			if(permItem != null && permItem.getId() != null) {
-				if(permItem.getId().equals(whyq.getId())) {
+				if(permItem.getId().equals(store.getId())) {
 					return true;
 				}
 			}
@@ -996,16 +733,16 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 		// TODO Auto-generated method stub
 		String permId = (String)view.getTag();
 		if(permId != null){
-			Whyq whyq = newPermList.get(permId);
+			Store store = newPermList.get(permId);
 			Intent googleMap = new Intent(context,
 					GoogleMapActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putFloat("lat", Float.parseFloat(whyq.getLatitude()));
-			bundle.putFloat("lon", Float.parseFloat(whyq.getLongitude()));
-			bundle.putString("thumbnail", whyq.getLogo());
+			bundle.putFloat("lat", Float.parseFloat(store.getLatitude()));
+			bundle.putFloat("lon", Float.parseFloat(store.getLongitude()));
+			bundle.putString("thumbnail", store.getLogo());
 			googleMap.putExtra("locationData", bundle);
 			//Log.d("AA+++++============","========="+perm.getImage().getUrl());
-			View view2 = ListActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+whyq.getId(), googleMap).getDecorView();
+			View view2 = ListActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+store.getId(), googleMap).getDecorView();
 			ListActivityGroup.group.replaceView(view2);
 
 		}	
@@ -1015,13 +752,13 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 		// TODO Auto-generated method stub
 		String permId = (String)view.getTag();
 		if(permId != null){
-			Whyq whyq = newPermList.get(permId);
+			Store store = newPermList.get(permId);
 			user = WhyqUtils.isAuthenticated(view.getContext());
 			if (user != null) {
 				
 				WhyqApplication state = (WhyqApplication)view.getContext().getApplicationContext();
 				
-				CommentDialog commentDialog = new CommentDialog( view.getContext(), whyq , state.getUser() );
+				CommentDialog commentDialog = new CommentDialog( view.getContext(), store , state.getUser() );
 				commentDialog.show();
 			} else {
 				Toast.makeText(view.getContext(), Constants.NOT_LOGIN, Toast.LENGTH_LONG).show();
@@ -1035,7 +772,7 @@ public class WhyqAdapter extends ArrayAdapter<Whyq> implements OnClickListener {
 		// TODO Auto-generated method stub
 		String permId = (String)view.getTag();
 		if(permId != null){
-			Whyq whyq = newPermList.get(permId);
+			Store store = newPermList.get(permId);
 			user = WhyqUtils.isAuthenticated(view.getContext());
 //			if (user != null) {
 //				Intent myIntent = new Intent(view.getContext(),

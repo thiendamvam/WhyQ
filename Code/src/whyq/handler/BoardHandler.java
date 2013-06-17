@@ -11,7 +11,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import whyq.model.Comment;
-import whyq.model.Whyq;
+import whyq.model.Store;
 import whyq.model.WhyqImage;
 import whyq.model.User;
 import whyq.utils.Constants;
@@ -25,9 +25,9 @@ public class BoardHandler extends DefaultHandler {
 
 	private StringBuffer buffer = new StringBuffer();
 	
-	private List<Whyq> whyqs;
+	private List<Store> stores;
 	
-	private Whyq whyq;
+	private Store store;
 	
 	private User user;
 	
@@ -47,9 +47,9 @@ public class BoardHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		if (localName != null && localName.equals(Constants.ITEM)) {
-			whyqs.add(whyq);
+			stores.add(store);
 		} else if (localName != null && localName.equals(Constants.PERM_ID)) {
-			whyq.setId(buffer.toString());
+			store.setId(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_DESCRIPTION)) {
 //			whyq.setDescription(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.PERM_CATEGORY)) {
@@ -108,9 +108,9 @@ public class BoardHandler extends DefaultHandler {
 		buffer.setLength(0);
 		
 		if (localName != null && localName.equals(Constants.PERMS)) {
-			whyqs = new ArrayList<Whyq>();
+			stores = new ArrayList<Store>();
 		} else if (localName != null && localName.equals(Constants.ITEM)) {
-			whyq = new Whyq();
+			store = new Store();
 		} else if (localName != null && localName.equals(Constants.USER)) {
 			user = new User();
 		} else if (localName != null && localName.equals(Constants.L_USER)) {
@@ -124,7 +124,7 @@ public class BoardHandler extends DefaultHandler {
 		}
 	}
 	
-	public List<Whyq> getPerms() {
-		return whyqs;
+	public List<Store> getPerms() {
+		return stores;
 	}
 }

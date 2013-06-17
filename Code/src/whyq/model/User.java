@@ -47,6 +47,7 @@ public class User implements Serializable {
 	private boolean isReceivePromotionNotification;
 	private int notiCreateDate;
 	private int notiUpdateDate;
+	private String address;
 	
 	/**
 	 * Default constructor
@@ -596,6 +597,20 @@ public class User implements Serializable {
 	 */
 	public void setShowFriend(boolean isShowFriend) {
 		this.isShowFriend = isShowFriend;
+	}
+
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
 	
