@@ -10,6 +10,7 @@ import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
+import whyq.utils.SpannableUtils;
 import whyq.utils.WhyqUtils;
 import whyq.view.SearchField;
 import whyq.view.SearchField.QueryCallback;
@@ -175,38 +176,22 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 			}
 
 			if (position == 0) {
-				return "You have " + countListWhyq
-						+ " facebook friends had joined WHY Q.";
+				final String key = countListWhyq + " facebook friends";
+				final String result = "You have " + key + " had joined WHY Q.";
+				return SpannableUtils.stylistTextBold(result, key, mContext
+						.getResources().getColor(R.color.orange));
 			} else if (position == countListWhyq + 1) {
-				return "And "
-						+ countListNotJoinWhyq
-						+ " facebook friends haven't joined WHY Q. Invite your friend to join this app!";
+				final String key = countListNotJoinWhyq + " facebook friends";
+				final String result = "And "
+						+ key
+						+ " haven't joined WHY Q. Invite your friend to join this app!";
+				return SpannableUtils.stylistTextBold(result, key, mContext
+						.getResources().getColor(R.color.orange));
 			} else if (position <= countListWhyq) {
 				return listWhyq.get(position - 1);
 			} else {
 				return listNotJoinWhyq.get(position - countListWhyq - 2);
 			}
-		}
-
-		private static final String YOU_HAVE = "You have ";
-		private static final String AND = "And ";
-		private static final String FACE_BOOK_FRIEND = " facebook friends";
-
-		private Spannable stylistText(String input) {
-			Spannable result = new SpannableString(input);
-
-			final int start, end;
-			if (input.startsWith(YOU_HAVE)) {
-				start = YOU_HAVE.length();
-			} else {
-				start = AND.length();
-			}
-			end = input.indexOf(FACE_BOOK_FRIEND) + FACE_BOOK_FRIEND.length();
-			result.setSpan(new ForegroundColorSpan(0xffff8822), start, end,
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			result.setSpan(new StyleSpan(android.graphics.Typeface.BOLD),
-					start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			return result;
 		}
 
 		@Override
@@ -258,7 +243,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 				}
 
 			} else {
-				holder.name.setText(stylistText(String.valueOf(item)));
+				holder.name.setText((Spannable) item);
 				if (position == 0 && countListWhyq > 0) {
 					holder.action.setText(R.string.friend_all);
 					holder.action.setVisibility(View.VISIBLE);
