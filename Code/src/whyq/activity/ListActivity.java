@@ -24,6 +24,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -31,11 +33,18 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckedTextView;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.whyq.R;
 
@@ -81,13 +90,22 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	ImageButton lnWine;
 	private ImageButton lnCoffe;
 	
+	
+	private String searchKey="";
+	private String longitude;
+	private String latgitude;
+	private String filter="0"; 
+	private String friendFavourite;
+	private String friendVisited;
+	private String cateId="0";
+	private boolean isSearch = false;
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
 			if (intent.getAction().equals(DOWNLOAD_COMPLETED)) {
-				exeListActivity();
+				exeListActivity(false);
 			} 
 		}
 	};
@@ -111,6 +129,12 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			}
 		}
 	};
+	private ImageView bntFilter;
+	private LinearLayout lnFilter;
+	private EditText etTextSearch;
+	private CheckedTextView cktViewAll;
+	private CheckedTextView cktFriednVised;
+	private CheckedTextView cktFriendFavourtie;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -124,8 +148,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
     	dialog = ProgressDialog.show(getParent(), "", "progressing...",
     			true);
     	showProgress();
-    	Intent intent = new Intent(ListActivity.this, WhyqLogout.class);
-    	startActivity(intent);
+//    	Intent intent = new Intent(ListActivity.this, WhyqLogout.class);
+//    	startActivity(intent);
 	}
 	
 	protected void gotoStoreDetail(String storeId) {
@@ -141,11 +165,45 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		lnCutlery = (ImageButton) findViewById(R.id.lnCutleryTab);
 		lnWine = (ImageButton) findViewById(R.id.lnWineTab);
 		lnCoffe = (ImageButton) findViewById(R.id.lnCoffeTab);
-		loadPermList = new LoadPermList();
+		bntFilter = (ImageView)findViewById(R.id.btnFilters);
+		lnFilter = (LinearLayout)findViewById(R.id.lnFilterView);
+		loadPermList = new LoadPermList(false);
 		progressBar = new ProgressBar(ListActivity.this);
+		etTextSearch =(EditText) findViewById(R.id.etTextSearch);
 		isAddHeader = true;
+		cktViewAll = (CheckedTextView) findViewById(R.id.cktViewAll);
+		cktFriednVised = (CheckedTextView)findViewById(R.id.cktViewVisited);
+		cktFriendFavourtie = (CheckedTextView) findViewById(R.id.cktViewFavourite);
+				
+
+		etTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(etTextSearch
+							.getApplicationWindowToken(), 0);
+					try {
+						exeSearch(etTextSearch.getText().toString());
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					return true;
+				}
+				return false;
+			}
+		});
+		
 	}
 	
+	protected void exeSearch(String string) {
+		// TODO Auto-generated method stub
+		searchKey = string;
+		isSearch = true;
+		exeListActivity(true);
+	}
+
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
@@ -165,13 +223,13 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			isLogin = false;
 		}else if(WhyqMain.getCurrentTab() == 0 && isRefesh){
 			// Get the screen's size.
-			exeListActivity();
+			exeListActivity(false);
 		}else if(WhyqMain.getCurrentTab() == 1 || WhyqMain.getCurrentTab() == 4){
 			if(isRefesh)
-				exeListActivity();
+				exeListActivity(false);
 		}else if(WhyqMain.getCurrentTab() == 3) { 
 			isCalendar = true;
-			exeListActivity();
+			exeListActivity(false);
 		}else if(!isRefesh){
 			isRefesh = true;
 		}
@@ -187,7 +245,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 
 
-	public void exeListActivity() {
+	public void exeListActivity(boolean isSearch) {
 		// TODO Auto-generated method stub
 		if(isFirst){
 	    	clearData();
@@ -222,15 +280,20 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			this.header = false;
 		} else if (user != null) {
 //			this.url = API.followingPerm + String.valueOf(user.getId());
-			this.url = API.popularBusinessListURL;
-			this.header = false;
+			if(isSearch){
+				this.url = API.searchBusinessListURL;
+				this.header = false;
+			}else{
+				this.url = API.popularBusinessListURL;
+				this.header = false;
+			}
 		}
 		clearData();
 //		btnRefesh.setVisibility(View.GONE);
 //		progressBar.setVisibility(View.VISIBLE);
 		showProgress();
 
-		loadPermList = new LoadPermList();
+		loadPermList = new LoadPermList(isSearch);
 		loadPermList.execute();
 	}
 	
@@ -248,7 +311,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 //			progressBar.setVisibility(View.VISIBLE);
 			showProgress();
 			
-			loadPermList = new LoadPermList();
+			loadPermList = new LoadPermList(isSearch);
 			loadPermList.execute();
 		}
 		
@@ -262,7 +325,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 //			btnRefesh.setVisibility(View.GONE);
 //			progressBar.setVisibility(View.VISIBLE);
 			showProgress();
-	    	loadPermList = new LoadPermList();
+	    	loadPermList = new LoadPermList(isSearch);
 			loadPermList.execute();
 		}		
 	}
@@ -329,6 +392,12 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 	public class LoadPermList extends AsyncTask<ArrayList<Whyq>, Void, ArrayList<Whyq>> {
 
+		public boolean isSearch;
+
+		public LoadPermList(boolean isSearch){
+			this.isSearch = isSearch; 
+		}
+		
 		@Override
 		protected ArrayList<Whyq> doInBackground(ArrayList<Whyq>... params) {
 			// TODO Auto-generated method stub
@@ -338,6 +407,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 				if (nextItem != -1) {
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("nextItem", String.valueOf(nextItem)));
+
 					if(isCalendar){
 						nameValuePairs.add(new BasicNameValuePair("uid", WhyqMain.UID));
 //						isCalendar =false;
@@ -355,6 +425,24 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+						if(isSearch){
+							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
+							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
+							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
+							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
+							
+							
+						}else{
+							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
+							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
+							if(friendVisited !=null){
+								nameValuePairs.add(new BasicNameValuePair("friend_visit", friendVisited));
+							}else if(friendFavourite !=null){
+								nameValuePairs.add(new BasicNameValuePair("friend_favourite", friendFavourite));
+							}else{
+								
+							}
+						}
 						permList = whyqListController.getBusinessList(url, nameValuePairs);	
 					}
 					
@@ -446,7 +534,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		case R.id.btnRefesh:
 			isFirst = true;
 	    	nextItem = -1;
-			exeListActivity();
+			exeListActivity(false);
 			break;
 
 		default:
@@ -519,5 +607,38 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		if (dialog != null && dialog.isShowing()) {
 			dialog.show();
 		}
+	}
+	public void onFilter(View v){
+		if(lnFilter.getVisibility()==View.VISIBLE){
+			hideFilterView();
+		}else{
+			showFilterView();
+		}
+		
+	}
+	public void toggle(View v)
+	{
+//	    CheckedTextView cView = (CheckedTextView) v.findViewById(R.id.cktViewAll);
+//	        if (cView.isSelected())
+//	        {
+//	            cView.setSelected(false);
+//	            cView.setCheckMarkDrawable (R.drawable.ic_launcher);
+//	        }
+//	        else
+//	        {
+//	            cView.setSelected(true);
+//	            cView.setCheckMarkDrawable (R.drawable.icon_cat_cutlery);
+//	        }
+		CheckedTextView view = (CheckedTextView) v;
+		view.setTextColor(Color.RED);
+	}
+	private void showFilterView() {
+		// TODO Auto-generated method stub
+		lnFilter.setVisibility(View.VISIBLE);
+	}
+
+	private void hideFilterView() {
+		// TODO Auto-generated method stub
+		lnFilter.setVisibility(View.GONE);
 	}
 }

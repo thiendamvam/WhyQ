@@ -18,12 +18,6 @@
         <include layout="@layout/navigation_search" />
     </LinearLayout>
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        layout="@layout/tabbar_3bar" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -33,6 +27,12 @@
         android:orientation="vertical"
         android:padding="0dp"
         android:weightSum="4" >
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            layout="@layout/tabbar_3bar" />
 
         <ListView
             android:id="@+id/lvWhyqList"
@@ -44,10 +44,14 @@
         </ListView>
 
         <LinearLayout
+            android:id="@+id/lnFilterView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:background="@color/black"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="10dp"
+            android:padding="15dp"
             android:orientation="vertical" >
 
             <RelativeLayout
@@ -60,13 +64,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/tvViewAll"
+                <CheckedTextView
+                    android:id="@+id/cktViewAll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#805504"
                     android:layout_toRightOf="@+id/imgCbAll"
-                    android:text="View All" />
+                    android:text="View All"
+                    android:onClick="toggle"
+                    android:textColor="#805504" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -79,8 +84,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/tvViewFavourite"
+                <CheckedTextView
+                    android:id="@+id/cktViewFavourite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/imgCbFavourite"
@@ -97,8 +102,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/tvViewVisited"
+                <CheckedTextView
+                    android:id="@+id/cktViewVisited"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/imgCbVisited"

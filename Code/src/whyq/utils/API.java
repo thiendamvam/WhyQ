@@ -6,6 +6,7 @@ public class API {
 	public static final String hostURL = "http://v2.whyq.net.au";//"http://permping.com/services";
 	
 	public static final String popularBusinessListURL = hostURL + "/m/business";
+	public static final String searchBusinessListURL = hostURL + "/m/business";
 	public static final String authorizeURL    = hostURL + "/m/login";
 	public static final String createAccountURL = hostURL + "/m/register";//"/userservice/createaccount";
 
