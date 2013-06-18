@@ -18,11 +18,16 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import android.app.TabActivity;
+import android.nfc.Tag;
+
 import whyq.handler.FriendFacebookHandler;
 import whyq.handler.UserHandler;
 import whyq.interfaces.FriendFacebookController;
 import whyq.model.Menu;
+import whyq.model.ProductTypeInfo;
 import whyq.model.Store;
+import whyq.model.StoreInfo;
 import whyq.model.User;
 import whyq.model.WhyqImage;
 
@@ -158,9 +163,10 @@ public class DataParser {
 			item.setCoutBill(coutBill);
 			item.setIncome(inCome);
 			item.setNameCate(nameCate);
-			NodeList nodes = permElement.getElementsByTagName("user");
 			
+			NodeList nodes = permElement.getElementsByTagName("user");
 			int lengthUser = nodes.getLength();
+			ArrayList<User> userList = new ArrayList<User>();
 			for(int j=0; j< lengthUser;j++){
 				Element element = (Element)nodes.item(j);
 				User user = new User();
@@ -184,12 +190,16 @@ public class DataParser {
 				WhyqImage image = new WhyqImage(getValue(element,"avatar"));
 				user.setAvatar(image);
 				user.setAddress(getValue(element,"address"));
+				userList.add(user);
 			}
-			NodeList menuNodes = permElement.getElementsByTagName("menu");
+			item.setUserList(userList);
 			
+			NodeList menuNodes = permElement.getElementsByTagName("menu");
 			int lengthMenuNode = nodes.getLength();
-			for(int c =0; c< lengthMenuNode; c++){
-				Element element = (Element)nodes.item(c);
+			ArrayList<Menu> menuList = new ArrayList<Menu>();
+			
+			for(int c = 0; c< lengthMenuNode; c++){
+				Element element = (Element)menuNodes.item(c);
 				Menu menu = new Menu();
 				menu.setId(getValue(element,"id"));
 				menu.setStoreId(getValue(element,"store_id"));
@@ -204,8 +214,73 @@ public class DataParser {
 				menu.setUpdateData(getValue(element,"updatedate"));
 				menu.setSort(getValue(element,"sort"));
 				
-//				NodeList menuNodes = permElement.getElementsByTagName("menu");
+				NodeList productTypeInfoNodes = permElement.getElementsByTagName("product_type_info");
+				int  length = productTypeInfoNodes.getLength();
+				ArrayList<ProductTypeInfo> productTypeInfoList = new ArrayList<ProductTypeInfo>();
+				for(int y=0; y< length;y++){
+					Element inElement = (Element)productTypeInfoNodes.item(y);
+					ProductTypeInfo product = new ProductTypeInfo();
+					product.setId(getValue(inElement,"id"));
+					product.setNameProductType(getValue(inElement,"name_product_type"));
+					product.setCreateDate(getValue(inElement,"createdate"));
+					product.setSort(getValue(inElement,"sort"));
+					productTypeInfoList.add(product);
+				}
+				menu.setProductTypeInfoList(productTypeInfoList);
+				
+				NodeList storeInfoNodes = permElement.getElementsByTagName("store_info");
+				int  storeInfoLength = productTypeInfoNodes.getLength();
+				for(int w=0; w < storeInfoLength; w++){
+					Element infoElement = (Element)storeInfoNodes.item(w);
+					StoreInfo storeInfo = new StoreInfo();
+					storeInfo.setId(getValue(infoElement,"id"));
+					storeInfo.setCateid(getValue(infoElement,"cate_id"));
+					storeInfo.setUserId(getValue(infoElement,"user_id"));
+					storeInfo.setNameSore(getValue(infoElement,"name_store"));
+					storeInfo.setIntroStore(getValue(infoElement,"intro_store"));
+					storeInfo.setPhoneStore(getValue(infoElement,"phone_store"));
+					storeInfo.setLogo(getValue(infoElement,"logo"));
+					storeInfo.setStyle(getValue(infoElement,"style"));
+					storeInfo.setStartTime(getValue(infoElement,"start_time"));
+					storeInfo.setEndTime(getValue(infoElement,"end_time"));
+					storeInfo.setHomeDeliver(getValue(infoElement,"is_home_deliver").equals("1")?true:false);
+					storeInfo.setHotelDeliver(getValue(infoElement,"is_hotel_deliver").equals("2")?true:false);
+					storeInfo.setTakeAray(getValue(infoElement,"is_take_away").equals("1")?true:false);
+					storeInfo.setAtPlace(getValue(infoElement,"is_at_place").equals("2")?true:false);
+					storeInfo.setStartTimeDeliver(getValue(infoElement,"start_time_deliver"));
+					storeInfo.setEndtimeDeliver(getValue(infoElement,"end_time_deliver"));
+					storeInfo.setMinimunTimeDeliever(Integer.parseInt(getValue(infoElement,"minimun_time_deliver")));
+					storeInfo.setValueConditionDeliver(Integer.parseInt(getValue(infoElement,"value_condition_deliver")));
+					storeInfo.setTableWuantity(getValue(infoElement,"table_quantity"));
+					storeInfo.setCountFavouriteMember(Integer.parseInt(getValue(infoElement,"count_favourite_member")));
+					storeInfo.setCountBill(Integer.parseInt(getValue(infoElement,"count_bill")));
+					storeInfo.setIncome(Integer.parseInt(getValue(infoElement,"income")));
+					storeInfo.setStatus(Integer.parseInt(getValue(infoElement,"status")));
+					storeInfo.setCreateDate(getValue(infoElement,"createdate"));
+					storeInfo.setUpdateDate(getValue(infoElement,"updatedate"));
+					menu.setStoreInfo(storeInfo);
+					
+				}
+				
+				menuList.add(menu);
 			}
+			item.setMenuList(menuList);
+			
+			NodeList tagNodes = permElement.getElementsByTagName("tags");
+			int tagLenth = nodes.getLength();
+			ArrayList<whyq.model.Tag> tagList = new ArrayList<whyq.model.Tag>();
+			for(int k=0; k <tagLenth;k++){
+				Element element2 = (Element) tagNodes.item(k);
+				whyq.model.Tag tag = new whyq.model.Tag();
+				tag.setId(getValue(element2,"id"));
+				tag.setNameTag(getValue(element2,"name_tag"));
+				tag.setCountUsed(Integer.parseInt(getValue(element2,"count_used")));
+				tag.setStoreId(getValue(element2,"store_id"));
+				tag.setCreateDate(getValue(element2,"createdate"));
+				tagList.add(tag);
+			}
+			item.setTagList(tagList);
+			
 		}
 		return null;
 	}

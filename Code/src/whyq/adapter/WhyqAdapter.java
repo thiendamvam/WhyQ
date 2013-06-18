@@ -53,6 +53,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -184,6 +185,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					LayoutInflater inflater = (LayoutInflater) context
 							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					View rowView = inflater.inflate(R.layout.whyq_item_new, null);
+					LayoutParams PARAMS = (LinearLayout.LayoutParams)rowView.getLayoutParams();
 					ViewHolder viewHolder = new ViewHolder();
 					viewHolder.id = item.getStoreId();
 					viewHolder.imgThumb = (ImageView) rowView.findViewById(R.id.imgThumbnal2);

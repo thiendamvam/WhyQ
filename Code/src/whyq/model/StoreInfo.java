@@ -18,6 +18,7 @@ public class StoreInfo {
 	private String startTimeDeliver;
 	private String endtimeDeliver;
 	private int minimunTimeDeliever;
+	private int valueConditionDeliver;
 	private String tableWuantity;
 	private int countFavouriteMember;
 	private int countBill;
@@ -252,5 +253,17 @@ public class StoreInfo {
 	 */
 	public void setAtPlace(boolean isAtPlace) {
 		this.isAtPlace = isAtPlace;
+	}
+	/**
+	 * @return the valueConditionDeliver
+	 */
+	public int getValueConditionDeliver() {
+		return valueConditionDeliver;
+	}
+	/**
+	 * @param valueConditionDeliver the valueConditionDeliver to set
+	 */
+	public void setValueConditionDeliver(int valueConditionDeliver) {
+		this.valueConditionDeliver = valueConditionDeliver;
 	}
 }

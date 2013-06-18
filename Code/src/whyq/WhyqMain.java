@@ -202,7 +202,7 @@ public class WhyqMain extends TabActivity {
 			locationManager.requestLocationUpdates(
 					LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
 
-//			tabHost.setCurrentTab(0);
+			tabHost.setCurrentTab(0);
 //			rsa = new RSA();
 //			getListData();
 		}

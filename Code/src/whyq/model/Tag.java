@@ -4,7 +4,8 @@ public class Tag {
 	private String id;
 	private String nameTag;
 	private int countUsed;
-	private String createData;
+	private String storeId;
+	private String createDate;
 	/**
 	 * @return the id
 	 */
@@ -44,13 +45,29 @@ public class Tag {
 	/**
 	 * @return the createData
 	 */
-	public String getCreateData() {
-		return createData;
+	/**
+	 * @return the createDate
+	 */
+	public String getCreateDate() {
+		return createDate;
 	}
 	/**
-	 * @param createData the createData to set
+	 * @param createDate the createDate to set
 	 */
-	public void setCreateData(String createData) {
-		this.createData = createData;
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
 	}
+	/**
+	 * @return the storeId
+	 */
+	public String getStoreId() {
+		return storeId;
+	}
+	/**
+	 * @param storeId the storeId to set
+	 */
+	public void setStoreId(String storeId) {
+		this.storeId = storeId;
+	}
+
 }

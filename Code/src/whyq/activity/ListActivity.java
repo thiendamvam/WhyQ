@@ -73,7 +73,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public static boolean isCalendar = false;
 	int nextItem = -1;
 //	FragmentManager t = ggetSupportFragmentManager();
-	private ProgressDialog dialog;
+//	private ProgressDialog dialog;
 	
 	ListView whyqListView;
 //	Button btnRefesh;
@@ -152,8 +152,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(ListActivity.this.getIntent());
-    	dialog = ProgressDialog.show(getParent(), "", "progressing...",
-    			true);
+//    	dialog = ProgressDialog.show(getParent(), "", "progressing...",
+//    			true);
     	showProgress();
 //    	Intent intent = new Intent(ListActivity.this, WhyqLogout.class);
 //    	startActivity(intent);
@@ -175,7 +175,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		bntFilter = (ImageView)findViewById(R.id.btnFilters);
 		lnFilter = (LinearLayout)findViewById(R.id.lnFilterView);
 		loadPermList = new LoadPermList(false);
-		progressBar = new ProgressBar(ListActivity.this);
+		progressBar = (ProgressBar)findViewById(R.id.prgBar);
 		etTextSearch =(EditText) findViewById(R.id.etTextSearch);
 		isAddHeader = true;
 		cktViewAll = (TextView) findViewById(R.id.cktViewAll);
@@ -572,6 +572,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
+			cateId = "0";
+			exeSearch(etTextSearch.getText().toString());
 			break;
 		case 2:
 			lnWine.setBackgroundResource(R.drawable.bg_tab_active);
@@ -579,6 +581,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
+			cateId = "1";
+			exeSearch(etTextSearch.getText().toString());
 			break;
 		case 3:
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_active);
@@ -586,6 +590,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
+			cateId = "2";
+			exeSearch(etTextSearch.getText().toString());
 			break;
 
 		default:
@@ -640,21 +646,21 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	private void hideProgress() {
 		// TODO Auto-generated method stub
-//    	if(progressBar.getVisibility() == View.VISIBLE){
-//    		progressBar.setVisibility(View.GONE);
-//    	}
-		if (dialog != null && dialog.isShowing()) {
-			dialog.dismiss();
-		}
+    	if(progressBar.getVisibility() == View.VISIBLE){
+    		progressBar.setVisibility(View.GONE);
+    	}
+//		if (dialog != null && dialog.isShowing()) {
+//			dialog.dismiss();
+//		}
 	}
 	private void showProgress() {
 		// TODO Auto-generated method stub
-//    	if(progressBar.getVisibility() != View.VISIBLE){
-//    		progressBar.setVisibility(View.VISIBLE);
-//    	}
-		if (dialog != null && dialog.isShowing()) {
-			dialog.show();
-		}
+    	if(progressBar.getVisibility() != View.VISIBLE){
+    		progressBar.setVisibility(View.VISIBLE);
+    	}
+//		if (dialog != null && !dialog.isShowing()) {
+//			dialog.show();
+//		}
 	}
 	public void onFilterClicked(View v){
 		if(lnFilter.getVisibility()==View.VISIBLE){

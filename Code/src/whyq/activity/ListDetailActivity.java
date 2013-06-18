@@ -45,6 +45,6 @@ public class ListDetailActivity extends Activity implements IServiceListener{
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
-		
+		hideDialog();
 	}
 }

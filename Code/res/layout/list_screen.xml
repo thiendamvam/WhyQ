@@ -18,6 +18,11 @@
         <include layout="@layout/navigation_search" />
     </LinearLayout>
 
+   <include
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        layout="@layout/tabbar_3bar" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -28,11 +33,6 @@
         android:padding="0dp"
         android:weightSum="4" >
 
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            layout="@layout/tabbar_3bar" />
 
         <ListView
             android:id="@+id/lvWhyqList"

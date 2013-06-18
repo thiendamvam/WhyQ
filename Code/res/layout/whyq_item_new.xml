@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="80dp"
     android:orientation="vertical"
     android:id="@+id/lvRowView"
     android:weightSum="4.5" >
@@ -18,23 +18,23 @@
             android:id="@+id/imgThumbnal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="0dp"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_horizontal|top"
             android:orientation="vertical" >
 
             <ImageView
                 android:id="@+id/imgThumbnal2"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginLeft="10dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/logo_whyq"
                 android:baselineAligned="false"
                 android:gravity="center"
-                android:orientation="vertical" >
-            </ImageView>
+                android:orientation="vertical" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -43,7 +43,7 @@
             android:layout_weight="4"
             android:background="@android:color/white"
             android:baselineAligned="false"
-            android:gravity="center"
+            android:gravity="top"
             android:orientation="vertical"
             android:weightSum="3" >
 
@@ -52,7 +52,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:baselineAligned="false"
-                android:gravity="center_vertical"
+                android:gravity="top"
                 android:orientation="horizontal"
                 android:weightSum="4" >
 
@@ -63,7 +63,7 @@
                     android:layout_weight="3"
                     android:baselineAligned="false"
                     android:ellipsize="end"
-                    android:gravity="center_vertical"
+                    android:gravity="top"
                     android:orientation="vertical"
                     android:singleLine="true"
                     android:text="De nhat suon nuong"
@@ -81,7 +81,7 @@
                         android:id="@+id/tvNumberFavourite"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
+                        android:gravity="top"
                         android:text="4"
                         android:textColor="#ff3300" />
 
@@ -102,7 +102,7 @@
                 android:layout_weight="1"
                 android:baselineAligned="false"
                 android:ellipsize="end"
-                android:gravity="center_vertical"
+                android:gravity="top"
                 android:orientation="vertical"
                 android:paddingRight="40dp"
                 android:singleLine="true"
@@ -115,7 +115,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:baselineAligned="false"
-                android:gravity="center"
+                android:gravity="center_horizontal|top"
                 android:orientation="horizontal"
                 android:weightSum="4" >
 

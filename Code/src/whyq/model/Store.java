@@ -1,5 +1,7 @@
 package whyq.model;
 
+import java.util.ArrayList;
+
 public class Store {
 
 	private String id;
@@ -30,6 +32,11 @@ public class Store {
 	private int coutBill;
 	private int income;
 	private String nameCate;
+	private ArrayList<User> userList;
+	private ArrayList<Menu> menuList;
+	private ArrayList<ProductTypeInfo> productTypeInfo;
+	private ArrayList<Tag> tagList;
+	private StoreInfo storeInfo;
 	
 	public Store() {
 		// TODO Auto-generated constructor stub
@@ -426,5 +433,75 @@ public class Store {
 	 */
 	public void setNameCate(String nameCate) {
 		this.nameCate = nameCate;
+	}
+
+	/**
+	 * @return the userList
+	 */
+	public ArrayList<User> getUserList() {
+		return userList;
+	}
+
+	/**
+	 * @param userList the userList to set
+	 */
+	public void setUserList(ArrayList<User> userList) {
+		this.userList = userList;
+	}
+
+	/**
+	 * @return the menuList
+	 */
+	public ArrayList<Menu> getMenuList() {
+		return menuList;
+	}
+
+	/**
+	 * @param menuList the menuList to set
+	 */
+	public void setMenuList(ArrayList<Menu> menuList) {
+		this.menuList = menuList;
+	}
+
+	/**
+	 * @return the productTypeInfo
+	 */
+	public ArrayList<ProductTypeInfo> getProductTypeInfo() {
+		return productTypeInfo;
+	}
+
+	/**
+	 * @param productTypeInfo the productTypeInfo to set
+	 */
+	public void setProductTypeInfo(ArrayList<ProductTypeInfo> productTypeInfo) {
+		this.productTypeInfo = productTypeInfo;
+	}
+
+	/**
+	 * @return the storeInfo
+	 */
+	public StoreInfo getStoreInfo() {
+		return storeInfo;
+	}
+
+	/**
+	 * @param storeInfo the storeInfo to set
+	 */
+	public void setStoreInfo(StoreInfo storeInfo) {
+		this.storeInfo = storeInfo;
+	}
+
+	/**
+	 * @return the tagList
+	 */
+	public ArrayList<Tag> getTagList() {
+		return tagList;
+	}
+
+	/**
+	 * @param tagList the tagList to set
+	 */
+	public void setTagList(ArrayList<Tag> tagList) {
+		this.tagList = tagList;
 	}
 }

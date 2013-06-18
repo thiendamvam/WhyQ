@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class Menu {
 	String id;
 	String storeId;
-	String nameProduct;
+	private String nameProduct;
+	private ArrayList<ProductTypeInfo> productTypeInfoList;
 	String value;
 	String valuePromotion;
 	String imageProduct;
@@ -30,12 +31,7 @@ public class Menu {
 	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
-	public String getNameProduct() {
-		return nameProduct;
-	}
-	public void setNameProduct(String nameProduct) {
-		this.nameProduct = nameProduct;
-	}
+
 	public String getValue() {
 		return value;
 	}
@@ -87,14 +83,37 @@ public class Menu {
 	public ProductTypeInfo getProductTypeInfo() {
 		return productTypeInfo;
 	}
-	public void setProductTypeInfo(ProductTypeInfo productTypeInfo) {
-		this.productTypeInfo = productTypeInfo;
-	}
+
 	public StoreInfo getStoreInfo() {
 		return storeInfo;
 	}
 	public void setStoreInfo(StoreInfo storeInfo) {
 		this.storeInfo = storeInfo;
+	}
+
+	/**
+	 * @return the productTypeInfoList
+	 */
+	public ArrayList<ProductTypeInfo> getProductTypeInfoList() {
+		return productTypeInfoList;
+	}
+	/**
+	 * @param productTypeInfoList the productTypeInfoList to set
+	 */
+	public void setProductTypeInfoList(ArrayList<ProductTypeInfo> productTypeInfoList) {
+		this.productTypeInfoList = productTypeInfoList;
+	}
+	/**
+	 * @return the nameProduct
+	 */
+	public String getNameProduct() {
+		return nameProduct;
+	}
+	/**
+	 * @param nameProduct the nameProduct to set
+	 */
+	public void setNameProduct(String nameProduct) {
+		this.nameProduct = nameProduct;
 	}
 	String typeProductId;
 	String createDate;
