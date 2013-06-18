@@ -44,6 +44,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private ImageView imgBtnMenu;
 	private ImageView imgBtnPromotion;
 	private String cateId;
+	private TextView tvHeaderTitle;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		imgBtnAbout = (ImageView) findViewById(R.id.lnCutleryTab);
 		imgBtnMenu = (ImageView) findViewById(R.id.lnWineTab);
 		imgBtnPromotion = (ImageView) findViewById(R.id.lnCoffeTab);
+		tvHeaderTitle = (TextView) findViewById(R.id.tvHeaderTitle);
 		initTabbar();
 		getDetailData();
 	}
@@ -77,6 +79,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		imgBtnAbout.setImageResource(R.color.transparent);
 		imgBtnMenu.setImageResource(R.color.transparent);
 		imgBtnPromotion.setImageResource(R.color.transparent);
+		tvHeaderTitle.setText("");
 	}
 
 	private void bindData() {
@@ -89,6 +92,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 			tvOpeningTime.setText(store.getCreatedate());
 			tvTelephone.setText(store.getPhoneStore());
 			tvStoreDes.setText(store.getIntroStore());
+			tvHeaderTitle.setText(store.getNameStore());
 			tvNumberFavourtie.setText(""+store.getCountFavaouriteMember());
 			tvCommendRever.setText(store.getCountFavaouriteMember() + " from users");
 			UrlImageViewHelper.setUrlDrawable(imgFrienAvatar, store.getUserList()

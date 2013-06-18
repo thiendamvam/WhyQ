@@ -18,26 +18,23 @@
         <include layout="@layout/navigation_search" />
     </LinearLayout>
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        layout="@layout/tabbar_3bar" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8.2"
-        android:background="@color/flu"
-        android:baselineAligned="false"
-        android:orientation="vertical"
-        android:padding="0dp"
-        android:weightSum="4" >
+        android:layout_weight="9.2" >
+
+        <include
+            android:id="@+id/menuBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/tabbar_3bar" />
 
         <ListView
             android:id="@+id/lvWhyqList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/menuBar"
+            android:layout_weight="8.2"
             android:background="@color/bgListView"
             android:divider="@drawable/bg_pics"
             android:dividerHeight="13dp" >

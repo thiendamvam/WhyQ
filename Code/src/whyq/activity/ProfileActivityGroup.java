@@ -42,19 +42,19 @@ public class ProfileActivityGroup extends TabGroupActivity {
 	public void createUI() {
 		ProfileActivity.commentData = null;
 		ProfileActivity.isUserProfile = true;
-		User user = WhyqUtils.isAuthenticated(getApplicationContext());
-		setTabGroup(this);
-        if (user != null) {
-        	Comment comment = new Comment(user.getId());
-			comment.setAuthor(user);
-			ProfileActivity.commentData = comment;
-        	View view = getLocalActivityManager().startActivity( "ProfileActivity", new Intent(this, ProfileWhyQActivty.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
-    		replaceView(view);
-    		clearHistory(); 
-    	} else {
-    		clearHistory();
-			WhyqMain.showLogin();
-		}
+//		User user = WhyqUtils.isAuthenticated(getApplicationContext());
+//		setTabGroup(this);
+//        if (user != null) {
+//        	Comment comment = new Comment(user.getId());
+//			comment.setAuthor(user);
+//			ProfileActivity.commentData = comment;
+        	View view = getLocalActivityManager().startActivity( "ProfileActivity", new Intent(this, ProfileWhyQActivty.class)).getDecorView();//.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//    		replaceView(view);
+//    		clearHistory(); 
+//    	} else {
+//    		clearHistory();
+//			WhyqMain.showLogin();
+//		}
 	}
 	
 	@Override
