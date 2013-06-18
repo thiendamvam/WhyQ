@@ -3,6 +3,7 @@ package whyq.service;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,12 +19,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import android.app.TabActivity;
-import android.nfc.Tag;
-
+import whyq.handler.ActivityHandler;
 import whyq.handler.FriendFacebookHandler;
 import whyq.handler.UserHandler;
 import whyq.interfaces.FriendFacebookController;
+import whyq.model.ActivityItem;
 import whyq.model.Menu;
 import whyq.model.ProductTypeInfo;
 import whyq.model.Store;
@@ -66,6 +66,23 @@ public class DataParser {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static final List<ActivityItem> parseActivities(String inputString) {
+		try {
+			XMLReader xmlReader = initializeReader();
+			ActivityHandler handler = new ActivityHandler();
+			xmlReader.setContentHandler(handler);
+			xmlReader.parse(new InputSource(new StringReader(inputString)));
+			return handler.getItems();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static final FriendFacebookController parseFriendFacebook(

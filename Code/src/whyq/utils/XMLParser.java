@@ -70,7 +70,13 @@ public class XMLParser implements HttpAccess {
     public static final String STORE_USER_PASS = "UserPass";
     public static final String STORE_LAST_TIME_LOGIN = "LastTimeLogin";
     public static final long ACCOUNT_TIME_OUT = 3 * 60 * 60 * 1000;
-	private static final String STORE_USER_TOKEN = "TOKEN";
+    public static final String STORE_USER_TOKEN = "TOKEN";
+    public static final String STORE_USER_ID = "UserID";
+    public static final String STORE_TOTAL_CHECK_BILL = "total_check_bill";
+    public static final String STORE_TOTAL_SAVING = "total_saving";
+	public static final String STORE_USER_AVATAR = "userAvatar";
+	public static final String STORE_USER_NAME = "userName";
+	public static final String STORE_TOTAL_COMMENT = "totalComment";
 	private Document doc = null;
 	private String xml = "<empty></empty>";
 	public int type;
@@ -839,7 +845,7 @@ public class XMLParser implements HttpAccess {
 		if(isSuccess){
 			WhyqApplication state = (WhyqApplication)context.getApplicationContext();
 			state.setUser(null);
-			XMLParser.storePermpingAccount(context, "", "", XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
+			XMLParser.storePermpingAccount(context, null);
 			WhyqMain.back();
 			WhyqMain.showLogin();
 		}else{
@@ -867,16 +873,39 @@ public class XMLParser implements HttpAccess {
 		return false;
 	}
 
-	public static void storePermpingAccount(Context context, String userEmail, String userPass, String token) {
+	
+	
+	public static void storePermpingAccount(Context context, User user) {
 		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = account.edit();
-		editor.putString(STORE_USER_EMAIL, userEmail);
-		editor.putString(STORE_USER_PASS, userPass);
-		editor.putString(STORE_USER_TOKEN, token);
-		editor.putLong(STORE_LAST_TIME_LOGIN, System.currentTimeMillis());
+		if (user  == null) {
+			editor.putString(STORE_USER_ID, "");
+			editor.putString(STORE_USER_EMAIL, "");
+			editor.putString(STORE_USER_NAME, "");
+			editor.putString(STORE_USER_TOKEN, "");
+		} else {
+			editor.putString(STORE_USER_ID, user.getId());
+			editor.putString(STORE_USER_EMAIL, user.getEmail());
+			editor.putString(STORE_USER_NAME, user.getFirstName());
+			editor.putString(STORE_USER_TOKEN, user.getToken());
+			editor.putString(STORE_TOTAL_CHECK_BILL, user.getTotalCheckBill());
+			editor.putString(STORE_TOTAL_SAVING, user.getTotalSavingMoney());
+			editor.putString(STORE_TOTAL_COMMENT, user.getTotalComment());
+			editor.putString(STORE_USER_AVATAR, user.getUrlAvatar());
+			editor.putLong(STORE_LAST_TIME_LOGIN, System.currentTimeMillis());
+		}
 		editor.commit();
 	}
 	
+	public static String getValue(Context context, String key) {
+		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+		return account.getString(key, "");	
+	}
+	
+	public static String getUserId(Context context) {
+		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+		return account.getString(STORE_USER_ID, "");	
+	}
 	public static String getUserEmail(Context context) {
 		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 		return account.getString(STORE_USER_EMAIL, "");		
@@ -912,7 +941,7 @@ public class XMLParser implements HttpAccess {
 //					token = pair.getValue();
 //				}
 //			}
-			storePermpingAccount(WhyqApplication.Instance().getApplicationContext(), user.getEmail(), "", user.getToken());
+			storePermpingAccount(WhyqApplication.Instance().getApplicationContext(), user);
 //		}
 	}
 	

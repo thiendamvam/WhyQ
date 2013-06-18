@@ -364,7 +364,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 				if(result.booleanValue() && btnAccount.getText().equals(context.getString(R.string.logout))){
 					WhyqApplication state = (WhyqApplication)context.getApplicationContext();
 					state.setUser(null);
-					XMLParser.storePermpingAccount(context, "", "", XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
+					XMLParser.storePermpingAccount(context, null);
 					WhyqMain.back();
 					WhyqMain.showLogin();
 //					btnAccount.setText(context.getString(R.string.login));

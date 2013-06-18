@@ -62,7 +62,7 @@ public class AccountActivity extends Activity {
 					whyqUtils.logOutFacebook(getParent());
 					whyqUtils.logOutTwitter(getApplicationContext());
 					state.setUser(null);
-					XMLParser.storePermpingAccount(AccountActivity.this, "", "", XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
+					XMLParser.storePermpingAccount(AccountActivity.this, null);
 				}
 				
 				((ProfileActivityGroup)(ProfileActivityGroup.group)).createUI();

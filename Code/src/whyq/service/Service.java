@@ -26,7 +26,7 @@ import org.apache.http.protocol.HTTP;
 
 import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
-import whyq.model.Store;
+import whyq.model.SearchFriendCriteria;
 import whyq.utils.API;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
@@ -84,6 +84,9 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionGetFriends;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", token);
+		if (user_id != null) {
+			params.put("user_id", user_id);
+		}
 		request("/m/member/friend", params, true, false);
 	}
 
@@ -95,17 +98,26 @@ public class Service implements Runnable {
 		request("/m/member/friend/facebook", params, true, false);
 	}
 
-	public void searchFriendsFacebook(String encryptedToken, String key,
-			String accessToken) {
+	public void searchFriends(SearchFriendCriteria criteria,
+			String encryptedToken, String key, String accessToken,
+			String oauth_token, String oauth_token_secret) {
 		_action = ServiceAction.ActionSearchFriendsFacebook;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("key", key);
-		params.put("search", "facebook");
-		params.put("access_token", accessToken);
+		params.put("search", criteria.toString());
+		switch (criteria) {
+		case facebook:
+			params.put("access_token", accessToken);
+			break;
+		case twitter:
+			params.put("oauth_token", oauth_token);
+			params.put("oauth_token_secret", oauth_token_secret);
+			break;
+		}
 		request("/m/member/search/friend", params, true, false);
 	}
-	
+
 	public void inviteFriendsFacebook(String encryptedToken, String userId,
 			String accessToken) {
 		_action = ServiceAction.ActionInviteFriendsFacebook;
@@ -228,6 +240,7 @@ public class Service implements Runnable {
 			resObj = parser.parserLoginData(result);
 			break;
 		case ActionGetFriendsFacebook:
+		case ActionGetFriends:
 			resObj = result;
 			break;
 		case ActionGetUserActivities:
@@ -413,6 +426,15 @@ public class Service implements Runnable {
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", id);
 		request("/m/business/show", params, true, false);
+	}
+
+	public void getBills(String encryptedToken, String page, String count) {
+		_action = ServiceAction.ActionGetBusinessDetail;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("page", page);
+		params.put("count", count);
+		request("/m/member/order", params, true, false);
 	}
 
 }
