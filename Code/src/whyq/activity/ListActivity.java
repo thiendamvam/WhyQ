@@ -161,7 +161,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	protected void gotoStoreDetail(String storeId) {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(ListActivity.this, StoreDetailActivity.class);
+		Intent intent = new Intent(ListActivity.this, ListDetailActivity.class);
 		startActivity(intent);
 	}
 

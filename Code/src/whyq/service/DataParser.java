@@ -127,11 +127,11 @@ public class DataParser {
 			boolean isHotelDeliver = getValue(permElement, "is_hotel_deliver").equals("1")?true:false;
 			boolean isTakeAway = getValue(permElement, "is_take_away").equals("1")?true:false;
 			boolean isPlace = getValue(permElement, "is_at_place").equals("1")?true:false;
-			boolean minimunTimeDeliver = getValue(permElement, "minimun_time_deliver").equals("1")?true:false;
+			String minimunTimeDeliver = getValue(permElement, "minimun_time_deliver");
 			String tableQuantity = getValue(permElement, "table_quantity");
-			int countFavouriteMemebr = Integer.parseInt(getValue(permElement, "count_favourite_member"));
-			int coutBill =Integer.parseInt(getValue(permElement, "count_bill"));
-			int inCome = Integer.parseInt(getValue(permElement, "income"));
+			String countFavouriteMemebr = getValue(permElement, "count_favourite_member");
+			String coutBill =getValue(permElement, "count_bill");
+			String inCome = getValue(permElement, "income");
 			String nameCate = getValue(permElement, "name_cate");
 			
 			
@@ -163,7 +163,8 @@ public class DataParser {
 			item.setCoutBill(coutBill);
 			item.setIncome(inCome);
 			item.setNameCate(nameCate);
-			
+			item.setPlace(isPlace);
+			item.setMinimum(minimunTimeDeliver);
 			NodeList nodes = permElement.getElementsByTagName("user");
 			int lengthUser = nodes.getLength();
 			ArrayList<User> userList = new ArrayList<User>();
@@ -249,13 +250,13 @@ public class DataParser {
 					storeInfo.setAtPlace(getValue(infoElement,"is_at_place").equals("2")?true:false);
 					storeInfo.setStartTimeDeliver(getValue(infoElement,"start_time_deliver"));
 					storeInfo.setEndtimeDeliver(getValue(infoElement,"end_time_deliver"));
-					storeInfo.setMinimunTimeDeliever(Integer.parseInt(getValue(infoElement,"minimun_time_deliver")));
-					storeInfo.setValueConditionDeliver(Integer.parseInt(getValue(infoElement,"value_condition_deliver")));
+					storeInfo.setMinimunTimeDeliever(getValue(infoElement,"minimun_time_deliver"));
+					storeInfo.setValueConditionDeliver(getValue(infoElement,"value_condition_deliver"));
 					storeInfo.setTableWuantity(getValue(infoElement,"table_quantity"));
-					storeInfo.setCountFavouriteMember(Integer.parseInt(getValue(infoElement,"count_favourite_member")));
-					storeInfo.setCountBill(Integer.parseInt(getValue(infoElement,"count_bill")));
-					storeInfo.setIncome(Integer.parseInt(getValue(infoElement,"income")));
-					storeInfo.setStatus(Integer.parseInt(getValue(infoElement,"status")));
+					storeInfo.setCountFavouriteMember(getValue(infoElement,"count_favourite_member"));
+					storeInfo.setCountBill(getValue(infoElement,"count_bill"));
+					storeInfo.setIncome(getValue(infoElement,"income"));
+					storeInfo.setStatus(getValue(infoElement,"status"));
 					storeInfo.setCreateDate(getValue(infoElement,"createdate"));
 					storeInfo.setUpdateDate(getValue(infoElement,"updatedate"));
 					menu.setStoreInfo(storeInfo);
@@ -281,16 +282,21 @@ public class DataParser {
 			}
 			item.setTagList(tagList);
 			
+			return item;
 		}
 		return null;
 	}
 		public String getValue( Element e, String tag ){
-			if( e != null )
-			{
-				Node node = e.getElementsByTagName(tag).item(0).getFirstChild();
-				if( node != null ){
-					return node.getNodeValue();
+			try {
+				if( e != null )
+				{
+					Node node = e.getElementsByTagName(tag).item(0).getFirstChild();
+					if( node != null ){
+						return node.getNodeValue();
+					}
 				}
+			} catch (Exception e2) {
+				// TODO: handle exception
 			}
 			return "";
 		}

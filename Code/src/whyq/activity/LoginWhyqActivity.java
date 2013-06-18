@@ -86,7 +86,7 @@ public class LoginWhyqActivity extends Activity implements Login_delegate {
 //        facebookLogin = (Button) findViewById(R.id.loginfb);
 //        twitterLogin  = (Button) findViewById(R.id.logintw);
         login         = (Button) findViewById(R.id.loginPerm);
-        progressBar = new ProgressBar(context);
+        progressBar = (ProgressBar) findViewById(R.id.prgBar);
     
         
                 
@@ -94,7 +94,7 @@ public class LoginWhyqActivity extends Activity implements Login_delegate {
         login.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if(checkInputData()){
-					showLoadingDialog("Progress", "Please wait");
+					showDialog();
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);
 //					nameValuePairs.add(new BasicNameValuePair("type", Constants.LOGIN_TYPE));
 //					nameValuePairs.add(new BasicNameValuePair("oauth_token", ""));
@@ -299,7 +299,7 @@ public void on_success() {
 		}
 	}else{
 		ListActivity.isLogin = true;
-		dismissLoadingDialog();
+		hideDialog();
 		Intent intent = new Intent(LoginWhyqActivity.this, WhyqMain.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
@@ -329,30 +329,22 @@ public void on_error() {
 		Intent intent = new Intent(context, JoinWhyqActivity.class);
 		context.startActivity(intent);
 	}else{
-		dismissLoadingDialog();
+		hideDialog();
 		Toast toast = Toast.makeText(getApplicationContext(), "Authentication failed!. Please try again!", Toast.LENGTH_LONG);
 		toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 300);
 		toast.show();
 		
 	}
 }
-private void showLoadingDialog(String title, String msg) {
-//	loadingDialog = new ProgressDialog(getParent());
-//	loadingDialog.setMessage(msg);
-//	loadingDialog.setTitle(title);
-//	loadingDialog.setCancelable(true);
-//	loadingDialog.show();
+private void showDialog() {
+	// dialog.show();
 	progressBar.setVisibility(View.VISIBLE);
 }
 
-private void dismissLoadingDialog() {
-//	if (loadingDialog != null && loadingDialog.isShowing())
-//		loadingDialog.dismiss();
-	if(progressBar.getVisibility()==View.VISIBLE){
-		progressBar.setVisibility(View.GONE);
-	}
+private void hideDialog() {
+	// dialog.dismiss();
+	progressBar.setVisibility(View.INVISIBLE);
 }
-
 @Override
 public boolean onKeyDown(int keyCode, KeyEvent event)
 {		
@@ -363,5 +355,8 @@ public boolean onKeyDown(int keyCode, KeyEvent event)
         return true;
     }
     return super.onKeyDown(keyCode, event);
+}
+public void onBack(){
+	finish();
 }
 }

@@ -188,22 +188,22 @@ public class WhyqListController implements WhyqList_Delegate {
 			String cateId = getValue(permElement, "cate_id");
 			String userId =getValue(permElement, "user_id");
 			String nameStore =getValue(permElement, "name_store");
-			String introStore = getValue(permElement, "phone_store");
-			String phoneStore =getValue(permElement, "logo");
-			String logi =getValue(permElement, "style");;
-			String style =getValue(permElement, "start_time");
-			String startTime =getValue(permElement, "end_time");
-			String endTime =getValue(permElement, "is_home_deliver");
-			boolean isHomeDeliver = getValue(permElement, "is_hotel_deliver").equals("1")?true:false;
-			boolean isHotelDeliver = getValue(permElement, "is_take_away").equals("1")?true:false;
-			boolean isTakeAway = getValue(permElement, "is_at_place").equals("1")?true:false;
-			boolean isPlace = getValue(permElement, "minimun_time_deliver").equals("1")?true:false;
-			int minimunTimeDeliver = Integer.parseInt(getValue(permElement, "table_quantity"));
-			String tableQuantity = getValue(permElement, "count_favourite");
-			int countFavouriteMemebr =Integer.parseInt(getValue(permElement, "count_bill"));
-			int coutBill = Integer.parseInt(getValue(permElement, "income"));
-			int inCome = Integer.parseInt(getValue(permElement, "name_cate"));
-			String nameCate = getValue(permElement, "permId");
+			String introStore = getValue(permElement, "intro_store");
+			String phoneStore =getValue(permElement, "phone_store");
+			String logi =getValue(permElement, "logo");;
+			String style =getValue(permElement, "style");
+			String startTime =getValue(permElement, "start_time");
+			String endTime =getValue(permElement, "end_time");
+			boolean isHomeDeliver = getValue(permElement, "is_home_deliver").equals("1")?true:false;
+			boolean isHotelDeliver = getValue(permElement, "is_hotel_deliver").equals("1")?true:false;
+			boolean isTakeAway = getValue(permElement, "is_take_away").equals("1")?true:false;
+			boolean isPlace = getValue(permElement, "is_at_place").equals("1")?true:false;
+			String minimunTimeDeliver = getValue(permElement, "minimun_time_deliver");
+			String tableQuantity = getValue(permElement, "table_quantity");
+			String countFavouriteMemebr = getValue(permElement, "count_favourite");
+			String coutBill =getValue(permElement, "count_bill");
+			String inCome = getValue(permElement, "income");
+			String nameCate = getValue(permElement, "name_cate");
 			
 			
 			item.setId(id);
@@ -234,7 +234,8 @@ public class WhyqListController implements WhyqList_Delegate {
 			item.setCoutBill(coutBill);
 			item.setIncome(inCome);
 			item.setNameCate(nameCate);
-			
+			item.setMinimum(minimunTimeDeliver);
+			item.setPlace(isPlace);
 			
 			permList.add(item);
 		}
@@ -304,11 +305,11 @@ public class WhyqListController implements WhyqList_Delegate {
 				boolean isHotelDeliver = getValue(permElement, "is_hotel_deliver").equals("1")?true:false;
 				boolean isTakeAway = getValue(permElement, "is_take_away").equals("1")?true:false;
 				boolean isPlace = getValue(permElement, "is_at_place").equals("1")?true:false;
-				boolean minimunTimeDeliver = getValue(permElement, "minimun_time_deliver").equals("1")?true:false;
+				String minimunTimeDeliver = getValue(permElement, "minimun_time_deliver");
 				String tableQuantity = getValue(permElement, "table_quantity");
-				int countFavouriteMemebr = Integer.parseInt(getValue(permElement, "count_favourite_member"));
-				int coutBill =Integer.parseInt(getValue(permElement, "count_bill"));
-				int inCome = Integer.parseInt(getValue(permElement, "income"));
+				String countFavouriteMemebr = getValue(permElement, "count_favourite_member");
+				String coutBill =getValue(permElement, "count_bill");
+				String inCome = getValue(permElement, "income");
 				String nameCate = getValue(permElement, "name_cate");
 				
 				
@@ -340,7 +341,8 @@ public class WhyqListController implements WhyqList_Delegate {
 				item.setCoutBill(coutBill);
 				item.setIncome(inCome);
 				item.setNameCate(nameCate);
-				
+				item.setPlace(isPlace);
+				item.setMinimum(minimunTimeDeliver);
 				permList.add(item);
 //				//Create perm
 //				Element permElement = (Element ) permNodeList.item(i);

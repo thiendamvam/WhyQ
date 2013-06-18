@@ -28,20 +28,38 @@ public class Store {
 	private boolean isTakeAway;
 	private boolean isAtPlace;
 	private String tableQuantity;
-	private int countFavaouriteMember;
-	private int coutBill;
-	private int income;
+	private String countFavaouriteMember;
+	private String coutBill;
+	private String income;
 	private String nameCate;
 	private ArrayList<User> userList;
 	private ArrayList<Menu> menuList;
+
+
 	private ArrayList<ProductTypeInfo> productTypeInfo;
 	private ArrayList<Tag> tagList;
 	private StoreInfo storeInfo;
+	private String minimum;
+	private boolean isPlace;
 	
 	public Store() {
 		// TODO Auto-generated constructor stub
 	}
+	public String getMinimum() {
+		return minimum;
+	}
 
+	public void setMinimum(String minimum) {
+		this.minimum = minimum;
+	}
+
+	public boolean isPlace() {
+		return isPlace;
+	}
+
+	public void setPlace(boolean isPlace) {
+		this.isPlace = isPlace;
+	}
 	/**
 	 * @return the id
 	 */
@@ -382,43 +400,43 @@ public class Store {
 	/**
 	 * @return the countFavaouriteMember
 	 */
-	public int getCountFavaouriteMember() {
+	public String getCountFavaouriteMember() {
 		return countFavaouriteMember;
 	}
 
 	/**
 	 * @param countFavouriteMemebr the countFavaouriteMember to set
 	 */
-	public void setCountFavaouriteMember(int countFavouriteMemebr) {
+	public void setCountFavaouriteMember(String countFavouriteMemebr) {
 		this.countFavaouriteMember = countFavouriteMemebr;
 	}
 
 	/**
 	 * @return the coutBill
 	 */
-	public int getCoutBill() {
+	public String getCoutBill() {
 		return coutBill;
 	}
 
 	/**
-	 * @param coutBill the coutBill to set
+	 * @param coutBill2 the coutBill to set
 	 */
-	public void setCoutBill(int coutBill) {
-		this.coutBill = coutBill;
+	public void setCoutBill(String coutBill2) {
+		this.coutBill = coutBill2;
 	}
 
 	/**
 	 * @return the income
 	 */
-	public int getIncome() {
+	public String getIncome() {
 		return income;
 	}
 
 	/**
-	 * @param income the income to set
+	 * @param inCome2 the income to set
 	 */
-	public void setIncome(int income) {
-		this.income = income;
+	public void setIncome(String inCome2) {
+		this.income = inCome2;
 	}
 
 	/**

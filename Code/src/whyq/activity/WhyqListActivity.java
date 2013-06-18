@@ -123,7 +123,7 @@ public class WhyqListActivity extends FragmentActivity implements Login_delegate
 	
 	protected void gotoStoreDetail(String storeId) {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(WhyqListActivity.this, StoreDetailActivity.class);
+		Intent intent = new Intent(WhyqListActivity.this, ListDetailActivity.class);
 		startActivity(intent);
 	}
 

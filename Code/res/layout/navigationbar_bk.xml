@@ -28,7 +28,7 @@
         </ImageView>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="right"
@@ -37,6 +37,12 @@
         android:baselineAligned="false"
         android:gravity="center"
         android:orientation="vertical" >
-    </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/prgBar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
 </LinearLayout>

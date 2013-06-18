@@ -40,17 +40,18 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whyq.R;
 
 /**
- * @author Linh Nguyen
- * This activity supports to create new Perming account.
+ * @author Linh Nguyen This activity supports to create new Perming account.
  */
-public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_Delegate {
-//	Button createAccount;
+public class JoinWhyqActivity extends Activity implements TextWatcher,
+		JoinPerm_Delegate {
+	// Button createAccount;
 	EditText firstName;
 	EditText lastName;
 	EditText email;
@@ -60,54 +61,76 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 	private Button createAccount;
 	private ProgressDialog dialog;
 	private JoinWhyqActivity context;
-	
+	private View progressBar;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.whyq_join);
-        
-        context = JoinWhyqActivity.this;
-        TextView textView = (TextView)findViewById(R.id.permpingTitle);
-		Typeface tf = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
-		if(textView != null) {
+		setContentView(R.layout.whyq_join);
+
+		context = JoinWhyqActivity.this;
+		TextView textView = (TextView) findViewById(R.id.permpingTitle);
+		Typeface tf = Typeface.createFromAsset(getAssets(),
+				"ufonts.com_franklin-gothic-demi-cond-2.ttf");
+		if (textView != null) {
 			textView.setTypeface(tf);
 		}
-		
-        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        dialog = new ProgressDialog(context);
-        firstName = (EditText) findViewById(R.id.first_name);
-        lastName = (EditText) findViewById(R.id.last_name);
-		//name.addTextChangedListener(this);
-        //nickName = (EditText) findViewById(R.id.nickName);
-        email = (EditText) findViewById(R.id.email);
-		//email.addTextChangedListener(this);
-		password = (EditText) findViewById(R.id.acccountPassword);
-		//password.addTextChangedListener(this);
-		confirmPassword = (EditText) findViewById(R.id.confirm_password);
-        //confirmPassword.addTextChangedListener(this);
-        
 
-        createAccount = (Button) findViewById(R.id.loginPerm);
-        createAccount.setOnClickListener(new View.OnClickListener() {
-			
+		prefs = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		dialog = new ProgressDialog(context);
+		firstName = (EditText) findViewById(R.id.first_name);
+		lastName = (EditText) findViewById(R.id.last_name);
+		// name.addTextChangedListener(this);
+		// nickName = (EditText) findViewById(R.id.nickName);
+		email = (EditText) findViewById(R.id.email);
+		// email.addTextChangedListener(this);
+		password = (EditText) findViewById(R.id.acccountPassword);
+		// password.addTextChangedListener(this);
+		confirmPassword = (EditText) findViewById(R.id.confirm_password);
+		// confirmPassword.addTextChangedListener(this);
+
+		progressBar = (ProgressBar) findViewById(R.id.prgBar);
+		createAccount = (Button) findViewById(R.id.loginPerm);
+		createAccount.setOnClickListener(new View.OnClickListener() {
+
 			public void onClick(View v) {
-				showProgress();
-				// Send request to server to create new account along with its params
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);				
-//				nameValuePairs.add(new BasicNameValuePair("type", prefs.getString(Constants.LOGIN_TYPE, "")));
-				if (prefs.getString(Constants.LOGIN_TYPE, "").equals(Constants.FACEBOOK_LOGIN)) {// Facebook
-					nameValuePairs.add(new BasicNameValuePair("oauth_token", prefs.getString(Constants.ACCESS_TOKEN, "")));
-					nameValuePairs.add(new BasicNameValuePair("first_name",firstName.getText().toString()));//prefs.getString(Constants.ACCESS_TOKEN, ""))
-					nameValuePairs.add(new BasicNameValuePair("last_name", lastName.getText().toString()));
-					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
-					nameValuePairs.add(new BasicNameValuePair("password", password.getText().toString()));
-					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPassword.getText().toString()));
-				} else if(prefs.getString(Constants.LOGIN_TYPE, "").equals(Constants.TWITTER_LOGIN)) { // Twitter
-					nameValuePairs.add(new BasicNameValuePair("oauth_token", prefs.getString(OAuth.OAUTH_TOKEN, "")));
-					nameValuePairs.add(new BasicNameValuePair("oauth_token_secret", prefs.getString(OAuth.OAUTH_TOKEN_SECRET, "")));
-					nameValuePairs.add(new BasicNameValuePair("first_name",firstName.getText().toString()));//prefs.getString(Constants.ACCESS_TOKEN, ""))
-					nameValuePairs.add(new BasicNameValuePair("last_name", lastName.getText().toString()));
-					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
+				showDialog();
+				// Send request to server to create new account along with its
+				// params
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						8);
+				// nameValuePairs.add(new BasicNameValuePair("type",
+				// prefs.getString(Constants.LOGIN_TYPE, "")));
+				if (prefs.getString(Constants.LOGIN_TYPE, "").equals(
+						Constants.FACEBOOK_LOGIN)) {// Facebook
+					nameValuePairs.add(new BasicNameValuePair("oauth_token",
+							prefs.getString(Constants.ACCESS_TOKEN, "")));
+					nameValuePairs.add(new BasicNameValuePair("first_name",
+							firstName.getText().toString()));// prefs.getString(Constants.ACCESS_TOKEN,
+																// ""))
+					nameValuePairs.add(new BasicNameValuePair("last_name",
+							lastName.getText().toString()));
+					nameValuePairs.add(new BasicNameValuePair("email", email
+							.getText().toString()));
+					nameValuePairs.add(new BasicNameValuePair("password",
+							password.getText().toString()));
+					nameValuePairs.add(new BasicNameValuePair("cpassword",
+							confirmPassword.getText().toString()));
+				} else if (prefs.getString(Constants.LOGIN_TYPE, "").equals(
+						Constants.TWITTER_LOGIN)) { // Twitter
+					nameValuePairs.add(new BasicNameValuePair("oauth_token",
+							prefs.getString(OAuth.OAUTH_TOKEN, "")));
+					nameValuePairs.add(new BasicNameValuePair(
+							"oauth_token_secret", prefs.getString(
+									OAuth.OAUTH_TOKEN_SECRET, "")));
+					nameValuePairs.add(new BasicNameValuePair("first_name",
+							firstName.getText().toString()));// prefs.getString(Constants.ACCESS_TOKEN,
+																// ""))
+					nameValuePairs.add(new BasicNameValuePair("last_name",
+							lastName.getText().toString()));
+					nameValuePairs.add(new BasicNameValuePair("email", email
+							.getText().toString()));
 					RSA rsa = new RSA();
 					String pass = null;
 					try {
@@ -131,14 +154,17 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					nameValuePairs.add(new BasicNameValuePair("password", pass));
-					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPassword.getText().toString()));
+					nameValuePairs
+							.add(new BasicNameValuePair("password", pass));
+					nameValuePairs.add(new BasicNameValuePair("cpassword",
+							confirmPassword.getText().toString()));
 				} else { // Whyq
 					RSA rsa = new RSA();
-					String pass="", confirmPass = "";
+					String pass = "", confirmPass = "";
 					try {
 						pass = rsa.RSAEncrypt(password.getText().toString());
-//						confirmPass = rsa.RSAEncrypt(confirmPassword.getText().toString());
+						// confirmPass =
+						// rsa.RSAEncrypt(confirmPassword.getText().toString());
 					} catch (InvalidKeyException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -158,22 +184,30 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
-					nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
-					nameValuePairs.add(new BasicNameValuePair("password", pass));
-//					nameValuePairs.add(new BasicNameValuePair("cpassword", confirmPass));
-					nameValuePairs.add(new BasicNameValuePair("first_name",firstName.getText().toString()));//prefs.getString(Constants.ACCESS_TOKEN, ""))
-					nameValuePairs.add(new BasicNameValuePair("last_name", lastName.getText().toString()));
+
+					nameValuePairs.add(new BasicNameValuePair("email", email
+							.getText().toString()));
+					nameValuePairs
+							.add(new BasicNameValuePair("password", pass));
+					// nameValuePairs.add(new BasicNameValuePair("cpassword",
+					// confirmPass));
+					nameValuePairs.add(new BasicNameValuePair("first_name",
+							firstName.getText().toString()));// prefs.getString(Constants.ACCESS_TOKEN,
+																// ""))
+					nameValuePairs.add(new BasicNameValuePair("last_name",
+							lastName.getText().toString()));
 
 				}
-				
-				XMLParser parser = new XMLParser(XMLParser.JOIN_WHYQ, JoinWhyqActivity.this, API.createAccountURL, nameValuePairs);
+
+				XMLParser parser = new XMLParser(XMLParser.JOIN_WHYQ,
+						JoinWhyqActivity.this, API.createAccountURL,
+						nameValuePairs);
 				User user = parser.getUser();
 			}
 		});
 
 	}
-	
+
 	public void afterTextChanged(Editable s) {
 		// TODO Auto-generated method stub
 		if (firstName.getText().toString().equals("")) {
@@ -188,86 +222,88 @@ public class JoinWhyqActivity extends Activity implements TextWatcher, JoinPerm_
 		if (password.getText().toString().equals("")) {
 			password.setError("Password is required!");
 		}
-		if (confirmPassword.getText().toString().equals("") || !confirmPassword.getText().toString().equals(password.getText().toString())) {
+		if (confirmPassword.getText().toString().equals("")
+				|| !confirmPassword.getText().toString()
+						.equals(password.getText().toString())) {
 			confirmPassword.setError("Confirm password is invalid!");
 		}
 	}
-	
+
 	public void beforeTextChanged(CharSequence s, int start, int count,
 			int after) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onSuccess(User user) {
 		// TODO Auto-generated method stub
+		hideDialog();
 		if (user != null) {
 			// Store the user object to PermpingApplication
 			WhyqApplication state = (WhyqApplication) getApplicationContext();
 			state.setUser(user);
-			if(getApplicationContext() != null && email != null && password != null) {
-				if(email.getText().toString().length() > 0 && password.getText().toString().length() > 0) {
-					XMLParser.storePermpingAccount(getApplicationContext(), email.getText().toString(), password.getText().toString(), user.getToken());
+			if (getApplicationContext() != null && email != null
+					&& password != null) {
+				if (email.getText().toString().length() > 0
+						&& password.getText().toString().length() > 0) {
+					XMLParser.storePermpingAccount(getApplicationContext(),
+							email.getText().toString(), password.getText()
+									.toString(), user.getToken());
 				}
-			}			
+			}
 			ListActivity.isLogin = true;
 			ListActivity.loginType = 0;
 			Intent intent = new Intent(JoinWhyqActivity.this, WhyqMain.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
-//			finish();
+			// finish();
 		} else {
-			Toast toast = Toast.makeText(getApplicationContext(), "Joined perm failed! Please try again.", Toast.LENGTH_LONG);
-	    	toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 300);
-	    	toast.show();
+			Toast toast = Toast.makeText(getApplicationContext(),
+					"Joined perm failed! Please try again.", Toast.LENGTH_LONG);
+			toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 300);
+			toast.show();
 
 		}
-		
+
 	}
 
 	@Override
 	public void onError() {
 		// TODO Auto-generated method stub
-		Toast toast = Toast.makeText(getApplicationContext(), "Joined perm failed! Please try again.", Toast.LENGTH_LONG);
-    	toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 300);
-    	toast.show();
-    	this.finish();
+		hideDialog();
+		Toast toast = Toast.makeText(getApplicationContext(),
+				"Joined perm failed! Please try again.", Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 300);
+		toast.show();
+		this.finish();
 	}
 
-	
-	private void hideProgress() {
-		// TODO Auto-generated method stub
-//    	if(progressBar.getVisibility() == View.VISIBLE){
-//    		progressBar.setVisibility(View.GONE);
-//    	}
-		if (dialog != null && dialog.isShowing()) {
-			dialog.dismiss();
-		}
+	private void showDialog() {
+		// dialog.show();
+		progressBar.setVisibility(View.VISIBLE);
 	}
-	private void showProgress() {
-		// TODO Auto-generated method stub
-//    	if(progressBar.getVisibility() != View.VISIBLE){
-//    		progressBar.setVisibility(View.VISIBLE);
-//    	}
-		if (dialog != null && dialog.isShowing()) {
-			dialog.show();
-		}
+
+	private void hideDialog() {
+		// dialog.dismiss();
+		progressBar.setVisibility(View.INVISIBLE);
 	}
-	
+
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{		
-	    if ((keyCode == KeyEvent.KEYCODE_BACK))
-	    {
-	        finish();
-	        return true;
-	    }
-	    return super.onKeyDown(keyCode, event);
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			finish();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	public void onBack() {
+		finish();
 	}
 }
