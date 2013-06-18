@@ -8,14 +8,14 @@
     <FrameLayout
         android:id="@+id/radioGroupContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:background="@drawable/title"
         android:padding="8dp" >
 
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -29,7 +29,8 @@
                 android:button="@null"
                 android:checked="true"
                 android:gravity="center"
-                android:text="@string/view_bill" />
+                android:text="@string/view_bill"
+                android:textColor="@color/btn_radio_color" />
 
             <RadioButton
                 android:id="@+id/viewPlace"
@@ -39,7 +40,8 @@
                 android:background="@drawable/btn_radio"
                 android:button="@null"
                 android:gravity="center"
-                android:text="@string/view_place" />
+                android:text="@string/view_place"
+                android:textColor="@color/btn_radio_color" />
         </RadioGroup>
     </FrameLayout>
 

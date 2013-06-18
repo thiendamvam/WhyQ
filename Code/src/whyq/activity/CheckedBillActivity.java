@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whyq.WhyqApplication;
+import whyq.interfaces.IServiceListener;
 import whyq.mockup.MockupDataLoader;
 import whyq.model.BillItem;
+import whyq.service.Service;
+import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -20,6 +23,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.whyq.R;
@@ -27,7 +32,6 @@ import com.whyq.R;
 public class CheckedBillActivity extends ImageWorkerActivity {
 
 	private BillAdapter mAdapter;
-	private LoadDataTask mLoadDataTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +41,15 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 
 		setTitle(R.string.checked_bills);
 
-		findViewById(R.id.radioGroupContainer).getLayoutParams().height = WhyqApplication.sBaseViewHeight;
-		findViewById(R.id.radioGroup).getLayoutParams().width = WhyqApplication.sScreenWidth * 3 / 5;
+		RadioGroup group = (RadioGroup) findViewById(R.id.radioGroup);
+		group.getLayoutParams().width = WhyqApplication.sScreenWidth * 3 / 5;
+		group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+			}
+		});
 
 		mAdapter = new BillAdapter(this, mImageWorker);
 		ListView listview = (ListView) findViewById(R.id.listview);
@@ -51,50 +62,17 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 			}
 		});
 
-		mLoadDataTask = new LoadDataTask();
-		mLoadDataTask.execute();
+		Service service = new Service();
+		service.addListener(new IServiceListener() {
 
-		// Service service = new Service();
-		// service.addListener(new IServiceListener() {
-		//
-		// @Override
-		// public void onCompleted(Service service, ServiceResponse result) {
-		// if (result != null) {
-		// Log.d("FriendFacebook", String.valueOf(result));
-		// }
-		// }
-		// });
-		// service.getFriendsFacebook(getToken());
-	}
-
-	class LoadDataTask extends AsyncTask<Void, Void, List<BillItem>> {
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			setLoading(true);
-		}
-
-		@Override
-		protected List<BillItem> doInBackground(Void... params) {
-			Log.d("LoadDataTask", "Start loading.. ");
-			return MockupDataLoader.loadBills();
-		}
-
-		@Override
-		protected void onPostExecute(List<BillItem> result) {
-			super.onPostExecute(result);
-			setLoading(false);
-			if (isCancelled()) {
-				return;
+			@Override
+			public void onCompleted(Service service, ServiceResponse result) {
+				if (result != null) {
+					Log.d("CheckedBills", String.valueOf(result));
+				}
 			}
-
-			if (mAdapter != null) {
-				mAdapter.setItems(result);
-			}
-
-		}
-
+		});
+		service.getBills(getEncryptedToken(), "1", "20");
 	}
 
 	static class BillAdapter extends BaseAdapter {

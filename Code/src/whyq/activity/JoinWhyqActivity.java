@@ -18,6 +18,8 @@ import oauth.signpost.OAuth;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.whyq.R;
+
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.interfaces.JoinPerm_Delegate;
@@ -44,7 +46,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.whyq.R;
 
 /**
  * @author Linh Nguyen This activity supports to create new Perming account.
@@ -248,13 +249,10 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 			// Store the user object to PermpingApplication
 			WhyqApplication state = (WhyqApplication) getApplicationContext();
 			state.setUser(user);
-			if (getApplicationContext() != null && email != null
-					&& password != null) {
-				if (email.getText().toString().length() > 0
-						&& password.getText().toString().length() > 0) {
-					XMLParser.storePermpingAccount(getApplicationContext(),
-							email.getText().toString(), password.getText()
-									.toString(), user.getToken());
+			if(getApplicationContext() != null && email != null && password != null) {
+				if(email.getText().toString().length() > 0 && password.getText().toString().length() > 0) {
+					XMLParser.storePermpingAccount(getApplicationContext(), user);
+
 				}
 			}
 			ListActivity.isLogin = true;

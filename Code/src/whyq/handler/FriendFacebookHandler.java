@@ -20,6 +20,7 @@ import whyq.model.FriendFacebook;
 public class FriendFacebookHandler extends DefaultHandler implements FriendFacebookController {
 
 	private static final String TAG_LIST_NOT_JOIN_WHYQ = "list_not_join_whyq";
+	private static final String TAG_LIST_JOIN_WHYQ = "list_join_whyq";
 	private static final String TAG_DATA = "data";
 	private static final String TAG_FACEBOOK_ID = "facebook_id";
 	private static final String TAG_ITUNE_URL = "ituneUrl";
@@ -30,6 +31,7 @@ public class FriendFacebookHandler extends DefaultHandler implements FriendFaceb
 
 	private FriendFacebook friendfacebook;
 	private List<FriendFacebook> listNotJoinWhyq;
+	private List<FriendFacebook> listJoinWhyq;
 	private boolean isListNotJoinWhyq;
 
 	private StringBuffer buffer = new StringBuffer();
@@ -59,6 +61,8 @@ public class FriendFacebookHandler extends DefaultHandler implements FriendFaceb
 		} else if (localName.equals(TAG_DATA)){
 			if (isListNotJoinWhyq) {
 				listNotJoinWhyq.add(friendfacebook);
+			} else {
+				listJoinWhyq.add(friendfacebook);
 			}
 		}
 	}
@@ -74,7 +78,10 @@ public class FriendFacebookHandler extends DefaultHandler implements FriendFaceb
 		} else if (localName.equals(TAG_LIST_NOT_JOIN_WHYQ)) {
 			isListNotJoinWhyq = true;
 			listNotJoinWhyq = new ArrayList<FriendFacebook>();
-		} 
+		} else if (localName.equals(TAG_LIST_JOIN_WHYQ)) {
+			isListNotJoinWhyq = false;
+			listJoinWhyq = new ArrayList<FriendFacebook>();
+		}
 	}
 
 	@Override
@@ -84,8 +91,7 @@ public class FriendFacebookHandler extends DefaultHandler implements FriendFaceb
 
 	@Override
 	public List<FriendFacebook> getListWhyq() {
-		// TODO Auto-generated method stub
-		return null;
+		return listJoinWhyq;
 	}
 
 }

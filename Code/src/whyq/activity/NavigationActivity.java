@@ -81,7 +81,7 @@ public class NavigationActivity extends FragmentActivity {
 		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 		WhyqApplication.sScreenHeight = displaymetrics.heightPixels;
 		WhyqApplication.sScreenWidth = displaymetrics.widthPixels;
-		WhyqApplication.sBaseViewHeight = displaymetrics.heightPixels / 10;
+		WhyqApplication.sBaseViewHeight = (int) getResources().getDimension(R.dimen.base_size);
 	}
 
 	protected void setExtraView(View view) {

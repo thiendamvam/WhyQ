@@ -6,13 +6,16 @@ import java.util.List;
 import whyq.WhyqApplication;
 import whyq.mockup.MockupDataLoader;
 import whyq.model.ActivityItem;
+import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import whyq.utils.SpannableUtils;
+import whyq.utils.XMLParser;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,11 +47,12 @@ public class UserBoardActivity extends ImageWorkerActivity {
 		initCategory();
 
 		final Intent i = getIntent();
-		mUserFirstName = i.getStringExtra(ARG_FIRST_NAME);
+		mUserFirstName = XMLParser.getValue(this, XMLParser.STORE_USER_NAME);
 		if (mUserFirstName != null) {
 			setTitle(mUserFirstName);
 		}
-		final String avatar = i.getStringExtra(ARG_AVATAR);
+		final String avatar = XMLParser.getValue(this,
+				XMLParser.STORE_USER_AVATAR);
 		if (avatar != null) {
 			ImageView imageView = (ImageView) findViewById(R.id.avatar);
 			LayoutParams LP = imageView.getLayoutParams();
@@ -60,48 +64,28 @@ public class UserBoardActivity extends ImageWorkerActivity {
 		mAdapter = new ActivitiesAdapter(this);
 		((ListView) findViewById(R.id.listview)).setAdapter(mAdapter);
 
-		// final Service service = getService();
-		//
-		// final String userId = i.getStringExtra(ARG_USER_ID);
-		// service.getUserActivities(getEncryptedToken(), userId);
+		final Service service = getService();
 
-		new AsyncTask<Void, Void, List<ActivityItem>>() {
+		setLoading(true);
+		final String userId = XMLParser.getUserId(this);
+		service.getUserActivities(getEncryptedToken(), userId);
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				setLoading(true);
-			}
-
-			@Override
-			protected List<ActivityItem> doInBackground(Void... params) {
-				try {
-					Thread.sleep(1000);
-					return MockupDataLoader.loadActivities();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(List<ActivityItem> result) {
-				setLoading(false);
-				super.onPostExecute(result);
-				mAdapter.setItems(result);
-			}
-		}.execute();
 	}
 
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
 		setLoading(false);
+		mAdapter.setItems(DataParser.parseActivities(String.valueOf(result
+				.getData())));
 	}
 
 	private void initCategory() {
-		bindCategory(R.id.check_bill, R.drawable.icon_cat_coffee, "2 places",
-				"checked bills", new OnClickListener() {
+		final String totalCheckBill = XMLParser.getValue(this,
+				XMLParser.STORE_TOTAL_CHECK_BILL);
+		bindCategory(R.id.check_bill, R.drawable.icon_cat_coffee,
+				totalCheckBill + " places", "checked bills",
+				new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
@@ -117,15 +101,22 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 					}
 				});
-		bindCategory(R.id.saving, R.drawable.icon_cat_wine, "0", "Saving",
-				new OnClickListener() {
+
+		final String totalSaving = XMLParser.getValue(this,
+				XMLParser.STORE_TOTAL_SAVING);
+		bindCategory(R.id.saving, R.drawable.icon_cat_wine, "$" + totalSaving,
+				"Saving", new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
 
 					}
 				});
-		bindCategory(R.id.comment, R.drawable.icon_cat_wine, "2", "Comments",
+
+		final String totalComment = XMLParser.getValue(this,
+				XMLParser.STORE_TOTAL_COMMENT);
+		bindCategory(R.id.comment, R.drawable.icon_cat_wine,
+				totalComment == "" ? "0" : totalComment, "Comments",
 				new OnClickListener() {
 
 					@Override
@@ -207,13 +198,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			ViewHolder holder = getViewHolder(convertView);
 			ActivityItem item = mItems.get(position);
 
-			final String activity = mUserFirstName + " " + item.getAction()
-					+ " " + item.getSubject();
-			holder.activity.setText(SpannableUtils.stylistTextBold(
-					activity,
-					item.getAction(),
-					mContext.getResources().getColor(
-							android.R.color.darker_gray)));
+			holder.activity.setText(Html.fromHtml(item.getMessage()));
 			holder.activity.setCompoundDrawablesWithIntrinsicBounds(
 					R.drawable.icon_quote, 0, 0, 0);
 

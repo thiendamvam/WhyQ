@@ -5,9 +5,11 @@ import java.util.List;
 import whyq.WhyqApplication;
 import whyq.interfaces.FriendFacebookController;
 import whyq.model.FriendFacebook;
+import whyq.model.SearchFriendCriteria;
 import whyq.model.StatusWithFriend;
 import whyq.service.DataParser;
 import whyq.service.Service;
+import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
 import whyq.utils.SpannableUtils;
@@ -18,9 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,14 +70,16 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 							friend.getFirstName());
 					i.putExtra(UserBoardActivity.ARG_AVATAR, friend.getAvatar());
 					startActivity(i);
+				} else {
+					// TODO: Remove after test.
+					Intent i = new Intent(FriendsFacebookActivity.this,
+							UserBoardActivity.class);
+					startActivity(i);
 				}
 			}
 		});
 
-		final String access_token = getAccessToken();
-		if (access_token != null && access_token.length() > 0) {
-			getFriends(access_token);
-		}
+		getFriends();
 
 	}
 
@@ -90,9 +91,9 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 	@Override
 	public void onQuery(String queryString) {
 		if (queryString != null && queryString.length() > 0) {
-			searchFriends(getAccessToken(), queryString);
+			searchFriends(queryString);
 		} else {
-			getFriends(getAccessToken());
+			getFriends();
 		}
 	}
 
@@ -101,45 +102,58 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 		super.onCompleted(service, result);
 		setLoading(false);
 		if (result != null) {
-			FriendFacebookController handler = DataParser
-					.parseFriendFacebook(String.valueOf(result.getData()));
-			mAdapter.setController(handler);
+			if (result.getAction() == ServiceAction.ActionInviteFriendsFacebook) {
+
+			} else {
+				FriendFacebookController handler = DataParser
+						.parseFriendFacebook(String.valueOf(result.getData()));
+				mAdapter.setController(handler);
+			}
 		}
 	}
 
-	private void searchFriends(String accessToken, String queryString) {
+	private void searchFriends(String queryString) {
+		Service service = getService();
+		setLoading(true);
+		final String accessToken = getAccessToken();
+		if (accessToken == null || accessToken.length() == 0) {
+			service.searchFriends(SearchFriendCriteria.whyq, getEncryptedToken(), queryString, null, null, null);
+		} else {
+			service.searchFriends(SearchFriendCriteria.facebook, getEncryptedToken(), queryString, accessToken, null, null);
+		}
+
+	}
+
+	private void getFriends() {
+		final String accessToken = getAccessToken();
 		if (accessToken == null || accessToken.length() == 0) {
 			return;
 		}
-
 		Service service = getService();
 		setLoading(true);
-		service.searchFriendsFacebook(getEncryptedToken(), queryString,
-				accessToken);
+		service.getFriendsFacebook(getEncryptedToken(), accessToken);
 	}
 
-	private void getFriends(String access_token) {
-		if (access_token == null || access_token.length() == 0) {
-			return;
-		}
-
+	void inviteFriend(String userId) {
+		final String accessToken = getAccessToken();
 		Service service = getService();
 		setLoading(true);
-		service.getFriendsFacebook(getEncryptedToken(), access_token);
+		service.inviteFriendsFacebook(getEncryptedToken(), userId, accessToken);
 	}
 
 	static class FriendsFacebookAdapter extends BaseAdapter {
 
 		private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
-		private Context mContext;
+		private FriendsFacebookActivity mActivity;
 		private List<FriendFacebook> listWhyq;
 		private List<FriendFacebook> listNotJoinWhyq;
 		private ImageWorker mImageWorker;
 		private static int countListNotJoinWhyq = 0;
 		private static int countListWhyq = 0;
 
-		public FriendsFacebookAdapter(Context context, ImageWorker imageWorker) {
-			this.mContext = context;
+		public FriendsFacebookAdapter(FriendsFacebookActivity context,
+				ImageWorker imageWorker) {
+			this.mActivity = context;
 			this.mImageWorker = imageWorker;
 		}
 
@@ -178,14 +192,14 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 			if (position == 0) {
 				final String key = countListWhyq + " facebook friends";
 				final String result = "You have " + key + " had joined WHY Q.";
-				return SpannableUtils.stylistTextBold(result, key, mContext
+				return SpannableUtils.stylistTextBold(result, key, mActivity
 						.getResources().getColor(R.color.orange));
 			} else if (position == countListWhyq + 1) {
 				final String key = countListNotJoinWhyq + " facebook friends";
 				final String result = "And "
 						+ key
 						+ " haven't joined WHY Q. Invite your friend to join this app!";
-				return SpannableUtils.stylistTextBold(result, key, mContext
+				return SpannableUtils.stylistTextBold(result, key, mActivity
 						.getResources().getColor(R.color.orange));
 			} else if (position <= countListWhyq) {
 				return listWhyq.get(position - 1);
@@ -218,18 +232,18 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 			final Object item = getItem(position);
 			if (convertView == null) {
 				if (item instanceof FriendFacebook) {
-					convertView = LayoutInflater.from(mContext).inflate(
+					convertView = mActivity.getLayoutInflater().inflate(
 							R.layout.friend_list_item, parent, false);
 				} else {
-					convertView = LayoutInflater.from(mContext).inflate(
+					convertView = mActivity.getLayoutInflater().inflate(
 							R.layout.friend_list_item_secondary, parent, false);
 				}
 			}
 
-			ViewHolder holder = getViewHolder(convertView);
+			final ViewHolder holder = getViewHolder(convertView);
 
 			if (item instanceof FriendFacebook) {
-				FriendFacebook friendfacebook = (FriendFacebook) item;
+				final FriendFacebook friendfacebook = (FriendFacebook) item;
 				holder.name.setText(friendfacebook.getFirstName());
 				mImageWorker.loadImage(friendfacebook.getAvatar(),
 						holder.avatar, AVATAR_SIZE, AVATAR_SIZE);
@@ -239,7 +253,18 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 								.setBackgroundResource(R.drawable.add_friend);
 					} else {
 						holder.action.setText(R.string.invite);
+						holder.action
+								.setOnClickListener(new View.OnClickListener() {
+
+									@Override
+									public void onClick(View v) {
+										mActivity.inviteFriend(friendfacebook
+												.getId());
+									}
+								});
 					}
+				} else if (friendfacebook.getIsFriend() == StatusWithFriend.STATUS_WAITING_FOR_ACCEPT) {
+
 				}
 
 			} else {
