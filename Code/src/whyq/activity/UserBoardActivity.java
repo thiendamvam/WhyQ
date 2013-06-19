@@ -139,7 +139,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 	@Override
 	protected View getTitleView() {
 		LinearLayout titleView = (LinearLayout) getLayoutInflater().inflate(
-				R.layout.navigation_title_include_avatar, null);
+				R.layout.navigation_title_avatar, null);
 		View title = super.getTitleView();
 		LinearLayout.LayoutParams LP = new LinearLayout.LayoutParams(0,
 				LinearLayout.LayoutParams.WRAP_CONTENT, 1);
