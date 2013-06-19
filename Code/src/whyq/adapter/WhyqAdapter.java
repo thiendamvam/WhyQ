@@ -15,7 +15,6 @@ import whyq.activity.ListActivity;
 import whyq.activity.ListActivityGroup;
 import whyq.activity.ListDetailActivity;
 import whyq.activity.PrepareRequestTokenActivity;
-import whyq.activity.StoreDetailActivity;
 import whyq.controller.AuthorizeController;
 import whyq.controller.WhyqListController;
 import whyq.model.Comment;
@@ -725,7 +724,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 
 	private void exeGotoDetail(View v) {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(context, StoreDetailActivity.class);
+		Intent intent = new Intent(context, ListDetailActivity.class);
 		context.startActivity(intent);
 	}
 

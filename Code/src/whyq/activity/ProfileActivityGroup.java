@@ -23,7 +23,7 @@ public class ProfileActivityGroup extends TabGroupActivity {
 	public static boolean isTabChanged = false;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		View view = getLocalActivityManager().startActivity( "ProfileActivity", new Intent(this, ProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
+		View view = getLocalActivityManager().startActivity( "ProfileActivity", new Intent(this, ProfileWhyQActivty.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
 		setTabGroup(this);
 		replaceView(view);
 	}
@@ -42,19 +42,19 @@ public class ProfileActivityGroup extends TabGroupActivity {
 	public void createUI() {
 		ProfileActivity.commentData = null;
 		ProfileActivity.isUserProfile = true;
-		User user = WhyqUtils.isAuthenticated(getApplicationContext());
-		setTabGroup(this);
-        if (user != null) {
-        	Comment comment = new Comment(user.getId());
-			comment.setAuthor(user);
-			ProfileActivity.commentData = comment;
-        	View view = getLocalActivityManager().startActivity( "ProfileActivity", new Intent(this, ProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
-    		replaceView(view);
-    		clearHistory(); 
-    	} else {
-    		clearHistory();
-			WhyqMain.showLogin();
-		}
+//		User user = WhyqUtils.isAuthenticated(getApplicationContext());
+//		setTabGroup(this);
+//        if (user != null) {
+//        	Comment comment = new Comment(user.getId());
+//			comment.setAuthor(user);
+//			ProfileActivity.commentData = comment;
+        	View view = getLocalActivityManager().startActivity( "ProfileActivity", new Intent(this, ProfileWhyQActivty.class)).getDecorView();//.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//    		replaceView(view);
+//    		clearHistory(); 
+//    	} else {
+//    		clearHistory();
+//			WhyqMain.showLogin();
+//		}
 	}
 	
 	@Override

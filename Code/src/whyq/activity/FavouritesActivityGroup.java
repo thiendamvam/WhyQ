@@ -28,7 +28,12 @@ public class FavouritesActivityGroup extends TabGroupActivity {
 	}
 	
 	public void createUI() {
-		View view = getLocalActivityManager().startActivity( "FavouriteActivity", new Intent(this, FavouriteActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
+//		View view = getLocalActivityManager().startActivity( "FavouriteActivity", new Intent(this, FavouriteActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
+//		Fix for Whyqapp
+		Intent intent = new Intent(this, ListActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra("favourite", "true");
+		View view = getLocalActivityManager().startActivity( "FavouriteActivity", intent).getDecorView();
 		setTabGroup(this);
 		replaceView(view);
 		clearHistory();

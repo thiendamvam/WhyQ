@@ -13,7 +13,8 @@
         android:layout_height="12dp"
         android:layout_centerVertical="true"
         android:layout_margin="12dp"
-        android:background="@drawable/icon_back" />
+        android:background="@drawable/icon_back"
+        android:onClick="onBack" />
 
     <View
         android:layout_width="2dp"
@@ -45,6 +46,15 @@
         android:paddingRight="7dp"
         android:text="Done"
         android:textColor="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/prgBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:visibility="invisible" />
 
     <View
         android:layout_width="2dp"

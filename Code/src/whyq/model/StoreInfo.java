@@ -17,13 +17,13 @@ public class StoreInfo {
 	private boolean isAtPlace;
 	private String startTimeDeliver;
 	private String endtimeDeliver;
-	private int minimunTimeDeliever;
-	private int valueConditionDeliver;
+	private String minimunTimeDeliever;
+	private String valueConditionDeliver;
 	private String tableWuantity;
-	private int countFavouriteMember;
-	private int countBill;
-	private int income;
-	private int status;
+	private String countFavouriteMember;
+	private String countBill;
+	private String income;
+	private String status;
 	private String createDate;
 	private String updateDate;
 	public String getStartTimeDeliver() {
@@ -38,11 +38,11 @@ public class StoreInfo {
 	public void setEndtimeDeliver(String endtimeDeliver) {
 		this.endtimeDeliver = endtimeDeliver;
 	}
-	public int getMinimunTimeDeliever() {
+	public String getMinimunTimeDeliever() {
 		return minimunTimeDeliever;
 	}
-	public void setMinimunTimeDeliever(int minimunTimeDeliever) {
-		this.minimunTimeDeliever = minimunTimeDeliever;
+	public void setMinimunTimeDeliever(String string) {
+		this.minimunTimeDeliever = string;
 	}
 	public String getTableWuantity() {
 		return tableWuantity;
@@ -50,29 +50,29 @@ public class StoreInfo {
 	public void setTableWuantity(String tableWuantity) {
 		this.tableWuantity = tableWuantity;
 	}
-	public int getCountFavouriteMember() {
+	public String getCountFavouriteMember() {
 		return countFavouriteMember;
 	}
-	public void setCountFavouriteMember(int countFavouriteMember) {
-		this.countFavouriteMember = countFavouriteMember;
+	public void setCountFavouriteMember(String string) {
+		this.countFavouriteMember = string;
 	}
-	public int getCountBill() {
+	public String getCountBill() {
 		return countBill;
 	}
-	public void setCountBill(int countBill) {
-		this.countBill = countBill;
+	public void setCountBill(String string) {
+		this.countBill = string;
 	}
-	public int getIncome() {
+	public String getIncome() {
 		return income;
 	}
-	public void setIncome(int income) {
-		this.income = income;
+	public void setIncome(String string) {
+		this.income = string;
 	}
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(int status) {
-		this.status = status;
+	public void setStatus(String string) {
+		this.status = string;
 	}
 	public String getCreateDate() {
 		return createDate;
@@ -257,13 +257,13 @@ public class StoreInfo {
 	/**
 	 * @return the valueConditionDeliver
 	 */
-	public int getValueConditionDeliver() {
+	public String getValueConditionDeliver() {
 		return valueConditionDeliver;
 	}
 	/**
-	 * @param valueConditionDeliver the valueConditionDeliver to set
+	 * @param string the valueConditionDeliver to set
 	 */
-	public void setValueConditionDeliver(int valueConditionDeliver) {
-		this.valueConditionDeliver = valueConditionDeliver;
+	public void setValueConditionDeliver(String string) {
+		this.valueConditionDeliver = string;
 	}
 }

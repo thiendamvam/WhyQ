@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.8"
         android:background="@drawable/ic_launcher"
         android:baselineAligned="false"
         android:gravity="center"
@@ -18,26 +18,23 @@
         <include layout="@layout/navigation_search" />
     </LinearLayout>
 
-   <include
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        layout="@layout/tabbar_3bar" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
-        android:background="@color/flu"
-        android:baselineAligned="false"
-        android:orientation="vertical"
-        android:padding="0dp"
-        android:weightSum="4" >
+        android:layout_weight="9.2" >
 
+        <include
+            android:id="@+id/menuBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/tabbar_3bar" />
 
         <ListView
             android:id="@+id/lvWhyqList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/menuBar"
+            android:layout_weight="8.2"
             android:background="@color/bgListView"
             android:divider="@drawable/bg_pics"
             android:dividerHeight="13dp" >
@@ -52,8 +49,8 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/bg_black"
             android:orientation="vertical"
-            android:visibility="invisible"
-            android:padding="15dp" >
+            android:padding="15dp"
+            android:visibility="invisible" >
 
             <RelativeLayout
                 android:id="@+id/rlViewAll"

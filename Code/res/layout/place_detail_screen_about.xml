@@ -96,7 +96,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center_vertical"
-                    android:text="Opening time:"
+                    android:text="Telephone:"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 

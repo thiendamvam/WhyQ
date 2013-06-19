@@ -1,32 +1,37 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey"
     android:orientation="horizontal"
-    android:weightSum="7" >
+    android:weightSum="10" >
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/imgCommandIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_launcher" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/imgCommandIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/icon_wrote"
+        android:paddingLeft="10dp" />
 
     <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="6"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
+        android:id="@+id/tvCommendReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/imgCommandIcon"
+        android:paddingLeft="10dp"
         android:text="No comment yet. Be the first?"
         android:textColor="@color/black" >
     </TextView>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tvFromUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/tvCommendReview"
+        android:paddingLeft="10dp"
+        android:text="From users" />
+
+</RelativeLayout>
