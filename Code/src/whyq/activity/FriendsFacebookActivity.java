@@ -14,13 +14,12 @@ import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
 import whyq.utils.SpannableUtils;
 import whyq.utils.WhyqUtils;
+import whyq.utils.XMLParser;
 import whyq.view.SearchField;
 import whyq.view.SearchField.QueryCallback;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -62,20 +61,10 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 					long arg3) {
 				final Object item = mAdapter.getItem(arg2);
 				if (item instanceof FriendFacebook) {
-					final FriendFacebook friend = (FriendFacebook) item;
-					Intent i = new Intent(FriendsFacebookActivity.this,
-							UserBoardActivity.class);
-					i.putExtra(UserBoardActivity.ARG_USER_ID, friend.getId());
-					i.putExtra(UserBoardActivity.ARG_FIRST_NAME,
-							friend.getFirstName());
-					i.putExtra(UserBoardActivity.ARG_AVATAR, friend.getAvatar());
-					startActivity(i);
-				} else {
-					// TODO: Remove after test.
 					Intent i = new Intent(FriendsFacebookActivity.this,
 							UserBoardActivity.class);
 					startActivity(i);
-				}
+				} 
 			}
 		});
 
@@ -125,13 +114,14 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 	}
 
 	private void getFriends() {
-		final String accessToken = getAccessToken();
-		if (accessToken == null || accessToken.length() == 0) {
-			return;
-		}
 		Service service = getService();
 		setLoading(true);
-		service.getFriendsFacebook(getEncryptedToken(), accessToken);
+		final String accessToken = getAccessToken();
+		if (accessToken == null || accessToken.length() == 0) {
+			service.getFriends(getEncryptedToken(), XMLParser.getValue(this, XMLParser.STORE_USER_ID));
+		} else {
+			service.getFriendsFacebook(getEncryptedToken(), accessToken);
+		}
 	}
 
 	void inviteFriend(String userId) {

@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whyq.WhyqApplication;
-import whyq.mockup.MockupDataLoader;
 import whyq.model.ActivityItem;
 import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
-import whyq.utils.SpannableUtils;
 import whyq.utils.XMLParser;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -31,9 +28,6 @@ import com.whyq.R;
 
 public class UserBoardActivity extends ImageWorkerActivity {
 
-	public static final String ARG_USER_ID = "arg_user_id";
-	public static final String ARG_FIRST_NAME = "arg_first_name";
-	public static final String ARG_AVATAR = "arg_avatar";
 	private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 	private ActivitiesAdapter mAdapter;
 	private String mUserFirstName;
@@ -46,7 +40,6 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 		initCategory();
 
-		final Intent i = getIntent();
 		mUserFirstName = XMLParser.getValue(this, XMLParser.STORE_USER_NAME);
 		if (mUserFirstName != null) {
 			setTitle(mUserFirstName);
