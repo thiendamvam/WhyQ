@@ -96,9 +96,9 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	 * Whyq elements
 	 */
 	
-	ImageButton lnCutlery;
-	ImageButton lnWine;
-	private ImageButton lnCoffe;
+	LinearLayout lnCutlery;
+	LinearLayout lnWine;
+	private LinearLayout lnCoffe;
 	
 	
 	private String searchKey="";
@@ -142,6 +142,12 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private ImageView imgCheckedAll;
 	private ImageView imgCheckedFavorite;
 	private ImageView imgCheckedVisited;
+	private ImageView imgArrowDown;
+	private ImageView imgCoffe;
+	private ImageView imgWine;
+	private ImageView imgHotel;
+	private ImageView imgCutlery;
+	private LinearLayout lnHotel;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -152,11 +158,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(ListActivity.this.getIntent());
-//    	dialog = ProgressDialog.show(getParent(), "", "progressing...",
-//    			true);
     	showProgress();
-//    	Intent intent = new Intent(ListActivity.this, WhyqLogout.class);
-//    	startActivity(intent);
+
 	}
 	
 	protected void gotoStoreDetail(String storeId) {
@@ -169,11 +172,13 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		setContentView(R.layout.list_screen);//
 		
 		whyqListView = (ListView) findViewById(R.id.lvWhyqList);
-		lnCutlery = (ImageButton) findViewById(R.id.lnCutleryTab);
-		lnWine = (ImageButton) findViewById(R.id.lnWineTab);
-		lnCoffe = (ImageButton) findViewById(R.id.lnCoffeTab);
+		lnCutlery = (LinearLayout) findViewById(R.id.lnCutleryTab);
+		lnWine = (LinearLayout) findViewById(R.id.lnWineTab);
+		lnCoffe = (LinearLayout) findViewById(R.id.lnCoffeTab);
+		lnHotel = (LinearLayout) findViewById(R.id.lnHotel);
 		bntFilter = (ImageView)findViewById(R.id.btnFilters);
 		lnFilter = (LinearLayout)findViewById(R.id.lnFilterView);
+		imgArrowDown = (ImageView)findViewById(R.id.imgArrowDown);
 		loadPermList = new LoadPermList(false);
 		progressBar = (ProgressBar)findViewById(R.id.prgBar);
 		etTextSearch =(EditText) findViewById(R.id.etTextSearch);
@@ -184,6 +189,11 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		imgCheckedAll = (ImageView) findViewById(R.id.imgCbAll);
 		imgCheckedFavorite = (ImageView)findViewById(R.id.imgCbFavourite);
 		imgCheckedVisited = (ImageView) findViewById(R.id.imgCbVisited);
+		
+		imgCutlery = (ImageView)findViewById(R.id.imgCutleryIcon);
+		imgWine = (ImageView)findViewById(R.id.imgWinIcon);
+		imgCoffe = (ImageView)findViewById(R.id.imgCoffeeIcon);
+		imgHotel = (ImageView)findViewById(R.id.imgHotelIcon);
 		
 		whyqListView.setOnItemClickListener(onStoreItemListener);
 		etTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -309,8 +319,6 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			this.header = false;
 		}
 		clearData();
-//		btnRefesh.setVisibility(View.GONE);
-//		progressBar.setVisibility(View.VISIBLE);
 		showProgress();
 
 		loadPermList = new LoadPermList(isSearch);
@@ -326,9 +334,6 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		if(nextItem > -1) {
 			nextItem = nextItem - 1;
 			clearData();
-
-//			btnRefesh.setVisibility(View.GONE);
-//			progressBar.setVisibility(View.VISIBLE);
 			showProgress();
 			
 			loadPermList = new LoadPermList(isSearch);
@@ -340,10 +345,6 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public void loadNextItems() {
 		if(permListAdapter != null) {
 			nextItem = permListAdapter.getNextItems();
-			//clearData();
-
-//			btnRefesh.setVisibility(View.GONE);
-//			progressBar.setVisibility(View.VISIBLE);
 			showProgress();
 	    	loadPermList = new LoadPermList(isSearch);
 			loadPermList.execute();
@@ -469,30 +470,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				// TODO: handle exception
-//				if (dialog != null && dialog.isShowing()) {
-//					dialog.dismiss();
-//				}
-				/*if(progressBar.getVisibility()==View.VISIBLE){
-					progressBar.setVisibility(View.GONE);
-					btnRefesh.setVisibility(View.VISIBLE);
-				}*/
-				hideProgress();
+
+//				hideProgress();
 			}
-			/*if(permList != null){
-				for(int i = 0; i < permList.size(); i++) {
-					if(!permListMain.contains(permList.get(i))) {
-						permListMain.add(permList.get(i));
-					}
-				}
-				
-			}*/
 			permListMain = permList;
 			/**
 			 * MSA
 			 */
-			//permListMain.addAll(permList);
-			//permListMain = permList;
+
 						
 			return permListMain;
 		}
@@ -566,10 +551,12 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		
 		switch (index) {
 		case 1:
-			
+			setIconTab(1);
 			lnWine.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
+			lnHotel.setBackgroundResource(R.drawable.bg_tab_normal);
+			setIconTab(1);
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
 			cateId = "0";
@@ -579,8 +566,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			lnWine.setBackgroundResource(R.drawable.bg_tab_active);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnHotel.setBackgroundResource(R.drawable.bg_tab_normal);
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
+			setIconTab(2);
 			cateId = "1";
 			exeSearch(etTextSearch.getText().toString());
 			break;
@@ -588,6 +577,19 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_active);
 			lnWine.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnHotel.setBackgroundResource(R.drawable.bg_tab_normal);
+			setIconTab(3);
+//			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
+//			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
+			cateId = "2";
+			exeSearch(etTextSearch.getText().toString());
+			break;
+		case 4:
+			lnHotel.setBackgroundResource(R.drawable.bg_tab_active);
+			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnWine.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
+			setIconTab(4);
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			cateId = "2";
@@ -599,7 +601,40 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		}
 		
 	}
-/*
+	private void setIconTab(int id) {
+		// TODO Auto-generated method stub
+		switch (id) {
+		case 1:
+			imgCutlery.setBackgroundResource(R.drawable.icon_tab_cutlery_active);
+			imgWine.setBackgroundResource(R.drawable.icon_tab_wine_normal);
+			imgCoffe.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
+			imgHotel.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
+			break;
+		case 2:
+			imgCutlery.setBackgroundResource(R.drawable.icon_tab_cutlery_normal);
+			imgWine.setBackgroundResource(R.drawable.icon_tab_wine_normal);
+			imgCoffe.setBackgroundResource(R.drawable.icon_tab_coffee_active);
+			imgHotel.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
+			break;
+		case 3:
+			imgCutlery.setBackgroundResource(R.drawable.icon_tab_cutlery_normal);
+			imgWine.setBackgroundResource(R.drawable.icon_tab_wine_normal);
+			imgCoffe.setBackgroundResource(R.drawable.icon_tab_coffee_active);
+			imgHotel.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
+			break;
+		case 4:
+			imgCutlery.setBackgroundResource(R.drawable.icon_tab_cutlery_normal);
+			imgWine.setBackgroundResource(R.drawable.icon_tab_wine_normal);
+			imgCoffe.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
+			imgHotel.setBackgroundResource(R.drawable.icon_tab_coffee_active);
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	/*
  * Clicked Listener
  * 
  */
@@ -727,10 +762,12 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private void showFilterView() {
 		// TODO Auto-generated method stub
 		lnFilter.setVisibility(View.VISIBLE);
+		imgArrowDown.setVisibility(View.VISIBLE);
 	}
 
 	private void hideFilterView() {
 		// TODO Auto-generated method stub
 		lnFilter.setVisibility(View.GONE);
+		imgArrowDown.setVisibility(View.GONE);
 	}
 }

@@ -81,6 +81,9 @@
             android:name="whyq.activity.ImageActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="whyq.activity.WhyCommentActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="whyq.activity.NewWhyqActivity"
             android:screenOrientation="portrait"
             android:theme="@style/toggle_style" >
@@ -149,6 +152,14 @@
         <activity
             android:name="whyq.activity.RecorderActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.activity.WhyqFindMenuActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="whyq.activity.WhyQNotificationActivity"
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name="whyq.activity.RewhyqActivity"
             android:screenOrientation="portrait" />

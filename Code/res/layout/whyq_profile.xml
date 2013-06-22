@@ -9,32 +9,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8" >
+        android:layout_weight="1" >
 
-        <include layout="@layout/navigationbar_bk" />
+        <include layout="@layout/navigation_title_text" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="59dp"
-        android:layout_weight="9.2"
+        android:layout_weight="9"
         android:orientation="vertical" >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="PROFILE" />
+            android:text="PROFILE"
+            android:textColor="@color/profifle_blue" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="#434343" />
+            android:background="@color/profifle_blue" />
 
         <TextView
+            style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
@@ -45,9 +47,10 @@
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="#434343" />
+            android:background="@color/normal_delivery_color" />
 
         <TextView
+            style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
@@ -58,9 +61,10 @@
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="#434343" />
+            android:background="@color/normal_delivery_color" />
 
         <TextView
+            style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
@@ -71,9 +75,10 @@
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="#434343" />
+            android:background="@color/normal_delivery_color" />
 
         <TextView
+            style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
@@ -84,16 +89,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="PROFILE" />
+            android:text="WHYQ"
+            android:textColor="@color/profifle_blue" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="2dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="#434343" />
+            android:background="@color/profifle_blue" />
 
         <TextView
+            style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
@@ -105,9 +112,10 @@
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="#434343" />
+            android:background="@color/normal_delivery_color" />
 
         <TextView
+            style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
@@ -118,9 +126,10 @@
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="#434343" />
+            android:background="@color/normal_delivery_color" />
 
         <TextView
+            style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"

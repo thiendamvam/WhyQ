@@ -116,7 +116,7 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
-						R.layout.bill_list_item, parent, false);
+						R.layout.whyq_bill_list_item, parent, false);
 			}
 
 			ViewHolder holder = getViewHolder(convertView);

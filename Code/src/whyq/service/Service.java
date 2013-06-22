@@ -252,6 +252,9 @@ public class Service implements Runnable {
 		case ActionGetBusinessDetail:
 			resObj = parser.parseBusinessDetail(result);
 			break;
+		case ActionComment:
+			resObj = parser.parseCommentResult(result);
+			break;
 		}
 		if (resObj == null)
 			response = new ServiceResponse(act, null, ResultCode.Failed);
@@ -435,6 +438,16 @@ public class Service implements Runnable {
 		params.put("page", page);
 		params.put("count", count);
 		request("/m/member/order", params, true, false);
+	}
+
+	public void exeComment(String string, String storeId) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionComment;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", WhyqApplication.Instance().getRSAToken());
+		params.put("store_id", storeId);
+		request("/m/business/show", params, true, false);
+		
 	}
 
 }

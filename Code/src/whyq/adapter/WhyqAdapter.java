@@ -74,6 +74,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 		private TextView tvItemName, tvNumberFavourite,tvItemAddress, tvVisited, tvDiscoutNumber;
 		private Button btnDistance;
 		public String id;
+		public ImageView imgFavouriteThumb;
 	}
 	private Activity activity;
 	private Boolean header;
@@ -194,11 +195,17 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					viewHolder.tvVisited = (TextView)rowView.findViewById(R.id.tvVisited);
 					viewHolder.tvDiscoutNumber = (TextView)rowView.findViewById(R.id.tvNumberDiscount);
 					viewHolder.btnDistance = (Button)rowView.findViewById(R.id.btnDistance);
-
-					viewHolder.tvItemName.setText(item.getNameStore());
+					viewHolder.imgFavouriteThumb = (ImageView)rowView.findViewById(R.id.imgFavourite);
+					viewHolder.tvItemName.setText(item.getNameStore().toUpperCase());
 					viewHolder.tvItemAddress.setText(item.getAddress());
 					viewHolder.tvNumberFavourite.setText(""+item.getCountFavaouriteMember());
 					viewHolder.btnDistance.setText("");
+					if(item.getCountFavaouriteMember() !=null)
+						if(!item.getCountFavaouriteMember().equals(""))
+							if(Integer.parseInt(item.getCountFavaouriteMember()) >0){
+//								viewHolder.imgFavouriteThumb.setBackgroundResource(R.drawable.icon_fav_enable);
+								viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
+					}
 					UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
 					rowView.setTag(viewHolder);
 					rowView.setOnClickListener(new View.OnClickListener() {
