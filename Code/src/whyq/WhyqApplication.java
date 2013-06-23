@@ -35,7 +35,9 @@ public class WhyqApplication extends Application {
 	public static int sScreenHeight;
 	public static int sBaseViewHeight;
 	public static int sBaseViewPadding;
-	public static Typeface sTypeface;
+	public static Typeface sTypefaceRegular;
+	public static Typeface sTypefaceBold;
+	public static Typeface sTypefaceItalic;
 
 	/**
 	 * The current login type 
@@ -53,7 +55,9 @@ public class WhyqApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		sTypeface = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
+		sTypefaceRegular = Typeface.createFromAsset(getAssets(), "Roboto-Regular.ttf");
+		sTypefaceBold = Typeface.createFromAsset(getAssets(), "Roboto-Bold.ttf");
+		sTypefaceItalic = Typeface.createFromAsset(getAssets(), "Roboto-Italic.ttf");
 	}
 	
 	public static void initScreenSize(int width, int height) {

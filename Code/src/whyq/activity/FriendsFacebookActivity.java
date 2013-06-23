@@ -268,7 +268,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 							R.layout.friend_list_item_secondary, parent, false);
 				}
 				
-				Util.applyTypeface(convertView, WhyqApplication.sTypeface);
+				Util.applyTypeface(convertView, WhyqApplication.sTypefaceRegular);
 			}
 
 			final ViewHolder holder = getViewHolder(convertView);
@@ -382,7 +382,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 			if (convertView == null) {
 				convertView = mActivity.getLayoutInflater().inflate(
 						R.layout.friend_list_item, parent, false);
-				Util.applyTypeface(convertView, WhyqApplication.sTypeface);
+				Util.applyTypeface(convertView, WhyqApplication.sTypefaceRegular);
 			}
 
 			final ViewHolder holder = getViewHolder(convertView);

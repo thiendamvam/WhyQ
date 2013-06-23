@@ -100,7 +100,7 @@ public class CommentActivity extends ImageWorkerActivity {
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.comment_list_item, parent, false);
-				Util.applyTypeface(convertView, WhyqApplication.sTypeface);
+				Util.applyTypeface(convertView, WhyqApplication.sTypefaceRegular);
 			}
 
 			ViewHolder holder = getViewHolder(convertView);

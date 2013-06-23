@@ -2,18 +2,6 @@ package whyq.model;
 
 public class Photo {
 
-	private static final String TAG_ID = "id";
-	private static final String TAG_STORE_ID = "store_id";
-	private static final String TAG_USER_ID = "user_id";
-	private static final String TAG_COMMENT_ID = "comment_id";
-	private static final String TAG_IMAGE = "image";
-	private static final String TAG_THUMB = "thumb";
-	private static final String TAG_STATUS = "status";
-	private static final String TAG_TYPE_PHOTO = "type_photo";
-	private static final String TAG_CREATEDATE = "createdate";
-	private static final String TAG_UPDATEDATE = "updatedate";
-
-	
 	private String id;
 	private String store_id;
 	private String user_id;

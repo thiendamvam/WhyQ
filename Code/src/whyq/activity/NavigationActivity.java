@@ -63,7 +63,7 @@ public class NavigationActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Util.applyTypeface(findViewById(R.id.navigationContentView), WhyqApplication.sTypeface);
+		Util.applyTypeface(findViewById(R.id.navigationContentView), WhyqApplication.sTypefaceRegular);
 	}
 
 	@Override
