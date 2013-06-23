@@ -15,7 +15,7 @@
     <string name="bt_cancel">Cancel</string>
     <string name="screen_login">Whyq.com/Login</string>
     <string name="first_name">First Name</string>
-     <string name="last_name">Last Name</string>
+    <string name="last_name">Last Name</string>
     <string name="acc_email">Email</string>
     <string name="acc_password">Password</string>
     <string name="acc_confirm_password">Confirm Password</string>
@@ -46,11 +46,10 @@
     <string name="confirm_password">Re-enter Password</string>
     <string name="required">required</string>
     <string name="login">로그인</string>
-    <string name="image_take_photo">카메라 촬영</string>
-    <string name="gallery">앨범에서 선택</string>
+    <string name="image_take_photo">Take a photo</string>
+    <string name="gallery">From gallry</string>
     <string name="create_board">보드 만들기</string>
-    <string name="new_description">당신의 이야기를 
-담아 주세요</string>
+    <string name="new_description">당신의 이야기를 담아 주세요</string>
     <string name="new_board">보드</string>
     <string name="new_place">위치</string>
     <string name="new_facebook">페이스북</string>
@@ -65,9 +64,9 @@
     <string name="welcome2">순간의 이야기를 펌핑과 함께</string>
     <string name="exit_title">Exit App</string>
     <string name="exit_content">Do you want to exit?</string>
-    <string name="yes">종료</string>
+    <string name="yes">Yes</string>
     <string name="yes_delete">예</string>
-    <string name="no">아니오</string>
+    <string name="no">No</string>
     <string name="delete">삭제</string>
     <string name="addProfile">프로파일 사진 올리기</string>
     <string name="app_info">Please record an audio</string>
@@ -90,5 +89,11 @@
     <string name="friends">Friends</string>
     <string name="checked_bills">Checked Bills</string>
     <string name="recent_activities">Recent activities</string>
-
-</resources>
+    <string name="find_friend_twitter">Find friends from Twitter</string>
+    <string name="search_by_name">Search by name</string>
+    <string name="find_friend_from_facebook">Find friends form Facebook</string>
+    <string name="find_friends_from_twitter">Find friends from Twitter</string>
+    <string name="receive_notification_from_whyq">Receive notification from WHYQ</string>
+    <string name="allow_user_to_see_my_friend">Allow user to see my friends</string>
+    <string name="sounds_notification">Sounds notification</string>
+</resources>

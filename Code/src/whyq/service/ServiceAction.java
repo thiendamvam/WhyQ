@@ -10,6 +10,7 @@ public enum ServiceAction {
     ActionGetFriendsFacebook, 
     ActionGetFriends, 
     ActionGetBusinessDetail,
+    ActionComment,
     ActionGetUserActivities,
     ActionPostComment, 
     ActionSearchFriendsFacebook, ActionInviteFriendsFacebook, ActionGetComment, ActionCheckedBills, ActionGetBills,

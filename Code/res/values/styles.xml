@@ -120,4 +120,9 @@
         <!-- Perhaps more theme items here...? -->
     </style>
 
+    <style name="normail_text">
+        <item name="android:textColor">@color/normal_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>

@@ -403,4 +403,9 @@ public class DataParser {
 		return doc;
 
 	}
+
+	public Object parseCommentResult(String result) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

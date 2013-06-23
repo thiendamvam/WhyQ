@@ -3,6 +3,7 @@ package whyq.activity;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import whyq.WhyqMain;
 import whyq.model.User;
@@ -10,6 +11,9 @@ import whyq.utils.WhyqUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -100,29 +104,6 @@ public class ImageActivity extends Activity {
 	}
 
 	public void showCamera(){
-//		try {
-//
-//	        String fileName = "temp.jpg";  
-//	        ContentValues values = new ContentValues();  
-////	        values.put(MediaStore.Images.Media.TITLE, fileName);  
-//	        mCapturedImageURI = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);  
-//
-//	        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);  
-//	        intent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);  
-//			Context context = ImageActivity.this;
-//			PackageManager packageManager = context.getPackageManager();
-//	 
-//			// if device support camera?
-//			if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-//				 getParent().startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-//			}
-//	       
-//	  
-//	        
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			Logger.appendLog(e.toString(), "takePhotoLog");
-//		}
 		try {
 			FileOutputStream fos = openFileOutput("MyFile.jpg", Context.MODE_WORLD_WRITEABLE);
 			fos.close();
@@ -142,6 +123,55 @@ public class ImageActivity extends Activity {
 
 			}
 	}
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if (resultCode == RESULT_OK) {
+	        if (requestCode == SELECT_PICTURE || requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ) {
+	        	String selectedImagePath = "";
+	        	if( data == null  ) {	        		
+	        		selectedImagePath = ImageActivity.imagePath;
+	        		try {
+	        			InputStream is = openFileInput("MyFile.jpg");
+	        			BitmapFactory.Options options = new BitmapFactory.Options();
+	        			//options.inSampleSize = 4;
+	        			Bitmap retrievedBitmap = BitmapFactory.decodeStream(is, null, options);
+	        			}
+	        			catch(IOException e) {
+
+	        			}
+	        	} else {
+		            Uri selectedImageUri = data.getData();
+		            
+		            if( requestCode == SELECT_PICTURE ){
+		            	selectedImagePath = getPath(selectedImageUri);
+		            } else {
+
+		            	selectedImagePath = ImageActivity.imagePath;
+		            }
+
+	        	}
+
+					
+
+
+	        }
+	    }
+	    
+	    ImageActivity.imagePath = "";
+	}
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        if(cursor!=null)
+        {
+            //HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+            //THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+            int column_index = cursor
+            .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        else return null;
+    }
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)

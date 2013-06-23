@@ -332,10 +332,10 @@ public void on_error() {
 		Intent intent = new Intent(context, JoinWhyqActivity.class);
 		context.startActivity(intent);
 	}else{
-		hideDialog();
-		Toast toast = Toast.makeText(getApplicationContext(), "Authentication failed!. Please try again!", Toast.LENGTH_LONG);
-		toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 300);
-		toast.show();
+//		hideDialog();
+//		Toast toast = Toast.makeText(getApplicationContext(), "Authentication failed!. Please try again!", Toast.LENGTH_LONG);
+//		toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 300);
+//		toast.show();
 		
 	}
 }
