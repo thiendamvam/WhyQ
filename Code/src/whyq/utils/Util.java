@@ -24,11 +24,15 @@ import javax.crypto.NoSuchPaddingException;
 import whyq.WhyqApplication;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.text.format.DateUtils;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.whyq.R;
 
@@ -183,6 +187,17 @@ public class Util {
 	public static String decryptToken(String token) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
 		RSA rsa = new RSA();
 		return rsa.RSADecrypt(token);
+	}
+	
+	public static void applyTypeface(View view, Typeface tf) {
+		if (view instanceof TextView) {
+	        ((TextView) view).setTypeface(tf);
+		} else if (view instanceof ViewGroup) {
+			ViewGroup group = (ViewGroup) view;
+			for (int i = 0, count = group.getChildCount(); i < count; i++) {
+				applyTypeface(group.getChildAt(i), tf);
+			}
+		}
 	}
 
 

@@ -1,10 +1,12 @@
 package whyq.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import whyq.WhyqApplication;
 import whyq.interfaces.FriendFacebookController;
 import whyq.model.FriendFacebook;
+import whyq.model.FriendWhyq;
 import whyq.model.SearchFriendCriteria;
 import whyq.model.StatusWithFriend;
 import whyq.service.DataParser;
@@ -13,6 +15,7 @@ import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
 import whyq.utils.SpannableUtils;
+import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
 import whyq.view.SearchField;
@@ -35,7 +38,10 @@ import com.whyq.R;
 public class FriendsFacebookActivity extends ImageWorkerActivity implements
 		QueryCallback {
 
-	private FriendsFacebookAdapter mAdapter;
+	private FriendsFacebookAdapter mFriendFacebookAdapter = null;
+	private FriendsWhyqAdapter mFriendWhyqAdapter = null;
+	private String mAccessToken;
+	private ListView mListview;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,33 +49,50 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 
 		setContentView(R.layout.activity_facebook_friends);
 
-		setTitle(R.string.friend_from_facebook);
-
 		SearchField searchField = (SearchField) findViewById(R.id.searchField);
-
-		searchField.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 
 		searchField.setQueryCallback(this);
 
-		mAdapter = new FriendsFacebookAdapter(this, mImageWorker);
-		ListView listview = (ListView) findViewById(R.id.listview);
-		listview.setAdapter(mAdapter);
-		listview.setOnItemClickListener(new OnItemClickListener() {
+		mListview = (ListView) findViewById(R.id.listview);
+		mListview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				final Object item = mAdapter.getItem(arg2);
+				final Object item = arg0.getItemAtPosition(arg2);
 				if (item instanceof FriendFacebook) {
-					Intent i = new Intent(FriendsFacebookActivity.this,
-							UserBoardActivity.class);
-					startActivity(i);
-				} 
+					FriendFacebook facebook = (FriendFacebook) item;
+					startUserProfileActivity(facebook.getId(),
+							facebook.getFirstName(), facebook.getAvatar());
+				} else if (item instanceof FriendWhyq) {
+					FriendWhyq whyq = (FriendWhyq) item;
+					startUserProfileActivity(whyq.getId(),
+							whyq.getFirst_name(), whyq.getAvatar());
+				}
 			}
 		});
 
+		mFriendWhyqAdapter = new FriendsWhyqAdapter(this, mImageWorker);
+		mFriendFacebookAdapter = new FriendsFacebookAdapter(this, mImageWorker);
+		mAccessToken = getAccessToken();
+
+		if (mAccessToken == null) {
+			setTitle(R.string.friends);
+		} else {
+			setTitle(R.string.friend_from_facebook);
+		}
+
 		getFriends();
 
+	}
+
+	private void startUserProfileActivity(String userId, String userName,
+			String avatar) {
+		Intent i = new Intent(this, UserBoardActivity.class);
+		i.putExtra(UserBoardActivity.ARG_USER_ID, userId);
+		i.putExtra(UserBoardActivity.ARG_USER_NAME, userName);
+		i.putExtra(UserBoardActivity.ARG_AVATAR, avatar);
+		startActivity(i);
 	}
 
 	private String getAccessToken() {
@@ -94,21 +117,35 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 			if (result.getAction() == ServiceAction.ActionInviteFriendsFacebook) {
 
 			} else {
-				FriendFacebookController handler = DataParser
-						.parseFriendFacebook(String.valueOf(result.getData()));
-				mAdapter.setController(handler);
+				if (result.getAction() == ServiceAction.ActionGetFriendsFacebook
+						|| result.getAction() == ServiceAction.ActionSearchFriendsFacebook) {
+					FriendFacebookController handler = DataParser
+							.parseFriendFacebook(String.valueOf(result
+									.getData()));
+					mFriendFacebookAdapter.setController(handler);
+				} else {
+					mFriendWhyqAdapter.setItems(DataParser
+							.parseFriendWhyq(String.valueOf(result.getData())));
+				}
 			}
 		}
 	}
 
 	private void searchFriends(String queryString) {
+		if (mFriendFacebookAdapter == null) {
+			mFriendFacebookAdapter = new FriendsFacebookAdapter(this,
+					mImageWorker);
+		}
+		mListview.setAdapter(mFriendFacebookAdapter);
+
 		Service service = getService();
 		setLoading(true);
-		final String accessToken = getAccessToken();
-		if (accessToken == null || accessToken.length() == 0) {
-			service.searchFriends(SearchFriendCriteria.whyq, getEncryptedToken(), queryString, null, null, null);
+		if (mAccessToken == null || mAccessToken.length() == 0) {
+			service.searchFriends(SearchFriendCriteria.whyq,
+					getEncryptedToken(), queryString, null, null, null);
 		} else {
-			service.searchFriends(SearchFriendCriteria.facebook, getEncryptedToken(), queryString, accessToken, null, null);
+			service.searchFriends(SearchFriendCriteria.facebook,
+					getEncryptedToken(), queryString, mAccessToken, null, null);
 		}
 
 	}
@@ -116,11 +153,13 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 	private void getFriends() {
 		Service service = getService();
 		setLoading(true);
-		final String accessToken = getAccessToken();
-		if (accessToken == null || accessToken.length() == 0) {
-			service.getFriends(getEncryptedToken(), XMLParser.getValue(this, XMLParser.STORE_USER_ID));
+		if (mAccessToken == null || mAccessToken.length() == 0) {
+			mListview.setAdapter(mFriendWhyqAdapter);
+			service.getFriends(getEncryptedToken(),
+					XMLParser.getValue(this, XMLParser.STORE_USER_ID));
 		} else {
-			service.getFriendsFacebook(getEncryptedToken(), accessToken);
+			mListview.setAdapter(mFriendFacebookAdapter);
+			service.getFriendsFacebook(getEncryptedToken(), mAccessToken);
 		}
 	}
 
@@ -228,6 +267,8 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 					convertView = mActivity.getLayoutInflater().inflate(
 							R.layout.friend_list_item_secondary, parent, false);
 				}
+				
+				Util.applyTypeface(convertView, WhyqApplication.sTypeface);
 			}
 
 			final ViewHolder holder = getViewHolder(convertView);
@@ -293,6 +334,88 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 				}
 				name = (TextView) view.findViewById(R.id.name);
 				action = (Button) view.findViewById(R.id.action);
+			}
+		}
+
+	}
+
+	static class FriendsWhyqAdapter extends BaseAdapter {
+
+		private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
+		private FriendsFacebookActivity mActivity;
+		private List<FriendWhyq> listWhyq;
+		private ImageWorker mImageWorker;
+
+		public FriendsWhyqAdapter(FriendsFacebookActivity context,
+				ImageWorker imageWorker) {
+			this.mActivity = context;
+			this.mImageWorker = imageWorker;
+			this.listWhyq = new ArrayList<FriendWhyq>();
+		}
+
+		public void setItems(List<FriendWhyq> items) {
+			if (items == null || items.size() == 0) {
+				listWhyq.clear();
+			} else {
+				listWhyq = items;
+			}
+			notifyDataSetChanged();
+		}
+
+		@Override
+		public int getCount() {
+			return listWhyq.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return listWhyq.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				convertView = mActivity.getLayoutInflater().inflate(
+						R.layout.friend_list_item, parent, false);
+				Util.applyTypeface(convertView, WhyqApplication.sTypeface);
+			}
+
+			final ViewHolder holder = getViewHolder(convertView);
+
+			final FriendWhyq item = listWhyq.get(position);
+			holder.name.setText(item.getFirst_name());
+			mImageWorker.loadImage(item.getAvatar(), holder.avatar,
+					AVATAR_SIZE, AVATAR_SIZE);
+			return convertView;
+		}
+
+		private ViewHolder getViewHolder(View view) {
+			ViewHolder holder = (ViewHolder) view.getTag();
+			if (holder == null) {
+				holder = new ViewHolder(view);
+				view.setTag(holder);
+			}
+			return holder;
+		}
+
+		class ViewHolder {
+			ImageView avatar;
+			TextView name;
+
+			public ViewHolder(View view) {
+				view.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+				avatar = (ImageView) view.findViewById(R.id.avatar);
+				if (avatar != null) {
+					avatar.getLayoutParams().width = AVATAR_SIZE;
+					avatar.getLayoutParams().height = AVATAR_SIZE;
+				}
+				name = (TextView) view.findViewById(R.id.name);
+				view.findViewById(R.id.action).setVisibility(View.GONE);
 			}
 		}
 

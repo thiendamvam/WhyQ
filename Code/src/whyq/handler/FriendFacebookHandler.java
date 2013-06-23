@@ -21,6 +21,7 @@ public class FriendFacebookHandler extends DefaultHandler implements FriendFaceb
 
 	private static final String TAG_LIST_NOT_JOIN_WHYQ = "list_not_join_whyq";
 	private static final String TAG_LIST_JOIN_WHYQ = "list_join_whyq";
+	private static final String TAG_OBJ = "obj";
 	private static final String TAG_DATA = "data";
 	private static final String TAG_FACEBOOK_ID = "facebook_id";
 	private static final String TAG_ITUNE_URL = "ituneUrl";
@@ -73,7 +74,7 @@ public class FriendFacebookHandler extends DefaultHandler implements FriendFaceb
 
 		buffer.setLength(0);
 
-		if (localName.equals(TAG_DATA)) {
+		if (localName.equals(TAG_OBJ)) {
 			friendfacebook = new FriendFacebook();
 		} else if (localName.equals(TAG_LIST_NOT_JOIN_WHYQ)) {
 			isListNotJoinWhyq = true;

@@ -208,8 +208,6 @@
             android:name="whyq.activity.ProfileWhyQActivty"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <uses-library android:name="com.google.android.maps" />
     </application>
 
 </manifest>

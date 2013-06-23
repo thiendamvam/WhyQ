@@ -28,9 +28,14 @@ import com.whyq.R;
 
 public class UserBoardActivity extends ImageWorkerActivity {
 
+	public static final String ARG_USER_NAME = "username";
+	public static final String ARG_USER_ID = "userid";
+	public static final String ARG_AVATAR = "avatar";
+
 	private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 	private ActivitiesAdapter mAdapter;
 	private String mUserFirstName;
+	protected String mUserId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +45,21 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 		initCategory();
 
-		mUserFirstName = XMLParser.getValue(this, XMLParser.STORE_USER_NAME);
+		Intent i = getIntent();
+
+		mUserFirstName = i.getStringExtra(ARG_USER_NAME);
+		if (mUserFirstName == null) {
+			mUserFirstName = XMLParser
+					.getValue(this, XMLParser.STORE_USER_NAME);
+		}
 		if (mUserFirstName != null) {
 			setTitle(mUserFirstName);
 		}
-		final String avatar = XMLParser.getValue(this,
-				XMLParser.STORE_USER_AVATAR);
+		String avatar = i.getStringExtra(ARG_AVATAR);
+		if (avatar == null) {
+			avatar = XMLParser.getValue(this, XMLParser.STORE_USER_AVATAR);
+		}
+		
 		if (avatar != null) {
 			ImageView imageView = (ImageView) findViewById(R.id.avatar);
 			LayoutParams LP = imageView.getLayoutParams();
@@ -60,8 +74,13 @@ public class UserBoardActivity extends ImageWorkerActivity {
 		final Service service = getService();
 
 		setLoading(true);
-		final String userId = XMLParser.getUserId(this);
-		service.getUserActivities(getEncryptedToken(), userId);
+		
+		mUserId = i.getStringExtra(ARG_USER_ID);
+		if (mUserId == null) {
+			mUserId = XMLParser.getUserId(this);
+		}
+		
+		service.getUserActivities(getEncryptedToken(), mUserId);
 
 	}
 
@@ -82,8 +101,9 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 					@Override
 					public void onClick(View v) {
-						startActivity(new Intent(UserBoardActivity.this,
-								CheckedBillActivity.class));
+						Intent i = new Intent(UserBoardActivity.this, CheckedBillActivity.class);
+						i.putExtra(CheckedBillActivity.ARG_USER_ID, mUserId);
+						startActivity(i);
 					}
 				});
 		bindCategory(R.id.history, R.drawable.icon_cat_cutlery, "15",
@@ -147,7 +167,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 		return titleView;
 	}
 
-	class ActivitiesAdapter extends BaseAdapter {
+	static class ActivitiesAdapter extends BaseAdapter {
 
 		private Context mContext;
 		private List<ActivityItem> mItems;
@@ -193,7 +213,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 			holder.activity.setText(Html.fromHtml(item.getMessage()));
 			holder.activity.setCompoundDrawablesWithIntrinsicBounds(
-					R.drawable.icon_quote, 0, 0, 0);
+					R.drawable.user_activity, 0, 0, 0);
 
 			return convertView;
 		}

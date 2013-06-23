@@ -66,7 +66,7 @@ public class BoardHandler extends DefaultHandler {
 		} else if (localName != null && localName.equals(Constants.USER)) {
 //			whyq.setAuthor(user);
 		} else if (localName != null && localName.equals(Constants.L_USER)) {
-			comment.setAuthor(commentAuthor);
+			comment.setUser(commentAuthor);
 		} else if (localName != null && localName.equals(Constants.USER_ID)) {
 			user.setId(buffer.toString());
 		} else if (localName != null && localName.equals(Constants.L_USER_ID)) {

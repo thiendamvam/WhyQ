@@ -10,6 +10,7 @@ import whyq.utils.XMLParser;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
@@ -24,14 +25,17 @@ public class WhyqApplication extends Application {
 	 * The perm user stored in application context
 	 */
 	private User user;
+	public static final float RATIO_BASE_HEIGHT = 0.08f;
 	public static final String ACCESS_TOKEN = "access_token";
 	public static final String REFESH_TOKEN = "refresh_token";
 	public static final String TOKEN_EXPIRED_TIME = "expires_in";
 	public static String DEVICE_ID = "noID";
 	public static final String DISK_CACHE_DIR = "images";
-	public static int sScreenWidth;
+	public static int sScreenWidth = 0;
 	public static int sScreenHeight;
 	public static int sBaseViewHeight;
+	public static int sBaseViewPadding;
+	public static Typeface sTypeface;
 
 	/**
 	 * The current login type 
@@ -44,6 +48,20 @@ public class WhyqApplication extends Application {
 		super();
 		_instance = this;
 
+	}
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		sTypeface = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
+	}
+	
+	public static void initScreenSize(int width, int height) {
+		if (sScreenWidth == 0) {
+			sScreenHeight = height;
+			sScreenWidth = width;
+			sBaseViewHeight = (int) (sScreenHeight * RATIO_BASE_HEIGHT);
+		}
 	}
 
 	public static WhyqApplication Instance() {
