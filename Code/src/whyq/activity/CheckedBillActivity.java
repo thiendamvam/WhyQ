@@ -5,13 +5,13 @@ import java.util.List;
 
 import whyq.WhyqApplication;
 import whyq.model.BillItem;
+import whyq.service.DataParser;
 import whyq.service.Service;
+import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +29,8 @@ import com.whyq.R;
 
 public class CheckedBillActivity extends ImageWorkerActivity {
 
+	public static final String ARG_USER_ID = "userid";
+	
 	private BillAdapter mAdapter;
 
 	@Override
@@ -117,7 +119,7 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
-						R.layout.bill_list_item, parent, false);
+						R.layout.whyq_bill_list_item, parent, false);
 			}
 
 			ViewHolder holder = getViewHolder(convertView);
