@@ -612,8 +612,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			break;
 		case 2:
 			imgCutlery.setBackgroundResource(R.drawable.icon_tab_cutlery_normal);
-			imgWine.setBackgroundResource(R.drawable.icon_tab_wine_normal);
-			imgCoffe.setBackgroundResource(R.drawable.icon_tab_coffee_active);
+			imgWine.setBackgroundResource(R.drawable.icon_tab_wine_active);
+			imgCoffe.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
 			imgHotel.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
 			break;
 		case 3:
@@ -648,6 +648,9 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	public void onCoffeTabClicked(View v){
 		resetTabBarFocus(3);
+	}
+	public void onHotelTabClicked(View v){
+		resetTabBarFocus(4);
 	}
 	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
 		public void beforeTextChanged(CharSequence s, int start, int count,

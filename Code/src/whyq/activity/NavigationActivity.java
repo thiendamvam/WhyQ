@@ -29,7 +29,7 @@ public class NavigationActivity extends FragmentActivity {
 		FrameLayout titleContainer = (FrameLayout) findViewById(R.id.titleContainer);
 		titleContainer.addView(getTitleView());
 
-		textviewTitle = (TextView) findViewById(R.id.textviewTitle);
+		textviewTitle = (TextView) findViewById(R.id.tvHeaderTitle);
 		
 		View navigationBar = findViewById(R.id.navigationBar);
 		navigationBar.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
