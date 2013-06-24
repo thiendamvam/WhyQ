@@ -71,7 +71,7 @@ public class Service implements Runnable {
 
 	public void getComments(String encryptedToken, String store_id, int page,
 			int count) {
-		_action = ServiceAction.ActionLogout;
+		_action = ServiceAction.ActionGetComment;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("store_id", store_id);
@@ -239,14 +239,12 @@ public class Service implements Runnable {
 		case ActionLoginTwitter:
 			resObj = parser.parserLoginData(result);
 			break;
+		case ActionGetUserActivities:
 		case ActionGetFriendsFacebook:
 		case ActionGetFriends:
-			resObj = result;
-			break;
-		case ActionGetUserActivities:
-			resObj = result;
-			break;
 		case ActionSearchFriendsFacebook:
+		case ActionGetComment:
+		case ActionCheckedBills:
 			resObj = result;
 			break;
 		case ActionGetBusinessDetail:
@@ -431,13 +429,12 @@ public class Service implements Runnable {
 		request("/m/business/show", params, true, false);
 	}
 
-	public void getBills(String encryptedToken, String page, String count) {
-		_action = ServiceAction.ActionGetBusinessDetail;
+	public void getCheckedBills(String encryptedToken, String userId) {
+		_action = ServiceAction.ActionCheckedBills;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
-		params.put("page", page);
-		params.put("count", count);
-		request("/m/member/order", params, true, false);
+		params.put("user_id", userId);
+		request("/m/member/profile/order", params, true, false);
 	}
 
 	public void exeComment(String string, String storeId) {
@@ -447,6 +444,12 @@ public class Service implements Runnable {
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", storeId);
 		request("/m/business/show", params, true, false);
+		
+	}
+
+	public void orderDelivery(String storeId, String otherAddress,
+			String phoneNumber, String hours, String minutes) {
+		// TODO Auto-generated method stub
 		
 	}
 
