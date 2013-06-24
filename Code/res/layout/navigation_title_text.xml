@@ -2,11 +2,7 @@
     android:id="@+id/titlebar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="0dip"
-    android:angle="90"
-    android:background="@drawable/bg_ationbar"
-    android:orientation="vertical" >
-
+    android:background="@drawable/bg_ationbar">
     <Button
         android:id="@+id/btn_back"
         android:layout_width="12dp"
@@ -37,3 +33,4 @@
 
 
 </RelativeLayout>
+
