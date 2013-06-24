@@ -124,7 +124,7 @@ public class BillHandler extends BaseHandler {
 			} else if (localName.equalsIgnoreCase(TAG_START_TIME)) {
 				currentBusinessInfo.setStart_time(getString());
 			} else if (localName.equalsIgnoreCase(TAG_START_TIME_DELIVER)) {
-				currentBusinessInfo.setStart_time_deliver(getInt());
+				currentBusinessInfo.setStart_time_deliver(getString());
 			} else if (localName.equalsIgnoreCase(TAG_STATUS)) {
 				currentBusinessInfo.setStatus(getString());
 			} else if (localName.equalsIgnoreCase(TAG_STORE_ID)) {

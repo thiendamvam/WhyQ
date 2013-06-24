@@ -8,6 +8,7 @@ import whyq.model.ActivityItem;
 import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
+import whyq.utils.Util;
 import whyq.utils.XMLParser;
 import android.content.Context;
 import android.content.Intent;
@@ -143,7 +144,6 @@ public class UserBoardActivity extends ImageWorkerActivity {
 	private void bindCategory(int id, int iconRes, String textTop,
 			String textBottom, OnClickListener listener) {
 		View categoryView = findViewById(id);
-		categoryView.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 		categoryView.setOnClickListener(listener);
 		ImageView icon = (ImageView) categoryView.findViewById(R.id.icon);
 		icon.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
@@ -206,6 +206,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.activities_list_item, parent, false);
+				Util.applyTypeface(convertView, WhyqApplication.sTypefaceRegular);
 			}
 
 			ViewHolder holder = getViewHolder(convertView);

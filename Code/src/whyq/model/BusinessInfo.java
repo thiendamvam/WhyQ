@@ -26,7 +26,7 @@ public class BusinessInfo {
 	private boolean is_hotel_deliver;
 	private boolean is_take_away;
 	private boolean is_at_place;
-	private int start_time_deliver;
+	private String start_time_deliver;
 	private String end_time_deliver;
 	private String minimun_time_deliver;
 	private String value_condition_deliver;
@@ -188,10 +188,10 @@ public class BusinessInfo {
 	public void setIs_at_place(boolean is_at_place) {
 		this.is_at_place = is_at_place;
 	}
-	public int getStart_time_deliver() {
+	public String getStart_time_deliver() {
 		return start_time_deliver;
 	}
-	public void setStart_time_deliver(int start_time_deliver) {
+	public void setStart_time_deliver(String start_time_deliver) {
 		this.start_time_deliver = start_time_deliver;
 	}
 	public String getEnd_time_deliver() {

@@ -40,7 +40,7 @@
     </style>
 
     <style name="text_secondary">
-        <item name="android:textSize">@dimen/base_font</item>
+        <item name="android:textSize">@dimen/font_small</item>
         <item name="android:textColor">@android:color/secondary_text_dark_nodisable</item>
     </style>
 
@@ -48,26 +48,30 @@
         <item name="android:textSize">@dimen/font_large</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
-    
-     <style name="text_large">
+
+    <style name="text_large">
         <item name="android:textSize">@dimen/font_large</item>
         <item name="android:textColor">#5c5c5c</item>
     </style>
-    
-     <style name="text_medium">
+
+    <style name="text_medium">
         <item name="android:textSize">@dimen/font_medium</item>
         <item name="android:textColor">#5c5c5c</item>
     </style>
-    
-     <style name="text_small">
+
+    <style name="text_small">
         <item name="android:textSize">@dimen/font_small</item>
         <item name="android:textColor">#5c5c5c</item>
     </style>
 
+    <style name="text_super_small">
+        <item name="android:textSize">@dimen/font_super_small</item>
+        <item name="android:textColor">#5c5c5c</item>
+    </style>
+
     <style name="listview_text">
-        <item name="android:textSize">@dimen/base_font</item>
+        <item name="android:textSize">@dimen/font_medium</item>
         <item name="android:textColor">#2a62a0</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="listview_button">
@@ -124,8 +128,10 @@
         <item name="android:textColor">@color/normal_text_color</item>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="small_grey_text">
         <item name="android:textColor">@color/normal_text_color</item>
         <item name="android:textSize">16sp</item>
     </style>
+
 </resources>

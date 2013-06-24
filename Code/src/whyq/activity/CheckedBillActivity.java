@@ -10,6 +10,7 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
+import whyq.utils.Util;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ import com.whyq.R;
 public class CheckedBillActivity extends ImageWorkerActivity {
 
 	public static final String ARG_USER_ID = "userid";
-	
+
 	private BillAdapter mAdapter;
 
 	@Override
@@ -66,15 +67,15 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 		String userId = getIntent().getStringExtra(ARG_USER_ID);
 		getService().getCheckedBills(getEncryptedToken(), userId);
 	}
-	
+
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
 		setLoading(false);
-		if (result != null
-				&& result.isSuccess()
+		if (result != null && result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionCheckedBills) {
-			DataParser.parseBills(String.valueOf(result.getData()));
+			mAdapter.setItems(DataParser.parseBills(String.valueOf(result
+					.getData())));
 		}
 	}
 
@@ -120,6 +121,8 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.whyq_bill_list_item, parent, false);
+				Util.applyTypeface(convertView,
+						WhyqApplication.sTypefaceRegular);
 			}
 
 			ViewHolder holder = getViewHolder(convertView);
@@ -150,7 +153,6 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 			Button price;
 
 			public ViewHolder(View view) {
-				view.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 				photo = (ImageView) view.findViewById(R.id.photo);
 				photo.getLayoutParams().width = PHOTO_SIZE;
 				photo.getLayoutParams().height = PHOTO_SIZE;

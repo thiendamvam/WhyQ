@@ -32,7 +32,7 @@
 
         <TextView
             android:id="@+id/textviewBottom"
-            style="@style/text_small"
+            style="@style/text_super_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
