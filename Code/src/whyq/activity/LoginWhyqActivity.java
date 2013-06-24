@@ -39,6 +39,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.whyq.BuildConfig;
 import com.whyq.R;
 
 /**
@@ -80,9 +81,11 @@ public class LoginWhyqActivity extends Activity implements Login_delegate {
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         login_delegate = new WhyqMain();
         email         = (EditText) findViewById(R.id.permEmail);
-        email.setText("tantam1810@gmail.com");
         password      = (EditText) findViewById(R.id.permPassword);
-        password.setText("123456");
+        if (BuildConfig.DEBUG) {
+        	email.setText("acthan09022002@gmail.com");
+        	password.setText("123456");
+        }
 //        facebookLogin = (Button) findViewById(R.id.loginfb);
 //        twitterLogin  = (Button) findViewById(R.id.logintw);
         login         = (Button) findViewById(R.id.loginPerm);

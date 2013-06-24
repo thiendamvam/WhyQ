@@ -1,37 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/titlebar"
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/textviewTitle"
+    style="@style/text_title"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="0dip"
-    android:angle="90"
-    android:background="@drawable/bg_ationbar"
-    android:orientation="vertical" >
-
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_centerVertical="true"
-        android:layout_margin="12dp"
-        android:background="@drawable/icon_back"
-        android:onClick="onBack" />
-
-    <View
-        android:layout_width="2dp"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/btn_back"
-        android:background="@drawable/header_divider" />
-
-    <TextView
-        android:id="@+id/permpingTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="7dp"
-        android:layout_toRightOf="@+id/btn_back"
-        android:gravity="center_vertical"
-        android:text="Login"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/text_size_header"
-        android:textStyle="normal" />
-
-</RelativeLayout>
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:ellipsize="marquee"
+    android:gravity="center"
+    android:singleLine="true" />

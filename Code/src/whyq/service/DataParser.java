@@ -20,10 +20,16 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import whyq.handler.ActivityHandler;
+import whyq.handler.BillHandler;
+import whyq.handler.CommentHandler;
 import whyq.handler.FriendFacebookHandler;
+import whyq.handler.FriendWhyqHandler;
 import whyq.handler.UserHandler;
 import whyq.interfaces.FriendFacebookController;
 import whyq.model.ActivityItem;
+import whyq.model.BillItem;
+import whyq.model.Comment;
+import whyq.model.FriendWhyq;
 import whyq.model.Menu;
 import whyq.model.ProductTypeInfo;
 import whyq.model.Store;
@@ -84,6 +90,40 @@ public class DataParser {
 		}
 		return null;
 	}
+	
+	public static final List<BillItem> parseBills(String inputString) {
+		try {
+			XMLReader xmlReader = initializeReader();
+			BillHandler handler = new BillHandler();
+			xmlReader.setContentHandler(handler);
+			xmlReader.parse(new InputSource(new StringReader(inputString)));
+			return handler.getBills();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static final List<Comment> parseComments(String inputString) {
+		try {
+			XMLReader xmlReader = initializeReader();
+			CommentHandler handler = new CommentHandler();
+			xmlReader.setContentHandler(handler);
+			xmlReader.parse(new InputSource(new StringReader(inputString)));
+			return handler.getComments();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static final FriendFacebookController parseFriendFacebook(
 			String inputString) {
@@ -93,6 +133,24 @@ public class DataParser {
 			xmlReader.setContentHandler(handler);
 			xmlReader.parse(new InputSource(new StringReader(inputString)));
 			return handler;
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static final List<FriendWhyq> parseFriendWhyq(
+			String inputString) {
+		try {
+			XMLReader xmlReader = initializeReader();
+			FriendWhyqHandler handler = new FriendWhyqHandler();
+			xmlReader.setContentHandler(handler);
+			xmlReader.parse(new InputSource(new StringReader(inputString)));
+			return handler.getFriends();
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {

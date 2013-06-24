@@ -4,16 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whyq.WhyqApplication;
-import whyq.interfaces.IServiceListener;
-import whyq.mockup.MockupDataLoader;
 import whyq.model.BillItem;
+import whyq.service.DataParser;
 import whyq.service.Service;
+import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +29,8 @@ import com.whyq.R;
 
 public class CheckedBillActivity extends ImageWorkerActivity {
 
+	public static final String ARG_USER_ID = "userid";
+	
 	private BillAdapter mAdapter;
 
 	@Override
@@ -62,17 +62,20 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 			}
 		});
 
-		Service service = new Service();
-		service.addListener(new IServiceListener() {
-
-			@Override
-			public void onCompleted(Service service, ServiceResponse result) {
-				if (result != null) {
-					Log.d("CheckedBills", String.valueOf(result));
-				}
-			}
-		});
-		service.getBills(getEncryptedToken(), "1", "20");
+		setLoading(true);
+		String userId = getIntent().getStringExtra(ARG_USER_ID);
+		getService().getCheckedBills(getEncryptedToken(), userId);
+	}
+	
+	@Override
+	public void onCompleted(Service service, ServiceResponse result) {
+		super.onCompleted(service, result);
+		setLoading(false);
+		if (result != null
+				&& result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionCheckedBills) {
+			DataParser.parseBills(String.valueOf(result.getData()));
+		}
 	}
 
 	static class BillAdapter extends BaseAdapter {
@@ -121,16 +124,12 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 
 			ViewHolder holder = getViewHolder(convertView);
 			BillItem item = mItems.get(position);
-			holder.name.setText(item.getName());
-			if (item.getCount() > 1) {
-				holder.unit.setText("check bill " + item.getCount() + "times");
-			} else {
-				holder.unit.setText("check bill " + item.getCount() + "time");
-			}
-			holder.price.setText("$ " + item.getPrice());
+			holder.name.setText(item.getBusiness_info().getName_store());
+			holder.unit.setText("Bill normal");
+			holder.price.setText("$ " + item.getTotal_value());
 
-			mImageWorker.loadImage(item.getPhotoUrl(), holder.photo,
-					PHOTO_SIZE, PHOTO_SIZE);
+			mImageWorker.loadImage(item.getBusiness_info().getLogo(),
+					holder.photo, PHOTO_SIZE, PHOTO_SIZE);
 
 			return convertView;
 		}

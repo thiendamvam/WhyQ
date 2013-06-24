@@ -1,7 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/navigationBar"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/base_size"
+    android:layout_height="0dp"
+    android:layout_marginBottom="0dip"
+    android:angle="90"
     android:background="@drawable/bg_ationbar"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -11,7 +13,7 @@
         android:id="@+id/buttonBack"
         android:layout_width="@dimen/base_size"
         android:layout_height="@dimen/base_size"
-        android:padding="@dimen/base_padding"
+        android:padding="@dimen/normal_padding"
         android:scaleType="centerInside"
         android:src="@drawable/icon_back" />
 
@@ -23,17 +25,26 @@
     <FrameLayout
         android:id="@+id/titleContainer"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingLeft="@dimen/base_padding"
+        android:paddingRight="@dimen/base_padding" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/header_divider" />
 
     <FrameLayout
         android:id="@+id/extraContainer"
-        android:layout_width="@dimen/base_size"
-        android:layout_height="@dimen/base_size" >
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/base_padding"
+        android:paddingRight="@dimen/base_padding" >
 
         <FrameLayout
             android:id="@+id/buttonExtra"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent" />
 
         <ProgressBar

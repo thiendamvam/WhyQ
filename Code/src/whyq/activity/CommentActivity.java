@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whyq.WhyqApplication;
-import whyq.mockup.MockupDataLoader;
 import whyq.model.Comment;
+import whyq.model.Photo;
+import whyq.service.DataParser;
+import whyq.service.ResultCode;
 import whyq.service.Service;
+import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
+import whyq.utils.Util;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,50 +44,23 @@ public class CommentActivity extends ImageWorkerActivity {
 
 		Service service = getService();
 		setLoading(true);
-		service.getComments(getEncryptedToken(), "21", 0, 20);
+		service.getComments(getEncryptedToken(), "", 1, 20);
 	}
 	
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
 		setLoading(false);
-	}
-
-	class LoadDataTask extends AsyncTask<Void, Void, List<Comment>> {
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			setLoading(true);
+		if (result != null && result.getCode() == ResultCode.Success && result.getAction() == ServiceAction.ActionGetComment) {
+			List<Comment> comments = DataParser.parseComments(String.valueOf(result.getData()));
+			mAdapter.setItems(comments);
 		}
-
-		@Override
-		protected List<Comment> doInBackground(Void... params) {
-			Log.d("LoadDataTask", "Start loading.. ");
-			return MockupDataLoader.loadComments();
-		}
-
-		@Override
-		protected void onPostExecute(List<Comment> result) {
-			super.onPostExecute(result);
-			setLoading(false);
-			if (isCancelled()) {
-				return;
-			}
-
-			if (mAdapter != null) {
-				Log.d("LoadDataTask", "Result loaded size: " + result.size());
-				mAdapter.setItems(result);
-			}
-
-		}
-
 	}
 
 	static class CommentAdapter extends BaseAdapter {
 
 		private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
-		private static final int THUMB_HEIGHT = WhyqApplication.sBaseViewHeight * 4;
+		private static final int THUMB_HEIGHT = WhyqApplication.sBaseViewHeight * 5;
 		private Context mContext;
 		private List<Comment> mItems;
 		private ImageWorker mImageWorker;
@@ -125,19 +100,23 @@ public class CommentActivity extends ImageWorkerActivity {
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.comment_list_item, parent, false);
+				Util.applyTypeface(convertView, WhyqApplication.sTypefaceRegular);
 			}
 
 			ViewHolder holder = getViewHolder(convertView);
 			Comment item = mItems.get(position);
 
-			holder.name.setText(item.getAuthor().getName());
+			holder.name.setText(item.getUser().getFirstName());
 			holder.comment.setText(item.getContent());
-			holder.like.setText("" + item.getAuthor().getLike());
-			mImageWorker.loadImage(item.getAuthor().getAvatar().getUrl(),
+			holder.like.setText("" + item.getCount_like());
+			mImageWorker.loadImage(item.getUser().getUrlAvatar(),
 					holder.avatar, AVATAR_SIZE, AVATAR_SIZE);
-			mImageWorker.loadImage(item.getThumbUrl(), holder.thumb,
-					WhyqApplication.sScreenWidth, THUMB_HEIGHT);
-			if (item.getAuthor().getLike() > 0) {
+			Photo photo = item.getPhotos();
+			if (photo != null) {
+				mImageWorker.loadImage(item.getPhotos().getThumb(), holder.thumb,
+						WhyqApplication.sScreenWidth, THUMB_HEIGHT);
+			}
+			if (item.getUser().getLike() > 0) {
 				holder.favorite.setImageResource(R.drawable.icon_fav_enable);
 			} else {
 				holder.favorite.setImageResource(R.drawable.icon_fav_disable);

@@ -468,7 +468,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 			  				Toast.makeText(context,"Added comment!",Toast.LENGTH_LONG).show();
 			  				int position = items.indexOf(store);			  				
 			  				Comment comment = new Comment(store.getId(), cmText);
-			  				comment.setAuthor(user);
+			  				comment.setUser(user);
 			  				//perm.addCommnent(comment);
 //			  				items.get(position).addCommnent(comment);
 			  				

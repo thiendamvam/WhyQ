@@ -1,6 +1,7 @@
 package whyq.activity;
 
 import whyq.WhyqApplication;
+import whyq.utils.Util;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
@@ -24,21 +25,24 @@ public class NavigationActivity extends FragmentActivity {
 		setContentView(R.layout.activity_navigation);
 
 		initScreenSize();
-
+		
 		FrameLayout titleContainer = (FrameLayout) findViewById(R.id.titleContainer);
 		titleContainer.addView(getTitleView());
 
-		textviewTitle = (TextView) findViewById(R.id.tvTitle);
-
+		textviewTitle = (TextView) findViewById(R.id.textviewTitle);
+		
 		View navigationBar = findViewById(R.id.navigationBar);
 		navigationBar.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 
 		ViewGroup.LayoutParams progressBarLP = findViewById(R.id.progressBar)
 				.getLayoutParams();
-		progressBarLP.width = WhyqApplication.sBaseViewHeight * 4 / 5;
-		progressBarLP.height = WhyqApplication.sBaseViewHeight * 4 / 5;
+		progressBarLP.width = WhyqApplication.sBaseViewHeight * 3 / 5;
+		progressBarLP.height = WhyqApplication.sBaseViewHeight * 3 / 5;
 
-		findViewById(R.id.buttonBack).setOnClickListener(new OnClickListener() {
+		View buttonBack = findViewById(R.id.buttonBack);
+		buttonBack.getLayoutParams().width = WhyqApplication.sBaseViewHeight;
+		buttonBack.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+		buttonBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onBackPressed();
@@ -54,6 +58,12 @@ public class NavigationActivity extends FragmentActivity {
 					}
 				});
 
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Util.applyTypeface(findViewById(R.id.navigationContentView), WhyqApplication.sTypefaceRegular);
 	}
 
 	@Override
@@ -79,9 +89,7 @@ public class NavigationActivity extends FragmentActivity {
 	private void initScreenSize() {
 		DisplayMetrics displaymetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-		WhyqApplication.sScreenHeight = displaymetrics.heightPixels;
-		WhyqApplication.sScreenWidth = displaymetrics.widthPixels;
-		WhyqApplication.sBaseViewHeight = (int) getResources().getDimension(R.dimen.base_size);
+		WhyqApplication.initScreenSize(displaymetrics.widthPixels, displaymetrics.heightPixels);
 	}
 
 	protected void setExtraView(View view) {

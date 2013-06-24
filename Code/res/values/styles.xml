@@ -45,8 +45,23 @@
     </style>
 
     <style name="text_title">
-        <item name="android:textSize">@dimen/font_title</item>
+        <item name="android:textSize">@dimen/font_large</item>
         <item name="android:textColor">#FFFFFF</item>
+    </style>
+    
+     <style name="text_large">
+        <item name="android:textSize">@dimen/font_large</item>
+        <item name="android:textColor">#5c5c5c</item>
+    </style>
+    
+     <style name="text_medium">
+        <item name="android:textSize">@dimen/font_medium</item>
+        <item name="android:textColor">#5c5c5c</item>
+    </style>
+    
+     <style name="text_small">
+        <item name="android:textSize">@dimen/font_small</item>
+        <item name="android:textColor">#5c5c5c</item>
     </style>
 
     <style name="listview_text">
@@ -109,5 +124,8 @@
         <item name="android:textColor">@color/normal_text_color</item>
         <item name="android:textSize">16sp</item>
     </style>
-
+    <style name="small_grey_text">
+        <item name="android:textColor">@color/normal_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

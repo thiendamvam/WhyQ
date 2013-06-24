@@ -20,4 +20,5 @@
     <color name="profifle_blue">#48bde8</color>
 	<color name="normal_text_color">#696969</color>
 	<color name="normal_delivery_color">#dddddd</color>
+	<color name="text_normal">#5c5c5c</color>
 </resources>

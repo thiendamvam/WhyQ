@@ -206,7 +206,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
     			btnAccount.setVisibility(View.INVISIBLE);
     			findViewById(R.id.imageBeforRefeshbtnNew2).setVisibility(View.INVISIBLE);
     		}else{
-    			if(user.getId().equals(commentData.getAuthor().getId())){
+    			if(user.getId().equals(commentData.getUser().getId())){
     				btnAccount.setVisibility(View.VISIBLE);
     				findViewById(R.id.imageBeforRefeshbtnNew2).setVisibility(View.VISIBLE);
     				btnFollow.setVisibility(View.GONE);
@@ -224,8 +224,8 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 	protected void exeUserProfile() {
 		// TODO Auto-generated method stub
 		if( commentData != null) {
-			if(commentData.getAuthor() != null) {
-				new getUserProfile(API.getProfileURL+commentData.getAuthor().getId()).execute(null,null);
+			if(commentData.getUser() != null) {
+				new getUserProfile(API.getProfileURL+commentData.getUser().getId()).execute(null,null);
 			} else {
 				new getUserProfile(API.getProfileURL+commentData.getId()).execute(null,null);
 			}
@@ -270,10 +270,10 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 //    		btnAccount.setVisibility(View.INVISIBLE);
     		initButtonStatus();
     		if(commentData != null){
-    			if(commentData.getAuthor() != null) {
-    				if(commentData.getAuthor().getId() != null){
+    			if(commentData.getUser() != null) {
+    				if(commentData.getUser().getId() != null){
 //    		    		showLoadingDialog("Loading", "Please wait");
-    		    			new getUserProfile(API.getProfileURL+commentData.getAuthor().getId()).execute(null,null);
+    		    			new getUserProfile(API.getProfileURL+commentData.getUser().getId()).execute(null,null);
     					
     				}
     			} else {
@@ -302,8 +302,8 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 
             		}
             	} else {
-	                authorName.setText(commentData.getAuthor().getName());
-	                WhyqImage avatar = commentData.getAuthor().getAvatar();
+	                authorName.setText(commentData.getUser().getName());
+	                WhyqImage avatar = commentData.getUser().getAvatar();
 	                UrlImageViewHelper.setUrlDrawable(authorAvatar, avatar.getUrl());
 	                friends.setText(String.valueOf(ProfileActivity.this.getString(R.string.perm) + " " + ProfileActivity.pinCount + " " + ProfileActivity.this.getString(R.string.followers) + " " + ProfileActivity.followerCount));
             	}
@@ -465,7 +465,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 					postRequest = new HttpPost(filePath);
 					if(isFollow){
 						reqEntity.addPart("fuid", new StringBody(user.getId()));
-						reqEntity.addPart("tuid", new StringBody(commentData.getAuthor().getId()));
+						reqEntity.addPart("tuid", new StringBody(commentData.getUser().getId()));
 						postRequest.setEntity(reqEntity);
 					}else{
 						if(isLogout){
@@ -475,7 +475,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 								reqEntity.addPart("loggedinuid", new StringBody(user.getId()));
 								postRequest.setEntity(reqEntity);
 							}else{
-								reqEntity.addPart("loggedinuid", new StringBody(commentData.getAuthor().getId()));
+								reqEntity.addPart("loggedinuid", new StringBody(commentData.getUser().getId()));
 								postRequest.setEntity(reqEntity);
 							}
 
