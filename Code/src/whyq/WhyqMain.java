@@ -19,6 +19,7 @@ import whyq.activity.LoginWhyqActivity;
 import whyq.activity.FriendActivityGroup;
 import whyq.activity.ProfileActivityGroup;
 import whyq.activity.SimpleActivity;
+import whyq.activity.UserBoardActivity;
 import whyq.model.User;
 import whyq.utils.MyLocationListener;
 import whyq.utils.RSA;
@@ -102,7 +103,7 @@ public class WhyqMain extends TabActivity {
 			TabSpec profile = tabHost.newTabSpec("Profile");
 			profile.setIndicator("Profile",
 					getResources().getDrawable(R.drawable.footer_icon4));
-			Intent profileIntent = new Intent(this, ProfileActivityGroup.class);
+			Intent profileIntent = new Intent(this, UserBoardActivity.class);
 			profile.setContent(profileIntent);
 			tabHost.addTab(profile);
 
@@ -203,10 +204,9 @@ public class WhyqMain extends TabActivity {
 					LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
 
 			tabHost.setCurrentTab(0);
-//			rsa = new RSA();
-//			getListData();
+			// rsa = new RSA();
+			// getListData();
 		}
-
 
 	}
 

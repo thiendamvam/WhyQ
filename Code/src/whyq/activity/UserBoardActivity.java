@@ -33,7 +33,7 @@ import com.whyq.R;
 public class UserBoardActivity extends ImageWorkerActivity {
 
 	private static final String TIME_FORMAT = "HH:mm a";
-	private static final String DATE_FORMAT = "dd/MM/YYYY";
+	private static final String DATE_FORMAT = "dd/MM/yyyy";
 
 	public static final String ARG_USER_NAME = "username";
 	public static final String ARG_USER_ID = "userid";
