@@ -1,6 +1,9 @@
 package whyq.activity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import whyq.WhyqApplication;
@@ -28,6 +31,9 @@ import android.widget.TextView;
 import com.whyq.R;
 
 public class UserBoardActivity extends ImageWorkerActivity {
+
+	private static final String TIME_FORMAT = "HH:mm a";
+	private static final String DATE_FORMAT = "dd/MM/YYYY";
 
 	public static final String ARG_USER_NAME = "username";
 	public static final String ARG_USER_ID = "userid";
@@ -60,7 +66,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 		if (avatar == null) {
 			avatar = XMLParser.getValue(this, XMLParser.STORE_USER_AVATAR);
 		}
-		
+
 		if (avatar != null) {
 			ImageView imageView = (ImageView) findViewById(R.id.avatar);
 			LayoutParams LP = imageView.getLayoutParams();
@@ -75,13 +81,22 @@ public class UserBoardActivity extends ImageWorkerActivity {
 		final Service service = getService();
 
 		setLoading(true);
-		
+
 		mUserId = i.getStringExtra(ARG_USER_ID);
 		if (mUserId == null) {
 			mUserId = XMLParser.getUserId(this);
 		}
-		
+
 		service.getUserActivities(getEncryptedToken(), mUserId);
+
+		SimpleDateFormat sdf = new SimpleDateFormat();
+		Date date = Calendar.getInstance().getTime();
+		TextView tvTime = (TextView) findViewById(R.id.textTime);
+		sdf.applyPattern(TIME_FORMAT);
+		tvTime.setText(sdf.format(date));
+		TextView tvDate = (TextView) findViewById(R.id.textDate);
+		sdf.applyPattern(DATE_FORMAT);
+		tvDate.setText(sdf.format(date));
 
 	}
 
@@ -102,7 +117,8 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 					@Override
 					public void onClick(View v) {
-						Intent i = new Intent(UserBoardActivity.this, CheckedBillActivity.class);
+						Intent i = new Intent(UserBoardActivity.this,
+								CheckedBillActivity.class);
 						i.putExtra(CheckedBillActivity.ARG_USER_ID, mUserId);
 						startActivity(i);
 					}
@@ -206,7 +222,8 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.activities_list_item, parent, false);
-				Util.applyTypeface(convertView, WhyqApplication.sTypefaceRegular);
+				Util.applyTypeface(convertView,
+						WhyqApplication.sTypefaceRegular);
 			}
 
 			ViewHolder holder = getViewHolder(convertView);
