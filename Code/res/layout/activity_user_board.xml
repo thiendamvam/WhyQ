@@ -1,41 +1,49 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white"
     android:orientation="vertical"
     android:padding="8dp" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <include
-            android:id="@+id/check_bill"
-            layout="@layout/category_item1" />
-
-        <include
-            android:id="@+id/history"
-            layout="@layout/category_item1" />
-    </LinearLayout>
-
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/categoryContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <include
-            android:id="@+id/saving"
-            layout="@layout/category_item1" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
-        <include
-            android:id="@+id/comment"
-            layout="@layout/category_item1" />
-    </LinearLayout>
+            <include
+                android:id="@+id/check_bill"
+                layout="@layout/category_item1" />
+
+            <include
+                android:id="@+id/history"
+                layout="@layout/category_item1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <include
+                android:id="@+id/saving"
+                layout="@layout/category_item1" />
+
+            <include
+                android:id="@+id/comment"
+                layout="@layout/category_item1" />
+        </LinearLayout>
+    </FrameLayout>
 
     <TextView
+        android:id="@+id/textRecentActivities"
         style="@style/text_small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/categoryContainer"
         android:layout_marginBottom="@dimen/base_padding"
         android:layout_marginTop="@dimen/base_padding"
         android:drawableLeft="@drawable/icon_clock_gray"
@@ -43,13 +51,48 @@
         android:text="@string/recent_activities"
         android:textColor="@android:color/secondary_text_dark_nodisable" />
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textRecentActivities"
+        android:layout_marginTop="@dimen/normal_padding"
+        android:background="@color/black" >
+
+        <ImageView
+            android:id="@+id/clockIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_clock_gray" />
+
+        <TextView
+            android:id="@+id/textTime"
+            style="@style/text_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/clockIcon"
+            android:text="4:21 Chiều"
+            android:textColor="@android:color/primary_text_light" />
+
+        <TextView
+            android:id="@+id/textDate"
+            style="@style/text_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textTime"
+            android:layout_toRightOf="@+id/clockIcon"
+            android:text="6/12/2013"
+            android:textColor="@android:color/secondary_text_light" />
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/listview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/textRecentActivities"
         android:cacheColorHint="@null"
-        android:divider="@null" >
-    </ListView>
+        android:divider="@null" />
 
-</LinearLayout>
+</RelativeLayout>

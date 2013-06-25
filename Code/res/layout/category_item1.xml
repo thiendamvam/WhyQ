@@ -5,6 +5,7 @@
     android:layout_margin="@dimen/base_padding"
     android:layout_weight="1"
     android:background="@drawable/category_button"
+    android:gravity="center_vertical"
     android:orientation="horizontal" >
 
     <ImageView

@@ -1,7 +1,8 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/titlebar"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_ationbar">
-</TextView>
-
+    android:id="@+id/tvHeaderTitle"
+    style="@style/text_title"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:ellipsize="marquee"
+    android:gravity="center_vertical"
+    android:singleLine="true" />
