@@ -685,9 +685,11 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 				Log.d("Text serch","Text "+text);
 				if(text.equals(""))
 				{
+					exeDisableSearchFocus();
 					isSearch = false;
 					exeListActivity(false);
 				}else{
+					exeSearchFocus();
 					isSearch = true;
 					exeSearch(text);
 				}
@@ -703,10 +705,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
 	    if(hasFocus){
-	    	exeSearchFocus();
+//	    	exeSearchFocus();
 	    }else {
 //	        Toast.makeText(getApplicationContext(), "lost the focus", Toast.LENGTH_LONG).show();
-	    	exeDisableSearchFocus();
+//	    	exeDisableSearchFocus();
 	    }
 	   
 	};
@@ -722,7 +724,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	protected void exeSearchFocus() {
 		// TODO Auto-generated method stub
 		if(btnCacel.getVisibility()!=View.VISIBLE){
-			params.width = 90;
+			params.width = 100;
 			params.height = LayoutParams.WRAP_CONTENT;
 			params.addRule(RelativeLayout.CENTER_IN_PARENT,1);
 			rlSearchTools.setLayoutParams(params);

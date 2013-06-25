@@ -48,20 +48,23 @@
         </activity>
         <activity
             android:name="whyq.activity.FavouriteActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="whyq.activity.ListActivityGroup"
             android:screenOrientation="portrait" />
         <activity
             android:name="whyq.activity.StoreDetailAdsctivity"
             android:screenOrientation="portrait"
+             android:windowSoftInputMode="adjustPan"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
         <activity
             android:name="whyq.activity.WhyqLogout"
             android:screenOrientation="portrait" />
         <activity
             android:name="whyq.activity.ListActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="com.permpings.activity.intent.action.SEND_LOG" />
 
@@ -107,7 +110,8 @@
         <activity
             android:name="whyq.activity.ListDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" />
+            android:windowSoftInputMode="adjustPan"
+             />
         <activity
             android:name="whyq.activity.ProfileActivity"
             android:screenOrientation="portrait" />
@@ -121,13 +125,13 @@
             android:name="whyq.activity.JoinWhyqActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustResize" >
+             android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
             android:name="whyq.activity.LoginWhyqActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
             android:name="whyq.activity.LoginHome"
@@ -189,7 +193,6 @@
             android:name="whyq.view.ImageDetail"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateVisible" >
         </activity>
         <activity
