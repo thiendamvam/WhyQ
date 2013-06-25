@@ -30,9 +30,9 @@
     <string name="bt_create_board">확인</string>
     <string name="logout">로그 아웃</string>
     <string name="account">Account</string>
-    <string name="cancel">취소</string>
+    <string name="cancel">Cancel</string>
     <string name="bt_reperm">펌하기</string>
-    <string name="bt_like">좋아요</string>
+    <string name="bt_like">Like</string>
     <string name="bt_comment">댓글</string>
     <string name="ok">OK</string>
     <string name="title_reperm">RePerm</string>
@@ -45,7 +45,7 @@
     <string name="password">Password</string>
     <string name="confirm_password">Re-enter Password</string>
     <string name="required">required</string>
-    <string name="login">로그인</string>
+    <string name="login">Login</string>
     <string name="image_take_photo">Take a photo</string>
     <string name="gallery">From gallry</string>
     <string name="create_board">보드 만들기</string>

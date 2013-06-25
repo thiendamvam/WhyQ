@@ -6,26 +6,24 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import twitter4j.util.ImageUpload.ImgLyOAuthUploader;
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
+import whyq.activity.ProfileActivity.exeFollow;
 import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
 import whyq.interfaces.Login_delegate;
-import whyq.model.User;
 import whyq.model.Store;
+import whyq.model.User;
 import whyq.utils.API;
 import whyq.utils.RSA;
 import whyq.utils.UrlImageViewHelper;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,22 +35,24 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.CheckedTextView;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.whyq.R;
 
-public class ListActivity extends FragmentActivity implements Login_delegate, OnClickListener{
+public class ListActivity extends FragmentActivity implements Login_delegate, OnClickListener,OnFocusChangeListener{
 
 	
 	public static final String DOWNLOAD_COMPLETED = "DOWNLOAD_COMPLETED";
@@ -148,6 +148,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private ImageView imgHotel;
 	private ImageView imgCutlery;
 	private LinearLayout lnHotel;
+	private Button btnCacel;
+	private RelativeLayout rlSearchTools;
+	private LayoutParams params;
+	private RelativeLayout rlFilterGroup;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -190,10 +194,16 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		imgCheckedFavorite = (ImageView)findViewById(R.id.imgCbFavourite);
 		imgCheckedVisited = (ImageView) findViewById(R.id.imgCbVisited);
 		
+		btnCacel = (Button)findViewById(R.id.btnCancel);
+		rlSearchTools = (RelativeLayout)findViewById(R.id.rlSearchtool);
+		rlFilterGroup = (RelativeLayout)findViewById(R.id.rlFilter);
+		params = (RelativeLayout.LayoutParams)rlSearchTools.getLayoutParams();
+		
 		imgCutlery = (ImageView)findViewById(R.id.imgCutleryIcon);
 		imgWine = (ImageView)findViewById(R.id.imgWinIcon);
 		imgCoffe = (ImageView)findViewById(R.id.imgCoffeeIcon);
 		imgHotel = (ImageView)findViewById(R.id.imgHotelIcon);
+		
 		
 		whyqListView.setOnItemClickListener(onStoreItemListener);
 		etTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -222,7 +232,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			}
 		});
 		etTextSearch.addTextChangedListener(mTextEditorWatcher);
-
+		etTextSearch.setOnFocusChangeListener(this);
+		imgCoffe.setFocusable(true);
+		etTextSearch.clearFocus();
+		imgCoffe.requestFocus();
 	}
 	
 	protected void exeSearch(String string) {
@@ -241,6 +254,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	@Override
 	protected void onResume() {
 		super.onResume();
+		imgCoffe.requestFocus();
 		if(isLogin && WhyqMain.getCurrentTab() == 3){
 			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
 			if(user2 != null){
@@ -652,9 +666,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public void onHotelTabClicked(View v){
 		resetTabBarFocus(4);
 	}
+	
+	public void changeLocationClicked(View v){
+		
+	}
 	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
 		public void beforeTextChanged(CharSequence s, int start, int count,
 				int after) {
+//			exeSearchFocus();
 		}
 
 		public void onTextChanged(CharSequence s, int start, int before,
@@ -681,7 +700,16 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		public void afterTextChanged(Editable s) {
 		}
 	};
-	
+	@Override
+	public void onFocusChange(View v, boolean hasFocus) {
+	    if(hasFocus){
+	    	exeSearchFocus();
+	    }else {
+//	        Toast.makeText(getApplicationContext(), "lost the focus", Toast.LENGTH_LONG).show();
+	    	exeDisableSearchFocus();
+	    }
+	   
+	};
 	private void hideProgress() {
 		// TODO Auto-generated method stub
     	if(progressBar.getVisibility() == View.VISIBLE){
@@ -690,6 +718,42 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 //		if (dialog != null && dialog.isShowing()) {
 //			dialog.dismiss();
 //		}
+	}
+	protected void exeSearchFocus() {
+		// TODO Auto-generated method stub
+		if(btnCacel.getVisibility()!=View.VISIBLE){
+			params.width = 90;
+			params.height = LayoutParams.WRAP_CONTENT;
+			params.addRule(RelativeLayout.CENTER_IN_PARENT,1);
+			rlSearchTools.setLayoutParams(params);
+			btnCacel.setVisibility(View.VISIBLE);
+			
+			imgCoffe.requestFocus();
+			hideFilterGroup();
+		}
+	}
+
+
+	public void onCancelClicked(View v){
+		exeDisableSearchFocus();
+	}
+
+	private void exeDisableSearchFocus() {
+		// TODO Auto-generated method stub
+		btnCacel.setVisibility(View.GONE);
+		params.width = 60;
+		rlSearchTools.setLayoutParams(params);
+		showFilterGroup();
+	}
+
+	private void hideFilterGroup() {
+		// TODO Auto-generated method stub
+		rlFilterGroup.setVisibility(View.GONE);
+	}
+
+	private void showFilterGroup() {
+		// TODO Auto-generated method stub
+		rlFilterGroup.setVisibility(View.VISIBLE);
 	}
 	private void showProgress() {
 		// TODO Auto-generated method stub

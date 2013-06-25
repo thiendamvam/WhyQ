@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_ationbar"
@@ -7,8 +7,10 @@
     android:weightSum="10" >
 
     <RelativeLayout
-        android:layout_width="0dp"
+        android:id="@+id/rlSearchField"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/rlSearchtool"
         android:layout_weight="8.5"
         android:gravity="center"
         android:orientation="vertical"
@@ -36,39 +38,61 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="0dp"
+        android:id="@+id/rlSearchtool"
+        android:layout_width="90dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.5"
-        android:orientation="horizontal" >
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_weight="1.5" >
 
-        <View
-            android:layout_width="4dp"
+        <RelativeLayout
+            android:id="@+id/rlFilter"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:background="@drawable/header_divider" />
-
-        <ImageView
-            android:id="@+id/btnFilters"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/icon_filter"
-            android:onClick="onFilterClicked" />
-
-        <ProgressBar
-            android:id="@+id/prgBar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerInParent="true" />
-
-        <ImageView
-            android:id="@+id/imgArrowDown"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:visibility="invisible"
-            android:src="@drawable/ic_launcher" />
+            android:layout_weight="1.5"
+            android:orientation="horizontal" >
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/header_divider" />
+
+            <ImageView
+                android:id="@+id/btnFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/icon_filter"
+                android:onClick="onFilterClicked" />
+
+            <ProgressBar
+                android:id="@+id/prgBar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true" />
+
+            <ImageView
+                android:id="@+id/imgArrowDown"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_launcher"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:onClick="onCancelClicked"
+            android:text="@string/cancel"
+            android:textColor="@color/profifle_blue"
+            android:visibility="gone" />
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>
