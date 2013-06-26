@@ -1,8 +1,8 @@
 package whyq.activity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,27 +11,33 @@ import whyq.model.ActivityItem;
 import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
+import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.whyq.BuildConfig;
 import com.whyq.R;
 
 public class UserBoardActivity extends ImageWorkerActivity {
 
+	private static final String TIME_SERVER = "yyyy-MM-dd HH:mm:ss";
 	private static final String TIME_FORMAT = "HH:mm a";
 	private static final String DATE_FORMAT = "dd/MM/yyyy";
 
@@ -74,9 +80,36 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			LP.height = AVATAR_SIZE;
 			mImageWorker.loadImage(avatar, imageView, AVATAR_SIZE, AVATAR_SIZE);
 		}
+		final TextView tvTime = (TextView) findViewById(R.id.textTime);
+		final TextView tvDate = (TextView) findViewById(R.id.textDate);
 
 		mAdapter = new ActivitiesAdapter(this);
-		((ListView) findViewById(R.id.listview)).setAdapter(mAdapter);
+		ListView lv = (ListView) findViewById(R.id.listview);
+		lv.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				int index = view.getFirstVisiblePosition();
+				ActivityItem item = (ActivityItem) mAdapter.getItem(index);
+				if (item != null) {
+					if (BuildConfig.DEBUG) {
+						Log.d("",
+								"time: "
+										+ converServerTimeToTime(item
+												.getUpdatedate()));
+					}
+					tvTime.setText(converServerTimeToTime(item.getUpdatedate()));
+					tvDate.setText(converServerTimeToDate(item.getUpdatedate()));
+				}
+			}
+		});
+		lv.setAdapter(mAdapter);
 
 		final Service service = getService();
 
@@ -89,15 +122,32 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 		service.getUserActivities(getEncryptedToken(), mUserId);
 
-		SimpleDateFormat sdf = new SimpleDateFormat();
-		Date date = Calendar.getInstance().getTime();
-		TextView tvTime = (TextView) findViewById(R.id.textTime);
-		sdf.applyPattern(TIME_FORMAT);
-		tvTime.setText(sdf.format(date));
-		TextView tvDate = (TextView) findViewById(R.id.textDate);
-		sdf.applyPattern(DATE_FORMAT);
-		tvDate.setText(sdf.format(date));
+	}
 
+	private String converServerTimeToDate(String serverTime) {
+		SimpleDateFormat sdf = new SimpleDateFormat();
+		sdf.applyPattern(TIME_SERVER);
+		try {
+			Date date = sdf.parse(serverTime);
+			sdf.applyPattern(DATE_FORMAT);
+			return sdf.format(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private String converServerTimeToTime(String serverTime) {
+		SimpleDateFormat sdf = new SimpleDateFormat();
+		sdf.applyPattern(TIME_SERVER);
+		try {
+			Date date = sdf.parse(serverTime);
+			sdf.applyPattern(TIME_FORMAT);
+			return sdf.format(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -209,6 +259,9 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 		@Override
 		public Object getItem(int position) {
+			if (position < 0 || position >= mItems.size()) {
+				return null;
+			}
 			return mItems.get(position);
 		}
 
@@ -228,8 +281,15 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 			ViewHolder holder = getViewHolder(convertView);
 			ActivityItem item = mItems.get(position);
-
-			holder.activity.setText(Html.fromHtml(item.getMessage()));
+			String message = Html.fromHtml(item.getMessage()).toString();
+			String key = message.substring(item.getUser_name().length(),
+					message.length()
+							- item.getBusiness_info().getName_store().length() - 1);
+			holder.activity.setText(SpannableUtils.stylistText(
+					message,
+					key,
+					mContext.getResources().getColor(
+							android.R.color.secondary_text_light_nodisable)));
 			holder.activity.setCompoundDrawablesWithIntrinsicBounds(
 					R.drawable.user_activity, 0, 0, 0);
 

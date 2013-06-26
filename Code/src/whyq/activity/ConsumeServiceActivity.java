@@ -8,6 +8,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import android.util.Log;
+
 import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
 import whyq.service.Service;
@@ -32,7 +34,7 @@ public class ConsumeServiceActivity extends NavigationActivity implements IServi
 			String token = XMLParser.getToken(WhyqApplication._instance
 					.getApplicationContext());
 			token = Util.encryptToken(token);
-			Logger.appendLog("Token: " + token);
+			Log.d("token", token);
 			return token;
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="0dp"
-    android:layout_height="wrap_content"
+    android:layout_height="48dip"
     android:layout_margin="@dimen/base_padding"
     android:layout_weight="1"
     android:background="@drawable/category_button"
@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="48dip"
+        android:layout_height="48dip"
         android:background="#55bbd4"
         android:padding="8dp"
         android:scaleType="fitCenter" />
@@ -27,7 +27,7 @@
             style="@style/text_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:singleLine="true"
             android:textColor="@color/orange" />
 
@@ -36,9 +36,9 @@
             style="@style/text_super_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:singleLine="true"
-            android:textColor="@android:color/secondary_text_dark_nodisable" />
+            android:textColor="@android:color/primary_text_light" />
     </LinearLayout>
 
 </LinearLayout>

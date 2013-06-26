@@ -7,6 +7,7 @@
 
     <TextView
         android:id="@+id/activity"
+        style="@style/text_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/category_button"

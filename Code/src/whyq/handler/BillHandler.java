@@ -183,8 +183,8 @@ public class BillHandler extends BaseHandler {
 			} else if (localName.equalsIgnoreCase(TAG_COUNT_FAVOURITE_MEMBER)) {
 				currentBusinessInfo.setCount_favourite_member(getInt());
 			}
-			builder.setLength(0);
 		}
+		builder.setLength(0);
 	}
 
 	@Override
