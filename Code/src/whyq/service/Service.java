@@ -239,19 +239,14 @@ public class Service implements Runnable {
 		case ActionLoginTwitter:
 			resObj = parser.parserLoginData(result);
 			break;
-		case ActionGetUserActivities:
-		case ActionGetFriendsFacebook:
-		case ActionGetFriends:
-		case ActionSearchFriendsFacebook:
-		case ActionGetComment:
-		case ActionCheckedBills:
-			resObj = result;
-			break;
 		case ActionGetBusinessDetail:
 			resObj = parser.parseBusinessDetail(result);
 			break;
 		case ActionComment:
 			resObj = parser.parseCommentResult(result);
+			break;
+		default:
+			resObj = result;
 			break;
 		}
 		if (resObj == null)
@@ -429,12 +424,12 @@ public class Service implements Runnable {
 		request("/m/business/show", params, true, false);
 	}
 
-	public void getCheckedBills(String encryptedToken, String userId) {
-		_action = ServiceAction.ActionCheckedBills;
+	public void getHistories(String encryptedToken, String userId) {
+		_action = ServiceAction.ActionGetHistories;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
-		request("/m/member/profile/order", params, true, false);
+		request("/m/member/recent/activity", params, true, false);
 	}
 
 	public void exeComment(String string, String storeId) {
@@ -444,13 +439,13 @@ public class Service implements Runnable {
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", storeId);
 		request("/m/business/show", params, true, false);
-		
+
 	}
 
 	public void orderDelivery(String storeId, String otherAddress,
 			String phoneNumber, String hours, String minutes) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

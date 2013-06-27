@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import whyq.WhyqApplication;
 import whyq.model.ActivityItem;
@@ -44,6 +46,15 @@ public class UserBoardActivity extends ImageWorkerActivity {
 	public static final String ARG_USER_NAME = "username";
 	public static final String ARG_USER_ID = "userid";
 	public static final String ARG_AVATAR = "avatar";
+
+	private static final Map<String, String> ACTIVITY_MAP;
+	static {
+		ACTIVITY_MAP = new HashMap<String, String>();
+		ACTIVITY_MAP.put("friend_invite",
+				"wants to add you as friend on WHY Q, accept");
+		ACTIVITY_MAP.put("favourite",
+				"favoured");
+	}
 
 	private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 	private ActivitiesAdapter mAdapter;
@@ -282,14 +293,19 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			ViewHolder holder = getViewHolder(convertView);
 			ActivityItem item = mItems.get(position);
 			String message = Html.fromHtml(item.getMessage()).toString();
-			String key = message.substring(item.getUser_name().length(),
-					message.length()
-							- item.getBusiness_info().getName_store().length() - 1);
-			holder.activity.setText(SpannableUtils.stylistText(
-					message,
-					key,
-					mContext.getResources().getColor(
-							android.R.color.secondary_text_light_nodisable)));
+			String key = ACTIVITY_MAP.get(item.getActivity_type());
+			if (key == null) {
+				holder.activity.setText(message);
+			} else {
+				holder.activity
+						.setText(SpannableUtils
+								.stylistText(
+										message,
+										key,
+										mContext.getResources()
+												.getColor(
+														android.R.color.secondary_text_light_nodisable)));
+			}
 			holder.activity.setCompoundDrawablesWithIntrinsicBounds(
 					R.drawable.user_activity, 0, 0, 0);
 

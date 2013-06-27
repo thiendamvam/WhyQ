@@ -96,4 +96,5 @@
     <string name="receive_notification_from_whyq">Receive notification from WHYQ</string>
     <string name="allow_user_to_see_my_friend">Allow user to see my friends</string>
     <string name="sounds_notification">Sounds notification</string>
+    <string name="history">History</string>
 </resources>

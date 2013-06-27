@@ -280,8 +280,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 						holder.avatar, AVATAR_SIZE, AVATAR_SIZE);
 				if (friendfacebook.getIsFriend() == StatusWithFriend.STATUS_NOT_CONNECT) {
 					if (position <= countListWhyq) {
-						holder.action
-								.setBackgroundResource(R.drawable.add_friend);
+						holder.action.setText(R.string.add);
 					} else {
 						holder.action.setText(R.string.invite);
 						holder.action
@@ -326,7 +325,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 			Button action;
 
 			public ViewHolder(View view) {
-				view.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+//				view.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 				avatar = (ImageView) view.findViewById(R.id.avatar);
 				if (avatar != null) {
 					avatar.getLayoutParams().width = AVATAR_SIZE;

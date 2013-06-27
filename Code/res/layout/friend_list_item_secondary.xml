@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
-    android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/base_padding"
     android:paddingTop="@dimen/base_padding" >
