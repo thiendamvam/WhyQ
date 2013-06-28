@@ -8,6 +8,7 @@
     android:padding="5dp" >
 
     <EditText
+        style="@style/normail_black_text"
         android:id="@+id/etTextSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

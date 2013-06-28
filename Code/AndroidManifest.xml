@@ -81,7 +81,7 @@
             android:name="whyq.activity.ImageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="whyq.activity.WhyCommentActivity"
+            android:name="whyq.activity.WhyQCommentActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="whyq.activity.NewWhyqActivity"

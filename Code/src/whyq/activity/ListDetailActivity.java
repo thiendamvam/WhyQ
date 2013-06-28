@@ -7,6 +7,7 @@ import whyq.service.ServiceResponse;
 import whyq.utils.UrlImageViewHelper;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.URLUtil;
@@ -45,6 +46,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private ImageView imgBtnPromotion;
 	private String cateId;
 	private TextView tvHeaderTitle;
+	private TextView tvFromUsr;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -93,8 +95,15 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 			tvTelephone.setText(store.getPhoneStore());
 			tvStoreDes.setText(store.getIntroStore());
 			tvHeaderTitle.setText(store.getNameStore());
+			tvFromUsr = (TextView)findViewById(R.id.tvFromUser);
+			
 			tvNumberFavourtie.setText(""+store.getCountFavaouriteMember());
-			tvCommendRever.setText(store.getCountFavaouriteMember() + " from users");
+			if(!store.getCountFavaouriteMember().equals("0")){
+				tvCommendRever.setText(store.getCountFavaouriteMember());
+				tvFromUsr.setVisibility(View.GONE);
+			}else{
+				tvFromUsr.setVisibility(View.VISIBLE);
+			}
 			UrlImageViewHelper.setUrlDrawable(imgFrienAvatar, store.getUserList()
 					.get(0).getUrlAvatar());
 		} catch (Exception e) {
@@ -170,6 +179,17 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		}
 		
 	}
+	public void gotoCommentScreen(View v){
+		if(store.getCountFavaouriteMember().equals("0")){
+			Intent intent = new Intent(ListDetailActivity.this, WhyQCommentActivity.class);
+			intent.putExtra("store_id", store.getId());
+			startActivity(intent);
+		}else{
+			Intent intent = new Intent(ListDetailActivity.this, CommentActivity.class);
+			intent.putExtra("store_id", store.getId());
+			startActivity(intent);
+		}
+	} 
 	public void onBack(View v){
 		finish();
 		
