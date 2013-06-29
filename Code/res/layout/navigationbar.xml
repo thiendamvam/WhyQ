@@ -23,12 +23,23 @@
         android:background="@drawable/header_divider" />
 
     <FrameLayout
-        android:id="@+id/titleContainer"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:paddingLeft="@dimen/base_padding"
-        android:paddingRight="@dimen/base_padding" />
+        android:paddingRight="@dimen/base_padding" >
+
+        <FrameLayout
+            android:id="@+id/titleContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <whyq.view.SearchField
+            android:id="@+id/searchField"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <View
         android:layout_width="2dp"

@@ -117,9 +117,9 @@ public class UserBoardActivity extends ImageWorkerActivity {
 				}
 			}
 		});
-		mPhotoAdapter = new PhotoAdapter(this, mImageWorker);
-		// lv.setAdasspter(mPhotoAdapter);
+		lv.setAdapter(mActivitiesAdapter);
 
+		mPhotoAdapter = new PhotoAdapter(this, mImageWorker);
 		int PHOTO_SIZE = WhyqApplication.sScreenWidth / 5;
 		HorizontalListView listPhoto = (HorizontalListView) findViewById(R.id.gallery);
 		listPhoto.getLayoutParams().height = (int) (PHOTO_SIZE + WhyqApplication
@@ -133,7 +133,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			mUserId = XMLParser.getUserId(this);
 		}
 
-		// getService().getUserActivities(getEncryptedToken(), mUserId);
+		getService().getUserActivities(getEncryptedToken(), mUserId);
 		getService().getPhotos(getEncryptedToken(), mUserId);
 
 	}

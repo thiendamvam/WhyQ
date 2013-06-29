@@ -9,10 +9,11 @@
         style="@style/text_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_input"
         android:drawableLeft="@drawable/icon_search"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
-        android:background="@drawable/bg_input"
-        android:hint="@string/hint_search" />
+        android:hint="@string/hint_search"
+        android:textColorHint="@color/white" />
 
 </FrameLayout>

@@ -2,7 +2,7 @@
     android:id="@+id/navigationContentView"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_marginBottom="60dp"
+    android:layout_marginBottom="74dp"
     android:orientation="vertical" >
 
     <include
@@ -14,7 +14,6 @@
         android:id="@+id/contentView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="74dp"
         android:layout_weight="1" />
 
 </LinearLayout>
