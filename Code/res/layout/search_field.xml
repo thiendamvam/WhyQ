@@ -12,6 +12,7 @@
         android:drawableLeft="@drawable/icon_search"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
+        android:background="@drawable/bg_input"
         android:hint="@string/hint_search" />
 
 </FrameLayout>

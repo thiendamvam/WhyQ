@@ -12,6 +12,8 @@ public class Photo {
 	private String type_photo;
 	private String createdate;
 	private String updatedate;
+	private String location_id;
+
 	
 	public String getId() {
 		return id;
@@ -72,6 +74,12 @@ public class Photo {
 	}
 	public void setUpdatedate(String updatedate) {
 		this.updatedate = updatedate;
+	}
+	public String getLocation_id() {
+		return location_id;
+	}
+	public void setLocation_id(String location_id) {
+		this.location_id = location_id;
 	}
 
 	

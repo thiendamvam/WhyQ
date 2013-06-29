@@ -24,6 +24,7 @@ import whyq.handler.BillHandler;
 import whyq.handler.CommentHandler;
 import whyq.handler.FriendFacebookHandler;
 import whyq.handler.FriendWhyqHandler;
+import whyq.handler.PhotoHandler;
 import whyq.handler.UserHandler;
 import whyq.interfaces.FriendFacebookController;
 import whyq.model.ActivityItem;
@@ -31,6 +32,7 @@ import whyq.model.BillItem;
 import whyq.model.Comment;
 import whyq.model.FriendWhyq;
 import whyq.model.Menu;
+import whyq.model.Photo;
 import whyq.model.ProductTypeInfo;
 import whyq.model.Store;
 import whyq.model.StoreInfo;
@@ -108,6 +110,23 @@ public class DataParser {
 		return null;
 	}
 
+	public static final List<Photo> parsePhotos(String inputString) {
+		try {
+			XMLReader xmlReader = initializeReader();
+			PhotoHandler handler = new PhotoHandler();
+			xmlReader.setContentHandler(handler);
+			xmlReader.parse(new InputSource(new StringReader(inputString)));
+			return handler.getComments();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static final List<Comment> parseComments(String inputString) {
 		try {
 			XMLReader xmlReader = initializeReader();
