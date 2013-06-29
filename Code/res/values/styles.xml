@@ -145,7 +145,7 @@
     </style>
     <style name="small_blue_text">
         <item name="android:textColor">@color/profifle_blue</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="big_blue_text">
         <item name="android:textColor">@color/profifle_blue</item>
@@ -153,11 +153,11 @@
     </style>
     <style name="small_grey_text">
         <item name="android:textColor">@color/normal_text_color</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="normal_grey_text">
         <item name="android:textColor">@color/normal_text_color</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="big_grey_text">
         <item name="android:textColor">@color/normal_text_color</item>
@@ -165,7 +165,7 @@
     </style>
     <style name="small_back_text">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="big_back_text">
         <item name="android:textColor">@color/black</item>
