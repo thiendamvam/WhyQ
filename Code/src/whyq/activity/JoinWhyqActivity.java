@@ -301,7 +301,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 		return super.onKeyDown(keyCode, event);
 	}
 
-	public void onBack() {
+	public void onBack(View v) {
 		finish();
 	}
 }

@@ -127,13 +127,13 @@
             android:name="whyq.activity.JoinWhyqActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustUnspecified" >
         </activity>
         <activity
             android:name="whyq.activity.LoginWhyqActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustUnspecified" >
         </activity>
         <activity
             android:name="whyq.activity.LoginHome"
