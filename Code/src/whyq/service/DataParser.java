@@ -31,6 +31,7 @@ import whyq.model.ActivityItem;
 import whyq.model.BillItem;
 import whyq.model.Comment;
 import whyq.model.FriendWhyq;
+import whyq.model.Location;
 import whyq.model.Menu;
 import whyq.model.Photo;
 import whyq.model.ProductTypeInfo;
@@ -452,5 +453,24 @@ public class DataParser {
 	public Object parseCommentResult(String result) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public ArrayList<Location> parseLCationResult(String result) {
+		// TODO Auto-generated method stub
+		Document doc = XMLfromString(result);
+		ArrayList<Store> permList = new ArrayList<Store>();
+		NodeList nodeList = doc.getElementsByTagName("geoname");
+		ArrayList<Location> locationList = new ArrayList<Location>();
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Location location = new Location();
+			Element infoElement = (Element) nodeList.item(i);
+			location.setLat(getValue(infoElement, "lat"));
+			location.setLon(getValue(infoElement, "lng"));
+			location.setName(getValue(infoElement, "name"));
+			location.setCountry(getValue(infoElement, "countryName"));
+			locationList.add(location);
+		}
+		
+		return locationList;
 	}
 }

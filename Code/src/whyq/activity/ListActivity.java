@@ -8,7 +8,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
-import whyq.activity.ProfileActivity.exeFollow;
 import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
@@ -27,7 +26,6 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager.OnActivityResultListener;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -105,12 +103,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	
 	private String searchKey="";
-	private String longitude="";
-	private String latgitude="";
+	public static String longitude="";
+	public static String latgitude="";
+	public static String currentLocation;
 	private String filter="0"; 
 	private String friendFavourite;
 	private String friendVisited;
 	private String cateId="0";
+	
 	public static boolean isSearch = false;
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -158,6 +158,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private LayoutParams params;
 	private RelativeLayout rlFilterGroup;
 	private Context context;
+	private TextView tvNearLocation;
+	private RelativeLayout rlLocationField;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -202,8 +204,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		lnFilter = (LinearLayout)findViewById(R.id.lnFilterView);
 		imgArrowDown = (ImageView)findViewById(R.id.imgArrowDown);
 		loadPermList = new LoadPermList(false);
+		tvNearLocation = (TextView)findViewById(R.id.tvNearLocation);
 		progressBar = (ProgressBar)findViewById(R.id.prgBar);
 		etTextSearch =(EditText) findViewById(R.id.etTextSearch);
+		rlLocationField = (RelativeLayout)findViewById(R.id.rlLocationField);
 		isAddHeader = true;
 		cktViewAll = (TextView) findViewById(R.id.cktViewAll);
 		cktFriednVised = (TextView)findViewById(R.id.cktViewVisited);
@@ -256,7 +260,18 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		imgCoffe.requestFocus();
 		params = (RelativeLayout.LayoutParams)rlSearchTools.getLayoutParams();
 	}
-	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d("onActivityResult changelocation","");
+	    if (resultCode == RESULT_OK) {
+	    	 if (requestCode == CHANGE_LOCATION_REQUEST ) {
+	    		 latgitude = data.getStringExtra("lat");
+	    		 longitude = data.getStringExtra("lng");
+	    		 exeSearch(etTextSearch.getText().toString());
+	    		 tvNearLocation.setText(data.getStringExtra("name"));
+	    	 }
+	    
+	    }
+	}
 	protected void exeSearch(String string) {
 		// TODO Auto-generated method stub
 		searchKey = string;
@@ -273,6 +288,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(currentLocation !=null)
+			tvNearLocation.setText(currentLocation);
 		imgCoffe.requestFocus();
 		if(isLogin && WhyqMain.getCurrentTab() == 3){
 			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
@@ -688,7 +705,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	public void changeLocationClicked(View v){
 		Intent intent = new Intent(ListActivity.this, ChangeLocationActivity.class);
-		startActivity(intent);
+		startActivityForResult(intent, CHANGE_LOCATION_REQUEST);
 	}
 	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
 		public void beforeTextChanged(CharSequence s, int start, int count,
@@ -755,6 +772,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			
 			imgCoffe.requestFocus();
 			hideFilterGroup();
+			rlLocationField.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -762,12 +780,15 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public void onCancelClicked(View v){
 		exeDisableSearchFocus();
 		etTextSearch.setText("");
+		currentLocation=null;
+		
 	}
 
 	private void exeDisableSearchFocus() {
 		// TODO Auto-generated method stub
 		btnCacel.setVisibility(View.GONE);
 //		params.width = 60;
+		rlLocationField.setVisibility(View.GONE);
 		rlSearchTools.setLayoutParams(params);
 		showFilterGroup();
 	}

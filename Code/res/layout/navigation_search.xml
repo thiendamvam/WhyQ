@@ -17,17 +17,17 @@
         android:padding="5dp" >
 
         <EditText
-            style="@style/normal_grey_text"
             android:id="@+id/etTextSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@+id/btnCancel"
             android:background="@drawable/bg_input"
             android:gravity="center_vertical"
+            android:textColor="@color/white"
             android:hint="@string/hint_search"
             android:imeOptions="actionSearch"
             android:inputType="text"
-            android:paddingLeft="25dp"
+            android:paddingLeft="35dp"
             android:singleLine="true" >
         </EditText>
 
@@ -86,6 +86,7 @@
                 android:id="@+id/prgBar"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:visibility="invisible"
                 android:layout_centerInParent="true" />
 
             <ImageView

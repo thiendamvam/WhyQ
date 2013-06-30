@@ -245,6 +245,9 @@ public class Service implements Runnable {
 		case ActionComment:
 			resObj = parser.parseCommentResult(result);
 			break;
+		case ActionGetLocation:
+			resObj = parser.parseLCationResult(result);
+			break;
 		default:
 			resObj = result;
 			break;
@@ -289,8 +292,16 @@ public class Service implements Runnable {
 		HttpConnectionParams.setSoTimeout(httpParameters, 600000);
 		HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 		try {
-			final String urlString = _includeHost ? API.hostURL + _actionURI
-					: _actionURI;
+			final String urlString;
+			if(_action==ServiceAction.ActionGetLocation){
+				String textSearch = _params.get("text-search");
+				textSearch = textSearch.replace(" ", "+");
+				urlString= "http://ws.geonames.org/search?q="
+						+ textSearch
+						+ "&style=full&maxRows=10";
+			}else
+				urlString = _includeHost ? API.hostURL + _actionURI
+						: _actionURI;
 			HttpRequestBase request = null;
 
 			if (_isGet) {
@@ -454,6 +465,14 @@ public class Service implements Runnable {
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		request("/m/member/profile/photo", params, true, false);
+	}
+
+	public void setLocation(String string) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionGetLocation;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("text-search", string);
+		request("getlocation", params, true, false);
 	}
 
 }

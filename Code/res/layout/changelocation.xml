@@ -2,29 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="74dp"
+    android:background="@color/flu"
     android:orientation="vertical" >
 
-    <include
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="50dp"
         android:layout_weight="1"
-        layout="@layout/navigation_search" />
+        android:background="@color/white"
+        android:padding="5dp" >
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/whyq_search_del" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="9"
-        android:background="@layout/rounded_corner"
+        android:background="@color/white"
         android:orientation="horizontal"
-        android:padding="10dip" >
+        android:paddingLeft="5dp" >
 
         <ListView
             android:id="@+id/lwLocationToChange"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cacheColorHint="#00000000" >
+            android:cacheColorHint="#00000000"
+            android:divider="@color/grey"
+            android:dividerHeight="1dp" >
         </ListView>
     </LinearLayout>
 
