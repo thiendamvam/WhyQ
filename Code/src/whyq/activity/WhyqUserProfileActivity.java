@@ -19,6 +19,7 @@ import whyq.utils.ImageWorker;
 import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
+import whyq.view.ExtendedListView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AnalogClock;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +41,7 @@ import android.widget.TextView;
 import com.devsmart.android.ui.HorizontalListView;
 import com.whyq.R;
 
-public class UserBoardActivity extends ImageWorkerActivity {
+public class WhyqUserProfileActivity extends ImageWorkerActivity {
 
 	private static final String TIME_SERVER = "yyyy-MM-dd HH:mm:ss";
 	private static final String TIME_FORMAT = "HH:mm a";
@@ -93,11 +95,17 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			LP.height = AVATAR_SIZE;
 			mImageWorker.loadImage(avatar, imageView, AVATAR_SIZE, AVATAR_SIZE);
 		}
-		final TextView tvTime = (TextView) findViewById(R.id.textTime);
-		final TextView tvDate = (TextView) findViewById(R.id.textDate);
+
+		ExtendedListView lv = (ExtendedListView) findViewById(R.id.listview);
+		View profileClock = lv.getScrollBarPanel();
+		final TextView tvTime = (TextView) profileClock
+				.findViewById(R.id.textTime);
+		final TextView tvDate = (TextView) profileClock
+				.findViewById(R.id.textDate);
+		final whyq.view.AnalogClock analogClock = (whyq.view.AnalogClock) profileClock
+				.findViewById(R.id.clock);
 
 		mActivitiesAdapter = new ActivitiesAdapter(this);
-		ListView lv = (ListView) findViewById(R.id.listview);
 		lv.setOnScrollListener(new OnScrollListener() {
 
 			@Override
@@ -112,6 +120,11 @@ public class UserBoardActivity extends ImageWorkerActivity {
 				ActivityItem item = (ActivityItem) mActivitiesAdapter
 						.getItem(index);
 				if (item != null) {
+					Date date = getDate(item.getUpdatedate());
+					if (date != null) {
+						analogClock.setTime(date.getHours(), date.getMinutes(),
+								00);
+					}
 					tvTime.setText(converServerTimeToTime(item.getUpdatedate()));
 					tvDate.setText(converServerTimeToDate(item.getUpdatedate()));
 				}
@@ -133,9 +146,21 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			mUserId = XMLParser.getUserId(this);
 		}
 
+		ImageView setting = new ImageView(this);
+		setting.setImageResource(R.drawable.footer_icon4);
+		setExtraView(setting);
+
+		hideExtraButton();
+
 		getService().getUserActivities(getEncryptedToken(), mUserId);
 		getService().getPhotos(getEncryptedToken(), mUserId);
 
+	}
+
+	@Override
+	protected void onExtraButtonPressed() {
+		super.onExtraButtonPressed();
+		startActivity(new Intent(this, ProfileWhyQActivty.class));
 	}
 
 	private String converServerTimeToDate(String serverTime) {
@@ -145,6 +170,17 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			Date date = sdf.parse(serverTime);
 			sdf.applyPattern(DATE_FORMAT);
 			return sdf.format(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return "00/00/0000";
+	}
+
+	private Date getDate(String serverTime) {
+		SimpleDateFormat sdf = new SimpleDateFormat();
+		sdf.applyPattern(TIME_SERVER);
+		try {
+			return sdf.parse(serverTime);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -168,6 +204,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
 		setLoading(false);
+		showExtraButton();
 		if (result == null)
 			return;
 		if (result.getAction() == ServiceAction.ActionGetUserActivities) {
@@ -188,7 +225,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 					@Override
 					public void onClick(View v) {
-						Intent i = new Intent(UserBoardActivity.this,
+						Intent i = new Intent(WhyqUserProfileActivity.this,
 								CheckedBillActivity.class);
 						i.putExtra(CheckedBillActivity.ARG_USER_ID, mUserId);
 						startActivity(i);
@@ -222,7 +259,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 					@Override
 					public void onClick(View v) {
-						startActivity(new Intent(UserBoardActivity.this,
+						startActivity(new Intent(WhyqUserProfileActivity.this,
 								CommentActivity.class));
 					}
 				});

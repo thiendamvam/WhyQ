@@ -23,7 +23,7 @@
             android:layout_toLeftOf="@+id/btnCancel"
             android:background="@drawable/bg_input"
             android:gravity="center_vertical"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:hint="@string/hint_search"
             android:imeOptions="actionSearch"
             android:inputType="text"

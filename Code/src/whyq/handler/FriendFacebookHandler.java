@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import whyq.interfaces.FriendFacebookController;
 import whyq.model.FriendFacebook;
@@ -17,18 +16,20 @@ import whyq.model.FriendFacebook;
  * @author giangnguyen.tale@gmail.com
  * 
  */
-public class FriendFacebookHandler extends DefaultHandler implements FriendFacebookController {
+public class FriendFacebookHandler extends BaseHandler implements
+		FriendFacebookController {
 
 	private static final String TAG_LIST_NOT_JOIN_WHYQ = "list_not_join_whyq";
 	private static final String TAG_LIST_JOIN_WHYQ = "list_join_whyq";
-	private static final String TAG_OBJ = "obj";
 	private static final String TAG_DATA = "data";
 	private static final String TAG_FACEBOOK_ID = "facebook_id";
 	private static final String TAG_ITUNE_URL = "ituneUrl";
 	private static final String TAG_FIRST_NAME = "first_name";
 	private static final String TAG_ID = "id";
-	private static final String TAG_ID_FRIEND = "is_friend";
 	private static final String TAG_AVATAR = "avatar";
+	private static final String TAG_LAST_NAME = "last_name";
+	private static final String TAG_IS_JOIN = "is_join";
+	private static final String TAG_IS_FRIEND = "is_friend";
 
 	private FriendFacebook friendfacebook;
 	private List<FriendFacebook> listNotJoinWhyq;
@@ -53,13 +54,17 @@ public class FriendFacebookHandler extends DefaultHandler implements FriendFaceb
 			friendfacebook.setFirstName(buffer.toString());
 		} else if (localName.equals(TAG_ID)) {
 			friendfacebook.setId(buffer.toString());
-		} else if (localName.equals(TAG_ID_FRIEND)) {
+		} else if (localName.equals(TAG_IS_FRIEND)) {
 			friendfacebook.setIsFriend(Integer.parseInt(buffer.toString()));
 		} else if (localName.equals(TAG_AVATAR)) {
 			friendfacebook.setAvatar(buffer.toString());
 		} else if (localName.equals(TAG_ITUNE_URL)) {
 			friendfacebook.setItuneUrl(buffer.toString());
-		} else if (localName.equals(TAG_DATA)){
+		} else if (localName.equals(TAG_LAST_NAME)) {
+			friendfacebook.setLast_name(getString());
+		} else if (localName.equals(TAG_IS_JOIN)) {
+			friendfacebook.setIs_join(getInt());
+		} else if (localName.equals(TAG_DATA)) {
 			if (isListNotJoinWhyq) {
 				listNotJoinWhyq.add(friendfacebook);
 			} else {
@@ -74,7 +79,7 @@ public class FriendFacebookHandler extends DefaultHandler implements FriendFaceb
 
 		buffer.setLength(0);
 
-		if (localName.equals(TAG_OBJ)) {
+		if (localName.equals(TAG_DATA)) {
 			friendfacebook = new FriendFacebook();
 		} else if (localName.equals(TAG_LIST_NOT_JOIN_WHYQ)) {
 			isListNotJoinWhyq = true;

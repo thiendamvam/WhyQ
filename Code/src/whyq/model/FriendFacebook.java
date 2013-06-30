@@ -8,6 +8,24 @@ public class FriendFacebook {
 	private String id;
 	private int isFriend;
 	private String avatar;
+	private String last_name;
+	private int is_join;
+
+	public String getLast_name() {
+		return last_name;
+	}
+
+	public void setLast_name(String last_name) {
+		this.last_name = last_name;
+	}
+
+	public int getIs_join() {
+		return is_join;
+	}
+
+	public void setIs_join(int is_join) {
+		this.is_join = is_join;
+	}
 
 	public void setFacebookId(String facebookId) {
 		this.facebookId = facebookId;

@@ -19,7 +19,7 @@ import whyq.activity.LoginWhyqActivity;
 import whyq.activity.FriendActivityGroup;
 import whyq.activity.ProfileActivityGroup;
 import whyq.activity.SimpleActivity;
-import whyq.activity.UserBoardActivity;
+import whyq.activity.WhyqUserProfileActivity;
 import whyq.model.User;
 import whyq.utils.MyLocationListener;
 import whyq.utils.RSA;
@@ -103,7 +103,7 @@ public class WhyqMain extends TabActivity {
 			TabSpec profile = tabHost.newTabSpec("Profile");
 			profile.setIndicator("Profile",
 					getResources().getDrawable(R.drawable.footer_icon4));
-			Intent profileIntent = new Intent(this, UserBoardActivity.class);
+			Intent profileIntent = new Intent(this, WhyqUserProfileActivity.class);
 			profile.setContent(profileIntent);
 			tabHost.addTab(profile);
 
