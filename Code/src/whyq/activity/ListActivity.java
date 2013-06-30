@@ -160,6 +160,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private Context context;
 	private TextView tvNearLocation;
 	private RelativeLayout rlLocationField;
+	private int storeType;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -189,6 +190,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	protected void gotoStoreDetail(String storeId) {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(ListActivity.this, ListDetailActivity.class);
+		intent.putExtra("store_type", storeType);
 		startActivity(intent);
 	}
 
@@ -610,6 +612,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
 			cateId = "0";
+			storeType = 1;
 			exeSearch(etTextSearch.getText().toString());
 			break;
 		case 2:
@@ -617,6 +620,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnHotel.setBackgroundResource(R.drawable.bg_tab_normal);
+			storeType = 2;
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			setIconTab(2);
@@ -629,6 +633,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnHotel.setBackgroundResource(R.drawable.bg_tab_normal);
 			setIconTab(3);
+			storeType = 3;
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			cateId = "2";
@@ -640,6 +645,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			lnWine.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
 			setIconTab(4);
+			storeType = 4;
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			cateId = "2";

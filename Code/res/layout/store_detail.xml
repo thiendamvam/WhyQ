@@ -69,12 +69,12 @@
                 </RelativeLayout>
 
                 <TextView
+                    style="@style/small_back_text"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center_vertical"
-                    android:text="Opening time:"
-                    style="@style/small_back_text" />
+                    android:text="Opening time:" />
 
                 <TextView
                     android:id="@+id/tvOpeningTime"
@@ -111,12 +111,12 @@
                 </RelativeLayout>
 
                 <TextView
+                    style="@style/small_back_text"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center_vertical"
-                    android:text="Telephone:"
-                    style="@style/small_back_text"/>
+                    android:text="Telephone:" />
 
                 <TextView
                     android:id="@+id/tvTelephone"
@@ -142,12 +142,17 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp" >
 
-                <TextView
-                    android:id="@+id/tvStoreDes"
-                    style="@style/small_grey_text"
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:text="Loren is dorlor sir...." />
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/tvStoreDes"
+                        style="@style/small_grey_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:text="Loren is dorlor sir...." />
+                </ScrollView>
             </LinearLayout>
 
             <View
@@ -158,8 +163,8 @@
             <include
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:onClick="onCommentClicked"
-                layout="@layout/command_item" >
+                layout="@layout/command_item"
+                >
             </include>
 
             <View
@@ -185,9 +190,9 @@
             <include
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
                 layout="@layout/search_feld" >
             </include>
 
