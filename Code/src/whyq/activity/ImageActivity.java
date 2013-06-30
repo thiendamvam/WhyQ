@@ -47,14 +47,14 @@ public class ImageActivity extends Activity {
 		final LinearLayout takePhoto = (LinearLayout) findViewById(R.id.takePhoto);
 		takePhoto.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				User user = WhyqUtils.isAuthenticated(getApplicationContext());
-				if (user != null) {
+//				User user = WhyqUtils.isAuthenticated(getApplicationContext());
+//				if (user != null) {
 					// define the file-name to save photo taken by Camera activity
 					showCamera();
-				} else {
-
-					WhyqMain.showLogin();
-				}
+//				} else {
+//
+//					WhyqMain.showLogin();
+//				}
 			}
 		});
 		
@@ -64,18 +64,18 @@ public class ImageActivity extends Activity {
 		openGalerry.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				   // select a file
-				User user = WhyqUtils.isAuthenticated(getApplicationContext());
-				if (user != null) {
+//				User user = WhyqUtils.isAuthenticated(getApplicationContext());
+//				if (user != null) {
 					Intent intent = new Intent();
 	                intent.setType("image/*");
 	                intent.setAction(Intent.ACTION_GET_CONTENT);
-	                getParent().startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
-				} else {
-					// Go to login screen
-//					Intent i = new Intent(v.getContext(), LoginPermActivity.class);
-//					v.getContext().startActivity(i);
-					WhyqMain.showLogin();
-				}
+	                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+//				} else {
+//					// Go to login screen
+////					Intent i = new Intent(v.getContext(), LoginPermActivity.class);
+////					v.getContext().startActivity(i);
+//					WhyqMain.showLogin();
+//				}
                 
 			}
 		});
@@ -112,7 +112,7 @@ public class ImageActivity extends Activity {
 				imagePath = f.getPath();
 				Uri uri = Uri.fromFile(f);
 				if(imagePath != null && uri != null){
-					getParent().startActivityForResult(
+					startActivityForResult(
 					        new Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 					            .putExtra(MediaStore.EXTRA_OUTPUT, uri)
 					        , CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
@@ -146,17 +146,19 @@ public class ImageActivity extends Activity {
 		            } else {
 
 		            	selectedImagePath = ImageActivity.imagePath;
+		            	
 		            }
 
 	        	}
 
-					
-
-
+	    	    Intent intent = new Intent();
+	    	    intent.putExtra("path", selectedImagePath);
+	    	    setResult(RESULT_OK,intent);
+	    	    ImageActivity.imagePath = "";
+	    	    finish();
 	        }
 	    }
-	    
-	    ImageActivity.imagePath = "";
+
 	}
     public String getPath(Uri uri) {
         String[] projection = { MediaStore.Images.Media.DATA };
@@ -178,7 +180,8 @@ public class ImageActivity extends Activity {
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        WhyqMain.back();
+//	        WhyqMain.back();
+	    	finish();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

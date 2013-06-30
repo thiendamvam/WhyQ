@@ -56,33 +56,62 @@
             android:textColor="#818181" >
         </Button>
 
-        <Button
-            android:id="@+id/btnFbLogin"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="10dp"
             android:layout_weight="1.1"
-            android:background="@drawable/bg_btn_login_fb"
-            android:baselineAligned="false"
-            android:gravity="center"
-            android:onClick="onClickedLoginFB"
-            android:text="Login with Facebook"
-            android:textColor="#fefefe" >
-        </Button>
+            android:background="@drawable/bg_btn_login_fb" >
 
-        <Button
-            android:id="@+id/btnLoginTw"
+            <ImageView
+                android:id="@+id/iconFb"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_facebook" />
+
+            <Button
+                android:id="@+id/btnFbLogin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:gravity="center"
+                android:onClick="onClickedLoginFB"
+                android:paddingLeft="5dp"
+                android:text="Login with Facebook"
+                android:textColor="#fefefe" >
+            </Button>
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="10dp"
             android:layout_weight="1.1"
-            android:background="@drawable/bg_btn_login_tw"
-            android:baselineAligned="false"
-            android:gravity="center"
-            android:onClick="onClickedLoginTW"
-            android:text="Login with Twitter"
-            android:textColor="#fefefe" >
-        </Button>
+            android:background="@drawable/bg_btn_login_tw" >
+
+            <ImageView
+                android:id="@+id/iconTw"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/icon_twitter" />
+
+            <Button
+                android:id="@+id/btnLoginTw"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:background="@color/transparent"
+                android:onClick="onClickedLoginTW"
+                android:text="Login with Twitter"
+                android:textColor="#fefefe" >
+            </Button>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

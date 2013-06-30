@@ -3,6 +3,10 @@
  */
 package whyq.activity;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -16,9 +20,9 @@ import javax.crypto.NoSuchPaddingException;
 import oauth.signpost.OAuth;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
-
-import com.whyq.R;
 
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
@@ -27,24 +31,32 @@ import whyq.model.User;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.RSA;
+import whyq.utils.Util;
 import whyq.utils.XMLParser;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.whyq.R;
 
 
 /**
@@ -52,6 +64,7 @@ import android.widget.Toast;
  */
 public class JoinWhyqActivity extends Activity implements TextWatcher,
 		JoinPerm_Delegate {
+	private static final int GET_IMAGE = 0;
 	// Button createAccount;
 	EditText firstName;
 	EditText lastName;
@@ -63,6 +76,8 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 	private ProgressDialog dialog;
 	private JoinWhyqActivity context;
 	private View progressBar;
+	private ImageView imgAvatar;
+	private String avatarPath;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,12 +86,15 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 
 		context = JoinWhyqActivity.this;
 		TextView textView = (TextView) findViewById(R.id.permpingTitle);
-		Typeface tf = Typeface.createFromAsset(getAssets(),
-				"ufonts.com_franklin-gothic-demi-cond-2.ttf");
-		if (textView != null) {
-			textView.setTypeface(tf);
-		}
+//		Typeface tf = Typeface.createFromAsset(getAssets(),
+//				"ufonts.com_franklin-gothic-demi-cond-2.ttf");
+		Util.applyTypeface(textView, Util.sTypefaceRegular);
+		textView.setText("New Account");
+//		if (textView != null) {
+//			textView.setTypeface(WhyqApplication.sTypefaceRegular);
+//		}
 
+		imgAvatar = (ImageView)findViewById(R.id.imgAvatar);
 		prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 		dialog = new ProgressDialog(context);
@@ -197,6 +215,19 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 																// ""))
 					nameValuePairs.add(new BasicNameValuePair("last_name",
 							lastName.getText().toString()));
+					
+					
+					ByteArrayOutputStream bos = new ByteArrayOutputStream();
+					// Bitmap bm = BitmapFactory.decodeFile(filePath);
+					Bitmap bm = getBitmap2(avatarPath);
+					bm.compress(CompressFormat.JPEG, 75, bos);
+					byte[] data = bos.toByteArray();
+
+					String fileName = new File(avatarPath).getName();
+					ByteArrayBody bab = new ByteArrayBody(data, fileName);
+					nameValuePairs.add(new BasicNameValuePair("photo",
+							bab.toString()));
+
 
 				}
 
@@ -207,6 +238,51 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 			}
 		});
 
+	}
+	private Bitmap getBitmap2(String path) {
+		try {
+
+			final int IMAGE_MAX_SIZE = 1024;// 1200000; // 1.2MP
+			BitmapFactory.Options o = new BitmapFactory.Options();
+			o.inJustDecodeBounds = true;
+			InputStream in = new FileInputStream(path);
+			BitmapFactory.decodeStream(in, null, o);
+			in.close();
+			in = new FileInputStream(path);
+
+			// Decode image size
+
+			double scale = 1;
+			int currentWidth = o.outWidth;
+			if (currentWidth > IMAGE_MAX_SIZE) {
+				scale = currentWidth / IMAGE_MAX_SIZE;
+
+			}
+
+			Bitmap b = null;
+			if (scale > 1) {
+
+				double y = (double) o.outHeight / scale;
+				double x = 1024;
+				b = BitmapFactory.decodeFile(path);
+				Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+						(int) y, true);
+				b = scaledBitmap;
+				System.gc();
+
+			} else {
+				b = BitmapFactory.decodeFile(path);
+			}
+
+			/*
+			 * Log.d("", "bitmap size - width: " + b.getWidth() +
+			 * ", height: " + b.getHeight() + "");
+			 */
+			return b;
+		} catch (Exception e) {
+			// Log.e("", e.getMessage(), e);
+			return null;
+		}
 	}
 
 	public void afterTextChanged(Editable s) {
@@ -292,6 +368,27 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 		progressBar.setVisibility(View.INVISIBLE);
 	}
 
+	public void takeImageOnclicked(View v) {
+		Intent intent = new Intent(JoinWhyqActivity.this, ImageActivity.class);
+		startActivityForResult(intent,GET_IMAGE);
+	}
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d("onActivityResult Join","");
+	    if (resultCode == RESULT_OK) {
+	        if (requestCode == GET_IMAGE ) {
+	        	avatarPath = data.getStringExtra("path");
+	        	Log.d("onActivityResult Join",""+avatarPath);
+	        	if(avatarPath!=null){
+	        		 File imgFile = new  File(avatarPath);
+	        		if(imgFile.exists()){
+	        			imgAvatar.setImageURI(Uri.fromFile(imgFile));
+	        		}
+	        	}
+	        }
+	    }
+	    
+	    ImageActivity.imagePath = "";
+	}
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {

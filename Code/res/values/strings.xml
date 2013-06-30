@@ -21,7 +21,7 @@
     <string name="acc_confirm_password">Confirm Password</string>
     <string name="bt_create_account">Done</string>
     <string name="nick_name">Nickname:</string>
-    <string name="user_name">Username:</string>
+    <string name="user_name">Username</string>
     <string name="category">카테고리</string>
     <string name="category_prompt">Main category</string>
     <string name="board_prompt">Select board</string>

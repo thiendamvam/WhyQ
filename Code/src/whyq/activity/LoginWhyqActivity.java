@@ -15,6 +15,7 @@ import whyq.controller.AuthorizeController;
 import whyq.interfaces.Login_delegate;
 import whyq.utils.Constants;
 import whyq.utils.RSA;
+import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.facebook.FacebookConnector;
 import whyq.utils.facebook.sdk.DialogError;
@@ -73,11 +74,11 @@ public class LoginWhyqActivity extends Activity implements Login_delegate {
         context = LoginWhyqActivity.this;
 //        context = WhyqApplication.Instance().getApplicationContext();
         TextView textView = (TextView)findViewById(R.id.permpingTitle);
-		Typeface tf = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
-		if(textView != null) {
-			textView.setTypeface(tf);
-		}
-        
+//		Typeface tf = Typeface.createFromAsset(getAssets(), "ufonts.com_franklin-gothic-demi-cond-2.ttf");
+//		if(textView != null) {
+//			textView.setTypeface(tf);
+//		}
+        Util.applyTypeface(textView, Util.sTypefaceRegular);
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         login_delegate = new WhyqMain();
         email         = (EditText) findViewById(R.id.permEmail);
