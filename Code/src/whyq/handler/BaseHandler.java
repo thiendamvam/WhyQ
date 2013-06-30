@@ -13,7 +13,6 @@ public class BaseHandler extends DefaultHandler {
 		builder.append(ch, start, length);
 	}
 
-	
 	@Override
 	public void startDocument() throws SAXException {
 		super.startDocument();
@@ -23,21 +22,32 @@ public class BaseHandler extends DefaultHandler {
 	protected String getString() {
 		return builder.toString();
 	}
-	
+
 	protected int getInt() {
-		return Integer.parseInt(builder.toString());
+		try {
+			return Integer.parseInt(builder.toString());
+		} catch (NumberFormatException e) {
+			return 0;
+		}
 	}
-	
+
 	protected float getFloat() {
-		return Float.parseFloat(builder.toString());
+		try {
+			return Float.parseFloat(builder.toString());
+		} catch (NumberFormatException e) {
+			return 0f;
+		}
 	}
-	
+
 	protected boolean getBoolean() {
 		return builder.toString().equals("1") ? true : false;
 	}
 
-
 	protected double getDouble() {
-		return Double.parseDouble(builder.toString());
+		try {
+			return Double.parseDouble(builder.toString());
+		} catch (NumberFormatException e) {
+			return 0f;
+		}
 	}
 }

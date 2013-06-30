@@ -19,6 +19,7 @@ public class SearchField extends FrameLayout {
 
 	QueryCallback callback = null;
 	QueryRunnable runnable = new QueryRunnable();
+	private TextView mTextview;
 
 	public void setQueryCallback(QueryCallback callback) {
 		this.callback = callback;
@@ -39,6 +40,14 @@ public class SearchField extends FrameLayout {
 		createLayout(context);
 	}
 
+	public void setHint(String text) {
+		mTextview.setHint(text);
+	}
+
+	public void setHint(int resId) {
+		mTextview.setHint(resId);
+	}
+
 	private void createLayout(Context context) {
 		final FrameLayout layout = (FrameLayout) LayoutInflater.from(context)
 				.inflate(R.layout.search_field, null);
@@ -50,8 +59,8 @@ public class SearchField extends FrameLayout {
 		setPadding(layout.getPaddingLeft(), layout.getPaddingTop(),
 				layout.getPaddingRight(), layout.getPaddingBottom());
 
-		TextView textview = (TextView) findViewById(R.id.tvSearch);
-		textview.addTextChangedListener(new TextWatcher() {
+		mTextview = (TextView) findViewById(R.id.tvSearch);
+		mTextview.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,

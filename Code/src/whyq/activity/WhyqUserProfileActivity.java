@@ -20,6 +20,7 @@ import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
 import whyq.view.ExtendedListView;
+import whyq.view.ExtendedListView.OnPositionChangedListener;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,19 +30,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AnalogClock;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.devsmart.android.ui.HorizontalListView;
 import com.whyq.R;
 
-public class WhyqUserProfileActivity extends ImageWorkerActivity {
+public class WhyqUserProfileActivity extends ImageWorkerActivity implements
+		OnPositionChangedListener {
 
 	private static final String TIME_SERVER = "yyyy-MM-dd HH:mm:ss";
 	private static final String TIME_FORMAT = "HH:mm a";
@@ -97,39 +95,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity {
 		}
 
 		ExtendedListView lv = (ExtendedListView) findViewById(R.id.listview);
-		View profileClock = lv.getScrollBarPanel();
-		final TextView tvTime = (TextView) profileClock
-				.findViewById(R.id.textTime);
-		final TextView tvDate = (TextView) profileClock
-				.findViewById(R.id.textDate);
-		final whyq.view.AnalogClock analogClock = (whyq.view.AnalogClock) profileClock
-				.findViewById(R.id.clock);
-
+		lv.setOnPositionChangedListener(this);
 		mActivitiesAdapter = new ActivitiesAdapter(this);
-		lv.setOnScrollListener(new OnScrollListener() {
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				int index = view.getFirstVisiblePosition();
-				ActivityItem item = (ActivityItem) mActivitiesAdapter
-						.getItem(index);
-				if (item != null) {
-					Date date = getDate(item.getUpdatedate());
-					if (date != null) {
-						analogClock.setTime(date.getHours(), date.getMinutes(),
-								00);
-					}
-					tvTime.setText(converServerTimeToTime(item.getUpdatedate()));
-					tvDate.setText(converServerTimeToDate(item.getUpdatedate()));
-				}
-			}
-		});
 		lv.setAdapter(mActivitiesAdapter);
 
 		mPhotoAdapter = new PhotoAdapter(this, mImageWorker);
@@ -155,6 +122,27 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity {
 		getService().getUserActivities(getEncryptedToken(), mUserId);
 		getService().getPhotos(getEncryptedToken(), mUserId);
 
+	}
+
+	@Override
+	public void onPositionChanged(ExtendedListView listView, int position,
+			View scrollBarPanel) {
+
+		final TextView tvTime = (TextView) scrollBarPanel
+				.findViewById(R.id.textTime);
+		final TextView tvDate = (TextView) scrollBarPanel
+				.findViewById(R.id.textDate);
+		final whyq.view.AnalogClock analogClock = (whyq.view.AnalogClock) scrollBarPanel
+				.findViewById(R.id.clock);
+		ActivityItem item = (ActivityItem) mActivitiesAdapter.getItem(position);
+		if (item != null) {
+			Date date = getDate(item.getUpdatedate());
+			if (date != null) {
+				analogClock.setTime(date.getHours(), date.getMinutes(), 00);
+			}
+			tvTime.setText(converServerTimeToTime(item.getUpdatedate()));
+			tvDate.setText(converServerTimeToDate(item.getUpdatedate()));
+		}
 	}
 
 	@Override
@@ -344,14 +332,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity {
 			if (key == null) {
 				holder.activity.setText(message);
 			} else {
-				holder.activity
-						.setText(SpannableUtils
-								.stylistText(
-										message,
-										key,
-										mContext.getResources()
-												.getColor(
-														android.R.color.secondary_text_light_nodisable)));
+				holder.activity.setText(SpannableUtils.stylistText(message,
+						key, 0xff808080));
 			}
 			holder.activity.setCompoundDrawablesWithIntrinsicBounds(
 					R.drawable.user_activity, 0, 0, 0);
@@ -451,4 +433,5 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity {
 		}
 
 	}
+
 }

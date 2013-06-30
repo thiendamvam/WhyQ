@@ -34,7 +34,7 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class FriendsFacebookActivity extends ImageWorkerActivity {
+public class SearchFriendsActivity extends ImageWorkerActivity {
 
 	private FriendsFacebookAdapter mFriendFacebookAdapter = null;
 	private FriendsWhyqAdapter mFriendWhyqAdapter = null;
@@ -179,14 +179,14 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 	static class FriendsFacebookAdapter extends BaseAdapter {
 
 		private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
-		private FriendsFacebookActivity mActivity;
+		private SearchFriendsActivity mActivity;
 		private List<FriendFacebook> listWhyq;
 		private List<FriendFacebook> listNotJoinWhyq;
 		private ImageWorker mImageWorker;
 		private static int countListNotJoinWhyq = 0;
 		private static int countListWhyq = 0;
 
-		public FriendsFacebookAdapter(FriendsFacebookActivity context,
+		public FriendsFacebookAdapter(SearchFriendsActivity context,
 				ImageWorker imageWorker) {
 			this.mActivity = context;
 			this.mImageWorker = imageWorker;
@@ -290,7 +290,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 						holder.action.setText(R.string.add);
 					} else {
 						holder.action.setText(R.string.invite);
-						holder.actionContainer
+						holder.action
 								.setOnClickListener(new View.OnClickListener() {
 
 									@Override
@@ -350,11 +350,11 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 	static class FriendsWhyqAdapter extends BaseAdapter {
 
 		private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
-		private FriendsFacebookActivity mActivity;
+		private SearchFriendsActivity mActivity;
 		private List<FriendWhyq> listWhyq;
 		private ImageWorker mImageWorker;
 
-		public FriendsWhyqAdapter(FriendsFacebookActivity context,
+		public FriendsWhyqAdapter(SearchFriendsActivity context,
 				ImageWorker imageWorker) {
 			this.mActivity = context;
 			this.mImageWorker = imageWorker;
