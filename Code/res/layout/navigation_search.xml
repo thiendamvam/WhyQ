@@ -17,10 +17,12 @@
         android:padding="5dp" >
 
         <EditText
+            style="@style/normal_grey_text"
             android:id="@+id/etTextSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:layout_toLeftOf="@+id/btnCancel"
+            android:background="@drawable/bg_input"
             android:gravity="center_vertical"
             android:hint="@string/hint_search"
             android:imeOptions="actionSearch"
@@ -33,13 +35,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/icon_search" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@+id/rlSearchtool"
+            android:background="@drawable/white_container"
+            android:onClick="onCancelClicked"
+            android:text="@string/cancel"
+            android:textColor="@color/profifle_blue"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rlSearchtool"
-        android:layout_width="90dp"
+        android:layout_width="60dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -47,7 +63,7 @@
 
         <RelativeLayout
             android:id="@+id/rlFilter"
-            android:layout_width="50dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_weight="1.5"
@@ -82,17 +98,6 @@
                 android:src="@drawable/ic_launcher"
                 android:visibility="invisible" />
         </RelativeLayout>
-
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:onClick="onCancelClicked"
-            android:text="@string/cancel"
-            android:textColor="@color/profifle_blue"
-            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

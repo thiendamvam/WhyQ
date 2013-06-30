@@ -37,6 +37,9 @@ import android.widget.TextView;
 import com.whyq.R;
 
 public class Util {
+	public static Typeface sTypefaceRegular = Typeface.createFromAsset(WhyqApplication.Instance().getApplicationContext().getAssets(), "Roboto-Regular.ttf");;
+	public static Typeface sTypefaceBold = Typeface.createFromAsset(WhyqApplication.Instance().getApplicationContext().getAssets(), "Roboto-Bold.ttf");; 
+	public static Typeface sTypefaceItalic =  Typeface.createFromAsset(WhyqApplication.Instance().getApplicationContext().getAssets(), "Roboto-Italic.ttf");;
 
 	/**
 	 * @Description: check to see whether email address is valid or not

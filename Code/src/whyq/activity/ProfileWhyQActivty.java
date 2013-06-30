@@ -7,6 +7,7 @@ import com.whyq.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 
 public class ProfileWhyQActivty extends Activity {
 
@@ -15,7 +16,7 @@ public class ProfileWhyQActivty extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_profile);
 	}
-	public void back(){
+	public void back(View v){
 	       WhyqMain.back();
 	}
 	@Override

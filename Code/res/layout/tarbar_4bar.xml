@@ -6,12 +6,12 @@
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="0dp"
-    android:weightSum="5" >
+    android:weightSum="4" >
 
     <LinearLayout
         android:id="@+id/lnCutleryTab"
         android:layout_width="0dp"
-        android:layout_height="36dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/bg_tab_active"
         android:gravity="center"
@@ -29,7 +29,7 @@
     <LinearLayout
         android:id="@+id/lnWineTab"
         android:layout_width="0dp"
-        android:layout_height="36dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/bg_tab_normal"
         android:baselineAligned="false"
@@ -48,7 +48,7 @@
     <LinearLayout
         android:id="@+id/lnCoffeTab"
         android:layout_width="0dp"
-        android:layout_height="36dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/bg_tab_normal"
         android:baselineAligned="false"
@@ -67,7 +67,7 @@
     <LinearLayout
         android:id="@+id/lnHotel"
         android:layout_width="0dp"
-        android:layout_height="36dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/bg_tab_normal"
         android:baselineAligned="false"

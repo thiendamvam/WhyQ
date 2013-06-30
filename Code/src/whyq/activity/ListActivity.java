@@ -27,6 +27,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager.OnActivityResultListener;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -57,6 +58,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	public static final String DOWNLOAD_COMPLETED = "DOWNLOAD_COMPLETED";
 	public static final String COFFE = "";
+	private static final int CHANGE_LOCATION_REQUEST = 0;
+	protected static final String CHANGE_LOCATION = "CHANGE_LOCATION";
 	public String url = "";
 	public Boolean header = true;
 
@@ -116,7 +119,9 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 			if (intent.getAction().equals(DOWNLOAD_COMPLETED)) {
 				exeListActivity(false);
-			} 
+			} else if(intent.getAction().equals(CHANGE_LOCATION)){
+				updateLocation(intent);
+			}
 		}
 	};
 	
@@ -152,20 +157,33 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private RelativeLayout rlSearchTools;
 	private LayoutParams params;
 	private RelativeLayout rlFilterGroup;
+	private Context context;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createUI();
-		IntentFilter intentFilter = new IntentFilter(DOWNLOAD_COMPLETED);
-		registerReceiver(receiver, intentFilter);
+		regisReceiver();
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(ListActivity.this.getIntent());
     	showProgress();
 
 	}
+
+
+	private void regisReceiver() {
+		// TODO Auto-generated method stub
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(DOWNLOAD_COMPLETED);
+		intentFilter.addAction(CHANGE_LOCATION);
+		registerReceiver(receiver, intentFilter);
+	}
 	
+	protected void updateLocation(Intent intent) {
+		// TODO Auto-generated method stub
+		
+	}
 	protected void gotoStoreDetail(String storeId) {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(ListActivity.this, ListDetailActivity.class);
@@ -193,18 +211,18 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		imgCheckedAll = (ImageView) findViewById(R.id.imgCbAll);
 		imgCheckedFavorite = (ImageView)findViewById(R.id.imgCbFavourite);
 		imgCheckedVisited = (ImageView) findViewById(R.id.imgCbVisited);
-		
+
 		btnCacel = (Button)findViewById(R.id.btnCancel);
 		rlSearchTools = (RelativeLayout)findViewById(R.id.rlSearchtool);
 		rlFilterGroup = (RelativeLayout)findViewById(R.id.rlFilter);
-		params = (RelativeLayout.LayoutParams)rlSearchTools.getLayoutParams();
+		
 		
 		imgCutlery = (ImageView)findViewById(R.id.imgCutleryIcon);
 		imgWine = (ImageView)findViewById(R.id.imgWinIcon);
 		imgCoffe = (ImageView)findViewById(R.id.imgCoffeeIcon);
 		imgHotel = (ImageView)findViewById(R.id.imgHotelIcon);
 		
-		
+		context = ListActivity.this;
 		whyqListView.setOnItemClickListener(onStoreItemListener);
 		etTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
@@ -234,8 +252,9 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		etTextSearch.addTextChangedListener(mTextEditorWatcher);
 		etTextSearch.setOnFocusChangeListener(this);
 		imgCoffe.setFocusable(true);
-		etTextSearch.clearFocus();
+//		etTextSearch.clearFocus();
 		imgCoffe.requestFocus();
+		params = (RelativeLayout.LayoutParams)rlSearchTools.getLayoutParams();
 	}
 	
 	protected void exeSearch(String string) {
@@ -668,7 +687,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	}
 	
 	public void changeLocationClicked(View v){
-		
+		Intent intent = new Intent(ListActivity.this, ChangeLocationActivity.class);
+		startActivity(intent);
 	}
 	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
 		public void beforeTextChanged(CharSequence s, int start, int count,
@@ -686,9 +706,12 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 				if(text.equals(""))
 				{
 					isSearch = false;
+					exeDisableSearchFocus();
 					exeListActivity(false);
+					
 				}else{
 					isSearch = true;
+					exeSearchFocus();
 					exeSearch(text);
 				}
 			
@@ -703,7 +726,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
 	    if(hasFocus){
-	    	exeSearchFocus();
+//	    	exeSearchFocus();
 	    }else {
 //	        Toast.makeText(getApplicationContext(), "lost the focus", Toast.LENGTH_LONG).show();
 	    	exeDisableSearchFocus();
@@ -722,10 +745,12 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	protected void exeSearchFocus() {
 		// TODO Auto-generated method stub
 		if(btnCacel.getVisibility()!=View.VISIBLE){
-			params.width = 90;
-			params.height = LayoutParams.WRAP_CONTENT;
-			params.addRule(RelativeLayout.CENTER_IN_PARENT,1);
-			rlSearchTools.setLayoutParams(params);
+			
+//			params.width =WhyqApplication.Instance().getDisplayMetrics().densityDpi*10;// LayoutParams.WRAP_CONTENT;
+//			params.height = LayoutParams.WRAP_CONTENT;
+//			params.addRule(RelativeLayout.CENTER_VERTICAL,1);
+//			params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,1);
+//			rlSearchTools.setLayoutParams(params);
 			btnCacel.setVisibility(View.VISIBLE);
 			
 			imgCoffe.requestFocus();
@@ -736,24 +761,25 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 	public void onCancelClicked(View v){
 		exeDisableSearchFocus();
+		etTextSearch.setText("");
 	}
 
 	private void exeDisableSearchFocus() {
 		// TODO Auto-generated method stub
 		btnCacel.setVisibility(View.GONE);
-		params.width = 60;
+//		params.width = 60;
 		rlSearchTools.setLayoutParams(params);
 		showFilterGroup();
 	}
 
 	private void hideFilterGroup() {
 		// TODO Auto-generated method stub
-		rlFilterGroup.setVisibility(View.GONE);
+		rlSearchTools.setVisibility(View.GONE);
 	}
 
 	private void showFilterGroup() {
 		// TODO Auto-generated method stub
-		rlFilterGroup.setVisibility(View.VISIBLE);
+		rlSearchTools.setVisibility(View.VISIBLE);
 	}
 	private void showProgress() {
 		// TODO Auto-generated method stub

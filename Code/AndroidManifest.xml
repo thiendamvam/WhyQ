@@ -60,6 +60,11 @@
             android:name="whyq.activity.WhyqLogout"
             android:screenOrientation="portrait" />
         <activity
+            android:name="whyq.activity.ChangeLocationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name="whyq.activity.ListActivity"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -107,7 +112,8 @@
         <activity
             android:name="whyq.activity.ListDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" />
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="whyq.activity.ProfileActivity"
             android:screenOrientation="portrait" />
@@ -121,13 +127,13 @@
             android:name="whyq.activity.JoinWhyqActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustUnspecified" >
         </activity>
         <activity
             android:name="whyq.activity.LoginWhyqActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustUnspecified" >
         </activity>
         <activity
             android:name="whyq.activity.LoginHome"
