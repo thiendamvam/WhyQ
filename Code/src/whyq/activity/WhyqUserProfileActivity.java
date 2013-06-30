@@ -55,6 +55,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		ACTIVITY_MAP.put("friend_invite",
 				"wants to add you as friend on WHY Q, accept");
 		ACTIVITY_MAP.put("favourite", "favoured");
+		ACTIVITY_MAP.put("comment", "commented on");
 	}
 
 	private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
@@ -242,13 +243,11 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		final String totalComment = XMLParser.getValue(this,
 				XMLParser.STORE_TOTAL_COMMENT);
 		bindCategory(R.id.comment, R.drawable.icon_cat_wine,
-				totalComment == "" ? "0" : totalComment, "Comments",
+				totalComment == "" ? "0" : totalComment, "Tips",
 				new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
-						startActivity(new Intent(WhyqUserProfileActivity.this,
-								CommentActivity.class));
 					}
 				});
 	}
