@@ -18,7 +18,6 @@ import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
-import whyq.view.SearchField;
 import whyq.view.SearchField.QueryCallback;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,8 +34,7 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class FriendsFacebookActivity extends ImageWorkerActivity implements
-		QueryCallback {
+public class FriendsFacebookActivity extends ImageWorkerActivity {
 
 	private FriendsFacebookAdapter mFriendFacebookAdapter = null;
 	private FriendsWhyqAdapter mFriendWhyqAdapter = null;
@@ -49,10 +47,8 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 
 		setContentView(R.layout.activity_facebook_friends);
 
-		SearchField searchField = (SearchField) findViewById(R.id.searchField);
-
-		searchField.setQueryCallback(this);
-
+		showSearchField(true);
+		
 		mListview = (ListView) findViewById(R.id.listview);
 		mListview.setOnItemClickListener(new OnItemClickListener() {
 
@@ -108,7 +104,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 			getFriends();
 		}
 	}
-
+	
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);

@@ -448,4 +448,12 @@ public class Service implements Runnable {
 
 	}
 
+	public void getPhotos(String encryptedToken, String userId) {
+		_action = ServiceAction.ActionGetPhotos;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("user_id", userId);
+		request("/m/member/profile/photo", params, true, false);
+	}
+
 }

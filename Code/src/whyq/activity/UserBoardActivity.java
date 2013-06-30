@@ -10,9 +10,12 @@ import java.util.Map;
 
 import whyq.WhyqApplication;
 import whyq.model.ActivityItem;
+import whyq.model.Photo;
 import whyq.service.DataParser;
 import whyq.service.Service;
+import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
+import whyq.utils.ImageWorker;
 import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
@@ -20,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.whyq.BuildConfig;
+import com.devsmart.android.ui.HorizontalListView;
 import com.whyq.R;
 
 public class UserBoardActivity extends ImageWorkerActivity {
@@ -52,12 +54,12 @@ public class UserBoardActivity extends ImageWorkerActivity {
 		ACTIVITY_MAP = new HashMap<String, String>();
 		ACTIVITY_MAP.put("friend_invite",
 				"wants to add you as friend on WHY Q, accept");
-		ACTIVITY_MAP.put("favourite",
-				"favoured");
+		ACTIVITY_MAP.put("favourite", "favoured");
 	}
 
 	private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
-	private ActivitiesAdapter mAdapter;
+	private ActivitiesAdapter mActivitiesAdapter;
+	private PhotoAdapter mPhotoAdapter;
 	private String mUserFirstName;
 	protected String mUserId;
 
@@ -65,7 +67,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_user_board);
+		setContentView(R.layout.activity_profile);
 
 		initCategory();
 
@@ -94,7 +96,7 @@ public class UserBoardActivity extends ImageWorkerActivity {
 		final TextView tvTime = (TextView) findViewById(R.id.textTime);
 		final TextView tvDate = (TextView) findViewById(R.id.textDate);
 
-		mAdapter = new ActivitiesAdapter(this);
+		mActivitiesAdapter = new ActivitiesAdapter(this);
 		ListView lv = (ListView) findViewById(R.id.listview);
 		lv.setOnScrollListener(new OnScrollListener() {
 
@@ -107,22 +109,22 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
 				int index = view.getFirstVisiblePosition();
-				ActivityItem item = (ActivityItem) mAdapter.getItem(index);
+				ActivityItem item = (ActivityItem) mActivitiesAdapter
+						.getItem(index);
 				if (item != null) {
-					if (BuildConfig.DEBUG) {
-						Log.d("",
-								"time: "
-										+ converServerTimeToTime(item
-												.getUpdatedate()));
-					}
 					tvTime.setText(converServerTimeToTime(item.getUpdatedate()));
 					tvDate.setText(converServerTimeToDate(item.getUpdatedate()));
 				}
 			}
 		});
-		lv.setAdapter(mAdapter);
+		lv.setAdapter(mActivitiesAdapter);
 
-		final Service service = getService();
+		mPhotoAdapter = new PhotoAdapter(this, mImageWorker);
+		int PHOTO_SIZE = WhyqApplication.sScreenWidth / 5;
+		HorizontalListView listPhoto = (HorizontalListView) findViewById(R.id.gallery);
+		listPhoto.getLayoutParams().height = (int) (PHOTO_SIZE + WhyqApplication
+				.Instance().getDisplayMetrics().density * 5);
+		listPhoto.setAdapter(mPhotoAdapter);
 
 		setLoading(true);
 
@@ -131,7 +133,8 @@ public class UserBoardActivity extends ImageWorkerActivity {
 			mUserId = XMLParser.getUserId(this);
 		}
 
-		service.getUserActivities(getEncryptedToken(), mUserId);
+		getService().getUserActivities(getEncryptedToken(), mUserId);
+		getService().getPhotos(getEncryptedToken(), mUserId);
 
 	}
 
@@ -165,8 +168,15 @@ public class UserBoardActivity extends ImageWorkerActivity {
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
 		setLoading(false);
-		mAdapter.setItems(DataParser.parseActivities(String.valueOf(result
-				.getData())));
+		if (result == null)
+			return;
+		if (result.getAction() == ServiceAction.ActionGetUserActivities) {
+			mActivitiesAdapter.setItems(DataParser.parseActivities(String
+					.valueOf(result.getData())));
+		} else if (result.getAction() == ServiceAction.ActionGetPhotos) {
+			mPhotoAdapter.setItems(DataParser.parsePhotos(String.valueOf(result
+					.getData())));
+		}
 	}
 
 	private void initCategory() {
@@ -326,6 +336,80 @@ public class UserBoardActivity extends ImageWorkerActivity {
 
 			public ViewHolder(View view) {
 				activity = (TextView) view.findViewById(R.id.activity);
+			}
+		}
+
+	}
+
+	static class PhotoAdapter extends BaseAdapter {
+
+		private static final int PHOTO_SIZE = WhyqApplication.sScreenWidth / 5;
+		private Context mContext;
+		private List<Photo> mItems;
+		private ImageWorker mImageWorker;
+
+		public PhotoAdapter(Context context, ImageWorker imageWorker) {
+			this.mContext = context;
+			this.mImageWorker = imageWorker;
+			this.mItems = new ArrayList<Photo>();
+		}
+
+		public void setItems(List<Photo> items) {
+			if (items == null || items.size() == 0) {
+				mItems.clear();
+			} else {
+				mItems = items;
+			}
+			notifyDataSetChanged();
+		}
+
+		@Override
+		public int getCount() {
+			return mItems.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return mItems.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				convertView = LayoutInflater.from(mContext).inflate(
+						R.layout.photo_item, parent, false);
+			}
+
+			final Photo item = mItems.get(position);
+
+			ViewHolder holder = getViewHolder(convertView);
+			mImageWorker.loadImage(item.getImage(), holder.photo, PHOTO_SIZE,
+					PHOTO_SIZE);
+
+			return convertView;
+		}
+
+		private ViewHolder getViewHolder(View view) {
+			ViewHolder holder = (ViewHolder) view.getTag();
+			if (holder == null) {
+				holder = new ViewHolder(view);
+				view.setTag(holder);
+			}
+			return holder;
+		}
+
+		class ViewHolder {
+			ImageView photo;
+
+			public ViewHolder(View view) {
+				photo = (ImageView) view.findViewById(R.id.photo);
+				photo.getLayoutParams().width = PHOTO_SIZE;
+				photo.getLayoutParams().height = PHOTO_SIZE;
 			}
 		}
 

@@ -2,6 +2,8 @@ package whyq.activity;
 
 import whyq.WhyqApplication;
 import whyq.utils.Util;
+import whyq.view.SearchField;
+import whyq.view.SearchField.QueryCallback;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
@@ -14,9 +16,12 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class NavigationActivity extends FragmentActivity {
+public class NavigationActivity extends FragmentActivity implements
+		QueryCallback {
 
 	private TextView textviewTitle;
+	private SearchField mSearchField;
+	private FrameLayout mTitleContainer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +30,17 @@ public class NavigationActivity extends FragmentActivity {
 		setContentView(R.layout.activity_navigation);
 
 		initScreenSize();
-		
-		FrameLayout titleContainer = (FrameLayout) findViewById(R.id.titleContainer);
-		titleContainer.addView(getTitleView());
+
+		mTitleContainer = (FrameLayout) findViewById(R.id.titleContainer);
+		mTitleContainer.addView(getTitleView());
+
+		mSearchField = (SearchField) findViewById(R.id.searchField);
+		mSearchField.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+
+		mSearchField.setQueryCallback(this);
 
 		textviewTitle = (TextView) findViewById(R.id.tvHeaderTitle);
-		
+
 		View navigationBar = findViewById(R.id.navigationBar);
 		navigationBar.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 
@@ -59,11 +69,26 @@ public class NavigationActivity extends FragmentActivity {
 				});
 
 	}
-	
+
+	protected void showSearchField(boolean show) {
+		if (show) {
+			mSearchField.setVisibility(View.VISIBLE);
+			mTitleContainer.setVisibility(View.INVISIBLE);
+		} else {
+			mTitleContainer.setVisibility(View.VISIBLE);
+			mSearchField.setVisibility(View.GONE);
+		}
+	}
+
+	@Override
+	public void onQuery(String queryString) {
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Util.applyTypeface(findViewById(R.id.navigationContentView), WhyqApplication.sTypefaceRegular);
+		Util.applyTypeface(findViewById(R.id.navigationContentView),
+				WhyqApplication.sTypefaceRegular);
 	}
 
 	@Override
@@ -89,7 +114,8 @@ public class NavigationActivity extends FragmentActivity {
 	private void initScreenSize() {
 		DisplayMetrics displaymetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-		WhyqApplication.initScreenSize(displaymetrics.widthPixels, displaymetrics.heightPixels);
+		WhyqApplication.initScreenSize(displaymetrics.widthPixels,
+				displaymetrics.heightPixels);
 	}
 
 	protected void setExtraView(View view) {

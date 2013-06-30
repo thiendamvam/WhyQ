@@ -27,10 +27,4 @@ public class ImageWorkerActivity extends ConsumeServiceActivity {
 		mImageWorker.setExitTasksEarly(true);
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mImageWorker.clearCache();
-	}
-
 }

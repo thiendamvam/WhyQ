@@ -18,10 +18,11 @@
     <dimen name="normal_padding">16dp</dimen>
     <dimen name="base_font">16sp</dimen>
     <dimen name="font_title">18sp</dimen>
-    <dimen name="font_large">36px</dimen>
-    <dimen name="font_medium">28px</dimen>
-    <dimen name="font_small">24px</dimen>
-    <dimen name="font_super_small">20px</dimen>
-    <dimen name="base_size">48dp</dimen>
+    <dimen name="base_size">48dip</dimen>
+    
+    <dimen name="font_large">20sp</dimen>
+    <dimen name="font_medium">18sp</dimen>
+    <dimen name="font_small">16sp</dimen>
+    <dimen name="font_super_small">14sp</dimen>
 
 </resources>

@@ -4,11 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <!--
     <whyq.view.SearchField
         android:id="@+id/searchField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/title" />
+        android:background="@drawable/title" />    -->
 
     <ListView
         android:id="@+id/listview"
