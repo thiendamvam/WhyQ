@@ -59,7 +59,7 @@ public class NavigationActivity extends FragmentActivity implements
 			}
 		});
 
-		findViewById(R.id.extraContainer).setOnClickListener(
+		findViewById(R.id.buttonExtra).setOnClickListener(
 				new OnClickListener() {
 
 					@Override
@@ -119,7 +119,7 @@ public class NavigationActivity extends FragmentActivity implements
 	}
 
 	protected void setExtraView(View view) {
-		FrameLayout extraContainer = (FrameLayout) findViewById(R.id.extraContainer);
+		FrameLayout extraContainer = (FrameLayout) findViewById(R.id.buttonExtra);
 		extraContainer.addView(view, new FrameLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}

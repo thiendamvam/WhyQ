@@ -84,10 +84,10 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 
 	private void startUserProfileActivity(String userId, String userName,
 			String avatar) {
-		Intent i = new Intent(this, UserBoardActivity.class);
-		i.putExtra(UserBoardActivity.ARG_USER_ID, userId);
-		i.putExtra(UserBoardActivity.ARG_USER_NAME, userName);
-		i.putExtra(UserBoardActivity.ARG_AVATAR, avatar);
+		Intent i = new Intent(this, WhyqUserProfileActivity.class);
+		i.putExtra(WhyqUserProfileActivity.ARG_USER_ID, userId);
+		i.putExtra(WhyqUserProfileActivity.ARG_USER_NAME, userName);
+		i.putExtra(WhyqUserProfileActivity.ARG_AVATAR, avatar);
 		startActivity(i);
 	}
 
