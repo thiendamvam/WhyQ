@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:singleLine="true"
-            android:textColor="@android:color/primary_text_light" />
+            android:textColor="#5C5C5C" />
     </LinearLayout>
 
 </LinearLayout>

@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.whyq.R;
@@ -22,6 +23,7 @@ public class NavigationActivity extends FragmentActivity implements
 	private TextView textviewTitle;
 	private SearchField mSearchField;
 	private FrameLayout mTitleContainer;
+	private ImageView mButtonBack;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,7 @@ public class NavigationActivity extends FragmentActivity implements
 		mTitleContainer = (FrameLayout) findViewById(R.id.titleContainer);
 		mTitleContainer.addView(getTitleView());
 
-		mSearchField = (SearchField) findViewById(R.id.searchField);
+		mSearchField = (SearchField) findViewById(R.id.searchFieldHeader);
 		mSearchField.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 
 		mSearchField.setQueryCallback(this);
@@ -49,10 +51,11 @@ public class NavigationActivity extends FragmentActivity implements
 		progressBarLP.width = WhyqApplication.sBaseViewHeight * 3 / 5;
 		progressBarLP.height = WhyqApplication.sBaseViewHeight * 3 / 5;
 
-		View buttonBack = findViewById(R.id.buttonBack);
-		buttonBack.getLayoutParams().width = WhyqApplication.sBaseViewHeight;
-		buttonBack.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
-		buttonBack.setOnClickListener(new OnClickListener() {
+		mButtonBack = (ImageView) findViewById(R.id.buttonBack);
+		View buttonBackContainer = findViewById(R.id.buttonBackContainer);
+		buttonBackContainer.getLayoutParams().width = WhyqApplication.sBaseViewHeight;
+		buttonBackContainer.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+		buttonBackContainer.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onBackPressed();
@@ -70,7 +73,7 @@ public class NavigationActivity extends FragmentActivity implements
 
 	}
 
-	protected void showSearchField(boolean show) {
+	protected void showHeaderSearchField(boolean show) {
 		if (show) {
 			mSearchField.setVisibility(View.VISIBLE);
 			mTitleContainer.setVisibility(View.INVISIBLE);
@@ -78,6 +81,10 @@ public class NavigationActivity extends FragmentActivity implements
 			mTitleContainer.setVisibility(View.VISIBLE);
 			mSearchField.setVisibility(View.GONE);
 		}
+	}
+
+	protected void setBackButtonIcon(int resId) {
+		mButtonBack.setImageResource(resId);
 	}
 
 	@Override

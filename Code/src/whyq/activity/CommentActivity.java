@@ -13,6 +13,7 @@ import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageWorker;
 import whyq.utils.Util;
+import whyq.utils.XMLParser;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -44,7 +45,7 @@ public class CommentActivity extends ImageWorkerActivity {
 
 		Service service = getService();
 		setLoading(true);
-		service.getComments(getEncryptedToken(), "", 1, 20);
+		service.getComments(getEncryptedToken(), XMLParser.getUserId(this), 1, 20);
 	}
 	
 	@Override
