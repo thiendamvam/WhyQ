@@ -239,19 +239,17 @@ public class Service implements Runnable {
 		case ActionLoginTwitter:
 			resObj = parser.parserLoginData(result);
 			break;
-		case ActionGetUserActivities:
-		case ActionGetFriendsFacebook:
-		case ActionGetFriends:
-		case ActionSearchFriendsFacebook:
-		case ActionGetComment:
-		case ActionCheckedBills:
-			resObj = result;
-			break;
 		case ActionGetBusinessDetail:
 			resObj = parser.parseBusinessDetail(result);
 			break;
 		case ActionComment:
 			resObj = parser.parseCommentResult(result);
+			break;
+		case ActionGetLocation:
+			resObj = parser.parseLCationResult(result);
+			break;
+		default:
+			resObj = result;
 			break;
 		}
 		if (resObj == null)
@@ -294,8 +292,16 @@ public class Service implements Runnable {
 		HttpConnectionParams.setSoTimeout(httpParameters, 600000);
 		HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 		try {
-			final String urlString = _includeHost ? API.hostURL + _actionURI
-					: _actionURI;
+			final String urlString;
+			if(_action==ServiceAction.ActionGetLocation){
+				String textSearch = _params.get("text-search");
+				textSearch = textSearch.replace(" ", "+");
+				urlString= "http://ws.geonames.org/search?q="
+						+ textSearch
+						+ "&style=full&maxRows=10";
+			}else
+				urlString = _includeHost ? API.hostURL + _actionURI
+						: _actionURI;
 			HttpRequestBase request = null;
 
 			if (_isGet) {
@@ -429,12 +435,12 @@ public class Service implements Runnable {
 		request("/m/business/show", params, true, false);
 	}
 
-	public void getCheckedBills(String encryptedToken, String userId) {
-		_action = ServiceAction.ActionCheckedBills;
+	public void getHistories(String encryptedToken, String userId) {
+		_action = ServiceAction.ActionGetHistories;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
-		request("/m/member/profile/order", params, true, false);
+		request("/m/member/recent/activity", params, true, false);
 	}
 
 	public void exeComment(String string, String storeId) {
@@ -444,13 +450,29 @@ public class Service implements Runnable {
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", storeId);
 		request("/m/business/show", params, true, false);
-		
+
 	}
 
 	public void orderDelivery(String storeId, String otherAddress,
 			String phoneNumber, String hours, String minutes) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	public void getPhotos(String encryptedToken, String userId) {
+		_action = ServiceAction.ActionGetPhotos;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("user_id", userId);
+		request("/m/member/profile/photo", params, true, false);
+	}
+
+	public void setLocation(String string) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionGetLocation;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("text-search", string);
+		request("getlocation", params, true, false);
 	}
 
 }

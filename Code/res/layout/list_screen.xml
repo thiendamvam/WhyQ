@@ -35,7 +35,7 @@
             <include
                 android:id="@+id/menuBar"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="4"
                 layout="@layout/tarbar_4bar" />
         </LinearLayout>
@@ -46,7 +46,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:onClick="changeLocationClicked"
-            android:background="@color/white" >
+            android:background="@color/white"
+            android:visibility="gone" >
 
             <TextView
                 style="@style/normail_blue_text"
@@ -56,7 +57,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:text="Near:" />
-
+			
             <TextView
                 style="@style/normail_black_text"
                 android:id="@+id/tvNearLocation"

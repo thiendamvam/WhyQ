@@ -19,7 +19,6 @@ import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
 import whyq.view.SearchField;
-import whyq.view.SearchField.QueryCallback;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -28,15 +27,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.whyq.R;
 
-public class FriendsFacebookActivity extends ImageWorkerActivity implements
-		QueryCallback {
+public class FriendsFacebookActivity extends ImageWorkerActivity {
 
 	private FriendsFacebookAdapter mFriendFacebookAdapter = null;
 	private FriendsWhyqAdapter mFriendWhyqAdapter = null;
@@ -49,9 +47,10 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 
 		setContentView(R.layout.activity_facebook_friends);
 
+		// showSearchField(true);
 		SearchField searchField = (SearchField) findViewById(R.id.searchField);
-
 		searchField.setQueryCallback(this);
+		searchField.setHint(R.string.find_a_friend);
 
 		mListview = (ListView) findViewById(R.id.listview);
 		mListview.setOnItemClickListener(new OnItemClickListener() {
@@ -81,6 +80,13 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 		} else {
 			setTitle(R.string.friend_from_facebook);
 		}
+		
+		// Set extra button.
+		ImageView imageView = new ImageView(this);
+		imageView.setImageResource(R.drawable.icon_add_friend);
+		setExtraView(imageView);
+		
+		setBackButtonIcon(R.drawable.icon_friend_invite);
 
 		getFriends();
 
@@ -88,10 +94,10 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 
 	private void startUserProfileActivity(String userId, String userName,
 			String avatar) {
-		Intent i = new Intent(this, UserBoardActivity.class);
-		i.putExtra(UserBoardActivity.ARG_USER_ID, userId);
-		i.putExtra(UserBoardActivity.ARG_USER_NAME, userName);
-		i.putExtra(UserBoardActivity.ARG_AVATAR, avatar);
+		Intent i = new Intent(this, WhyqUserProfileActivity.class);
+		i.putExtra(WhyqUserProfileActivity.ARG_USER_ID, userId);
+		i.putExtra(WhyqUserProfileActivity.ARG_USER_NAME, userName);
+		i.putExtra(WhyqUserProfileActivity.ARG_AVATAR, avatar);
 		startActivity(i);
 	}
 
@@ -267,8 +273,9 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 					convertView = mActivity.getLayoutInflater().inflate(
 							R.layout.friend_list_item_secondary, parent, false);
 				}
-				
-				Util.applyTypeface(convertView, WhyqApplication.sTypefaceRegular);
+
+				Util.applyTypeface(convertView,
+						WhyqApplication.sTypefaceRegular);
 			}
 
 			final ViewHolder holder = getViewHolder(convertView);
@@ -280,11 +287,10 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 						holder.avatar, AVATAR_SIZE, AVATAR_SIZE);
 				if (friendfacebook.getIsFriend() == StatusWithFriend.STATUS_NOT_CONNECT) {
 					if (position <= countListWhyq) {
-						holder.action
-								.setBackgroundResource(R.drawable.add_friend);
+						holder.action.setText(R.string.add);
 					} else {
 						holder.action.setText(R.string.invite);
-						holder.action
+						holder.actionContainer
 								.setOnClickListener(new View.OnClickListener() {
 
 									@Override
@@ -302,9 +308,9 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 				holder.name.setText((Spannable) item);
 				if (position == 0 && countListWhyq > 0) {
 					holder.action.setText(R.string.friend_all);
-					holder.action.setVisibility(View.VISIBLE);
+					holder.actionContainer.setVisibility(View.VISIBLE);
 				} else {
-					holder.action.setVisibility(View.GONE);
+					holder.actionContainer.setVisibility(View.GONE);
 				}
 			}
 
@@ -323,17 +329,19 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 		class ViewHolder {
 			ImageView avatar;
 			TextView name;
-			Button action;
+			FrameLayout actionContainer;
+			TextView action;
 
 			public ViewHolder(View view) {
-				view.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 				avatar = (ImageView) view.findViewById(R.id.avatar);
 				if (avatar != null) {
 					avatar.getLayoutParams().width = AVATAR_SIZE;
 					avatar.getLayoutParams().height = AVATAR_SIZE;
 				}
 				name = (TextView) view.findViewById(R.id.name);
-				action = (Button) view.findViewById(R.id.action);
+				action = (TextView) view.findViewById(R.id.action);
+				actionContainer = (FrameLayout) view
+						.findViewById(R.id.actionContainer);
 			}
 		}
 
@@ -382,7 +390,8 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 			if (convertView == null) {
 				convertView = mActivity.getLayoutInflater().inflate(
 						R.layout.friend_list_item, parent, false);
-				Util.applyTypeface(convertView, WhyqApplication.sTypefaceRegular);
+				Util.applyTypeface(convertView,
+						WhyqApplication.sTypefaceRegular);
 			}
 
 			final ViewHolder holder = getViewHolder(convertView);
@@ -406,6 +415,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 		class ViewHolder {
 			ImageView avatar;
 			TextView name;
+			View action;
 
 			public ViewHolder(View view) {
 				view.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
@@ -415,7 +425,8 @@ public class FriendsFacebookActivity extends ImageWorkerActivity implements
 					avatar.getLayoutParams().height = AVATAR_SIZE;
 				}
 				name = (TextView) view.findViewById(R.id.name);
-				view.findViewById(R.id.action).setVisibility(View.GONE);
+				action = view.findViewById(R.id.action);
+				action.setBackgroundResource(R.drawable.icon_friend);
 			}
 		}
 

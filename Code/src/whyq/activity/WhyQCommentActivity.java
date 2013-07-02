@@ -12,7 +12,7 @@ import android.widget.ToggleButton;
 
 import com.whyq.R;
 
-public class WhyCommentActivity extends Activity implements IServiceListener {
+public class WhyQCommentActivity extends Activity implements IServiceListener {
 
 	private String storeId;
 	private TextView tvMesssage;
@@ -33,7 +33,7 @@ public class WhyCommentActivity extends Activity implements IServiceListener {
 	}
 
 	public void takeImageOnclicked(View v) {
-		Intent intent = new Intent(WhyCommentActivity.this, ImageActivity.class);
+		Intent intent = new Intent(WhyQCommentActivity.this, ImageActivity.class);
 		startActivity(intent);
 	}
 

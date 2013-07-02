@@ -65,7 +65,7 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 
 		setLoading(true);
 		String userId = getIntent().getStringExtra(ARG_USER_ID);
-		getService().getCheckedBills(getEncryptedToken(), userId);
+		getService().getHistories(getEncryptedToken(), userId);
 	}
 
 	@Override

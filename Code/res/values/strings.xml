@@ -21,7 +21,7 @@
     <string name="acc_confirm_password">Confirm Password</string>
     <string name="bt_create_account">Done</string>
     <string name="nick_name">Nickname:</string>
-    <string name="user_name">Username:</string>
+    <string name="user_name">Username</string>
     <string name="category">카테고리</string>
     <string name="category_prompt">Main category</string>
     <string name="board_prompt">Select board</string>
@@ -78,7 +78,7 @@
     <string name="AlertMsgWebExtLoadError">Please check your netword again!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="hint_search">Search</string>
+    <string name="hint_search">Search name and tag</string>
     <string name="invite">Invite</string>
     <string name="friend_all">Friend all</string>
     <string name="add">Add</string>
@@ -96,4 +96,6 @@
     <string name="receive_notification_from_whyq">Receive notification from WHYQ</string>
     <string name="allow_user_to_see_my_friend">Allow user to see my friends</string>
     <string name="sounds_notification">Sounds notification</string>
+    <string name="history">History</string>
+    <string name="find_a_friend">Find a friend</string>
 </resources>

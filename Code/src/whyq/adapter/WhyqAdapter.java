@@ -215,6 +215,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 							// TODO Auto-generated method stub
 							Log.d("fdsfsfsdfs","fdsfsdfsf");
 							Intent intent = new Intent(context, ListDetailActivity.class);
+							intent.putExtra("store_id", ListActivity.storeId);
 							intent.putExtra("id", store.getId());
 							context.startActivity(intent);
 						}

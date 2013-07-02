@@ -8,7 +8,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
-import whyq.activity.ProfileActivity.exeFollow;
 import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
@@ -57,6 +56,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	public static final String DOWNLOAD_COMPLETED = "DOWNLOAD_COMPLETED";
 	public static final String COFFE = "";
+	private static final int CHANGE_LOCATION_REQUEST = 0;
+	protected static final String CHANGE_LOCATION = "CHANGE_LOCATION";
 	public String url = "";
 	public Boolean header = true;
 
@@ -72,6 +73,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public static boolean isRefesh = true;
 	public static boolean isCalendar = false;
 	int nextItem = -1;
+	
+	public static String storeId;
 //	FragmentManager t = ggetSupportFragmentManager();
 //	private ProgressDialog dialog;
 	
@@ -102,12 +105,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	
 	
 	private String searchKey="";
-	private String longitude="";
-	private String latgitude="";
+	public static String longitude="";
+	public static String latgitude="";
+	public static String currentLocation;
 	private String filter="0"; 
 	private String friendFavourite;
 	private String friendVisited;
 	private String cateId="0";
+	
 	public static boolean isSearch = false;
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -116,19 +121,23 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 			if (intent.getAction().equals(DOWNLOAD_COMPLETED)) {
 				exeListActivity(false);
-			} 
+			} else if(intent.getAction().equals(CHANGE_LOCATION)){
+				updateLocation(intent);
+			}
 		}
 	};
 	
 	
 	private OnItemClickListener onStoreItemListener = new OnItemClickListener() {
+		
+
 		@Override
 		public void onItemClick(AdapterView<?> adapter, View view,
 				int position, long id) {
 			try {
 				ViewHolder store = ((ViewHolder) view.getTag());
 				if(store !=null){
-					String storeId = store.id;
+					storeId = store.id;
 					if(storeId !=null)
 						gotoStoreDetail(storeId);
 				}
@@ -152,23 +161,40 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private RelativeLayout rlSearchTools;
 	private LayoutParams params;
 	private RelativeLayout rlFilterGroup;
+	private Context context;
+	private TextView tvNearLocation;
+	private RelativeLayout rlLocationField;
+	private int storeType;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createUI();
-		IntentFilter intentFilter = new IntentFilter(DOWNLOAD_COMPLETED);
-		registerReceiver(receiver, intentFilter);
+		regisReceiver();
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(ListActivity.this.getIntent());
     	showProgress();
 
 	}
+
+
+	private void regisReceiver() {
+		// TODO Auto-generated method stub
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(DOWNLOAD_COMPLETED);
+		intentFilter.addAction(CHANGE_LOCATION);
+		registerReceiver(receiver, intentFilter);
+	}
 	
+	protected void updateLocation(Intent intent) {
+		// TODO Auto-generated method stub
+		
+	}
 	protected void gotoStoreDetail(String storeId) {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(ListActivity.this, ListDetailActivity.class);
+		intent.putExtra("store_type", storeType);
 		startActivity(intent);
 	}
 
@@ -184,8 +210,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		lnFilter = (LinearLayout)findViewById(R.id.lnFilterView);
 		imgArrowDown = (ImageView)findViewById(R.id.imgArrowDown);
 		loadPermList = new LoadPermList(false);
+		tvNearLocation = (TextView)findViewById(R.id.tvNearLocation);
 		progressBar = (ProgressBar)findViewById(R.id.prgBar);
 		etTextSearch =(EditText) findViewById(R.id.etTextSearch);
+		rlLocationField = (RelativeLayout)findViewById(R.id.rlLocationField);
 		isAddHeader = true;
 		cktViewAll = (TextView) findViewById(R.id.cktViewAll);
 		cktFriednVised = (TextView)findViewById(R.id.cktViewVisited);
@@ -193,18 +221,18 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		imgCheckedAll = (ImageView) findViewById(R.id.imgCbAll);
 		imgCheckedFavorite = (ImageView)findViewById(R.id.imgCbFavourite);
 		imgCheckedVisited = (ImageView) findViewById(R.id.imgCbVisited);
-		
+
 		btnCacel = (Button)findViewById(R.id.btnCancel);
 		rlSearchTools = (RelativeLayout)findViewById(R.id.rlSearchtool);
 		rlFilterGroup = (RelativeLayout)findViewById(R.id.rlFilter);
-		params = (RelativeLayout.LayoutParams)rlSearchTools.getLayoutParams();
+		
 		
 		imgCutlery = (ImageView)findViewById(R.id.imgCutleryIcon);
 		imgWine = (ImageView)findViewById(R.id.imgWinIcon);
 		imgCoffe = (ImageView)findViewById(R.id.imgCoffeeIcon);
 		imgHotel = (ImageView)findViewById(R.id.imgHotelIcon);
 		
-		
+		context = ListActivity.this;
 		whyqListView.setOnItemClickListener(onStoreItemListener);
 		etTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
@@ -234,10 +262,22 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		etTextSearch.addTextChangedListener(mTextEditorWatcher);
 		etTextSearch.setOnFocusChangeListener(this);
 		imgCoffe.setFocusable(true);
-		etTextSearch.clearFocus();
+//		etTextSearch.clearFocus();
 		imgCoffe.requestFocus();
+		params = (RelativeLayout.LayoutParams)rlSearchTools.getLayoutParams();
 	}
-	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d("onActivityResult changelocation","");
+	    if (resultCode == RESULT_OK) {
+	    	 if (requestCode == CHANGE_LOCATION_REQUEST ) {
+	    		 latgitude = data.getStringExtra("lat");
+	    		 longitude = data.getStringExtra("lng");
+	    		 exeSearch(etTextSearch.getText().toString());
+	    		 tvNearLocation.setText(data.getStringExtra("name"));
+	    	 }
+	    
+	    }
+	}
 	protected void exeSearch(String string) {
 		// TODO Auto-generated method stub
 		searchKey = string;
@@ -254,6 +294,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(currentLocation !=null)
+			tvNearLocation.setText(currentLocation);
 		imgCoffe.requestFocus();
 		if(isLogin && WhyqMain.getCurrentTab() == 3){
 			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
@@ -390,6 +432,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 			
 			whyqListView.setAdapter(permListAdapter);
+			permListAdapter.notifyDataSetChanged();
 
 //			int selected = permListAdapter.getCount() - permListMain.size() - 2;
 //			if(selected >= 0) {
@@ -574,18 +617,22 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
 			cateId = "0";
-			exeSearch(etTextSearch.getText().toString());
+			storeType = 1;
+//			exeSearch(etTextSearch.getText().toString());
+			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 		case 2:
 			lnWine.setBackgroundResource(R.drawable.bg_tab_active);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnHotel.setBackgroundResource(R.drawable.bg_tab_normal);
+			storeType = 2;
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			setIconTab(2);
 			cateId = "1";
-			exeSearch(etTextSearch.getText().toString());
+//			exeSearch(etTextSearch.getText().toString());
+			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 		case 3:
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_active);
@@ -593,10 +640,12 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnHotel.setBackgroundResource(R.drawable.bg_tab_normal);
 			setIconTab(3);
+			storeType = 3;
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			cateId = "2";
-			exeSearch(etTextSearch.getText().toString());
+//			exeSearch(etTextSearch.getText().toString());
+			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 		case 4:
 			lnHotel.setBackgroundResource(R.drawable.bg_tab_active);
@@ -604,10 +653,12 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			lnWine.setBackgroundResource(R.drawable.bg_tab_normal);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
 			setIconTab(4);
+			storeType = 4;
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			cateId = "2";
-			exeSearch(etTextSearch.getText().toString());
+//			exeSearch(etTextSearch.getText().toString());
+			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 
 		default:
@@ -615,6 +666,13 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		}
 		
 	}
+	private void exeGetBusiness(String string) {
+		// TODO Auto-generated method stub
+		searchKey = string;
+		exeListActivity(isSearch);
+	}
+
+
 	private void setIconTab(int id) {
 		// TODO Auto-generated method stub
 		switch (id) {
@@ -668,7 +726,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	}
 	
 	public void changeLocationClicked(View v){
-		
+		Intent intent = new Intent(ListActivity.this, ChangeLocationActivity.class);
+		startActivityForResult(intent, CHANGE_LOCATION_REQUEST);
 	}
 	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
 		public void beforeTextChanged(CharSequence s, int start, int count,
@@ -687,10 +746,13 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 				{
 					exeDisableSearchFocus();
 					isSearch = false;
+					exeDisableSearchFocus();
 					exeListActivity(false);
+					
 				}else{
 					exeSearchFocus();
 					isSearch = true;
+					exeSearchFocus();
 					exeSearch(text);
 				}
 			
@@ -724,38 +786,46 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	protected void exeSearchFocus() {
 		// TODO Auto-generated method stub
 		if(btnCacel.getVisibility()!=View.VISIBLE){
-			params.width = 100;
-			params.height = LayoutParams.WRAP_CONTENT;
-			params.addRule(RelativeLayout.CENTER_IN_PARENT,1);
-			rlSearchTools.setLayoutParams(params);
+			
+//			params.width =WhyqApplication.Instance().getDisplayMetrics().densityDpi*10;// LayoutParams.WRAP_CONTENT;
+//			params.height = LayoutParams.WRAP_CONTENT;
+//			params.addRule(RelativeLayout.CENTER_VERTICAL,1);
+//			params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,1);
+//			rlSearchTools.setLayoutParams(params);
+
 			btnCacel.setVisibility(View.VISIBLE);
 			
 			imgCoffe.requestFocus();
 			hideFilterGroup();
+			rlLocationField.setVisibility(View.VISIBLE);
 		}
 	}
 
 
 	public void onCancelClicked(View v){
 		exeDisableSearchFocus();
+		etTextSearch.setText("");
+		currentLocation=null;
+		
 	}
 
 	private void exeDisableSearchFocus() {
 		// TODO Auto-generated method stub
 		btnCacel.setVisibility(View.GONE);
-		params.width = 60;
+//		params.width = 60;
+		rlLocationField.setVisibility(View.GONE);
 		rlSearchTools.setLayoutParams(params);
 		showFilterGroup();
 	}
 
 	private void hideFilterGroup() {
 		// TODO Auto-generated method stub
-		rlFilterGroup.setVisibility(View.GONE);
+		rlSearchTools.setVisibility(View.GONE);
 	}
 
 	private void showFilterGroup() {
 		// TODO Auto-generated method stub
-		rlFilterGroup.setVisibility(View.VISIBLE);
+		rlSearchTools.setVisibility(View.VISIBLE);
 	}
 	private void showProgress() {
 		// TODO Auto-generated method stub

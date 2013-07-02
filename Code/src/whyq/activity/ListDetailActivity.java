@@ -7,6 +7,7 @@ import whyq.service.ServiceResponse;
 import whyq.utils.UrlImageViewHelper;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.URLUtil;
@@ -45,6 +46,9 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private ImageView imgBtnPromotion;
 	private String cateId;
 	private TextView tvHeaderTitle;
+	private TextView tvFromUsr;
+	private ImageView imgHeader;
+	private int storeType;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		service = new Service(this);
 		tvAddresss = (TextView) findViewById(R.id.tvAddress);
 		imgThumbnail = (ImageView) findViewById(R.id.imgThumbnail);
-		tvNumberFavourtie = (TextView) findViewById(R.id.tvNumberFavourite);
+		tvNumberFavourtie = (TextView) findViewById(R.id.tvNumberOfFavourite);
 		imgFavourtieIcon = (ImageView) findViewById(R.id.imgFavourite);
 		tvOpeningTime = (TextView) findViewById(R.id.tvOpeningTime);
 		tvTelephone = (TextView) findViewById(R.id.tvTelephone);
@@ -62,6 +66,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		tvCommendRever = (TextView) findViewById(R.id.tvCommendReview);
 		imgFrienAvatar = (ImageView) findViewById(R.id.imgAvatar);
 		tvFriendNumber = (TextView) findViewById(R.id.tvFriendCount);
+		tvFromUsr = (TextView)findViewById(R.id.tvFromUser);
 		edSearch = (EditText) findViewById(R.id.tvSearch);
 		lvResult = (ListView) findViewById(R.id.lvFindResult);
 		progressBar = (ProgressBar) findViewById(R.id.prgBar);
@@ -70,8 +75,24 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		imgBtnMenu = (ImageView) findViewById(R.id.lnWineTab);
 		imgBtnPromotion = (ImageView) findViewById(R.id.lnCoffeTab);
 		tvHeaderTitle = (TextView) findViewById(R.id.tvHeaderTitle);
+		imgHeader = (ImageView)findViewById(R.id.imgHeader);
+		storeType = getIntent().getIntExtra("store_type", 0);
+		showHeaderImage();
 		initTabbar();
 		getDetailData();
+	}
+
+	private void showHeaderImage() {
+		// TODO Auto-generated method stub
+		if(storeType == 1){
+			imgHeader.setImageResource(R.drawable.icon_result_cutlery);
+		}else if(storeType==2){
+			imgHeader.setImageResource(R.drawable.icon_result_wine);
+		}else if(storeType==3){
+			imgHeader.setImageResource(R.drawable.icon_result_coffee);
+		}else if(storeType==4){
+			imgHeader.setImageResource(R.drawable.icon_result_coffee);
+		}
 	}
 
 	private void initTabbar() {
@@ -94,11 +115,18 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 			tvStoreDes.setText(store.getIntroStore());
 			tvHeaderTitle.setText(store.getNameStore());
 			tvNumberFavourtie.setText(""+store.getCountFavaouriteMember());
-			tvCommendRever.setText(store.getCountFavaouriteMember() + " from users");
+			if(!store.getCountFavaouriteMember().equals("0")){
+				tvCommendRever.setText(store.getCountFavaouriteMember()+" comments");
+				tvCommendRever.setTextColor(getResources().getColor(R.color.profifle_blue));
+				tvFromUsr.setVisibility(View.VISIBLE);
+			}else{
+				tvFromUsr.setVisibility(View.VISIBLE);
+			}
 			UrlImageViewHelper.setUrlDrawable(imgFrienAvatar, store.getUserList()
 					.get(0).getUrlAvatar());
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 
 	}
@@ -170,6 +198,26 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		}
 		
 	}
+	public void gotoCommentScreen(View v){
+		if(store !=null){
+			if(store.getCountFavaouriteMember() !=null){
+				if(store.getCountFavaouriteMember().equals("0")){
+					Intent intent = new Intent(ListDetailActivity.this, WhyQCommentActivity.class);
+					intent.putExtra("store_id", store.getId());
+					startActivity(intent);
+				}else{
+					Intent intent = new Intent(ListDetailActivity.this, CommentActivity.class);
+					intent.putExtra("store_id", store.getId());
+					startActivity(intent);
+				}
+				
+			}else{
+				Intent intent = new Intent(ListDetailActivity.this, WhyQCommentActivity.class);
+				intent.putExtra("store_id", store.getId());
+				startActivity(intent);
+			}
+		}
+	} 
 	public void onBack(View v){
 		finish();
 		
