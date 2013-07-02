@@ -433,14 +433,12 @@ public class Service implements Runnable {
 		request("/m/business/show", params, true, false);
 	}
 
-	public void getCheckedBills(String encryptedToken, String userId,
-			String store_id) {
+	public void getCheckedBills(String encryptedToken, String store_id) {
 		_action = ServiceAction.ActionGetBills;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
-		params.put("user_id", userId);
 		params.put("store_id", store_id);
-		request("/m/business/member/check_bil", params, true, false);
+		request("/m/business/member/check_bill", params, true, false);
 	}
 
 	public void getHistories(String encryptedToken, String userId) {

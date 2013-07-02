@@ -28,10 +28,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/categoryRow1"
-        android:paddingBottom="@dimen/base_padding"
+        android:paddingBottom="8dp"
         android:paddingLeft="@dimen/base_padding"
         android:paddingRight="@dimen/base_padding"
-        android:paddingTop="8dp" >
+        android:paddingTop="@dimen/base_padding" >
 
         <include
             android:id="@+id/saving"
