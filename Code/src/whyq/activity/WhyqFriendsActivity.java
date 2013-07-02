@@ -117,6 +117,12 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 			}
 		}
 	}
+	
+	@Override
+	protected void onExtraButtonPressed() {
+		super.onExtraButtonPressed();
+		startActivity(new Intent(this, WhyqFindMenuActivity.class));
+	}
 
 	@Override
 	public void onPositiveButtonClick() {

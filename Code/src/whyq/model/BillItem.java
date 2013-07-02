@@ -18,6 +18,42 @@ public class BillItem {
 	private String createdate;
 	private String updatedate;
 	private BusinessInfo business_info;
+	private String status_bill_old;
+	private String text_status_bill;
+	private String createdate_cv;
+	private String time_deliver_cv;
+	private String detail;
+	
+	public String getStatus_bill_old() {
+		return status_bill_old;
+	}
+	public void setStatus_bill_old(String status_bill_old) {
+		this.status_bill_old = status_bill_old;
+	}
+	public String getText_status_bill() {
+		return text_status_bill;
+	}
+	public void setText_status_bill(String text_status_bill) {
+		this.text_status_bill = text_status_bill;
+	}
+	public String getCreatedate_cv() {
+		return createdate_cv;
+	}
+	public void setCreatedate_cv(String createdate_cv) {
+		this.createdate_cv = createdate_cv;
+	}
+	public String getTime_deliver_cv() {
+		return time_deliver_cv;
+	}
+	public void setTime_deliver_cv(String time_deliver_cv) {
+		this.time_deliver_cv = time_deliver_cv;
+	}
+	public String getDetail() {
+		return detail;
+	}
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
 	public String getId() {
 		return id;
 	}

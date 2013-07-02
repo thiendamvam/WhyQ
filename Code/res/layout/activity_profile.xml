@@ -9,8 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingBottom="@dimen/base_padding"
         android:paddingLeft="@dimen/base_padding"
-        android:paddingRight="@dimen/base_padding" >
+        android:paddingRight="@dimen/base_padding"
+        android:paddingTop="8dp" >
 
         <include
             android:id="@+id/check_bill"
@@ -26,8 +28,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/categoryRow1"
+        android:paddingBottom="@dimen/base_padding"
         android:paddingLeft="@dimen/base_padding"
-        android:paddingRight="@dimen/base_padding" >
+        android:paddingRight="@dimen/base_padding"
+        android:paddingTop="8dp" >
 
         <include
             android:id="@+id/saving"

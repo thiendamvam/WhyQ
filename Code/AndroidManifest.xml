@@ -56,8 +56,8 @@
         <activity
             android:name="whyq.activity.StoreDetailAdsctivity"
             android:screenOrientation="portrait"
-             android:windowSoftInputMode="adjustPan"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="whyq.activity.WhyqLogout"
             android:screenOrientation="portrait" />
@@ -115,10 +115,8 @@
         <activity
             android:name="whyq.activity.ListDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
             android:theme="@android:style/Theme.NoTitleBar"
-             />
-
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="whyq.activity.ProfileActivity"
             android:screenOrientation="portrait" />
@@ -139,7 +137,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustUnspecified" >
-
         </activity>
         <activity
             android:name="whyq.activity.LoginHome"
@@ -223,7 +220,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name="whyq.activity.CheckedBillActivity"
+            android:name="whyq.activity.WhyqCheckedBillActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
@@ -232,7 +229,12 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="whyq.activity.WhyqFriendsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="whyq.activity.WhyqHistoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

@@ -36,6 +36,7 @@ public class BusinessInfo {
 	private String income;
 	private String time_zone;
 	private String name_cate;
+	private String is_payment_via_paypal;
 
 	public String getId() {
 		return id;
@@ -247,6 +248,12 @@ public class BusinessInfo {
 	}
 	public void setName_cate(String name_cate) {
 		this.name_cate = name_cate;
+	}
+	public String getIs_payment_via_paypal() {
+		return is_payment_via_paypal;
+	}
+	public void setIs_payment_via_paypal(String is_payment_via_paypal) {
+		this.is_payment_via_paypal = is_payment_via_paypal;
 	}
 	
 }

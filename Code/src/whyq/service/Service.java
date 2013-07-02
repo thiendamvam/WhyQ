@@ -293,13 +293,12 @@ public class Service implements Runnable {
 		HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 		try {
 			final String urlString;
-			if(_action==ServiceAction.ActionGetLocation){
+			if (_action == ServiceAction.ActionGetLocation) {
 				String textSearch = _params.get("text-search");
 				textSearch = textSearch.replace(" ", "+");
-				urlString= "http://ws.geonames.org/search?q="
-						+ textSearch
+				urlString = "http://ws.geonames.org/search?q=" + textSearch
 						+ "&style=full&maxRows=10";
-			}else
+			} else
 				urlString = _includeHost ? API.hostURL + _actionURI
 						: _actionURI;
 			HttpRequestBase request = null;
@@ -427,7 +426,6 @@ public class Service implements Runnable {
 	}
 
 	public void getBusinessDetail(String id) {
-		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionGetBusinessDetail;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
@@ -435,12 +433,22 @@ public class Service implements Runnable {
 		request("/m/business/show", params, true, false);
 	}
 
+	public void getCheckedBills(String encryptedToken, String userId,
+			String store_id) {
+		_action = ServiceAction.ActionGetBills;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("user_id", userId);
+		params.put("store_id", store_id);
+		request("/m/business/member/check_bil", params, true, false);
+	}
+
 	public void getHistories(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetHistories;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
-		request("/m/member/recent/activity", params, true, false);
+		request("/m/member/order", params, true, false);
 	}
 
 	public void exeComment(String string, String storeId) {

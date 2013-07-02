@@ -103,8 +103,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		mPhotoAdapter = new PhotoAdapter(this, mImageWorker);
 		int PHOTO_SIZE = WhyqApplication.sScreenWidth / 5;
 		HorizontalListView listPhoto = (HorizontalListView) findViewById(R.id.gallery);
-		listPhoto.getLayoutParams().height = (int) (PHOTO_SIZE + WhyqApplication
-				.Instance().getDisplayMetrics().density * 5);
+		listPhoto.getLayoutParams().height = PHOTO_SIZE;
 		listPhoto.setAdapter(mPhotoAdapter);
 
 		setLoading(true);
@@ -215,8 +214,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 					@Override
 					public void onClick(View v) {
 						Intent i = new Intent(WhyqUserProfileActivity.this,
-								CheckedBillActivity.class);
-						i.putExtra(CheckedBillActivity.ARG_USER_ID, mUserId);
+								WhyqCheckedBillActivity.class);
+						i.putExtra(WhyqCheckedBillActivity.ARG_USER_ID, mUserId);
 						startActivity(i);
 					}
 				});
@@ -225,7 +224,10 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 					@Override
 					public void onClick(View v) {
-
+						Intent i = new Intent(WhyqUserProfileActivity.this,
+								WhyqHistoryActivity.class);
+						i.putExtra(WhyqHistoryActivity.ARG_USER_ID, mUserId);
+						startActivity(i);
 					}
 				});
 
@@ -248,6 +250,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 					@Override
 					public void onClick(View v) {
+						startActivity(new Intent(WhyqUserProfileActivity.this,
+								CommentActivity.class));
 					}
 				});
 	}

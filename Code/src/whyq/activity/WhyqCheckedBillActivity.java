@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whyq.WhyqApplication;
-import whyq.model.ActivityItem;
+import whyq.model.BillItem;
 import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
@@ -22,23 +22,37 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.whyq.R;
 
-public class HistoryActivity extends ImageWorkerActivity {
+public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 
 	public static final String ARG_USER_ID = "userid";
 
-	private HistoryAdapter mAdapter;
+	private BillAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_comment);
+		setContentView(R.layout.activity_checked_bill);
 
-		mAdapter = new HistoryAdapter(this, mImageWorker);
+		setTitle(R.string.checked_bills);
+
+		RadioGroup group = (RadioGroup) findViewById(R.id.radioGroup);
+		group.getLayoutParams().width = WhyqApplication.sScreenWidth * 3 / 5;
+		group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+			}
+		});
+
+		mAdapter = new BillAdapter(this, mImageWorker);
 		ListView listview = (ListView) findViewById(R.id.listview);
 		listview.setAdapter(mAdapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
@@ -51,7 +65,7 @@ public class HistoryActivity extends ImageWorkerActivity {
 
 		setLoading(true);
 		String userId = getIntent().getStringExtra(ARG_USER_ID);
-		getService().getHistories(getEncryptedToken(), userId);
+		getService().getCheckedBills(getEncryptedToken(), userId, "");
 	}
 
 	@Override
@@ -60,25 +74,25 @@ public class HistoryActivity extends ImageWorkerActivity {
 		setLoading(false);
 		if (result != null && result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionCheckedBills) {
-			mAdapter.setItems(DataParser.parseActivities(String.valueOf(result
+			mAdapter.setItems(DataParser.parseBills(String.valueOf(result
 					.getData())));
 		}
 	}
 
-	static class HistoryAdapter extends BaseAdapter {
+	static class BillAdapter extends BaseAdapter {
 
 		private static final int PHOTO_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 		private Context mContext;
-		private List<ActivityItem> mItems;
+		private List<BillItem> mItems;
 		private ImageViewHelper mImageWorker;
 
-		public HistoryAdapter(Context context, ImageViewHelper imageWorker) {
+		public BillAdapter(Context context, ImageViewHelper imageWorker) {
 			this.mContext = context;
-			this.mItems = new ArrayList<ActivityItem>();
+			this.mItems = new ArrayList<BillItem>();
 			this.mImageWorker = imageWorker;
 		}
 
-		public void setItems(List<ActivityItem> items) {
+		public void setItems(List<BillItem> items) {
 			if (items == null || items.size() == 0) {
 				mItems.clear();
 			} else {
@@ -112,9 +126,10 @@ public class HistoryActivity extends ImageWorkerActivity {
 			}
 
 			ViewHolder holder = getViewHolder(convertView);
-			ActivityItem item = mItems.get(position);
+			BillItem item = mItems.get(position);
 			holder.name.setText(item.getBusiness_info().getName_store());
-			holder.unit.setText(item.getActive_id());
+			holder.unit.setText("Bill normal");
+			holder.price.setText("$ " + item.getTotal_value());
 
 			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
 					holder.photo);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import whyq.WhyqApplication;
 import whyq.model.BillItem;
+import whyq.model.BusinessInfo;
 import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
@@ -22,13 +23,11 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.whyq.R;
 
-public class CheckedBillActivity extends ImageWorkerActivity {
+public class WhyqHistoryActivity extends ImageWorkerActivity {
 
 	public static final String ARG_USER_ID = "userid";
 
@@ -38,19 +37,9 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_checked_bill);
+		setContentView(R.layout.activity_history);
 
-		setTitle(R.string.checked_bills);
-
-		RadioGroup group = (RadioGroup) findViewById(R.id.radioGroup);
-		group.getLayoutParams().width = WhyqApplication.sScreenWidth * 3 / 5;
-		group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-			}
-		});
+		setTitle(R.string.history);
 
 		mAdapter = new BillAdapter(this, mImageWorker);
 		ListView listview = (ListView) findViewById(R.id.listview);
@@ -73,7 +62,7 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 		super.onCompleted(service, result);
 		setLoading(false);
 		if (result != null && result.isSuccess()
-				&& result.getAction() == ServiceAction.ActionCheckedBills) {
+				&& result.getAction() == ServiceAction.ActionGetHistories) {
 			mAdapter.setItems(DataParser.parseBills(String.valueOf(result
 					.getData())));
 		}
@@ -127,12 +116,14 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 
 			ViewHolder holder = getViewHolder(convertView);
 			BillItem item = mItems.get(position);
-			holder.name.setText(item.getBusiness_info().getName_store());
-			holder.unit.setText("Bill normal");
-			holder.price.setText("$ " + item.getTotal_value());
-
-			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
-					holder.photo);
+			holder.circleIcon.setVisibility(View.VISIBLE);
+			BusinessInfo bi = item.getBusiness_info();
+			if (bi != null) {
+				holder.name.setText(bi.getName_store());
+				mImageWorker.downloadImage(bi.getLogo(), holder.photo);
+			}
+			holder.unit.setText("Order id: " + item.getId());
+			holder.price.setVisibility(View.GONE);
 
 			return convertView;
 		}
@@ -147,12 +138,14 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 		}
 
 		class ViewHolder {
+			ImageView circleIcon;
 			ImageView photo;
 			TextView name;
 			TextView unit;
 			Button price;
 
 			public ViewHolder(View view) {
+				circleIcon = (ImageView) view.findViewById(R.id.circle);
 				photo = (ImageView) view.findViewById(R.id.photo);
 				photo.getLayoutParams().width = PHOTO_SIZE;
 				photo.getLayoutParams().height = PHOTO_SIZE;

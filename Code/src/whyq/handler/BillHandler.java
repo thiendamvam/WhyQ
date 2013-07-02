@@ -6,6 +6,8 @@ import java.util.List;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import android.util.Log;
+
 import whyq.model.BillItem;
 import whyq.model.BusinessInfo;
 
@@ -18,7 +20,6 @@ public class BillHandler extends BaseHandler {
 	private static final String TAG_TOTAL_REAL_VALUE = "total_real_value";
 	private static final String TAG_DISCOUNT_VALUE = "discount_value";
 	private static final String TAG_DELIVER_FEE_VALUE = "deliver_fee_value";
-	private static final String TAG_TRANSACTION_ID = "transaction_id";
 	private static final String TAG_CODE_BILL = "code_bill";
 	private static final String TAG_DELIVER_TO = "deliver_to";
 	private static final String TAG_DELIVER_TYPE = "deliver_type";
@@ -27,6 +28,15 @@ public class BillHandler extends BaseHandler {
 	private static final String TAG_CREATEDATE = "createdate";
 	private static final String TAG_UPDATEDATE = "updatedate";
 	private static final String TAG_BUSINESS_INFO = "business_info";
+	private static final String TAG_TRANSACTION_ID = "transaction_id";
+	private static final String TAG_STATUS_BILL_OLD = "status_bill_old";
+	private static final String TAG_TEXT_STATUS_BILL = "text_status_bill";
+	private static final String TAG_CREATEDATE_CV = "createdate_cv";
+	private static final String TAG_TIME_DELIVER_CV = "time_deliver_cv";
+	private static final String TAG_DETAIL = "detail";
+
+	private static final String TAG_STORE_INFO = "store_info";
+
 	private static final String ITEM = "obj";
 
 	private static final String TAG_CITY = "city";
@@ -59,6 +69,7 @@ public class BillHandler extends BaseHandler {
 	private static final String TAG_INCOME = "income";
 	private static final String TAG_TIME_ZONE = "time_zone";
 	private static final String TAG_NAME_CATE = "name_cate";
+	private static final String TAG_IS_PAYMENT_VIA_PAYPAL = "is_payment_via_paypal";
 
 	private List<BillItem> bills;
 	private BillItem currentBill;
@@ -72,6 +83,7 @@ public class BillHandler extends BaseHandler {
 	public void endElement(String uri, String localName, String name)
 			throws SAXException {
 		super.endElement(uri, localName, name);
+
 		if (this.currentBusinessInfo != null) {
 			if (localName.equalsIgnoreCase(TAG_ADDRESS)) {
 				currentBusinessInfo.setAddress(getString());
@@ -81,7 +93,7 @@ public class BillHandler extends BaseHandler {
 				currentBusinessInfo.setCity(getString());
 			} else if (localName.equalsIgnoreCase(TAG_COUNT_BILL)) {
 				currentBusinessInfo.setCount_bill(getInt());
-			} else if (localName.equalsIgnoreCase(TAG_ADDRESS)) {
+			} else if (localName.equalsIgnoreCase(TAG_CREATEDATE)) {
 				currentBusinessInfo.setCreatedate(getString());
 			} else if (localName.equalsIgnoreCase(TAG_END_TIME)) {
 				currentBusinessInfo.setEnd_time(getString());
@@ -143,10 +155,16 @@ public class BillHandler extends BaseHandler {
 				currentBusinessInfo.setValue_condition_deliver(getString());
 			} else if (localName.equalsIgnoreCase(TAG_ZIPCODE)) {
 				currentBusinessInfo.setZipcode(getString());
+			} else if (localName.equalsIgnoreCase(TAG_COUNT_FAVOURITE_MEMBER)) {
+				currentBusinessInfo.setCount_favourite_member(getInt());
+			} else if (localName.equalsIgnoreCase(TAG_IS_PAYMENT_VIA_PAYPAL)) {
+				currentBusinessInfo.setIs_payment_via_paypal(getString());
 			}
 		}
+
 		if (this.currentBill != null) {
-			if (localName.equalsIgnoreCase(TAG_BUSINESS_INFO)) {
+			if (localName.equalsIgnoreCase(TAG_BUSINESS_INFO)
+					|| localName.equalsIgnoreCase(TAG_STORE_INFO)) {
 				currentBill.setBusiness_info(currentBusinessInfo);
 			} else if (localName.equalsIgnoreCase(TAG_CREATEDATE)) {
 				currentBill.setCreatedate(getString());
@@ -178,11 +196,20 @@ public class BillHandler extends BaseHandler {
 				currentBill.setUpdatedate(getString());
 			} else if (localName.equalsIgnoreCase(TAG_USER_ID)) {
 				currentBill.setUser_id(getString());
+			} else if (localName.equalsIgnoreCase(TAG_STATUS_BILL_OLD)) {
+				currentBill.setStatus_bill_old(getString());
+			} else if (localName.equalsIgnoreCase(TAG_TEXT_STATUS_BILL)) {
+				currentBill.setText_status_bill(getString());
+			} else if (localName.equalsIgnoreCase(TAG_CREATEDATE_CV)) {
+				currentBill.setCreatedate_cv(getString());
+			} else if (localName.equalsIgnoreCase(TAG_TIME_DELIVER_CV)) {
+				currentBill.setTime_deliver_cv(getString());
+			} else if (localName.equalsIgnoreCase(TAG_DETAIL)) {
+				currentBill.setDetail(getString());
 			} else if (localName.equalsIgnoreCase(ITEM)) {
 				bills.add(currentBill);
-			} else if (localName.equalsIgnoreCase(TAG_COUNT_FAVOURITE_MEMBER)) {
-				currentBusinessInfo.setCount_favourite_member(getInt());
 			}
+
 		}
 		builder.setLength(0);
 	}
@@ -198,8 +225,10 @@ public class BillHandler extends BaseHandler {
 			Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, name, attributes);
 		if (localName.equalsIgnoreCase(ITEM)) {
+			Log.d(ITEM, "start obj");
 			this.currentBill = new BillItem();
-		} else if (localName.equalsIgnoreCase(TAG_BUSINESS_INFO)) {
+		} else if (localName.equalsIgnoreCase(TAG_BUSINESS_INFO)
+				|| localName.equalsIgnoreCase(TAG_STORE_INFO)) {
 			this.currentBusinessInfo = new BusinessInfo();
 		}
 	}
