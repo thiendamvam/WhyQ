@@ -1,24 +1,14 @@
 package whyq;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
 import whyq.activity.AudioPlayerActivity;
-import whyq.activity.FriendsFacebookActivity;
 import whyq.activity.FavouritesActivityGroup;
+import whyq.activity.FriendActivityGroup;
+import whyq.activity.ImageActivityGroup;
 import whyq.activity.ListActivity;
 import whyq.activity.ListActivityGroup;
-import whyq.activity.ImageActivityGroup;
 import whyq.activity.LoginHome;
-import whyq.activity.LoginWhyqActivity;
-import whyq.activity.FriendActivityGroup;
 import whyq.activity.ProfileActivityGroup;
-import whyq.activity.SimpleActivity;
+import whyq.activity.WhyqFriendsActivity;
 import whyq.activity.WhyqUserProfileActivity;
 import whyq.model.User;
 import whyq.utils.MyLocationListener;
@@ -96,7 +86,7 @@ public class WhyqMain extends TabActivity {
 			mydiary.setIndicator("Friends",
 					getResources().getDrawable(R.drawable.footer_icon3));
 			Intent mydiaryIntent = new Intent(this,
-					FriendsFacebookActivity.class);
+					WhyqFriendsActivity.class);
 			mydiary.setContent(mydiaryIntent);
 			tabHost.addTab(mydiary);
 
