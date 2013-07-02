@@ -13,8 +13,8 @@ import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageViewHelper;
 import whyq.utils.Util;
-import whyq.utils.XMLParser;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,8 +45,15 @@ public class CommentActivity extends ImageWorkerActivity {
 
 		Service service = getService();
 		setLoading(true);
-		service.getComments(getEncryptedToken(), XMLParser.getUserId(this), 1,
-				20);
+		Intent i = getIntent();
+		String storeId = null;
+		if (i != null) {
+			storeId = i.getStringExtra("store_id");
+			if (storeId == null) {
+				storeId = "";
+			}
+		}
+		service.getComments(getEncryptedToken(), storeId, 1, 20);
 	}
 
 	@Override
@@ -114,8 +121,8 @@ public class CommentActivity extends ImageWorkerActivity {
 			holder.name.setText(item.getUser().getFirstName());
 			holder.comment.setText(item.getContent());
 			holder.like.setText("" + item.getCount_like());
-			mImageWorker
-					.downloadImage(item.getUser().getUrlAvatar(), holder.avatar);
+			mImageWorker.downloadImage(item.getUser().getUrlAvatar(),
+					holder.avatar);
 			Photo photo = item.getPhotos();
 			if (photo != null) {
 				mImageWorker.downloadImage(item.getPhotos().getThumb(),
@@ -153,6 +160,7 @@ public class CommentActivity extends ImageWorkerActivity {
 				avatar.getLayoutParams().width = AVATAR_SIZE;
 				avatar.getLayoutParams().height = AVATAR_SIZE;
 				thumb = (ImageView) view.findViewById(R.id.imageThumb);
+				thumb.getLayoutParams().height = THUMB_HEIGHT;
 
 				favorite = (ImageView) view.findViewById(R.id.favorite);
 				name = (TextView) view.findViewById(R.id.name);
