@@ -45,8 +45,6 @@
         android:layout_below="@+id/categoryRow2"
         android:background="@drawable/bg_border"
         android:overScrollMode="never"
-        android:paddingBottom="@dimen/base_padding"
-        android:paddingTop="@dimen/base_padding"
         android:scrollbars="none" />
 
     <TextView

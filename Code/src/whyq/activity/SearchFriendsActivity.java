@@ -13,7 +13,7 @@ import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
-import whyq.utils.ImageWorker;
+import whyq.utils.ImageViewHelper;
 import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
@@ -182,12 +182,12 @@ public class SearchFriendsActivity extends ImageWorkerActivity {
 		private SearchFriendsActivity mActivity;
 		private List<FriendFacebook> listWhyq;
 		private List<FriendFacebook> listNotJoinWhyq;
-		private ImageWorker mImageWorker;
+		private ImageViewHelper mImageWorker;
 		private static int countListNotJoinWhyq = 0;
 		private static int countListWhyq = 0;
 
 		public FriendsFacebookAdapter(SearchFriendsActivity context,
-				ImageWorker imageWorker) {
+				ImageViewHelper imageWorker) {
 			this.mActivity = context;
 			this.mImageWorker = imageWorker;
 		}
@@ -283,8 +283,7 @@ public class SearchFriendsActivity extends ImageWorkerActivity {
 			if (item instanceof FriendFacebook) {
 				final FriendFacebook friendfacebook = (FriendFacebook) item;
 				holder.name.setText(friendfacebook.getFirstName());
-				mImageWorker.loadImage(friendfacebook.getAvatar(),
-						holder.avatar, AVATAR_SIZE, AVATAR_SIZE);
+				mImageWorker.downloadImage(friendfacebook.getAvatar(), holder.avatar);
 				if (friendfacebook.getIsFriend() == StatusWithFriend.STATUS_NOT_CONNECT) {
 					if (position <= countListWhyq) {
 						holder.action.setText(R.string.add);
@@ -352,10 +351,10 @@ public class SearchFriendsActivity extends ImageWorkerActivity {
 		private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 		private SearchFriendsActivity mActivity;
 		private List<FriendWhyq> listWhyq;
-		private ImageWorker mImageWorker;
+		private ImageViewHelper mImageWorker;
 
 		public FriendsWhyqAdapter(SearchFriendsActivity context,
-				ImageWorker imageWorker) {
+				ImageViewHelper imageWorker) {
 			this.mActivity = context;
 			this.mImageWorker = imageWorker;
 			this.listWhyq = new ArrayList<FriendWhyq>();
@@ -398,8 +397,7 @@ public class SearchFriendsActivity extends ImageWorkerActivity {
 
 			final FriendWhyq item = listWhyq.get(position);
 			holder.name.setText(item.getFirst_name());
-			mImageWorker.loadImage(item.getAvatar(), holder.avatar,
-					AVATAR_SIZE, AVATAR_SIZE);
+			mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
 			return convertView;
 		}
 

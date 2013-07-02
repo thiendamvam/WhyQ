@@ -9,7 +9,7 @@ import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
-import whyq.utils.ImageWorker;
+import whyq.utils.ImageViewHelper;
 import whyq.utils.Util;
 import android.content.Context;
 import android.os.Bundle;
@@ -84,9 +84,9 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 		private static final int PHOTO_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 		private Context mContext;
 		private List<BillItem> mItems;
-		private ImageWorker mImageWorker;
+		private ImageViewHelper mImageWorker;
 
-		public BillAdapter(Context context, ImageWorker imageWorker) {
+		public BillAdapter(Context context, ImageViewHelper imageWorker) {
 			this.mContext = context;
 			this.mItems = new ArrayList<BillItem>();
 			this.mImageWorker = imageWorker;
@@ -131,8 +131,8 @@ public class CheckedBillActivity extends ImageWorkerActivity {
 			holder.unit.setText("Bill normal");
 			holder.price.setText("$ " + item.getTotal_value());
 
-			mImageWorker.loadImage(item.getBusiness_info().getLogo(),
-					holder.photo, PHOTO_SIZE, PHOTO_SIZE);
+			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
+					holder.photo);
 
 			return convertView;
 		}

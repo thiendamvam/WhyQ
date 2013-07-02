@@ -11,7 +11,7 @@ import whyq.service.ResultCode;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
-import whyq.utils.ImageWorker;
+import whyq.utils.ImageViewHelper;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
 import android.content.Context;
@@ -45,15 +45,18 @@ public class CommentActivity extends ImageWorkerActivity {
 
 		Service service = getService();
 		setLoading(true);
-		service.getComments(getEncryptedToken(), XMLParser.getUserId(this), 1, 20);
+		service.getComments(getEncryptedToken(), XMLParser.getUserId(this), 1,
+				20);
 	}
-	
+
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
 		setLoading(false);
-		if (result != null && result.getCode() == ResultCode.Success && result.getAction() == ServiceAction.ActionGetComment) {
-			List<Comment> comments = DataParser.parseComments(String.valueOf(result.getData()));
+		if (result != null && result.getCode() == ResultCode.Success
+				&& result.getAction() == ServiceAction.ActionGetComment) {
+			List<Comment> comments = DataParser.parseComments(String
+					.valueOf(result.getData()));
 			mAdapter.setItems(comments);
 		}
 	}
@@ -64,9 +67,9 @@ public class CommentActivity extends ImageWorkerActivity {
 		private static final int THUMB_HEIGHT = WhyqApplication.sBaseViewHeight * 5;
 		private Context mContext;
 		private List<Comment> mItems;
-		private ImageWorker mImageWorker;
+		private ImageViewHelper mImageWorker;
 
-		public CommentAdapter(Context context, ImageWorker imageWorker) {
+		public CommentAdapter(Context context, ImageViewHelper imageWorker) {
 			this.mContext = context;
 			this.mItems = new ArrayList<Comment>();
 			this.mImageWorker = imageWorker;
@@ -101,7 +104,8 @@ public class CommentActivity extends ImageWorkerActivity {
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.comment_list_item, parent, false);
-				Util.applyTypeface(convertView, WhyqApplication.sTypefaceRegular);
+				Util.applyTypeface(convertView,
+						WhyqApplication.sTypefaceRegular);
 			}
 
 			ViewHolder holder = getViewHolder(convertView);
@@ -110,12 +114,12 @@ public class CommentActivity extends ImageWorkerActivity {
 			holder.name.setText(item.getUser().getFirstName());
 			holder.comment.setText(item.getContent());
 			holder.like.setText("" + item.getCount_like());
-			mImageWorker.loadImage(item.getUser().getUrlAvatar(),
-					holder.avatar, AVATAR_SIZE, AVATAR_SIZE);
+			mImageWorker
+					.downloadImage(item.getUser().getUrlAvatar(), holder.avatar);
 			Photo photo = item.getPhotos();
 			if (photo != null) {
-				mImageWorker.loadImage(item.getPhotos().getThumb(), holder.thumb,
-						WhyqApplication.sScreenWidth, THUMB_HEIGHT);
+				mImageWorker.downloadImage(item.getPhotos().getThumb(),
+						holder.thumb);
 			}
 			if (item.getUser().getLike() > 0) {
 				holder.favorite.setImageResource(R.drawable.icon_fav_enable);

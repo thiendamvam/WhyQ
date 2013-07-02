@@ -5,12 +5,11 @@ import java.util.List;
 
 import whyq.WhyqApplication;
 import whyq.model.ActivityItem;
-import whyq.model.ActivityItem;
 import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
-import whyq.utils.ImageWorker;
+import whyq.utils.ImageViewHelper;
 import whyq.utils.Util;
 import android.content.Context;
 import android.os.Bundle;
@@ -23,8 +22,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.whyq.R;
@@ -73,9 +70,9 @@ public class HistoryActivity extends ImageWorkerActivity {
 		private static final int PHOTO_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 		private Context mContext;
 		private List<ActivityItem> mItems;
-		private ImageWorker mImageWorker;
+		private ImageViewHelper mImageWorker;
 
-		public HistoryAdapter(Context context, ImageWorker imageWorker) {
+		public HistoryAdapter(Context context, ImageViewHelper imageWorker) {
 			this.mContext = context;
 			this.mItems = new ArrayList<ActivityItem>();
 			this.mImageWorker = imageWorker;
@@ -119,8 +116,8 @@ public class HistoryActivity extends ImageWorkerActivity {
 			holder.name.setText(item.getBusiness_info().getName_store());
 			holder.unit.setText(item.getActive_id());
 
-			mImageWorker.loadImage(item.getBusiness_info().getLogo(),
-					holder.photo, PHOTO_SIZE, PHOTO_SIZE);
+			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
+					holder.photo);
 
 			return convertView;
 		}

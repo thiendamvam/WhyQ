@@ -1,33 +1,37 @@
 package whyq.activity;
 
-import com.whyq.R;
-
-import whyq.WhyqApplication;
-import whyq.utils.ImageWorker;
+import whyq.utils.ImageViewHelper;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+
+import com.whyq.R;
 
 public class ImageWorkerActivity extends ConsumeServiceActivity {
 
-	protected ImageWorker mImageWorker;
+	protected ImageViewHelper mImageWorker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mImageWorker = new ImageWorker(this);
-		mImageWorker.initCache(this, WhyqApplication.DISK_CACHE_DIR, 0.25f);
-		mImageWorker.setLoadingImage(R.drawable.icon);
+		mImageWorker = new ImageViewHelper();
+		mImageWorker.setLoading(BitmapFactory.decodeResource(getResources(),
+				R.drawable.icon));
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mImageWorker.setExitTasksEarly(false);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		mImageWorker.setExitTasksEarly(true);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mImageWorker.cleanCache();
 	}
 
 }

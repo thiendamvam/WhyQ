@@ -15,7 +15,7 @@ import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
-import whyq.utils.ImageWorker;
+import whyq.utils.ImageViewHelper;
 import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
@@ -92,7 +92,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			LayoutParams LP = imageView.getLayoutParams();
 			LP.width = AVATAR_SIZE;
 			LP.height = AVATAR_SIZE;
-			mImageWorker.loadImage(avatar, imageView, AVATAR_SIZE, AVATAR_SIZE);
+			mImageWorker.downloadImage(avatar, imageView);
 		}
 
 		ExtendedListView lv = (ExtendedListView) findViewById(R.id.listview);
@@ -364,9 +364,9 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		private static final int PHOTO_SIZE = WhyqApplication.sScreenWidth / 5;
 		private Context mContext;
 		private List<Photo> mItems;
-		private ImageWorker mImageWorker;
+		private ImageViewHelper mImageWorker;
 
-		public PhotoAdapter(Context context, ImageWorker imageWorker) {
+		public PhotoAdapter(Context context, ImageViewHelper imageWorker) {
 			this.mContext = context;
 			this.mImageWorker = imageWorker;
 			this.mItems = new ArrayList<Photo>();
@@ -406,8 +406,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			final Photo item = mItems.get(position);
 
 			ViewHolder holder = getViewHolder(convertView);
-			mImageWorker.loadImage(item.getImage(), holder.photo, PHOTO_SIZE,
-					PHOTO_SIZE);
+			mImageWorker.downloadImage(item.getImage(), holder.photo);
 
 			return convertView;
 		}
