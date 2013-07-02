@@ -211,7 +211,7 @@
             android:windowSoftInputMode="adjustPan|stateVisible" >
         </activity>
         <activity
-            android:name="whyq.activity.FriendsFacebookActivity"
+            android:name="whyq.activity.WhyqFriendsFacebookActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
@@ -230,6 +230,9 @@
             android:name="whyq.activity.ProfileWhyQActivty"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="whyq.activity.WhyqFriendsActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

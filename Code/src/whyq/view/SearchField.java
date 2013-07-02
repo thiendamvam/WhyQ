@@ -47,6 +47,10 @@ public class SearchField extends FrameLayout {
 	public void setHint(int resId) {
 		mTextview.setHint(resId);
 	}
+	
+	public void setEditBackground(int resId) {
+		mTextview.setBackgroundResource(resId);
+	}
 
 	private void createLayout(Context context) {
 		final FrameLayout layout = (FrameLayout) LayoutInflater.from(context)

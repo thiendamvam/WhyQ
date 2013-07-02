@@ -13,7 +13,7 @@ import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
-import whyq.utils.ImageWorker;
+import whyq.utils.ImageViewHelper;
 import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
@@ -47,9 +47,8 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 
 		setContentView(R.layout.activity_facebook_friends);
 
-		// showSearchField(true);
-		SearchField searchField = (SearchField) findViewById(R.id.searchField);
-		searchField.setQueryCallback(this);
+		showHeaderSearchField(true);
+		SearchField searchField = getSearchField();
 		searchField.setHint(R.string.find_a_friend);
 
 		mListview = (ListView) findViewById(R.id.listview);
@@ -80,12 +79,12 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 		} else {
 			setTitle(R.string.friend_from_facebook);
 		}
-		
+
 		// Set extra button.
 		ImageView imageView = new ImageView(this);
 		imageView.setImageResource(R.drawable.icon_add_friend);
 		setExtraView(imageView);
-		
+
 		setBackButtonIcon(R.drawable.icon_friend_invite);
 
 		getFriends();
@@ -182,12 +181,12 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 		private FriendsFacebookActivity mActivity;
 		private List<FriendFacebook> listWhyq;
 		private List<FriendFacebook> listNotJoinWhyq;
-		private ImageWorker mImageWorker;
+		private ImageViewHelper mImageWorker;
 		private static int countListNotJoinWhyq = 0;
 		private static int countListWhyq = 0;
 
 		public FriendsFacebookAdapter(FriendsFacebookActivity context,
-				ImageWorker imageWorker) {
+				ImageViewHelper imageWorker) {
 			this.mActivity = context;
 			this.mImageWorker = imageWorker;
 		}
@@ -283,8 +282,8 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 			if (item instanceof FriendFacebook) {
 				final FriendFacebook friendfacebook = (FriendFacebook) item;
 				holder.name.setText(friendfacebook.getFirstName());
-				mImageWorker.loadImage(friendfacebook.getAvatar(),
-						holder.avatar, AVATAR_SIZE, AVATAR_SIZE);
+				mImageWorker.downloadImage(friendfacebook.getAvatar(),
+						holder.avatar);
 				if (friendfacebook.getIsFriend() == StatusWithFriend.STATUS_NOT_CONNECT) {
 					if (position <= countListWhyq) {
 						holder.action.setText(R.string.add);
@@ -352,10 +351,10 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 		private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 		private FriendsFacebookActivity mActivity;
 		private List<FriendWhyq> listWhyq;
-		private ImageWorker mImageWorker;
+		private ImageViewHelper mImageWorker;
 
 		public FriendsWhyqAdapter(FriendsFacebookActivity context,
-				ImageWorker imageWorker) {
+				ImageViewHelper imageWorker) {
 			this.mActivity = context;
 			this.mImageWorker = imageWorker;
 			this.listWhyq = new ArrayList<FriendWhyq>();
@@ -398,8 +397,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 
 			final FriendWhyq item = listWhyq.get(position);
 			holder.name.setText(item.getFirst_name());
-			mImageWorker.loadImage(item.getAvatar(), holder.avatar,
-					AVATAR_SIZE, AVATAR_SIZE);
+			mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
 			return convertView;
 		}
 

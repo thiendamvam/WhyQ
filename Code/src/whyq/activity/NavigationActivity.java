@@ -73,13 +73,19 @@ public class NavigationActivity extends FragmentActivity implements
 
 	}
 
+	protected SearchField getSearchField() {
+		return mSearchField;
+	}
+
 	protected void showHeaderSearchField(boolean show) {
 		if (show) {
 			mSearchField.setVisibility(View.VISIBLE);
 			mTitleContainer.setVisibility(View.INVISIBLE);
+			findViewById(R.id.extraContainer).setVisibility(View.GONE);
 		} else {
 			mTitleContainer.setVisibility(View.VISIBLE);
 			mSearchField.setVisibility(View.GONE);
+			findViewById(R.id.extraContainer).setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -128,7 +134,7 @@ public class NavigationActivity extends FragmentActivity implements
 	protected void setExtraView(View view) {
 		FrameLayout extraContainer = (FrameLayout) findViewById(R.id.buttonExtra);
 		extraContainer.addView(view, new FrameLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 	}
 
 	protected void setLoading(boolean show) {
