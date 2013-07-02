@@ -17,14 +17,16 @@ public class ProfileWhyQActivty extends Activity {
 		setContentView(R.layout.whyq_profile);
 	}
 	public void back(View v){
-	       WhyqMain.back();
+//	       WhyqMain.back();
+		finish();
 	}
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        WhyqMain.back();
+//	        WhyqMain.back();
+	    	finish();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

@@ -217,16 +217,21 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 							lastName.getText().toString()));
 					
 					
-					ByteArrayOutputStream bos = new ByteArrayOutputStream();
-					// Bitmap bm = BitmapFactory.decodeFile(filePath);
-					Bitmap bm = getBitmap2(avatarPath);
-					bm.compress(CompressFormat.JPEG, 75, bos);
-					byte[] data = bos.toByteArray();
+					try {
+						ByteArrayOutputStream bos = new ByteArrayOutputStream();
+						// Bitmap bm = BitmapFactory.decodeFile(filePath);
+						Bitmap bm = getBitmap2(avatarPath);
+						bm.compress(CompressFormat.JPEG, 75, bos);
+						byte[] data = bos.toByteArray();
 
-					String fileName = new File(avatarPath).getName();
-					ByteArrayBody bab = new ByteArrayBody(data, fileName);
-					nameValuePairs.add(new BasicNameValuePair("photo",
-							bab.toString()));
+						String fileName = new File(avatarPath).getName();
+						ByteArrayBody bab = new ByteArrayBody(data, fileName);
+						nameValuePairs.add(new BasicNameValuePair("photo",
+								bab.toString()));
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
 
 
 				}
