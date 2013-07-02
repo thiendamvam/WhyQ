@@ -30,35 +30,40 @@ public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 	}
 
 	public void findFromFaccebookClicked(View v) {
-		Facebook mFacebook;
-		mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
-		final Activity activity = this;
-		mFacebook.authorize(activity, new String[] { "email", "status_update",
-				"user_birthday" }, new DialogListener() {
-			@Override
-			public void onComplete(Bundle values) {
-				WhyqUtils permutils = new WhyqUtils();
-				String accessToken = values.getString(Facebook.TOKEN);
-				permutils.saveFacebookToken("oauth_token", accessToken,
-						getApplication());
-				exeLoginFacebook(accessToken);
-			}
+		if (getAccessToken() == null) {
+			Facebook mFacebook;
+			mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
+			final Activity activity = this;
+			mFacebook.authorize(activity, new String[] { "email", "status_update",
+					"user_birthday" }, new DialogListener() {
+				@Override
+				public void onComplete(Bundle values) {
+					WhyqUtils permutils = new WhyqUtils();
+					String accessToken = values.getString(Facebook.TOKEN);
+					permutils.saveFacebookToken("oauth_token", accessToken,
+							getApplication());
+					exeLoginFacebook(accessToken);
+				}
 
-			@Override
-			public void onFacebookError(FacebookError error) {
+				@Override
+				public void onFacebookError(FacebookError error) {
 
-			}
+				}
 
-			@Override
-			public void onError(DialogError e) {
+				@Override
+				public void onError(DialogError e) {
 
-			}
+				}
 
-			@Override
-			public void onCancel() {
-				// cancel press or back press
-			}
-		});
+				@Override
+				public void onCancel() {
+					// cancel press or back press
+				}
+			});
+		} else {
+			Intent intent = new Intent(this, WhyqFriendsFacebookActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	public void exeLoginFacebook(String accessToken) {
@@ -87,8 +92,12 @@ public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 			XMLParser.storePermpingAccount(
 					WhyqApplication._instance.getApplicationContext(), user);
 			Intent intent = new Intent(this, WhyqFriendsFacebookActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 		}
+	}
+	
+	private String getAccessToken() {
+		final WhyqUtils mPermutils = new WhyqUtils();
+		return mPermutils.getFacebookToken(this);
 	}
 }
