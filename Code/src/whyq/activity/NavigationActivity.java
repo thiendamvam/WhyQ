@@ -37,7 +37,6 @@ public class NavigationActivity extends FragmentActivity implements
 		mTitleContainer.addView(getTitleView());
 
 		mSearchField = (SearchField) findViewById(R.id.searchFieldHeader);
-		mSearchField.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 
 		mSearchField.setQueryCallback(this);
 
@@ -81,11 +80,9 @@ public class NavigationActivity extends FragmentActivity implements
 		if (show) {
 			mSearchField.setVisibility(View.VISIBLE);
 			mTitleContainer.setVisibility(View.INVISIBLE);
-			findViewById(R.id.extraContainer).setVisibility(View.GONE);
 		} else {
 			mTitleContainer.setVisibility(View.VISIBLE);
 			mSearchField.setVisibility(View.GONE);
-			findViewById(R.id.extraContainer).setVisibility(View.VISIBLE);
 		}
 	}
 

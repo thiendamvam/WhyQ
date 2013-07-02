@@ -49,7 +49,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 
 		showHeaderSearchField(true);
 		SearchField searchField = getSearchField();
-		searchField.setHint(R.string.find_a_friend);
+		searchField.getEditTextView().setHint(R.string.find_a_friend);
 
 		mListview = (ListView) findViewById(R.id.listview);
 		mListview.setOnItemClickListener(new OnItemClickListener() {

@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -19,7 +20,7 @@ public class SearchField extends FrameLayout {
 
 	QueryCallback callback = null;
 	QueryRunnable runnable = new QueryRunnable();
-	private TextView mTextview;
+	private EditText mTextview;
 
 	public void setQueryCallback(QueryCallback callback) {
 		this.callback = callback;
@@ -40,16 +41,8 @@ public class SearchField extends FrameLayout {
 		createLayout(context);
 	}
 
-	public void setHint(String text) {
-		mTextview.setHint(text);
-	}
-
-	public void setHint(int resId) {
-		mTextview.setHint(resId);
-	}
-	
-	public void setEditBackground(int resId) {
-		mTextview.setBackgroundResource(resId);
+	public EditText getEditTextView() {
+		return mTextview;
 	}
 
 	private void createLayout(Context context) {
@@ -63,7 +56,7 @@ public class SearchField extends FrameLayout {
 		setPadding(layout.getPaddingLeft(), layout.getPaddingTop(),
 				layout.getPaddingRight(), layout.getPaddingBottom());
 
-		mTextview = (TextView) findViewById(R.id.tvSearch);
+		mTextview = (EditText) findViewById(R.id.tvSearch);
 		mTextview.addTextChangedListener(new TextWatcher() {
 
 			@Override

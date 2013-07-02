@@ -45,7 +45,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 
 		SearchField searchField = (SearchField) findViewById(R.id.searchField);
 		searchField.setQueryCallback(this);
-		searchField.setHint(R.string.find_a_friend);
+		searchField.getEditTextView().setHint(R.string.find_a_friend);
 
 		mListview = (ListView) findViewById(R.id.listview);
 		mListview.setOnItemClickListener(new OnItemClickListener() {

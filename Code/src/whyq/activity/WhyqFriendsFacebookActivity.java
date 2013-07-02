@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -47,10 +48,13 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 		setContentView(R.layout.activity_facebook_friends);
 
-		// showSearchField(true);
-		SearchField searchField = (SearchField) findViewById(R.id.searchField);
-		searchField.setQueryCallback(this);
-		searchField.setHint(R.string.find_a_friend);
+		showHeaderSearchField(true);
+		SearchField searchField = getSearchField();
+		EditText tvSearch = searchField.getEditTextView();
+		
+		tvSearch.setHint(R.string.find_a_friend);
+		tvSearch.setTextColor(getResources().getColor(R.color.white));
+		tvSearch.setBackgroundResource(R.drawable.textfield_search_default_holo_dark);
 
 		mListview = (ListView) findViewById(R.id.listview);
 		mListview.setOnItemClickListener(new OnItemClickListener() {
@@ -75,15 +79,6 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		mAccessToken = getAccessToken();
 
 		setTitle(R.string.friend_from_facebook);
-
-		// Set extra button.
-		ImageView imageView = new ImageView(this);
-		imageView.setImageResource(R.drawable.icon_add_friend);
-		setExtraView(imageView);
-
-		setBackButtonIcon(R.drawable.icon_friend_invite);
-
-		getFriends();
 
 	}
 
