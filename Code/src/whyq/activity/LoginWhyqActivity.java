@@ -286,21 +286,21 @@ public void on_success() {
 	if(isLoginFb){
 		ListActivity.isLogin = true;
 		isLoginFb = false;
-		if(WhyqMain.getCurrentTab() == 0) {
+//		if(WhyqMain.getCurrentTab() == 0) {
 			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
-		} else {
-			WhyqMain.back();
-		}
+//		} else {
+//			WhyqMain.back();
+//		}
 	}else if(isTwitter){
 		ListActivity.isLogin = true;
 //		Intent intent = new Intent(context, PermpingMain.class);
 //		context.startActivity(intent);
 		isTwitter = false;
-		if(WhyqMain.getCurrentTab() == 0) {
-			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
-		} else {
+//		if(WhyqMain.getCurrentTab() == 0) {
+//			((ListActivityGroup)ListActivityGroup.group).createFollowerActivity();
+//		} else {
 			WhyqMain.back();
-		}
+//		}
 	}else{
 		ListActivity.isLogin = true;
 		hideDialog();

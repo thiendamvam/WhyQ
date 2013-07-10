@@ -67,6 +67,11 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name="whyq.activity.MapsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name="whyq.activity.ListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >
