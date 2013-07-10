@@ -98,4 +98,8 @@
     <string name="sounds_notification">Sounds notification</string>
     <string name="history">History</string>
     <string name="find_a_friend">Find a friend</string>
-</resources>
+    <string name="About">About</string>
+    <string name="Menu">Menu</string>
+    <string name="Promotion">Promotion</string>
+
+</resources>
