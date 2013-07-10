@@ -6,16 +6,18 @@ import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import whyq.utils.UrlImageViewHelper;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.whyq.R;
@@ -41,14 +43,15 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private ListView lvResult;
 	private ImageView imgFrienAvatar;
 	private Button btnDone;
-	private ImageView imgBtnAbout;
-	private ImageView imgBtnMenu;
-	private ImageView imgBtnPromotion;
+	private RadioButton imgBtnAbout;
+	private RadioButton imgBtnMenu;
+	private RadioButton imgBtnPromotion;
 	private String cateId;
 	private TextView tvHeaderTitle;
 	private TextView tvFromUsr;
 	private ImageView imgHeader;
 	private int storeType;
+	private RadioGroup radioGroup;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,15 +74,47 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		lvResult = (ListView) findViewById(R.id.lvFindResult);
 		progressBar = (ProgressBar) findViewById(R.id.prgBar);
 		btnDone = (Button) findViewById(R.id.btn_done);
-		imgBtnAbout = (ImageView) findViewById(R.id.lnCutleryTab);
-		imgBtnMenu = (ImageView) findViewById(R.id.lnWineTab);
-		imgBtnPromotion = (ImageView) findViewById(R.id.lnCoffeTab);
+		imgBtnAbout = (RadioButton) findViewById(R.id.rdoAbout);
+		imgBtnMenu = (RadioButton) findViewById(R.id.rdoMenu);
+		imgBtnPromotion = (RadioButton) findViewById(R.id.rdoPromotion);
 		tvHeaderTitle = (TextView) findViewById(R.id.tvHeaderTitle);
 		imgHeader = (ImageView)findViewById(R.id.imgHeader);
 		storeType = getIntent().getIntExtra("store_type", 0);
 		showHeaderImage();
 		initTabbar();
 		getDetailData();
+		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				// TODO Auto-generated method stub
+				int selectedBtn = radioGroup.getCheckedRadioButtonId();
+				Log.d("setOnCheckedChangeListener", "selectedBtn "+selectedBtn);
+				if(selectedBtn == R.id.rdoAbout){
+					exeAboutFocus();
+				}else if(selectedBtn == R.id.rdoMenu){
+					exeMenuFocus();
+				}else if(selectedBtn == R.id.rdoPromotion){
+					exePromotionFocus();
+				}
+			}
+		});
+	}
+
+	protected void exeAboutFocus() {
+		// TODO Auto-generated method stub
+		Log.d("exeAboutFocus","exeAboutFocus");
+	}
+
+	protected void exeMenuFocus() {
+		// TODO Auto-generated method stub
+		Log.d("exeMenuFocus","exeMenuFocus");
+	}
+
+	protected void exePromotionFocus() {
+		// TODO Auto-generated method stub
+		Log.d("exePromotionFocus","exePromotionFocus");
 	}
 
 	private void showHeaderImage() {
@@ -97,9 +132,9 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 
 	private void initTabbar() {
 		// TODO Auto-generated method stub
-		imgBtnAbout.setImageResource(R.color.transparent);
-		imgBtnMenu.setImageResource(R.color.transparent);
-		imgBtnPromotion.setImageResource(R.color.transparent);
+//		imgBtnAbout.setImageResource(R.color.transparent);
+//		imgBtnMenu.setImageResource(R.color.transparent);
+//		imgBtnPromotion.setImageResource(R.color.transparent);
 		tvHeaderTitle.setText("");
 	}
 
