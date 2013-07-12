@@ -6,8 +6,7 @@
     android:angle="90"
     android:background="@drawable/bg_ationbar"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="@dimen/base_padding" >
+    android:orientation="horizontal" >
 
     <FrameLayout
         android:id="@+id/buttonBackContainer"
@@ -19,9 +18,8 @@
         <ImageView
             android:id="@+id/buttonBack"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:scaleType="centerInside"
             android:src="@drawable/icon_back" />
     </FrameLayout>
 

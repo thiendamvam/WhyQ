@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import whyq.WhyqApplication;
-import whyq.adapter.AmazingAdapter;
 import whyq.interfaces.FriendFacebookController;
 import whyq.model.FriendFacebook;
 import whyq.model.FriendWhyq;
@@ -19,7 +18,6 @@ import whyq.utils.ImageViewHelper;
 import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
-import whyq.view.AmazingListView;
 import whyq.view.SearchField;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -38,11 +35,11 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
+public class BKWhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 	private FriendsFacebookAdapter mFriendFacebookAdapter = null;
 	private String mAccessToken;
-	private AmazingListView mListview;
+	private ListView mListview;
 	private TextView mInviteMessage;
 	private FrameLayout mInviteButton;
 	private View mInviteContainer;
@@ -62,25 +59,24 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		tvSearch.setTextColor(getResources().getColor(R.color.white));
 		tvSearch.setBackgroundResource(R.drawable.textfield_search_default_holo_dark);
 
-		mListview = (AmazingListView) findViewById(R.id.listview);
-		// TODO: handle on item click
-		// mListview.setOnItemClickListener(new OnItemClickListener() {
-		//
-		// @Override
-		// public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-		// long arg3) {
-		// final Object item = arg0.getItemAtPosition(arg2);
-		// if (item instanceof FriendFacebook) {
-		// FriendFacebook facebook = (FriendFacebook) item;
-		// startUserProfileActivity(facebook.getId(),
-		// facebook.getFirstName(), facebook.getAvatar());
-		// } else if (item instanceof FriendWhyq) {
-		// FriendWhyq whyq = (FriendWhyq) item;
-		// startUserProfileActivity(whyq.getId(),
-		// whyq.getFirst_name(), whyq.getAvatar());
-		// }
-		// }
-		// });
+		mListview = (ListView) findViewById(R.id.listview);
+		mListview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				final Object item = arg0.getItemAtPosition(arg2);
+				if (item instanceof FriendFacebook) {
+					FriendFacebook facebook = (FriendFacebook) item;
+					startUserProfileActivity(facebook.getId(),
+							facebook.getFirstName(), facebook.getAvatar());
+				} else if (item instanceof FriendWhyq) {
+					FriendWhyq whyq = (FriendWhyq) item;
+					startUserProfileActivity(whyq.getId(),
+							whyq.getFirst_name(), whyq.getAvatar());
+				}
+			}
+		});
 
 		mFriendFacebookAdapter = new FriendsFacebookAdapter(this, mImageWorker);
 		mAccessToken = getAccessToken();
@@ -90,20 +86,20 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 //		mInviteContainer = findViewById(R.id.inviteContainer);
 //		mInviteMessage = (TextView) findViewById(R.id.inviteMessage);
 //		mInviteButton = (FrameLayout) findViewById(R.id.inviteButton);
-//		mInviteButton.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				if (INVITED_LIST.size() == 0) {
-//					return;
-//				}
-//				final StringBuilder userIds = new StringBuilder();
-//				for (String key : INVITED_LIST.keySet()) {
-//					userIds.append(key + ",");
-//				}
-//				inviteFriends(userIds.substring(0, userIds.length() - 1));
-//			}
-//		});
+		mInviteButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (INVITED_LIST.size() == 0) {
+					return;
+				}
+				final StringBuilder userIds = new StringBuilder();
+				for (String key : INVITED_LIST.keySet()) {
+					userIds.append(key + ",");
+				}
+				inviteFriends(userIds.substring(0, userIds.length() - 1));
+			}
+		});
 
 	}
 
@@ -192,19 +188,17 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		service.inviteFriendsFacebook(getEncryptedToken(), userId, accessToken);
 	}
 
-	static class FriendsFacebookAdapter extends AmazingAdapter {
+	static class FriendsFacebookAdapter extends BaseAdapter {
 
 		private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
-		private static final String SECTION_WHYQ = "joined whyq";
-		private static final String SECTION_NOT_JOIND_WHYQ = "not joined whyq";
-		private WhyqFriendsFacebookActivity mActivity;
+		private BKWhyqFriendsFacebookActivity mActivity;
 		private List<FriendFacebook> listWhyq;
 		private List<FriendFacebook> listNotJoinWhyq;
 		private ImageViewHelper mImageWorker;
 		private static int countListNotJoinWhyq = 0;
 		private static int countListWhyq = 0;
 
-		public FriendsFacebookAdapter(WhyqFriendsFacebookActivity context,
+		public FriendsFacebookAdapter(BKWhyqFriendsFacebookActivity context,
 				ImageViewHelper imageWorker) {
 			this.mActivity = context;
 			this.mImageWorker = imageWorker;
@@ -233,7 +227,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 		@Override
 		public int getCount() {
-			return countListWhyq + countListNotJoinWhyq;
+			return countListWhyq + countListNotJoinWhyq + 2;
 		}
 
 		@Override
@@ -242,71 +236,33 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 				return null;
 			}
 
-			if (position < countListWhyq) {
-				return listWhyq.get(position);
+			if (position == 0) {
+				final String key = countListWhyq + " facebook friends";
+				final String result = "You have " + key + " had joined WHY Q.";
+				return SpannableUtils.stylistTextBold(result, key, mActivity
+						.getResources().getColor(R.color.orange));
+			} else if (position == countListWhyq + 1) {
+				final String key = countListNotJoinWhyq + " facebook friends";
+				final String result = "And "
+						+ key
+						+ " haven't joined WHY Q. Invite your friend to join this app!";
+				return SpannableUtils.stylistTextBold(result, key, mActivity
+						.getResources().getColor(R.color.orange));
+			} else if (position <= countListWhyq) {
+				return listWhyq.get(position - 1);
 			} else {
-				return listNotJoinWhyq.get(position - countListWhyq);
+				return listNotJoinWhyq.get(position - countListWhyq - 2);
 			}
 		}
 
 		@Override
 		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		protected void onNextPageRequested(int page) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		protected void bindSectionHeader(View view, int position,
-				boolean displaySectionHeader) {
-			HeaderHolder holder = getHeaderHolder(view);
-			if (displaySectionHeader) {
-				holder.header.setVisibility(View.VISIBLE);
-				bindHeader(holder, getSections()[getSectionForPosition(position)]);
-			} else {
-				holder.header.setVisibility(View.GONE);
-			}
-
-		}
-
-		@Override
-		public View getAmazingView(int position, View convertView,
-				ViewGroup parent) {
-			if (convertView == null) {
-				convertView = mActivity.getLayoutInflater().inflate(
-						R.layout.friend_list_item, parent, false);
-
-				Util.applyTypeface(convertView,
-						WhyqApplication.sTypefaceRegular);
-			}
-
-			final ViewHolder holder = getViewHolder(convertView);
-			final FriendFacebook item = (FriendFacebook) getItem(position);
-
-			holder.name.setText(item.getFirstName());
-			mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
-
-			return convertView;
-		}
-
-		@Override
-		public void configurePinnedHeader(View header, int position, int alpha) {
-			bindHeader(getHeaderHolder(header),
-					getSections()[getSectionForPosition(position)]);
-		}
-
-		@Override
-		public int getPositionForSection(int section) {
 			return 0;
 		}
 
 		@Override
-		public int getSectionForPosition(int position) {
-			if (position < countListWhyq) {
+		public int getItemViewType(int position) {
+			if (position == 0 || position == countListWhyq + 1) {
 				return 0;
 			} else {
 				return 1;
@@ -314,29 +270,68 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		}
 
 		@Override
-		public String[] getSections() {
-			return new String[] { SECTION_WHYQ, SECTION_NOT_JOIND_WHYQ };
+		public int getViewTypeCount() {
+			return 2;
 		}
 
-		private void bindHeader(HeaderHolder holder, String section) {
-			if (section.equals(SECTION_WHYQ)) {
-				final String key = countListWhyq + " facebook friends";
-				final String result = "You have " + key + " had joined WHY Q.";
-				Spannable message = SpannableUtils.stylistTextBold(result, key,
-						mActivity.getResources().getColor(R.color.orange));
-				holder.headerMessage.setText(message);
-				holder.headerFriendAll.setVisibility(View.VISIBLE);
-			} else {
-				final String key = countListNotJoinWhyq + " facebook friends";
-				final String result = "And "
-						+ key
-						+ " haven't joined WHY Q. Invite your friend to join this app!";
-				final Spannable message = SpannableUtils.stylistTextBold(
-						result, key,
-						mActivity.getResources().getColor(R.color.orange));
-				holder.headerMessage.setText(message);
-				holder.headerFriendAll.setVisibility(View.GONE);
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			final Object item = getItem(position);
+			if (convertView == null) {
+				if (item instanceof FriendFacebook) {
+					convertView = mActivity.getLayoutInflater().inflate(
+							R.layout.friend_list_item, parent, false);
+				} else {
+					convertView = mActivity.getLayoutInflater().inflate(
+							R.layout.friend_list_item_secondary, parent, false);
+				}
+
+				Util.applyTypeface(convertView,
+						WhyqApplication.sTypefaceRegular);
 			}
+
+			final ViewHolder holder = getViewHolder(convertView);
+			holder.action.setBackgroundResource(0);
+
+			if (item instanceof FriendFacebook) {
+				final FriendFacebook friendfacebook = (FriendFacebook) item;
+				holder.name.setText(friendfacebook.getFirstName());
+				mImageWorker.downloadImage(friendfacebook.getAvatar(),
+						holder.avatar);
+				if (friendfacebook.getIsFriend() == StatusWithFriend.STATUS_NOT_CONNECT) {
+					if (INVITED_LIST.containsKey(friendfacebook.getId())) {
+						holder.action.setText("");
+						holder.action
+								.setBackgroundResource(R.drawable.icon_checked);
+					} else if (position <= countListWhyq) {
+						holder.action.setText(R.string.add);
+					} else {
+						holder.action.setText(R.string.invite);
+						holder.actionContainer
+								.setOnClickListener(new View.OnClickListener() {
+
+									@Override
+									public void onClick(View v) {
+										mActivity
+												.addInviteFriend(friendfacebook);
+									}
+								});
+					}
+				} else if (friendfacebook.getIsFriend() == StatusWithFriend.STATUS_WAITING_FOR_ACCEPT) {
+
+				}
+
+			} else {
+				holder.name.setText((Spannable) item);
+				if (position == 0 && countListWhyq > 0) {
+					holder.action.setText(R.string.friend_all);
+					holder.actionContainer.setVisibility(View.VISIBLE);
+				} else {
+					holder.actionContainer.setVisibility(View.GONE);
+				}
+			}
+
+			return convertView;
 		}
 
 		private ViewHolder getViewHolder(View view) {
@@ -348,19 +343,11 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 			return holder;
 		}
 
-		private HeaderHolder getHeaderHolder(View view) {
-			HeaderHolder holder = (HeaderHolder) view.getTag();
-			if (holder == null) {
-				holder = new HeaderHolder(view);
-				view.setTag(holder);
-			}
-			return holder;
-		}
-
-		private class ViewHolder {
+		class ViewHolder {
 			ImageView avatar;
 			TextView name;
-			Button invite;
+			FrameLayout actionContainer;
+			TextView action;
 
 			public ViewHolder(View view) {
 				avatar = (ImageView) view.findViewById(R.id.avatar);
@@ -369,19 +356,9 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 					avatar.getLayoutParams().height = AVATAR_SIZE;
 				}
 				name = (TextView) view.findViewById(R.id.name);
-				invite = (Button) view.findViewById(R.id.invite);
-			}
-		}
-
-		private class HeaderHolder {
-			View header;
-			TextView headerMessage;
-			Button headerFriendAll;
-
-			public HeaderHolder(View view) {
-				header = view.findViewById(R.id.header);
-				headerMessage = (TextView) header.findViewById(R.id.message);
-				headerFriendAll = (Button) header.findViewById(R.id.friendAll);
+				action = (TextView) view.findViewById(R.id.action);
+				actionContainer = (FrameLayout) view
+						.findViewById(R.id.actionContainer);
 			}
 		}
 

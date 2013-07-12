@@ -24,6 +24,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
+import com.whyq.BuildConfig;
+
 import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
 import whyq.model.SearchFriendCriteria;
@@ -234,7 +236,12 @@ public class Service implements Runnable {
 			resObj = parser.parseLogout();
 			break;
 		case ActionLoginFacebook:
-			resObj = parser.parserLoginData(result);
+			if (BuildConfig.DEBUG) {
+				resObj = parser.parserLoginData("<response><Version>2.0.0</Version><Status>200</Status><Message>Login via facebook account successfully</Message><Token>9rQ1qjJPeufy3MKNLDSU</Token><obj><id>116</id><email><![CDATA[giang.nguyentruong.uit@gmail.com]]></email><role_id>1</role_id><is_active>1</is_active><total_money>0</total_money><total_saving_money>0</total_saving_money><total_comment>0</total_comment><total_comment_like>0</total_comment_like><total_friend>0</total_friend><total_favourite>0</total_favourite><total_check_bill>0</total_check_bill><twitter_id></twitter_id><facebook_id>100003290134389</facebook_id><token><![CDATA[9rQ1qjJPeufy3MKNLDSU]]></token><status>1</status><createdate><![CDATA[14-Jun-2013 02:05:41]]></createdate><updatedate><![CDATA[13-Jul-2013 03:38:09]]></updatedate><first_name><![CDATA[Giang]]></first_name><last_name><![CDATA[Nguyen Truong]]></last_name><bio></bio><gender>1</gender><avatar><![CDATA[http://v2.whyq.net.au/upload/avatar/thumb/116_51b9edd55093d.jpg]]></avatar><city></city><address></address><phone_number></phone_number><paypal_email></paypal_email><status_user><is_friend>-2</is_friend></status_user><total_count><id>116</id><total_money></total_money><total_saving_money></total_saving_money><total_comment_like>0</total_comment_like><total_comment>0</total_comment><total_friend>0</total_friend><total_favourite>0</total_favourite><total_check_bill>0</total_check_bill><total_place_check_bill>0</total_place_check_bill></total_count><new_register>0</new_register><list_business_favorite></list_business_favorite><notification_setting><data><id>116</id><is_receive_notification>1</is_receive_notification><is_show_email>1</is_show_email><is_show_favorite>1</is_show_favorite><is_show_friend>1</is_show_friend><is_receive_promotion_notification>1</is_receive_promotion_notification><createdate><![CDATA[0000-00-00 00:00:00]]></createdate><updatedate><![CDATA[2013-06-14 02:05:43]]></updatedate></data></notification_setting><device_setting></device_setting></obj></response>");
+			} else {
+				resObj = parser.parserLoginData(result);
+			}
+			break;
 		case ActionLoginTwitter:
 			resObj = parser.parserLoginData(result);
 			break;

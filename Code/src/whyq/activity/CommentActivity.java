@@ -53,7 +53,17 @@ public class CommentActivity extends ImageWorkerActivity {
 				storeId = "";
 			}
 		}
+		
+		ImageView setting = new ImageView(this);
+		setting.setImageResource(R.drawable.icon_filter);
+		setExtraView(setting);
+		
 		service.getComments(getEncryptedToken(), storeId, 1, 20);
+	}
+	
+	@Override
+	protected void onExtraButtonPressed() {
+		super.onExtraButtonPressed();
 	}
 
 	@Override

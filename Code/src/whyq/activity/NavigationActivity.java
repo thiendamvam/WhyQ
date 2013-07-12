@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.whyq.R;
@@ -24,6 +25,7 @@ public class NavigationActivity extends FragmentActivity implements
 	private SearchField mSearchField;
 	private FrameLayout mTitleContainer;
 	private ImageView mButtonBack;
+	private LinearLayout mRootView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class NavigationActivity extends FragmentActivity implements
 						onExtraButtonPressed();
 					}
 				});
+		
 
 	}
 
@@ -89,6 +92,15 @@ public class NavigationActivity extends FragmentActivity implements
 	protected void setBackButtonIcon(int resId) {
 		mButtonBack.setImageResource(resId);
 	}
+	
+	protected void showTab(boolean show) {
+		if (show) {
+			final int marginBottom = (int) getResources().getDimension(R.dimen.tab_height);
+			((FrameLayout.LayoutParams) mRootView.getLayoutParams()).setMargins(0, 0, 0, marginBottom);
+		} else {
+			((FrameLayout.LayoutParams) mRootView.getLayoutParams()).setMargins(0, 0, 0, 0);
+		}
+	}
 
 	@Override
 	public void onQuery(String queryString) {
@@ -105,6 +117,7 @@ public class NavigationActivity extends FragmentActivity implements
 	public void setContentView(int layoutResID) {
 		if (layoutResID == R.layout.activity_navigation) {
 			super.setContentView(layoutResID);
+			mRootView = (LinearLayout) findViewById(R.id.navigationContentView);
 		} else {
 			((ViewGroup) findViewById(R.id.contentView))
 					.addView(getLayoutInflater().inflate(layoutResID, null));

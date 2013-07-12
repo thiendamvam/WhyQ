@@ -25,12 +25,22 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.util.LruCache;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 public class ImageViewHelper {
 
 	private static final int MAX_CACHE_SIZE = 4 * 1024 * 1024;
 	private static final int CLEAR_CACHE_SIZE = 2 * 1024 * 1024;
+	
+	public interface OnCompleteListener {
+		void onComplete();
+	}
+	
+	private OnCompleteListener mListener;
+	public void setOnCompleteListener(OnCompleteListener listener) {
+		mListener = listener;
+	}
 
 	LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(
 			MAX_CACHE_SIZE) {
@@ -50,6 +60,9 @@ public class ImageViewHelper {
 				new BitmapDrawable(imgView.getResources(), bmp) });
 		imgView.setImageDrawable(td);
 		td.startTransition(500);
+		if (mListener != null) {
+			mListener.onComplete();
+		}
 	}
 
 	private Bitmap bmp;
@@ -59,6 +72,10 @@ public class ImageViewHelper {
 	}
 
 	public void downloadImage(String url, ImageView imageView) {
+		if (TextUtils.isEmpty(url)) {
+			return;
+		}
+		
 		String key = hashKeyForDisk(url);
 		Bitmap bmp = cache.get(hashKeyForDisk(url));
 		if (null != bmp) {
@@ -159,7 +176,7 @@ public class ImageViewHelper {
 			imageViewReference = new WeakReference<ImageView>(imageView);
 			this.key = key;
 		}
-
+		
 		@Override
 		protected Bitmap doInBackground(Object... params) {
 			String request = (String) params[0];
@@ -249,6 +266,8 @@ public class ImageViewHelper {
 			}
 		}
 	}
+	
+	
 
 	public void cleanCache() {
 		cache.evictAll();

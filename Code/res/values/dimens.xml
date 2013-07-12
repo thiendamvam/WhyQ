@@ -24,5 +24,6 @@
     <dimen name="font_medium">18sp</dimen>
     <dimen name="font_small">16sp</dimen>
     <dimen name="font_super_small">14sp</dimen>
+    <dimen name="tab_height">74dp</dimen>
 
 </resources>

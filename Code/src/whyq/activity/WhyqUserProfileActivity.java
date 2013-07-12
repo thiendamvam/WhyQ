@@ -30,6 +30,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,6 +58,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 				"wants to add you as friend on WHY Q, accept");
 		ACTIVITY_MAP.put("favourite", "favoured");
 		ACTIVITY_MAP.put("comment", "commented on");
+		ACTIVITY_MAP.put("comment_like", "liked a comment of");
 	}
 
 	private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
@@ -105,12 +108,26 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		HorizontalListView listPhoto = (HorizontalListView) findViewById(R.id.gallery);
 		listPhoto.getLayoutParams().height = PHOTO_SIZE;
 		listPhoto.setAdapter(mPhotoAdapter);
+		listPhoto.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				Photo photo = (Photo) mPhotoAdapter.getItem(arg2);
+				Intent i = new Intent(WhyqUserProfileActivity.this, WhyqImageDisplayActivity.class);
+				i.putExtra(WhyqImageDisplayActivity.ARG_IMAGE_URL, photo.getImage());
+				startActivity(i);
+			}	
+		});
 
 		setLoading(true);
 
 		mUserId = i.getStringExtra(ARG_USER_ID);
 		if (mUserId == null) {
 			mUserId = XMLParser.getUserId(this);
+			showTab(true);
+		} else {
+			showTab(false);
 		}
 
 		ImageView setting = new ImageView(this);
@@ -338,8 +355,6 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 				holder.activity.setText(SpannableUtils.stylistText(message,
 						key, 0xff808080));
 			}
-			holder.activity.setCompoundDrawablesWithIntrinsicBounds(
-					R.drawable.user_activity, 0, 0, 0);
 
 			return convertView;
 		}

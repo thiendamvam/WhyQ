@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 
 import com.whyq.R;
 
@@ -63,6 +62,7 @@ public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 		} else {
 			Intent intent = new Intent(this, WhyqFriendsFacebookActivity.class);
 			startActivity(intent);
+			finish();
 		}
 	}
 
@@ -93,6 +93,7 @@ public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 					WhyqApplication._instance.getApplicationContext(), user);
 			Intent intent = new Intent(this, WhyqFriendsFacebookActivity.class);
 			startActivity(intent);
+			finish();
 		}
 	}
 	

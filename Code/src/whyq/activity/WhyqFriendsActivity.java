@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -215,7 +216,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 		class ViewHolder {
 			ImageView avatar;
 			TextView name;
-			View action;
+			Button invite;
 
 			public ViewHolder(View view) {
 				view.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
@@ -225,8 +226,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 					avatar.getLayoutParams().height = AVATAR_SIZE;
 				}
 				name = (TextView) view.findViewById(R.id.name);
-				action = view.findViewById(R.id.action);
-				action.setBackgroundResource(R.drawable.icon_friend);
+				invite = (Button) view.findViewById(R.id.invite);
 			}
 		}
 

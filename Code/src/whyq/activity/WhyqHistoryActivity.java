@@ -14,6 +14,7 @@ import whyq.utils.ImageViewHelper;
 import whyq.utils.Util;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,8 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 	public static final String ARG_USER_ID = "userid";
 
 	private BillAdapter mAdapter;
+	
+	private static final int[] STATUS_MAP = new int[] {R.drawable.waiting_for_payment, R.drawable.declined, R.drawable.delivered, R.drawable.dismissed, R.drawable.waiting_to_be_accepted,  R.drawable.paid};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +119,11 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 
 			ViewHolder holder = getViewHolder(convertView);
 			BillItem item = mItems.get(position);
+			if (item.getStatus_bill() > 0 && item.getStatus_bill() <= 6) {
+				holder.circleIcon.setImageResource(STATUS_MAP[item.getStatus_bill() - 1]);
+			} else {
+				holder.circleIcon.setImageResource(R.drawable.circle);
+			}
 			holder.circleIcon.setVisibility(View.VISIBLE);
 			BusinessInfo bi = item.getBusiness_info();
 			if (bi != null) {
