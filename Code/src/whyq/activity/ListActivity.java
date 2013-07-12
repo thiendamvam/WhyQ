@@ -537,7 +537,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 						RSA rsa = new RSA();
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+//						nameValuePairs.add(new BasicNameValuePair("token",enToken));
 						if(isSearch){
 							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
 							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));

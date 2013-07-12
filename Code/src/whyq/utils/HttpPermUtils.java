@@ -58,7 +58,7 @@ public class HttpPermUtils {
 				HttpPost postRequest = new HttpPost(url);
 				try {			
 					if (nameValuePairs != null) {
-//						postRequest.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+						postRequest.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
 					}
 					if(ListActivity.isSearch)
 					{
