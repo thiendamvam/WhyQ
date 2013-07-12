@@ -17,6 +17,7 @@ import whyq.model.User;
 import whyq.utils.API;
 import whyq.utils.RSA;
 import whyq.utils.UrlImageViewHelper;
+import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
 import android.content.BroadcastReceiver;
@@ -170,12 +171,24 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createUI();
+		getLocation();
 		regisReceiver();
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(ListActivity.this.getIntent());
+
     	showProgress();
 
+	}
+
+
+	private void getLocation() {
+		// TODO Auto-generated method stub
+		Bundle bundle = Util.getLocation(ListActivity.this);
+		if(bundle!=null){
+			longitude = bundle.getString("lat");
+			latgitude = bundle.getString("lon");
+		}
 	}
 
 

@@ -14,6 +14,7 @@ import java.io.Writer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -22,17 +23,26 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import whyq.WhyqApplication;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.text.style.BulletSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whyq.R;
 
@@ -202,6 +212,36 @@ public class Util {
 			}
 		}
 	}
+	public static Bundle getLocation(Activity activity){
+		Geocoder geocoder;
+	     String bestProvider;
+	     List<Address> user = null;
+	     double lat;
+	     double lng;
+	     Bundle bundle = new Bundle();
+	     LocationManager lm = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
 
+	     Criteria criteria = new Criteria();
+	     bestProvider = lm.getBestProvider(criteria, false);
+	     Location location = lm.getLastKnownLocation(bestProvider);
+
+	     if (location == null){
+	         Toast.makeText(activity,"Location Not found",Toast.LENGTH_LONG).show();
+	      }else{
+	        geocoder = new Geocoder(activity);
+	        try {
+	            user = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+	        lat=(double)user.get(0).getLatitude();
+	        lng=(double)user.get(0).getLongitude();
+	        bundle.putString("getLocation","lat"+ String.valueOf(lat));
+	        bundle.putString("getLocation","lon"+ String.valueOf(lng));
+	        System.out.println(" DDD lat: " +lat+",  longitude: "+lng);
+
+	        }catch (Exception e) {
+	             e.printStackTrace();
+	        }
+	    }
+	     return bundle;
+	}
 
 }
