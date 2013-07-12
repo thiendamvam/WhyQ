@@ -64,8 +64,7 @@ public class Service implements Runnable {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionLogout;
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("token", XMLParser.getToken(WhyqApplication.Instance()
-				.getApplicationContext()));
+		params.put("token", WhyqApplication.Instance().getRSAToken());
 		request("/m/logout", params, true, false);
 	}
 

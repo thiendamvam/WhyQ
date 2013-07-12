@@ -5,6 +5,7 @@
     android:background="@color/white"
     android:baselineAligned="false"
     android:orientation="vertical"
+    android:visibility="invisible"
     android:padding="10dp"
     android:weightSum="10" >
 

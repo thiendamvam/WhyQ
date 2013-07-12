@@ -1,10 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="0dp"
     android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:layout_marginBottom="60dp"
     android:weightSum="10" >
 
     <LinearLayout
@@ -18,7 +18,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="59dp"
+        android:layout_marginBottom="0dp"
         android:layout_weight="9"
         android:orientation="vertical" >
 
@@ -36,11 +36,13 @@
             android:layout_marginRight="15dp"
             android:background="@color/profifle_blue" />
 
-        <TextView
+        <Button
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:background="@color/transparent"
+            android:gravity="left"
+            android:padding="15dp"
             android:text="FAQ" />
 
         <View
@@ -50,11 +52,13 @@
             android:layout_marginRight="15dp"
             android:background="@color/normal_delivery_color" />
 
-        <TextView
+        <Button
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:background="@color/transparent"
+            android:gravity="left"
+            android:padding="15dp"
             android:text="Ntification - Personals" />
 
         <View
@@ -64,11 +68,13 @@
             android:layout_marginRight="15dp"
             android:background="@color/normal_delivery_color" />
 
-        <TextView
+        <Button
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:background="@color/transparent"
+            android:gravity="left"
+            android:padding="15dp"
             android:text="Edit Account" />
 
         <View
@@ -78,12 +84,14 @@
             android:layout_marginRight="15dp"
             android:background="@color/normal_delivery_color" />
 
-        <TextView
+        <Button
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:background="@color/transparent"
+            android:gravity="left"
             android:onClick="signoutClicked"
+            android:padding="15dp"
             android:text="Sign out" />
 
         <TextView
@@ -104,8 +112,8 @@
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
             android:layout_marginTop="5dp"
+            android:padding="15dp"
             android:text="WHYQ v2.0. Rate it!" />
 
         <View
@@ -115,11 +123,13 @@
             android:layout_marginRight="15dp"
             android:background="@color/normal_delivery_color" />
 
-        <TextView
+        <Button
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:background="@color/transparent"
+            android:gravity="left"
+            android:padding="15dp"
             android:text="Terms and conditions" />
 
         <View
@@ -133,7 +143,7 @@
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:padding="15dp"
             android:text="Support" />
     </LinearLayout>
 

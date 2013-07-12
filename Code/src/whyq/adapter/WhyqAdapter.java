@@ -199,7 +199,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					viewHolder.tvItemName.setText(item.getNameStore().toUpperCase());
 					viewHolder.tvItemAddress.setText(item.getAddress());
 					viewHolder.tvNumberFavourite.setText(""+item.getCountFavaouriteMember());
-					viewHolder.btnDistance.setText("");
+					viewHolder.btnDistance.setText(item.getRadius()+" km");
 					if(item.getCountFavaouriteMember() !=null)
 						if(!item.getCountFavaouriteMember().equals(""))
 							if(Integer.parseInt(item.getCountFavaouriteMember()) >0){

@@ -1,14 +1,13 @@
 package whyq.activity;
 
-import whyq.WhyqMain;
-
-import com.whyq.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+
+import com.whyq.R;
 
 public class ProfileWhyQActivty extends Activity {
 
@@ -17,11 +16,12 @@ public class ProfileWhyQActivty extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_profile);
 	}
-	public void back(View v){
+	public void onBack(View v){
 //	       WhyqMain.back();
 		finish();
 	}
 	public void signoutClicked(View v){
+		Log.d("signoutClicked","signoutClicked");
 		Intent i = new Intent(ProfileWhyQActivty.this, WhyqLogout.class);
 		startActivity(i);
 	}

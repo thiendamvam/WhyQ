@@ -112,7 +112,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private String filter="0"; 
 	private String friendFavourite;
 	private String friendVisited;
-	private String cateId="0";
+	private String cateId="1";
 	
 	public static boolean isSearch = false;
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -502,6 +502,28 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 					if(isCalendar){
 						nameValuePairs.add(new BasicNameValuePair("uid", WhyqMain.UID));
 //						isCalendar =false;
+					}else{
+						RSA rsa = new RSA();
+						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
+						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+						if(isSearch){
+							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
+							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
+							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
+							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
+							
+							
+						}else{
+//							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
+							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
+							if(friendVisited !=null){
+								nameValuePairs.add(new BasicNameValuePair("friend_visit", friendVisited));
+							}else if(friendFavourite !=null){
+								nameValuePairs.add(new BasicNameValuePair("friend_favourite", friendFavourite));
+							}else{
+								
+							}
+						}
 					}
 
 					permList = whyqListController.getBusinessList(url, nameValuePairs);
@@ -629,7 +651,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			setIconTab(1);
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
-			cateId = "0";
+			cateId = "1";
 			storeType = 1;
 //			exeSearch(etTextSearch.getText().toString());
 			exeGetBusiness(etTextSearch.getText().toString());
@@ -643,7 +665,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			setIconTab(2);
-			cateId = "1";
+			cateId = "2";
 //			exeSearch(etTextSearch.getText().toString());
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
@@ -656,7 +678,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			storeType = 3;
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
-			cateId = "2";
+			cateId = "3";
 //			exeSearch(etTextSearch.getText().toString());
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
@@ -669,7 +691,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			storeType = 4;
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
-			cateId = "2";
+			cateId = "4";
 //			exeSearch(etTextSearch.getText().toString());
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
@@ -878,7 +900,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	}
 	private void initCheckAll() {
 		// TODO Auto-generated method stub
-		cateId = "0";
+		cateId = "1";
 		cktViewAll.setTextColor(Color.parseColor("#805504"));	
 		cktFriendFavourtie.setTextColor(getResources().getColor(R.color.white));
 		cktFriednVised.setTextColor(getResources().getColor(R.color.white));
@@ -901,7 +923,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 	private void initCheckVisited() {
 		// TODO Auto-generated method stub
-		cateId = "2";
+		cateId = "1";
 		cktFriednVised.setTextColor(Color.parseColor("#805504"));
 		cktViewAll.setTextColor(getResources().getColor(R.color.white));
 		cktFriendFavourtie.setTextColor(getResources().getColor(R.color.white));

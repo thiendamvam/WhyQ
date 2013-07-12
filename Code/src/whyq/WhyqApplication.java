@@ -101,7 +101,9 @@ public class WhyqApplication extends Application {
 			return null;
 		}
 	}
-	
+	public void setToken(User user){
+		XMLParser.storePermpingAccount(getApplicationContext(), user);
+	}
 	private DisplayMetrics metrics;
 	
 	public void setDisplayMetrics( DisplayMetrics metrics ){

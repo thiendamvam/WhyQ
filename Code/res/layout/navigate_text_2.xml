@@ -2,15 +2,23 @@
     android:id="@+id/titlebar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_ationbar">
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_centerVertical="true"
-        android:layout_margin="12dp"
-        android:background="@drawable/icon_back"
-        android:onClick="onBack" />
+    android:background="@drawable/bg_ationbar" >
+
+    <LinearLayout
+        android:id="@+id/ln_back"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:onClick="onBack"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_margin="12dp"
+            android:background="@drawable/icon_back"
+             />
+    </LinearLayout>
 
     <View
         android:layout_width="2dp"
@@ -23,14 +31,20 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="7dp"
-        android:layout_toRightOf="@+id/btn_back"
+        android:layout_toRightOf="@+id/ln_back"
         android:gravity="center_vertical"
         android:text="Login"
         android:textColor="#FFFFFF"
         android:textSize="@dimen/text_size_header"
         android:textStyle="normal" />
 
-
+    <ProgressBar
+        android:id="@+id/prgBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="7dp"
+        android:visibility="invisible" />
 
 </RelativeLayout>
-

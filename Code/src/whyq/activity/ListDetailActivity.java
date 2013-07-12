@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -52,6 +53,9 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private ImageView imgHeader;
 	private int storeType;
 	private RadioGroup radioGroup;
+	private LinearLayout lnAboutContent;
+	private LinearLayout lnMenuContent;
+	private LinearLayout lnPromotionContent;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,9 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		tvHeaderTitle = (TextView) findViewById(R.id.tvHeaderTitle);
 		imgHeader = (ImageView)findViewById(R.id.imgHeader);
 		storeType = getIntent().getIntExtra("store_type", 0);
+		lnAboutContent = (LinearLayout)findViewById(R.id.lnAboutContent);
+		lnMenuContent = (LinearLayout)findViewById(R.id.lnMenuContent);
+		lnPromotionContent = (LinearLayout)findViewById(R.id.lnStoreDetailPromotion);
 		showHeaderImage();
 		initTabbar();
 		getDetailData();
@@ -105,16 +112,36 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	protected void exeAboutFocus() {
 		// TODO Auto-generated method stub
 		Log.d("exeAboutFocus","exeAboutFocus");
+		setViewContent(1);
 	}
 
 	protected void exeMenuFocus() {
 		// TODO Auto-generated method stub
 		Log.d("exeMenuFocus","exeMenuFocus");
+		setViewContent(2);
 	}
 
 	protected void exePromotionFocus() {
 		// TODO Auto-generated method stub
 		Log.d("exePromotionFocus","exePromotionFocus");
+		setViewContent(3);
+	}
+
+	private void setViewContent(int i) {
+		// TODO Auto-generated method stub
+		if(i==1){
+			lnAboutContent.setVisibility(View.VISIBLE);
+			lnMenuContent.setVisibility(View.INVISIBLE);
+			lnPromotionContent.setVisibility(View.INVISIBLE);
+		}else if(i==2){
+			lnAboutContent.setVisibility(View.INVISIBLE);
+			lnMenuContent.setVisibility(View.VISIBLE);
+			lnPromotionContent.setVisibility(View.INVISIBLE);
+		}else if(i==3){
+			lnAboutContent.setVisibility(View.INVISIBLE);
+			lnMenuContent.setVisibility(View.INVISIBLE);
+			lnPromotionContent.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void showHeaderImage() {
