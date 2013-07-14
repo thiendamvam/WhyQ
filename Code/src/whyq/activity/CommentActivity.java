@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.whyq.R;
@@ -29,6 +31,8 @@ import com.whyq.R;
 public class CommentActivity extends ImageWorkerActivity {
 
 	private CommentAdapter mAdapter;
+	private RadioGroup mFilterLayout;
+	private String mStoreId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,27 +47,46 @@ public class CommentActivity extends ImageWorkerActivity {
 		ListView listview = (ListView) findViewById(R.id.listview);
 		listview.setAdapter(mAdapter);
 
-		Service service = getService();
-		setLoading(true);
 		Intent i = getIntent();
-		String storeId = null;
-		if (i != null) {
-			storeId = i.getStringExtra("store_id");
-			if (storeId == null) {
-				storeId = "";
-			}
+		mStoreId = i.getStringExtra("store_id");
+		if (mStoreId == null) {
+			mStoreId = "";
 		}
 		
-		ImageView setting = new ImageView(this);
-		setting.setImageResource(R.drawable.icon_filter);
-		setExtraView(setting);
+		mFilterLayout = (RadioGroup) findViewById(R.id.filterLayout);
+		mFilterLayout.getLayoutParams().width = WhyqApplication.sScreenWidth * 2 / 3;
+		mFilterLayout.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				if (checkedId == R.id.viewAll) {
+					getComments(false);
+				} else {
+					getComments(true);
+				}
+			}
+		});
 		
-		service.getComments(getEncryptedToken(), storeId, 1, 20);
+		View filter = getLayoutInflater().inflate(R.layout.filter, null);
+		setExtraView(filter);
+		getComments(false);
+	}
+	
+	private void getComments(boolean onlyFriend){
+		setLoading(true);
+		getService().getComments(getEncryptedToken(), mStoreId, 1, 20, onlyFriend);
 	}
 	
 	@Override
 	protected void onExtraButtonPressed() {
 		super.onExtraButtonPressed();
+		if (mFilterLayout.getVisibility() == View.VISIBLE) {
+			mFilterLayout.setVisibility(View.GONE);
+			findViewById(R.id.triAngle).setVisibility(View.GONE);
+		} else {
+			mFilterLayout.setVisibility(View.VISIBLE);
+			findViewById(R.id.triAngle).setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
