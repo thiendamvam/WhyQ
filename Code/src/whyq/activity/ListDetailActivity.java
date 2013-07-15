@@ -1,6 +1,12 @@
 package whyq.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import whyq.adapter.ExpandableListAdapter;
 import whyq.interfaces.IServiceListener;
+import whyq.model.GroupMenu;
+import whyq.model.Menu;
 import whyq.model.Store;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
@@ -12,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -56,6 +63,10 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private LinearLayout lnAboutContent;
 	private LinearLayout lnMenuContent;
 	private LinearLayout lnPromotionContent;
+	private ExpandableListView lvMenu;
+	private TextView tvNumberDiscount;
+	private TextView tvDate;
+	private TextView tvDes;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +98,13 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		lnAboutContent = (LinearLayout)findViewById(R.id.lnAboutContent);
 		lnMenuContent = (LinearLayout)findViewById(R.id.lnMenuContent);
 		lnPromotionContent = (LinearLayout)findViewById(R.id.lnStoreDetailPromotion);
-		showHeaderImage();
+		
+		tvNumberDiscount = (TextView)findViewById(R.id.tvNumberDiscount);
+		tvDate = (TextView)findViewById(R.id.tvDate);
+		tvDes = (TextView)findViewById(R.id.tvDescription);
+		
+		lvMenu = (ExpandableListView)findViewById(R.id.lvMenu);
+//		showHeaderImage();
 		initTabbar();
 		getDetailData();
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
@@ -186,6 +203,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 			}
 			UrlImageViewHelper.setUrlDrawable(imgFrienAvatar, store.getUserList()
 					.get(0).getUrlAvatar());
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -214,8 +232,93 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		// TODO Auto-generated method stub
 		hideDialog();
 		store = (Store) result.getData();
-		if(store!=null)
+		if(store!=null){
+			storeType = Integer.valueOf(store.getCateid());
+			showHeaderImage();
 			bindData();
+			bindMenuData();
+			bindPromotionData();
+		}
+	}
+	private void bindPromotionData() {
+		// TODO Auto-generated method stub
+		try {
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	private void bindMenuData() {
+		// TODO Auto-generated method stub
+		try {
+			ArrayList<Menu> menuList = store.getMenuList();
+			
+			int size = menuList.size();
+			if(size > 0 ){
+//				WhyqMenuAdapter adapter = new WhyqMenuAdapter(ListDetailActivity.this, menuList);
+//				lvMenu.setAdapter(adapter);
+				ArrayList<GroupMenu> mGroupCollection = new ArrayList<GroupMenu>();
+				ArrayList<String> idList = getCateIdList(menuList);
+				int length = idList.size();
+				for (int i = 0; i < length; i++) {
+					try {
+
+						String id = idList.get(i);
+						GroupMenu group= getGroupFromId(
+								menuList, id);
+						
+						if (group != null)
+							mGroupCollection.add(group);
+
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+				}
+				ExpandableListAdapter adapter = new ExpandableListAdapter(
+						ListDetailActivity.this,
+						lvMenu,
+						mGroupCollection);
+
+				lvMenu.setAdapter(adapter);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	private GroupMenu getGroupFromId(List<Menu> storyList, String id) {
+		// TODO Auto-generated method stub
+		GroupMenu ge = new GroupMenu();
+		List<Menu> storiesList = new ArrayList<Menu>();
+		int storiesLength = storyList.size();
+		for (int j = 0; j < storiesLength; j++) {
+			Menu story = storyList.get(j);
+			if (story.getStoreInfo().getCateid().equals(id)) {
+				storiesList.add(story);
+			}
+		}
+		if (storiesList.size() > 0) {
+			ge.setMenuList(storiesList);
+			ge.setName(storiesList.get(0).getStoreInfo().getCateid());
+			ge.setColor("ffffff");
+			return ge;
+		} else {
+			return null;
+		}
+
+	}
+	private ArrayList<String> getCateIdList(List<Menu> menuList) {
+		// TODO Auto-generated method stub
+		ArrayList<String> listId = new ArrayList<String>();
+		int length = menuList.size();
+		for (int i = 0; i < length; i++) {
+			Menu menu = menuList.get(i);
+			if (!listId.contains(menu.getStoreInfo().getCateid())) {
+				listId.add(menu.getStoreInfo().getCateid());
+			}
+		}
+		return listId;
 	}
 	public void onCutleryTabCliked(View v){
 		resetTabBarFocus(1);

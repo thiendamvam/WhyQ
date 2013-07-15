@@ -1,14 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/lnMenuContent"
     android:layout_width="match_parent"
-    android:background="@color/white"
     android:layout_height="match_parent"
-    android:visibility="invisible"
-    android:orientation="vertical" >
+    android:layout_margin="7dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:visibility="invisible" >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="35dp"
         android:gravity="right"
         android:orientation="horizontal" >
 
@@ -49,10 +50,15 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/lvFindResult"
+    <ExpandableListView
+        android:id="@+id/lvMenu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:divider="#2d2d2d"
+        android:dividerHeight="1dp"
+        android:groupIndicator="@drawable/play_group_item"
+        android:listSelector="@drawable/play_expand_seletor"
+        android:scrollbars="none" />
 
 </LinearLayout>

@@ -82,6 +82,7 @@ public class WhyqApplication extends Application {
 			return token;
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 			return null;
 		}
 	}
