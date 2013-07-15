@@ -10,6 +10,7 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageViewHelper;
+import whyq.utils.Logger;
 import whyq.utils.Util;
 import android.content.Context;
 import android.os.Bundle;
@@ -64,8 +65,8 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 		});
 
 		setLoading(true);
-		String userId = getIntent().getStringExtra(ARG_USER_ID);
-		getService().getCheckedBills(getEncryptedToken(), "");
+		final String userId = getIntent().getExtras().getString(ARG_USER_ID);
+		getService().getOrder(getEncryptedToken(), userId);
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 		super.onCompleted(service, result);
 		setLoading(false);
 		if (result != null && result.isSuccess()
-				&& result.getAction() == ServiceAction.ActionCheckedBills) {
+				&& result.getAction() == ServiceAction.ActionGetOrder) {
 			mAdapter.setItems(DataParser.parseBills(String.valueOf(result
 					.getData())));
 		}

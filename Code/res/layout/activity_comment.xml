@@ -1,9 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/listview"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bgListView"
-    android:cacheColorHint="@null" >
+    android:layout_height="match_parent" >
 
-</ListView>
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bgListView"
+        android:cacheColorHint="@null" />
+
+    <RadioGroup
+        android:id="@+id/filterLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="@dimen/base_padding"
+        android:background="@drawable/filter_bg"
+        android:visibility="gone"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/viewAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@drawable/btn_radio"
+            android:checked="true"
+            android:gravity="center_vertical"
+            android:text="@string/filter_view_all"
+            android:textColor="@color/text_filter_color"
+            android:textSize="@dimen/font_medium" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#595959" />
+
+        <RadioButton
+            android:id="@+id/friendComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@drawable/btn_radio"
+            android:gravity="center_vertical"
+            android:text="@string/filter_friend_comment"
+            android:textColor="@color/text_filter_color"
+            android:textSize="@dimen/font_medium" />
+    </RadioGroup>
+
+</RelativeLayout>

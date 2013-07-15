@@ -86,6 +86,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		mAccessToken = getAccessToken();
 
 		setTitle(R.string.friend_from_facebook);
+		getFriends();
 
 //		mInviteContainer = findViewById(R.id.inviteContainer);
 //		mInviteMessage = (TextView) findViewById(R.id.inviteMessage);
