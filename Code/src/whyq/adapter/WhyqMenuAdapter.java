@@ -7,13 +7,13 @@ import java.util.List;
 
 import whyq.activity.ListDetailActivity;
 import whyq.model.Menu;
-import whyq.model.Menu;
 import whyq.utils.UrlImageViewHelper;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,11 +31,14 @@ public class WhyqMenuAdapter extends ArrayAdapter<Menu> {
 		this.context = context;
 		this.list = menuList;
 	}
-
+	public List<Menu> getData(){
+		return list;
+	}
 	public static class ViewHolderMitemInfo {
 		public TextView tvType, tvPrice, tvCount;
 		public ImageView imgThumb;
 		public String storeId;
+		public Button btnAdd, btnRemove;
 		public ViewHolderMitemInfo() {
 
 		}
@@ -59,7 +62,12 @@ public class WhyqMenuAdapter extends ArrayAdapter<Menu> {
 			viewHolder.tvType.setText(item.getNameProduct());
 			viewHolder.tvPrice.setText("$"+item.getValue());
 			viewHolder.storeId = item.getStoreId();
-			viewHolder.tvCount.setText(item.getSort());
+//			viewHolder.tvCount.setText(item.getSort());
+			viewHolder.btnAdd = (Button)view.findViewById(R.id.btnAdd);
+			viewHolder.btnRemove = (Button) view.findViewById(R.id.btnRemove);
+			
+			viewHolder.btnAdd.setTag(item);
+			viewHolder.btnRemove.setTag(item);
 			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getImageThumb());
 			
 			view.setTag(viewHolder);

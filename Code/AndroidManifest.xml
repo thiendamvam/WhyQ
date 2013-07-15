@@ -97,6 +97,10 @@
             android:name="whyq.activity.WhyQCommentActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="whyq.activity.WhyQBillScreen"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
             android:name="whyq.activity.NewWhyqActivity"
             android:screenOrientation="portrait"
             android:theme="@style/toggle_style" >
@@ -240,7 +244,7 @@
             android:name="whyq.activity.WhyqHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-         <activity
+        <activity
             android:name="whyq.activity.WhyqImageDisplayActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

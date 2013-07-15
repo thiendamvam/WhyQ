@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/black"
+    android:background="@color/list_bg"
     android:paddingBottom="0dp"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
@@ -10,16 +10,16 @@
 
     <ImageView
         android:id="@+id/tag_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:src="@drawable/group_down" />
 
     <TextView
+        style="@style/big_blue_text"
         android:id="@+id/group_title"
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/tag_img"
@@ -30,7 +30,6 @@
         android:paddingTop="10dp"
         android:scrollbars="none"
         android:singleLine="true"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="23sp" />
+        android:textColor="@android:color/darker_gray" />
 
 </RelativeLayout>

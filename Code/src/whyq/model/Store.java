@@ -32,6 +32,7 @@ public class Store {
 	private String coutBill;
 	private String income;
 	private String nameCate;
+	private String photos;
 	private ArrayList<User> userList;
 	private ArrayList<Menu> menuList;
 
@@ -521,5 +522,17 @@ public class Store {
 	 */
 	public void setTagList(ArrayList<Tag> tagList) {
 		this.tagList = tagList;
+	}
+	/**
+	 * @return the photos
+	 */
+	public String getPhotos() {
+		return photos;
+	}
+	/**
+	 * @param photos the photos to set
+	 */
+	public void setPhotos(String photos) {
+		this.photos = photos;
 	}
 }

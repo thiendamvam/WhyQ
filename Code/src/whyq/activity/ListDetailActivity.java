@@ -3,7 +3,10 @@ package whyq.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpandableListAdapter;
+import whyq.adapter.WhyqMenuAdapter;
+import whyq.adapter.WhyqMenuAdapter.ViewHolderMitemInfo;
 import whyq.interfaces.IServiceListener;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
@@ -63,10 +66,13 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private LinearLayout lnAboutContent;
 	private LinearLayout lnMenuContent;
 	private LinearLayout lnPromotionContent;
-	private ExpandableListView lvMenu;
+	private ListView lvMenu;
 	private TextView tvNumberDiscount;
 	private TextView tvDate;
 	private TextView tvDes;
+	private ImageView imgView;
+	private WhyqMenuAdapter menuAdapter;
+	private Button btnTotalValue;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -98,12 +104,13 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		lnAboutContent = (LinearLayout)findViewById(R.id.lnAboutContent);
 		lnMenuContent = (LinearLayout)findViewById(R.id.lnMenuContent);
 		lnPromotionContent = (LinearLayout)findViewById(R.id.lnStoreDetailPromotion);
-		
+		imgView = (ImageView)findViewById(R.id.imgView);
 		tvNumberDiscount = (TextView)findViewById(R.id.tvNumberDiscount);
 		tvDate = (TextView)findViewById(R.id.tvDate);
 		tvDes = (TextView)findViewById(R.id.tvDescription);
-		
-		lvMenu = (ExpandableListView)findViewById(R.id.lvMenu);
+		btnTotalValue = (Button) findViewById(R.id.btnTotalValue);
+		btnTotalValue.setText("0");
+		lvMenu = (ListView)findViewById(R.id.lvMenu);
 //		showHeaderImage();
 		initTabbar();
 		getDetailData();
@@ -194,6 +201,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 			tvStoreDes.setText(store.getIntroStore());
 			tvHeaderTitle.setText(store.getNameStore());
 			tvNumberFavourtie.setText(""+store.getCountFavaouriteMember());
+			UrlImageViewHelper.setUrlDrawable(imgView, store.getPhotos());
 			if(!store.getCountFavaouriteMember().equals("0")){
 				tvCommendRever.setText(store.getCountFavaouriteMember()+" comments");
 				tvCommendRever.setTextColor(getResources().getColor(R.color.profifle_blue));
@@ -256,31 +264,37 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 			
 			int size = menuList.size();
 			if(size > 0 ){
-//				WhyqMenuAdapter adapter = new WhyqMenuAdapter(ListDetailActivity.this, menuList);
+				menuAdapter = new WhyqMenuAdapter(ListDetailActivity.this, menuList);
+				lvMenu.setAdapter(menuAdapter);
+//				ArrayList<GroupMenu> mGroupCollection = new ArrayList<GroupMenu>();
+//				ArrayList<String> idList = getProductTypeIdList(menuList);
+//				int length = idList.size();
+//				for (int i = 0; i < length; i++) {
+//					try {
+//
+//						String id = idList.get(i);
+//						GroupMenu group= getGroupFromId(
+//								menuList, id);
+//						
+//						if (group != null)
+//							mGroupCollection.add(group);
+//
+//					} catch (Exception e) {
+//						// TODO: handle exception
+//						e.printStackTrace();
+//					}
+//				}
+//				ExpanMenuAdapter adapter = new ExpanMenuAdapter(
+//						ListDetailActivity.this,
+//						lvMenu,
+//						mGroupCollection);
+//
 //				lvMenu.setAdapter(adapter);
-				ArrayList<GroupMenu> mGroupCollection = new ArrayList<GroupMenu>();
-				ArrayList<String> idList = getCateIdList(menuList);
-				int length = idList.size();
-				for (int i = 0; i < length; i++) {
-					try {
-
-						String id = idList.get(i);
-						GroupMenu group= getGroupFromId(
-								menuList, id);
-						
-						if (group != null)
-							mGroupCollection.add(group);
-
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
-				}
-				ExpandableListAdapter adapter = new ExpandableListAdapter(
-						ListDetailActivity.this,
-						lvMenu,
-						mGroupCollection);
-
-				lvMenu.setAdapter(adapter);
+//				adapter.notifyDataSetChanged();
+//
+//				for (int i = 0; i < mGroupCollection.size(); i++) {
+//					lvMenu.expandGroup(i);
+//				}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -294,13 +308,14 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		int storiesLength = storyList.size();
 		for (int j = 0; j < storiesLength; j++) {
 			Menu story = storyList.get(j);
-			if (story.getStoreInfo().getCateid().equals(id)) {
+			if (story.getTypeProductId().equals(id)) {
 				storiesList.add(story);
 			}
 		}
 		if (storiesList.size() > 0) {
 			ge.setMenuList(storiesList);
-			ge.setName(storiesList.get(0).getStoreInfo().getCateid());
+			ge.setName(storiesList.get(0).getTypeProductId());
+//			ge.setName(storiesList.get(0).getProductTypeInfo().getNameProductType());
 			ge.setColor("ffffff");
 			return ge;
 		} else {
@@ -308,14 +323,14 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		}
 
 	}
-	private ArrayList<String> getCateIdList(List<Menu> menuList) {
+	private ArrayList<String> getProductTypeIdList(List<Menu> menuList) {
 		// TODO Auto-generated method stub
 		ArrayList<String> listId = new ArrayList<String>();
 		int length = menuList.size();
 		for (int i = 0; i < length; i++) {
 			Menu menu = menuList.get(i);
-			if (!listId.contains(menu.getStoreInfo().getCateid())) {
-				listId.add(menu.getStoreInfo().getCateid());
+			if (!listId.contains(menu.getTypeProductId())) {
+				listId.add(menu.getTypeProductId());
 			}
 		}
 		return listId;
@@ -363,6 +378,49 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		}
 		
 	}
+	
+	public void onAddClicked(View v){
+		Log.d("onAddClicked","id ="+v.getId());
+		Menu item = (Menu)v.getTag();
+		updateCount(item,true);
+	}
+	public void onRemoveClicked(View v){
+		Log.d("onRemoveClicked","id ="+v.getId());
+		Menu item = (Menu)v.getTag();
+		updateCount(item,false);
+	}
+	public void onViewBillClicked(View v){
+		Intent intent = new Intent(ListDetailActivity.this, WhyQBillScreen.class);
+		startActivity(intent);
+	}
+	private void updateCount(Menu item, boolean b) {
+		// TODO Auto-generated method stub
+		int size = lvMenu.getChildCount();
+		float value,totalValue = Float.parseFloat(btnTotalValue.getText().toString());
+		Menu item2;
+		ViewHolderMitemInfo holder;
+		for(int i=0;i< size;i++){
+			item2 = store.getMenuList().get(0);
+			if(item2.getId().equals(item.getId())){
+				holder = (ViewHolderMitemInfo)lvMenu.getChildAt(i).getTag();
+				if(b){
+					value = Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
+					totalValue+=Float.parseFloat(item.getValue());
+				}else{
+					value = Float.parseFloat(holder.tvCount.getText().toString())-Float.parseFloat("1");
+					totalValue-=Float.parseFloat(item.getValue());
+				}
+				if(value < 0 )
+					value= 0;
+				if(totalValue < 0)
+					totalValue = 0;
+				holder.tvCount.setText(""+value);
+				lvMenu.getChildAt(i).requestLayout();
+				btnTotalValue.setText(""+totalValue);
+			}
+		}
+	}
+
 	public void gotoCommentScreen(View v){
 		if(store !=null){
 			if(store.getCountFavaouriteMember() !=null){

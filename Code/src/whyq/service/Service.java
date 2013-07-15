@@ -433,7 +433,7 @@ public class Service implements Runnable {
 	public void getBusinessDetail(String id) {
 		_action = ServiceAction.ActionGetBusinessDetail;
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("token", WhyqApplication.Instance().getRSAToken());
+//		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", id);
 		request("/m/business/show", params, true, false);
 	}

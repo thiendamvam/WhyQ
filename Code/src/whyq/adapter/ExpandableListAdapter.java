@@ -99,9 +99,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		// TODO Auto-generated method stub
 		View view = arg3;
 		Menu item = mGroupCollection.get(arg0).getMenuList().get(arg1);
-		// if (v == null) {
-		view = LayoutInflater.from(mContext).inflate(R.layout.whyq_menu_item_,
-				null);
+//		// if (v == null) {
+//		view = LayoutInflater.from(mContext).inflate(R.layout.whyq_menu_item_,
+//				null);
 
 		LayoutInflater inflator = ((ListDetailActivity) WhyqApplication
 				.Instance().getApplicationContext()).getLayoutInflater();

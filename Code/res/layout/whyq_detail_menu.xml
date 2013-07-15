@@ -19,6 +19,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:text="View Bill"
+            android:onClick="onViewBillClicked"
             android:textColor="@color/profifle_blue" />
 
         <LinearLayout
@@ -50,7 +51,7 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ExpandableListView
+    <ListView
         android:id="@+id/lvMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

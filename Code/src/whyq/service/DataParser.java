@@ -215,6 +215,7 @@ public class DataParser {
 			String introStore = getValue(permElement, "intro_store");
 			String phoneStore = getValue(permElement, "phone_store");
 			String logo = getValue(permElement, "logo");
+			String photos = getValue(permElement, "photos");
 			String style = getValue(permElement, "style");
 			;
 			String startTime = getValue(permElement, "start_time");
@@ -258,7 +259,8 @@ public class DataParser {
 			item.setHomeDeliver(isHomeDeliver);
 			item.setHotelDeliver(isHotelDeliver);
 			item.setTakeAway(isTakeAway);
-
+			item.setPhotos(photos);
+			
 			item.setTableQuantity(tableQuantity);
 			item.setCountFavaouriteMember(countFavouriteMemebr);
 			item.setCoutBill(coutBill);
