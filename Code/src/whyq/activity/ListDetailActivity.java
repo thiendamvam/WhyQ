@@ -1,13 +1,14 @@
 package whyq.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import whyq.adapter.ExpanMenuAdapter;
-import whyq.adapter.ExpandableListAdapter;
 import whyq.adapter.WhyqMenuAdapter;
 import whyq.adapter.WhyqMenuAdapter.ViewHolderMitemInfo;
 import whyq.interfaces.IServiceListener;
+import whyq.model.Bill;
+import whyq.model.BillItem;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
 import whyq.model.Store;
@@ -21,7 +22,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -73,6 +73,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private ImageView imgView;
 	private WhyqMenuAdapter menuAdapter;
 	private Button btnTotalValue;
+	public static HashMap<String,Bill> billList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +112,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		btnTotalValue = (Button) findViewById(R.id.btnTotalValue);
 		btnTotalValue.setText("0");
 		lvMenu = (ListView)findViewById(R.id.lvMenu);
+		billList = new HashMap<String, Bill>();
 //		showHeaderImage();
 		initTabbar();
 		getDetailData();
@@ -382,12 +384,37 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	public void onAddClicked(View v){
 		Log.d("onAddClicked","id ="+v.getId());
 		Menu item = (Menu)v.getTag();
+		if(billList.containsKey(item.getId())){
+			int value = Integer.parseInt(billList.get(item.getId()).getUnit())+1;
+			billList.get(item.getId()).setUnit(""+value);
+		}else{
+			Bill bill = new Bill();
+			bill.setId(item.getId());
+			bill.setPrice(item.getValue());
+			bill.setUnit("1");
+			billList.put(item.getId(),bill);
+		}
+
 		updateCount(item,true);
 	}
 	public void onRemoveClicked(View v){
 		Log.d("onRemoveClicked","id ="+v.getId());
 		Menu item = (Menu)v.getTag();
 		updateCount(item,false);
+		if(billList.containsKey(item.getId())){
+			int value = Integer.parseInt(billList.get(item.getId()).getUnit())-1;
+
+			billList.get(item.getId()).setUnit(""+value);
+			if(value < 0)
+				billList.remove(item.getId());
+		}else{
+			Bill bill = new Bill();
+			bill.setId(item.getId());
+			bill.setPrice(item.getValue());
+			bill.setThumb(item.getImageThumb());
+			bill.setUnit("1");
+			billList.put(item.getId(),bill);
+		}
 	}
 	public void onViewBillClicked(View v){
 		Intent intent = new Intent(ListDetailActivity.this, WhyQBillScreen.class);

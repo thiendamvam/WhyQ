@@ -79,6 +79,7 @@
         </LinearLayout>
 
         <ListView
+            android:id="@+id/lvBill"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="10" >
@@ -104,8 +105,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingRight="10dp"
                 android:gravity="center_vertical|right"
+                android:paddingRight="10dp"
                 android:text="$999" />
         </LinearLayout>
 
@@ -127,8 +128,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingRight="10dp"
                 android:gravity="center_vertical|right"
+                android:paddingRight="10dp"
                 android:text="$99" />
         </LinearLayout>
 
