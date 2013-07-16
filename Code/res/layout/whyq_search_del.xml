@@ -15,11 +15,12 @@
         android:padding="5dp" >
 
         <EditText
+            style="@style/normal_grey_text"
             android:id="@+id/etTextSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@+id/btnCancel"
-            android:background="@drawable/bg_input"
+            android:background="@drawable/textfield_searchview_holo_dark"
             android:gravity="center_vertical"
             android:hint="@string/hint_search"
             android:imeOptions="actionSearch"
@@ -47,7 +48,7 @@
             android:onClick="onCancelClicked"
             android:text="@string/cancel"
             android:textColor="@color/profifle_blue"
-            android:visibility="invisible" />
+            android:visibility="gone" />
     </RelativeLayout>
 
     <ProgressBar
@@ -57,6 +58,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="15dp"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 </RelativeLayout>
