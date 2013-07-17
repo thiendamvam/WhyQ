@@ -40,22 +40,21 @@
 
         <Button
             android:id="@+id/btnCancel"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
             android:layout_toLeftOf="@+id/rlSearchtool"
-            android:background="@drawable/white_container"
+            android:background="@drawable/btn_cancel"
             android:onClick="onCancelClicked"
-            android:text="@string/cancel"
             android:textColor="@color/profifle_blue"
             android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rlSearchtool"
-        android:layout_width="40dp"
+        android:layout_width="60dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -96,7 +95,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/icon_filter"
                 android:visibility="invisible" />
         </RelativeLayout>
     </RelativeLayout>

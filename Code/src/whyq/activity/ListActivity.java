@@ -715,25 +715,25 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			imgCutlery.setBackgroundResource(R.drawable.icon_tab_cutlery_active);
 			imgWine.setBackgroundResource(R.drawable.icon_tab_wine_normal);
 			imgCoffe.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
-			imgHotel.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
+			imgHotel.setBackgroundResource(R.drawable.icon_tab_hotel_normal);
 			break;
 		case 2:
 			imgCutlery.setBackgroundResource(R.drawable.icon_tab_cutlery_normal);
 			imgWine.setBackgroundResource(R.drawable.icon_tab_wine_active);
 			imgCoffe.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
-			imgHotel.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
+			imgHotel.setBackgroundResource(R.drawable.icon_tab_hotel_normal);
 			break;
 		case 3:
 			imgCutlery.setBackgroundResource(R.drawable.icon_tab_cutlery_normal);
 			imgWine.setBackgroundResource(R.drawable.icon_tab_wine_normal);
 			imgCoffe.setBackgroundResource(R.drawable.icon_tab_coffee_active);
-			imgHotel.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
+			imgHotel.setBackgroundResource(R.drawable.icon_tab_hotel_normal);
 			break;
 		case 4:
 			imgCutlery.setBackgroundResource(R.drawable.icon_tab_cutlery_normal);
 			imgWine.setBackgroundResource(R.drawable.icon_tab_wine_normal);
 			imgCoffe.setBackgroundResource(R.drawable.icon_tab_coffee_normal);
-			imgHotel.setBackgroundResource(R.drawable.icon_tab_coffee_active);
+			imgHotel.setBackgroundResource(R.drawable.icon_tab_hotel_active);
 			break;
 		default:
 			break;

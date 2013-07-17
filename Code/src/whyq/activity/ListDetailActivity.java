@@ -179,7 +179,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		}else if(storeType==3){
 			imgHeader.setImageResource(R.drawable.icon_result_coffee);
 		}else if(storeType==4){
-			imgHeader.setImageResource(R.drawable.icon_result_coffee);
+			imgHeader.setImageResource(R.drawable.icon_result_hotel);
 		}
 	}
 
