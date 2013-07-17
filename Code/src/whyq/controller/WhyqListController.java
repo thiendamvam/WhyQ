@@ -10,15 +10,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import whyq.interfaces.WhyqList_Delegate;
-import whyq.model.Comment;
 import whyq.model.Store;
-import whyq.model.Store;
-import whyq.model.WhyqBoard;
-import whyq.model.WhyqImage;
-import whyq.model.User;
+import whyq.model.UserCheckBill;
 import whyq.utils.API;
-import whyq.utils.Constants;
 import whyq.utils.XMLParser;
+import android.util.Log;
 
 
 public class WhyqListController implements WhyqList_Delegate {
@@ -173,71 +169,93 @@ public class WhyqListController implements WhyqList_Delegate {
 		NodeList permNodeList =  doc.getElementsByTagName("obj");
 		
 		for( int i = 0; i< permNodeList.getLength(); i++ ){
-			Element permElement = (Element ) permNodeList.item(i);
-			Store item = new Store();
-			String id = getValue(permElement, "id");
-			String storeId = getValue(permElement, "store_id");
-			String address = getValue(permElement, "address");
-			String longitude = getValue(permElement, "longitude");
-			String latitude = getValue(permElement, "latitude");
-			String status = getValue(permElement, "status");
-			String radius = getValue(permElement, "radius_allow_deliver");
-			String feeChargeOutRadiesDeliverPerKm = getValue(permElement, "fee_charge_out_radius_allow_deliver");
-			String  createdate = getValue(permElement, "createdate");
-			String updatedate = getValue(permElement, "updatedate");
-			String cateId = getValue(permElement, "cate_id");
-			String userId =getValue(permElement, "user_id");
-			String nameStore =getValue(permElement, "name_store");
-			String introStore = getValue(permElement, "intro_store");
-			String phoneStore =getValue(permElement, "phone_store");
-			String logi =getValue(permElement, "logo");;
-			String style =getValue(permElement, "style");
-			String startTime =getValue(permElement, "start_time");
-			String endTime =getValue(permElement, "end_time");
-			boolean isHomeDeliver = getValue(permElement, "is_home_deliver").equals("1")?true:false;
-			boolean isHotelDeliver = getValue(permElement, "is_hotel_deliver").equals("1")?true:false;
-			boolean isTakeAway = getValue(permElement, "is_take_away").equals("1")?true:false;
-			boolean isPlace = getValue(permElement, "is_at_place").equals("1")?true:false;
-			String minimunTimeDeliver = getValue(permElement, "minimun_time_deliver");
-			String tableQuantity = getValue(permElement, "table_quantity");
-			String countFavouriteMemebr = getValue(permElement, "count_favourite");
-			String coutBill =getValue(permElement, "count_bill");
-			String inCome = getValue(permElement, "income");
-			String nameCate = getValue(permElement, "name_cate");
+			try {
+
+				Element permElement = (Element ) permNodeList.item(i);
+				Store item = new Store();
+				String id = getValue(permElement, "id");
+				String storeId = getValue(permElement, "store_id");
+				String address = getValue(permElement, "address");
+				String longitude = getValue(permElement, "longitude");
+				String latitude = getValue(permElement, "latitude");
+				String status = getValue(permElement, "status");
+				String radius = getValue(permElement, "radius_allow_deliver");
+				String feeChargeOutRadiesDeliverPerKm = getValue(permElement, "fee_charge_out_radius_allow_deliver");
+				String  createdate = getValue(permElement, "createdate");
+				String updatedate = getValue(permElement, "updatedate");
+				String cateId = getValue(permElement, "cate_id");
+				String userId =getValue(permElement, "user_id");
+				String nameStore =getValue(permElement, "name_store");
+				String introStore = getValue(permElement, "intro_store");
+				String phoneStore =getValue(permElement, "phone_store");
+				String logi =getValue(permElement, "logo");;
+				String style =getValue(permElement, "style");
+				String startTime =getValue(permElement, "start_time");
+				String endTime =getValue(permElement, "end_time");
+				boolean isHomeDeliver = getValue(permElement, "is_home_deliver").equals("1")?true:false;
+				boolean isHotelDeliver = getValue(permElement, "is_hotel_deliver").equals("1")?true:false;
+				boolean isTakeAway = getValue(permElement, "is_take_away").equals("1")?true:false;
+				boolean isPlace = getValue(permElement, "is_at_place").equals("1")?true:false;
+				String minimunTimeDeliver = getValue(permElement, "minimun_time_deliver");
+				String tableQuantity = getValue(permElement, "table_quantity");
+				String countFavouriteMemebr = getValue(permElement, "count_favourite");
+				String coutBill =getValue(permElement, "count_bill");
+				String inCome = getValue(permElement, "income");
+				String nameCate = getValue(permElement, "name_cate");
+				
+				NodeList userNode = (NodeList) permElement.getElementsByTagName("user_check_bill");
+				int size  = userNode.getLength();
+				for(int i2=0;i2< size;i2++){
+					Element element = (Element)userNode.item(i2);
+					UserCheckBill userCheckBill= new UserCheckBill();
+					userCheckBill.setTotalFriend(getValue(element, "TotalFriend"));
+					userCheckBill.setTotalMember(getValue(element, "TotalMember"));
+					userCheckBill.setId(getValue(element, "id"));
+					userCheckBill.setFirstName(getValue(element, "first_name"));
+					userCheckBill.setLastName(getValue(element, "last_name"));
+					userCheckBill.setAvatar(getValue(element, "avatar"));
+					userCheckBill.setStoreId(getValue(element, "store_id"));
+					userCheckBill.setStatusBill(getValue(element, "status_bill"));
+					userCheckBill.setInteractionPoint(getValue(element, "interaction_point"));
+					item.setUserCheckBill(userCheckBill);
+				}
+				item.setId(id);
+				item.setStoreId(storeId);
+				item.setAddress(address);
+				item.setLongitude(longitude);
+				item.setLatitude(latitude);
+				item.setStatus(status);
+				item.setRadius(radius);
+				item.setFreeChargeOutRadiusDelieverPerKm(feeChargeOutRadiesDeliverPerKm);
+				item.setCreatedate(createdate);
+				item.setUpdatedate(updatedate);
+				item.setCateid(cateId);
+				item.setUserId(userId);
+				item.setNameStore(nameStore);
+				item.setIntroStore(introStore);
+				item.setPhoneStore(phoneStore);
+				item.setLogo(logi);
+				item.setStyle(style);
+				item.setStartTime(startTime);
+				item.setEndTime(endTime);
+				item.setHomeDeliver(isHomeDeliver);
+				item.setHotelDeliver(isHotelDeliver);
+				item.setTakeAway(isTakeAway);
+				
+				item.setTableQuantity(tableQuantity);
+				item.setCountFavaouriteMember(countFavouriteMemebr);
+				item.setCoutBill(coutBill);
+				item.setIncome(inCome);
+				item.setNameCate(nameCate);
+				item.setMinimum(minimunTimeDeliver);
+				item.setPlace(isPlace);
+				
+				permList.add(item);
 			
-			
-			item.setId(id);
-			item.setStoreId(storeId);
-			item.setAddress(address);
-			item.setLongitude(longitude);
-			item.setLatitude(latitude);
-			item.setStatus(status);
-			item.setRadius(radius);
-			item.setFreeChargeOutRadiusDelieverPerKm(feeChargeOutRadiesDeliverPerKm);
-			item.setCreatedate(createdate);
-			item.setUpdatedate(updatedate);
-			item.setCateid(cateId);
-			item.setUserId(userId);
-			item.setNameStore(nameStore);
-			item.setIntroStore(introStore);
-			item.setPhoneStore(phoneStore);
-			item.setLogo(logi);
-			item.setStyle(style);
-			item.setStartTime(startTime);
-			item.setEndTime(endTime);
-			item.setHomeDeliver(isHomeDeliver);
-			item.setHotelDeliver(isHotelDeliver);
-			item.setTakeAway(isTakeAway);
-			
-			item.setTableQuantity(tableQuantity);
-			item.setCountFavaouriteMember(countFavouriteMemebr);
-			item.setCoutBill(coutBill);
-			item.setIncome(inCome);
-			item.setNameCate(nameCate);
-			item.setMinimum(minimunTimeDeliver);
-			item.setPlace(isPlace);
-			
-			permList.add(item);
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
 		}
 		return permList;
 	}
@@ -305,15 +323,33 @@ public class WhyqListController implements WhyqList_Delegate {
 				boolean isHotelDeliver = getValue(permElement, "is_hotel_deliver").equals("1")?true:false;
 				boolean isTakeAway = getValue(permElement, "is_take_away").equals("1")?true:false;
 				boolean isPlace = getValue(permElement, "is_at_place").equals("1")?true:false;
+				boolean isFavourite = getValue(permElement, "is_favourite").equals("1")?true:false;
 				String minimunTimeDeliver = getValue(permElement, "minimun_time_deliver");
 				String tableQuantity = getValue(permElement, "table_quantity");
 				String countFavouriteMemebr = getValue(permElement, "count_favourite_member");
 				String coutBill =getValue(permElement, "count_bill");
 				String inCome = getValue(permElement, "income");
 				String nameCate = getValue(permElement, "name_cate");
-				
-				
+				NodeList userNode = (NodeList) permElement.getElementsByTagName("user_check_bill");
+				int size  = userNode.getLength();
+				for(int i2=0;i2< size;i2++){
+					Element element = (Element)userNode.item(i2);
+					UserCheckBill userCheckBill= new UserCheckBill();
+					Log.d("usercheckbill","totalfriend "+getValue(element, "TotalFriend"));
+					userCheckBill.setTotalFriend(getValue(element, "TotalFriend"));
+					userCheckBill.setTotalMember(getValue(element, "TotalMember"));
+					userCheckBill.setId(getValue(element, "id"));
+					userCheckBill.setFirstName(getValue(element, "first_name"));
+					userCheckBill.setLastName(getValue(element, "last_name"));
+					userCheckBill.setAvatar(getValue(element, "avatar"));
+					userCheckBill.setStoreId(getValue(element, "store_id"));
+					userCheckBill.setStatusBill(getValue(element, "status_bill"));
+					userCheckBill.setInteractionPoint(getValue(element, "interaction_point"));
+					item.setUserCheckBill(userCheckBill);
+				}
+
 				item.setId(id);
+				item.setIsFavourite(isFavourite);
 				item.setStoreId(storeId);
 				item.setAddress(address);
 				item.setLongitude(longitude);
@@ -421,6 +457,7 @@ public class WhyqListController implements WhyqList_Delegate {
 			
 			} catch (Exception e) {
 				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 		//add for footer
@@ -439,9 +476,12 @@ public class WhyqListController implements WhyqList_Delegate {
 	public String getValue( Element e, String tag ){
 		if( e != null )
 		{
-			Node node = e.getElementsByTagName(tag).item(0).getFirstChild();
-			if( node != null ){
-				return node.getNodeValue();
+			if(e.getElementsByTagName(tag).item(0) !=null){
+				Node node = e.getElementsByTagName(tag).item(0).getFirstChild();
+				if( node != null ){
+					return node.getNodeValue();
+				}
+				
 			}
 		}
 		return "";

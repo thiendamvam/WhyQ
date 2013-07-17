@@ -138,6 +138,11 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 	}
 	public void onCancelClicked(View v){
 		etSearchLocation.setText("");
+		hideBtnCancel();
+	}
+	private void hideBtnCancel() {
+		// TODO Auto-generated method stub
+		btnDelete.setVisibility(View.GONE);
 	}
 	public void performSearch() {
 		try {
@@ -210,7 +215,7 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 
 	protected void exeDisableSearchFocus() {
 		// TODO Auto-generated method stub
-		btnDelete.setVisibility(View.INVISIBLE);
+		btnDelete.setVisibility(View.GONE);
 	}
 
 	private void hideProgress() {

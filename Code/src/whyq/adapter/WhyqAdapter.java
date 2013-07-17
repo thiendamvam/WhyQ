@@ -20,6 +20,7 @@ import whyq.controller.WhyqListController;
 import whyq.model.Comment;
 import whyq.model.User;
 import whyq.model.Store;
+import whyq.model.UserCheckBill;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.HttpPermUtils;
@@ -52,6 +53,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TableRow;
@@ -70,11 +72,12 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 //	public Button reperm;
 //	public Button comment;
 	public static class ViewHolder {
-		public ImageView imgThumb ;
-		private TextView tvItemName, tvNumberFavourite,tvItemAddress, tvVisited, tvDiscoutNumber;
-		private Button btnDistance;
+		public ImageView imgThumb , imgFriendThumb;
+		public TextView tvItemName, tvNumberFavourite,tvItemAddress, tvVisited, tvDiscoutNumber;
+		public Button btnDistance;
 		public String id;
 		public ImageView imgFavouriteThumb;
+		public ProgressBar prgFavourite;
 	}
 	private Activity activity;
 	private Boolean header;
@@ -196,16 +199,50 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					viewHolder.tvDiscoutNumber = (TextView)rowView.findViewById(R.id.tvNumberDiscount);
 					viewHolder.btnDistance = (Button)rowView.findViewById(R.id.btnDistance);
 					viewHolder.imgFavouriteThumb = (ImageView)rowView.findViewById(R.id.imgFavourite);
+					viewHolder.prgFavourite = (ProgressBar)rowView.findViewById(R.id.prgFavourite);
 					viewHolder.tvItemName.setText(item.getNameStore().toUpperCase());
 					viewHolder.tvItemAddress.setText(item.getAddress());
 					viewHolder.tvNumberFavourite.setText(""+item.getCountFavaouriteMember());
 					viewHolder.btnDistance.setText(item.getRadius()+" km");
-					if(item.getCountFavaouriteMember() !=null)
-						if(!item.getCountFavaouriteMember().equals(""))
-							if(Integer.parseInt(item.getCountFavaouriteMember()) >0){
-//								viewHolder.imgFavouriteThumb.setBackgroundResource(R.drawable.icon_fav_enable);
-								viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
+					viewHolder.imgFriendThumb = (ImageView)rowView.findViewById(R.id.imgFriendThumb);
+					
+					UserCheckBill userCheckBill = item.getUserCheckBill();
+					if(userCheckBill !=null){
+						if(userCheckBill.getTotalMember()!=null && !userCheckBill.getTotalMember().equals("")){
+							if(userCheckBill.getAvatar()!=null && !userCheckBill.getAvatar().equals("")){
+								viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalFriend()+" other visited");
+								viewHolder.imgFriendThumb.setVisibility(View.VISIBLE);
+								UrlImageViewHelper.setUrlDrawable(viewHolder.imgFriendThumb, userCheckBill.getAvatar());	
+							}else{
+								if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
+									viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" others visited");
+								}else{
+									viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" other visited");
+								}
+								
+							}
+
+						}
 					}
+//					if(item.getCountFavaouriteMember() !=null)
+//						if(!item.getCountFavaouriteMember().equals(""))
+//							if(Integer.parseInt(item.getCountFavaouriteMember()) >0){
+////								viewHolder.imgFavouriteThumb.setBackgroundResource(R.drawable.icon_fav_enable);
+//								viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
+//					}
+					if(item.getIsFavourite()){
+						viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
+					}else{
+						viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_disable);
+					}
+					viewHolder.imgFavouriteThumb.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							((ListActivity)context).onFavouriteClicked(v);
+						}
+					});
 					UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
 					rowView.setTag(viewHolder);
 					rowView.setOnClickListener(new View.OnClickListener() {
@@ -224,6 +261,8 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 						
 
 					}
+					viewHolder.imgFavouriteThumb.setTag(item);
+					viewHolder.btnDistance.setTag(item);
 					rowView.setEnabled(true);
 					viewList.put(store.getId(), rowView);
 					return rowView;

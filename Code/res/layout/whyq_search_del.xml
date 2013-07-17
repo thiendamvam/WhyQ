@@ -39,14 +39,13 @@
 
         <Button
             android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/white_container"
+            android:background="@drawable/btn_cancel"
             android:onClick="onCancelClicked"
-            android:text="@string/cancel"
             android:textColor="@color/profifle_blue"
             android:visibility="gone" />
     </RelativeLayout>

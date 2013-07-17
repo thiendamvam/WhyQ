@@ -76,13 +76,26 @@
                         android:text="4"
                         android:textColor="#ff3300" />
 
-                    <ImageView
-                        android:id="@+id/imgFavourite"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="5dp"
-                        android:src="@drawable/icon_fav_disable" />
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/imgFavourite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:onClick="onFavouriteClicked"
+                            android:src="@drawable/icon_fav_disable" />
+
+                        <ProgressBar
+                            android:id="@+id/prgFavourite"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:visibility="invisible"
+                            android:layout_centerInParent="true" />
+                    </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
 
@@ -112,8 +125,9 @@
                 <ImageView
                     android:id="@+id/imgFriendThumb"
                     android:layout_width="20dp"
-                    android:layout_height="20dp" 
-                    android:visibility="gone"/>
+                    android:layout_height="20dp"
+                    android:layout_marginRight="3dp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tvVisited"
@@ -135,12 +149,13 @@
                         style="@style/small_grey_text"
                         android:layout_width="match_parent"
                         android:layout_height="22dp"
-                        android:textSize="10sp"
+                        android:layout_gravity="center_vertical"
                         android:background="@drawable/btn_distance"
                         android:gravity="center"
-                        android:layout_gravity="center_vertical"
+                        android:onClick="onDistanceClicked"
                         android:singleLine="true"
-                        android:text="0.0 km" />
+                        android:text="0.0 km"
+                        android:textSize="10sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

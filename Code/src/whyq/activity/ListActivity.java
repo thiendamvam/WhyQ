@@ -11,11 +11,17 @@ import whyq.WhyqMain;
 import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
+import whyq.interfaces.IServiceListener;
 import whyq.interfaces.Login_delegate;
+import whyq.map.MapsActivity;
 import whyq.model.Store;
 import whyq.model.User;
+import whyq.service.Service;
+import whyq.service.ServiceAction;
+import whyq.service.ServiceResponse;
 import whyq.utils.API;
 import whyq.utils.RSA;
+import whyq.activity.GoogleMapActivity;
 import whyq.utils.UrlImageViewHelper;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
@@ -49,10 +55,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whyq.R;
 
-public class ListActivity extends FragmentActivity implements Login_delegate, OnClickListener,OnFocusChangeListener{
+public class ListActivity extends FragmentActivity implements Login_delegate, OnClickListener,OnFocusChangeListener, IServiceListener{
 
 	
 	public static final String DOWNLOAD_COMPLETED = "DOWNLOAD_COMPLETED";
@@ -109,7 +116,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public static String longitude="";
 	public static String latgitude="";
 	public static String currentLocation;
-	private String filter="0"; 
+	private String filterType="1"; 
 	private String friendFavourite;
 	private String friendVisited;
 	private String cateId="1";
@@ -166,6 +173,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	private TextView tvNearLocation;
 	private RelativeLayout rlLocationField;
 	private int storeType;
+	private Service service;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -176,7 +184,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(ListActivity.this.getIntent());
-
+		service = new Service(ListActivity.this);
     	showProgress();
 
 	}
@@ -432,7 +440,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 //			clearData();
 			//createUI();
 			if(this.permListAdapter == null) {
-				this.permListAdapter = new WhyqAdapter(ListActivityGroup.context,
+				this.permListAdapter = new WhyqAdapter(ListActivity.this,
 					getSupportFragmentManager(),R.layout.whyq_item_1, permListMain, this, screenWidth, screenHeight, header, user);
 			} else {
 				for(int i = 0; i < permListMain.size(); i++) {
@@ -506,6 +514,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 						RSA rsa = new RSA();
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
 						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+						if(filterType.equals("1")){
+							
+						}else if(filterType.equals("2")){
+							nameValuePairs.add(new BasicNameValuePair("friend_visit",filterType));
+						}else if(filterType.equals("3")){
+							nameValuePairs.add(new BasicNameValuePair("friend_favourite",filterType));
+						}
+						
 						if(isSearch){
 							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
 							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
@@ -516,13 +532,13 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 						}else{
 //							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
 							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
-							if(friendVisited !=null){
-								nameValuePairs.add(new BasicNameValuePair("friend_visit", friendVisited));
-							}else if(friendFavourite !=null){
-								nameValuePairs.add(new BasicNameValuePair("friend_favourite", friendFavourite));
-							}else{
-								
-							}
+//							if(friendVisited !=null){
+//								nameValuePairs.add(new BasicNameValuePair("friend_visit", friendVisited));
+//							}else if(friendFavourite !=null){
+//								nameValuePairs.add(new BasicNameValuePair("friend_favourite", friendFavourite));
+//							}else{
+//								
+//							}
 						}
 					}
 
@@ -537,7 +553,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 						RSA rsa = new RSA();
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-//						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+						if(filterType.equals("1")){
+							
+						}else if(filterType.equals("2")){
+							nameValuePairs.add(new BasicNameValuePair("friend_visit",filterType));
+						}else if(filterType.equals("3")){
+							nameValuePairs.add(new BasicNameValuePair("friend_favourite",filterType));
+						}
 						if(isSearch){
 							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
 							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
@@ -548,13 +571,13 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 						}else{
 //							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
 							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
-							if(friendVisited !=null){
-								nameValuePairs.add(new BasicNameValuePair("friend_visit", friendVisited));
-							}else if(friendFavourite !=null){
-								nameValuePairs.add(new BasicNameValuePair("friend_favourite", friendFavourite));
-							}else{
-								
-							}
+//							if(friendVisited !=null){
+//								nameValuePairs.add(new BasicNameValuePair("friend_visit", friendVisited));
+//							}else if(friendFavourite !=null){
+//								nameValuePairs.add(new BasicNameValuePair("friend_favourite", friendFavourite));
+//							}else{
+//								
+//							}
 						}
 						permList = whyqListController.getBusinessList(url, nameValuePairs);	
 					}
@@ -644,10 +667,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		switch (index) {
 		case 1:
 			setIconTab(1);
-			lnWine.setBackgroundResource(R.drawable.bg_tab_normal);
-			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
-			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
-			lnHotel.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnWine.setBackgroundResource(R.drawable.bg_tab_middle_normal);
+			lnCoffe.setBackgroundResource(R.drawable.bg_tab_middle_normal);
+			lnCutlery.setBackgroundResource(R.drawable.bg_tab_left_active);
+			lnHotel.setBackgroundResource(R.drawable.bg_tab_right_normal);
 			setIconTab(1);
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
@@ -657,10 +680,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 		case 2:
-			lnWine.setBackgroundResource(R.drawable.bg_tab_active);
-			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
-			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
-			lnHotel.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnWine.setBackgroundResource(R.drawable.bg_tab_middle_active);
+			lnCutlery.setBackgroundResource(R.drawable.bg_tab_left_normal);
+			lnCoffe.setBackgroundResource(R.drawable.bg_tab_middle_normal);
+			lnHotel.setBackgroundResource(R.drawable.bg_tab_right_normal);
 			storeType = 2;
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
@@ -670,10 +693,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 		case 3:
-			lnCoffe.setBackgroundResource(R.drawable.bg_tab_active);
-			lnWine.setBackgroundResource(R.drawable.bg_tab_normal);
-			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
-			lnHotel.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnCoffe.setBackgroundResource(R.drawable.bg_tab_middle_active);
+			lnWine.setBackgroundResource(R.drawable.bg_tab_middle_normal);
+			lnCutlery.setBackgroundResource(R.drawable.bg_tab_left_normal);
+			lnHotel.setBackgroundResource(R.drawable.bg_tab_right_normal);
 			setIconTab(3);
 			storeType = 3;
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
@@ -683,10 +706,10 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 		case 4:
-			lnHotel.setBackgroundResource(R.drawable.bg_tab_active);
-			lnCoffe.setBackgroundResource(R.drawable.bg_tab_normal);
-			lnWine.setBackgroundResource(R.drawable.bg_tab_normal);
-			lnCutlery.setBackgroundResource(R.drawable.bg_tab_normal);
+			lnHotel.setBackgroundResource(R.drawable.bg_tab_right_active);
+			lnCoffe.setBackgroundResource(R.drawable.bg_tab_middle_normal);
+			lnWine.setBackgroundResource(R.drawable.bg_tab_middle_normal);
+			lnCutlery.setBackgroundResource(R.drawable.bg_tab_left_normal);
 			setIconTab(4);
 			storeType = 4;
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
@@ -774,6 +797,11 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 				int count) {
 			// This sets a textview to the current length
 
+
+		}
+
+		public void afterTextChanged(Editable s) {
+			
 			try {
 				String text = s.toString();
 				Log.d("Text serch","Text "+text);
@@ -795,10 +823,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 				// TODO: handle exception
 			}
 		}
-
-		public void afterTextChanged(Editable s) {
-		}
 	};
+	private String currentStoreId;
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
 	    if(hasFocus){
@@ -896,11 +922,14 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		default:
 			break;
 		}
-
+		
+		hideFilterView();
+		exeGetBusiness(etTextSearch.getText().toString());
 	}
 	private void initCheckAll() {
 		// TODO Auto-generated method stub
-		cateId = "1";
+//		cateId = "1";
+		filterType = "1";
 		cktViewAll.setTextColor(Color.parseColor("#805504"));	
 		cktFriendFavourtie.setTextColor(getResources().getColor(R.color.white));
 		cktFriednVised.setTextColor(getResources().getColor(R.color.white));
@@ -911,7 +940,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 	private void initCheckFavourite() {
 		// TODO Auto-generated method stub
-		cateId = "1";
+//		cateId = "1";
+		filterType = "2";
 		cktFriendFavourtie.setTextColor(Color.parseColor("#805504"));
 		cktViewAll.setTextColor(getResources().getColor(R.color.white));
 		cktFriednVised.setTextColor(getResources().getColor(R.color.white));
@@ -923,7 +953,8 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 	private void initCheckVisited() {
 		// TODO Auto-generated method stub
-		cateId = "1";
+//		cateId = "1";
+		filterType = "3";
 		cktFriednVised.setTextColor(Color.parseColor("#805504"));
 		cktViewAll.setTextColor(getResources().getColor(R.color.white));
 		cktFriendFavourtie.setTextColor(getResources().getColor(R.color.white));
@@ -943,5 +974,77 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		// TODO Auto-generated method stub
 		lnFilter.setVisibility(View.GONE);
 		imgArrowDown.setVisibility(View.GONE);
+	}
+	public void onDistanceClicked(View v){
+		Store item = (Store)v.getTag();
+		Log.d("onDistanceClicked","id "+item.getStoreId());
+//		Intent intent = new Intent(ListActivity.this, MapsActivity.class);
+//		startActivity(intent);
+//		String storeId = item.getStoreId();
+//		if(storeId != null){
+//			Intent googleMap = new Intent(ListActivity.this,
+//					whyq.activity.GoogleMapActivity.class);
+//			Bundle bundle = new Bundle();
+//			bundle.putFloat("lat", Float.parseFloat(item.getLatitude()));
+//			bundle.putFloat("lon", Float.parseFloat(item.getLongitude()));
+//			bundle.putString("thumbnail", item.getLogo());
+//			googleMap.putExtra("locationData", bundle);
+//			View view2 = ListActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+store.getId(), googleMap).getDecorView();
+//			ListActivityGroup.group.replaceView(view2);
+//		}	
+	}
+	public void onFavouriteClicked(View v){
+		Store item = (Store)v.getTag();
+		currentStoreId = item.getStoreId();
+		if(item.getIsFavourite()){
+			service.removeFavorite(currentStoreId);
+		}else{
+			service.postFavorite(currentStoreId);
+		}
+	}
+
+	@Override
+	public void onCompleted(Service service, ServiceResponse result) {
+		// TODO Auto-generated method stub
+//		Store store = (Store)result.getData();
+		
+		if(result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
+//			Toast.makeText(context, "Favourite successfully", Toast.LENGTH_SHORT).show();
+			updateFavoriteWitId(currentStoreId, true);
+		}else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){
+//			Toast.makeText(context, "Un favourite successfully", Toast.LENGTH_SHORT).show();
+			updateFavoriteWitId(currentStoreId, false);
+		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
+			Toast.makeText(context, "Can not favourite for now", Toast.LENGTH_SHORT).show();
+		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){
+			Toast.makeText(context, "Can not un-favourite for now", Toast.LENGTH_SHORT).show();
+		}
+	}
+	private void updateFavoriteWitId(String id, boolean b) {
+		// TODO Auto-generated method stub
+		int size = whyqListView.getChildCount();
+		int value;
+		Store item2;
+		ViewHolder holder;
+		for(int i=0;i< size;i++){
+			item2 = permListMain.get(i);
+			if(item2.getStoreId().equals(id)){
+				holder = (ViewHolder)whyqListView.getChildAt(i).getTag();
+				if(b){
+					value = Integer.parseInt(holder.tvNumberFavourite.getText().toString())+Integer.parseInt("1");
+					holder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
+					item2.setIsFavourite(true);
+				}else{
+					value = Integer.parseInt(holder.tvNumberFavourite.getText().toString())-Integer.parseInt("1");
+					holder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_disable);
+					item2.setIsFavourite(false);
+				}
+				if(value < 0 )
+					value= 0;
+				holder.tvNumberFavourite.setText(""+value);
+				holder.imgFavouriteThumb.setTag(item2);
+				whyqListView.getChildAt(i).requestLayout();
+			}
+		}
 	}
 }

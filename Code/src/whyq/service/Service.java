@@ -70,7 +70,22 @@ public class Service implements Runnable {
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		request("/m/logout", params, true, false);
 	}
-
+	public void postFavorite(String storeId) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionPostFavorite;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", WhyqApplication.Instance().getRSAToken());
+		params.put("store_id", storeId);
+		request("/m/member/favourite/business", params, true, false);
+	}
+	public void removeFavorite(String storeId) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionRemoveFavorite;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", WhyqApplication.Instance().getRSAToken());
+		params.put("store_id", storeId);
+		request("/m/member/favourite/business", params, true, false);
+	}
 	public void getComments(String encryptedToken, String store_id, int page,
 			int count, boolean onlyFriend) {
 		_action = ServiceAction.ActionGetComment;

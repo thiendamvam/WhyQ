@@ -20,6 +20,7 @@ public class WhyQBillScreen extends Activity{
 	private TextView tvTitle;
 	private ListView lvBill;
 	private ArrayList<Bill> listBill;
+	private float totalValue;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

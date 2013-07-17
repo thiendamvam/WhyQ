@@ -396,7 +396,8 @@ public class DataParser {
 				whyq.model.Tag tag = new whyq.model.Tag();
 				tag.setId(getValue(element2, "id"));
 				tag.setNameTag(getValue(element2, "name_tag"));
-				tag.setCountUsed(Integer.parseInt(getValue(element2,
+				if(!getValue(element2,
+						"count_used").equals(""))tag.setCountUsed(Integer.parseInt(getValue(element2,
 						"count_used")));
 				tag.setStoreId(getValue(element2, "store_id"));
 				tag.setCreateDate(getValue(element2, "createdate"));

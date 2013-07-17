@@ -33,6 +33,8 @@ public class Store {
 	private String income;
 	private String nameCate;
 	private String photos;
+	private boolean isFavourite;
+	private UserCheckBill userCheckBill;
 	private ArrayList<User> userList;
 	private ArrayList<Menu> menuList;
 
@@ -534,5 +536,29 @@ public class Store {
 	 */
 	public void setPhotos(String photos) {
 		this.photos = photos;
+	}
+	/**
+	 * @return the isFavourite
+	 */
+	public boolean getIsFavourite() {
+		return isFavourite;
+	}
+	/**
+	 * @param isFavourite the isFavourite to set
+	 */
+	public void setIsFavourite(boolean isFavourite) {
+		this.isFavourite = isFavourite;
+	}
+	/**
+	 * @return the userCheckBill
+	 */
+	public UserCheckBill getUserCheckBill() {
+		return userCheckBill;
+	}
+	/**
+	 * @param userCheckBill the userCheckBill to set
+	 */
+	public void setUserCheckBill(UserCheckBill userCheckBill) {
+		this.userCheckBill = userCheckBill;
 	}
 }

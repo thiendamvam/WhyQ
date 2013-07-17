@@ -427,23 +427,30 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		Menu item2;
 		ViewHolderMitemInfo holder;
 		for(int i=0;i< size;i++){
-			item2 = store.getMenuList().get(0);
-			if(item2.getId().equals(item.getId())){
-				holder = (ViewHolderMitemInfo)lvMenu.getChildAt(i).getTag();
-				if(b){
-					value = Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
-					totalValue+=Float.parseFloat(item.getValue());
-				}else{
-					value = Float.parseFloat(holder.tvCount.getText().toString())-Float.parseFloat("1");
-					totalValue-=Float.parseFloat(item.getValue());
+			try {
+
+				item2 = store.getMenuList().get(0);
+				if(item2.getId().equals(item.getId()) && !item.getValue().equals("")){
+					holder = (ViewHolderMitemInfo)lvMenu.getChildAt(i).getTag();
+					if(b){
+						value = Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
+						totalValue+=Float.parseFloat(item.getValue());
+					}else{
+						value = Float.parseFloat(holder.tvCount.getText().toString())-Float.parseFloat("1");
+						totalValue-=Float.parseFloat(item.getValue());
+					}
+					if(value < 0 )
+						value= 0;
+					if(totalValue < 0)
+						totalValue = 0;
+					holder.tvCount.setText(""+value);
+					lvMenu.getChildAt(i).requestLayout();
+					btnTotalValue.setText(""+totalValue);
 				}
-				if(value < 0 )
-					value= 0;
-				if(totalValue < 0)
-					totalValue = 0;
-				holder.tvCount.setText(""+value);
-				lvMenu.getChildAt(i).requestLayout();
-				btnTotalValue.setText(""+totalValue);
+			
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 	}
