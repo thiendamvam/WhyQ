@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
 
 import com.whyq.R;
 
@@ -54,8 +55,9 @@ public class WhyqMain extends TabActivity {
 		} else {
 			tabHost = getTabHost();
 			context = WhyqMain.this;
-			tabHost.getTabWidget().setBackgroundResource(
-					R.drawable.tabs_background);
+//			tabHost.getTabWidget().setBackgroundResource(
+//					getResources().getColor(R.color.black));
+			tabHost.getTabWidget().setBackgroundColor(getResources().getColor(R.color.black));
 			// Tab for followers
 			TabSpec followers = tabHost.newTabSpec("List");
 			followers.setIndicator("List",
@@ -193,13 +195,18 @@ public class WhyqMain extends TabActivity {
 			locationManager.requestLocationUpdates(
 					LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
 
+			initTabsAppearance(tabHost);
 			tabHost.setCurrentTab(0);
 			// rsa = new RSA();
 			// getListData();
 		}
 
 	}
-
+	private void initTabsAppearance(TabHost tabhost) {
+	    // Change background
+	    for(int i=0; i < tabhost.getTabWidget().getChildCount(); i++)
+	       tabhost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.tab_selector);
+	}
 	private void getListData() {
 		// TODO Auto-generated method stub
 

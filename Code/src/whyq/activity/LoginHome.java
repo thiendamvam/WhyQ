@@ -216,7 +216,8 @@ public class LoginHome extends Activity
 			isLoginFb = true;
 			Log.d("LoginHome by Facebook", "result: " + result.getData());
 			User user = (User) result.getData();
-			XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(), user);
+			WhyqApplication.Instance().setToken(user);
+//			XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(), user);
 			Intent intent = new Intent(LoginHome.this, WhyqMain.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
