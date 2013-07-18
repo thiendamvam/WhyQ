@@ -63,6 +63,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		tvSearch.setBackgroundResource(R.drawable.textfield_search_default_holo_dark);
 
 		mListview = (AmazingListView) findViewById(R.id.listview);
+		mListview.setPinnedHeaderView(getLayoutInflater().inflate(R.layout.friend_list_item_header, mListview, false));
 		// TODO: handle on item click
 		// mListview.setOnItemClickListener(new OnItemClickListener() {
 		//
@@ -302,12 +303,16 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 		@Override
 		public int getPositionForSection(int section) {
-			return 0;
+			if (section == 0) {
+				return 0;
+			} else {
+				return countListWhyq;
+			}
 		}
 
 		@Override
 		public int getSectionForPosition(int position) {
-			if (position < countListWhyq) {
+			if (position >=0 && position < countListWhyq) {
 				return 0;
 			} else {
 				return 1;
