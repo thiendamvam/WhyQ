@@ -131,7 +131,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		}
 
 		ImageView setting = new ImageView(this);
-		setting.setImageResource(R.drawable.footer_icon4);
+		setting.setImageResource(R.drawable.icon_setting);
 		setExtraView(setting);
 
 		hideExtraButton();
@@ -224,7 +224,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	private void initCategory() {
 		final String totalCheckBill = XMLParser.getValue(this,
 				XMLParser.STORE_TOTAL_CHECK_BILL);
-		bindCategory(R.id.check_bill, R.drawable.icon_cat_coffee,
+		bindCategory(R.id.check_bill, R.drawable.btn_blue_place,
 				totalCheckBill + " places", "checked bills",
 				new OnClickListener() {
 
@@ -236,7 +236,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 						startActivity(i);
 					}
 				});
-		bindCategory(R.id.history, R.drawable.icon_cat_cutlery, "15",
+		final String totalHistory = XMLParser.getValue(this, XMLParser.STORE_TOTAL_HISTORY);
+		bindCategory(R.id.history, R.drawable.btn_blue_history, totalHistory,
 				"History", new OnClickListener() {
 
 					@Override
@@ -250,7 +251,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 		final String totalSaving = XMLParser.getValue(this,
 				XMLParser.STORE_TOTAL_SAVING);
-		bindCategory(R.id.saving, R.drawable.icon_cat_wine, "$" + totalSaving,
+		bindCategory(R.id.saving, R.drawable.btn_blue_saving, "$" + totalSaving,
 				"Saving", new OnClickListener() {
 
 					@Override
@@ -261,7 +262,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 		final String totalComment = XMLParser.getValue(this,
 				XMLParser.STORE_TOTAL_COMMENT);
-		bindCategory(R.id.comment, R.drawable.icon_cat_wine,
+		bindCategory(R.id.comment, R.drawable.btn_blue_tips,
 				totalComment == "" ? "0" : totalComment, "Tips",
 				new OnClickListener() {
 
@@ -277,9 +278,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			String textBottom, OnClickListener listener) {
 		View categoryView = findViewById(id);
 		categoryView.setOnClickListener(listener);
-		ImageView icon = (ImageView) categoryView.findViewById(R.id.icon);
-		icon.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
-		icon.setImageResource(iconRes);
+		categoryView.setBackgroundResource(iconRes);
 		TextView textviewTop = (TextView) categoryView
 				.findViewById(R.id.textviewTop);
 		textviewTop.setText(textTop);
