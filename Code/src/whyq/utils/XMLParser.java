@@ -77,6 +77,7 @@ public class XMLParser implements HttpAccess {
 	public static final String STORE_USER_AVATAR = "userAvatar";
 	public static final String STORE_USER_NAME = "userName";
 	public static final String STORE_TOTAL_COMMENT = "totalComment";
+	public static final String STORE_TOTAL_HISTORY = "totalHistory";
 	private Document doc = null;
 	private String xml = "<empty></empty>";
 	public int type;
@@ -891,6 +892,7 @@ public class XMLParser implements HttpAccess {
 			editor.putString(STORE_TOTAL_CHECK_BILL, user.getTotalCheckBill());
 			editor.putString(STORE_TOTAL_SAVING, user.getTotalSavingMoney());
 			editor.putString(STORE_TOTAL_COMMENT, user.getTotalComment());
+			editor.putString(STORE_TOTAL_HISTORY, user.getTotalCount());
 			editor.putString(STORE_USER_AVATAR, user.getUrlAvatar());
 			editor.putLong(STORE_LAST_TIME_LOGIN, System.currentTimeMillis());
 		}

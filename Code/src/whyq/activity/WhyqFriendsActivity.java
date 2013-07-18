@@ -109,7 +109,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 				&& result.getAction() == ServiceAction.ActionGetFriends) {
 			List<FriendWhyq> friends = DataParser.parseFriendWhyq(String
 					.valueOf(result.getData()));
-			if (friends.size() == 0) {
+			if (friends != null && friends.size() == 0) {
 				AlertFindFriendDialog dialog = new AlertFindFriendDialog();
 				dialog.setOnDialogButtonClickListern(this);
 				dialog.show(getSupportFragmentManager(), "Dialog");

@@ -254,6 +254,7 @@ public class Service implements Runnable {
 			resObj = parser.parseLogout();
 			break;
 		case ActionLoginFacebook:
+			result = result.replace("<0></0>", "");
 			resObj = parser.parserLoginData(result);
 			break;
 		case ActionLoginTwitter:

@@ -264,7 +264,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		@Override
 		protected void bindSectionHeader(View view, int position,
 				boolean displaySectionHeader) {
-			HeaderHolder holder = getHeaderHolder(view);
+			ViewHolder holder = getViewHolder(view);
 			if (displaySectionHeader) {
 				holder.header.setVisibility(View.VISIBLE);
 				bindHeader(holder, getSections()[getSectionForPosition(position)]);
@@ -296,7 +296,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 		@Override
 		public void configurePinnedHeader(View header, int position, int alpha) {
-			bindHeader(getHeaderHolder(header),
+			bindHeader(getViewHolder(header),
 					getSections()[getSectionForPosition(position)]);
 		}
 
@@ -319,7 +319,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 			return new String[] { SECTION_WHYQ, SECTION_NOT_JOIND_WHYQ };
 		}
 
-		private void bindHeader(HeaderHolder holder, String section) {
+		private void bindHeader(ViewHolder holder, String section) {
 			if (section.equals(SECTION_WHYQ)) {
 				final String key = countListWhyq + " facebook friends";
 				final String result = "You have " + key + " had joined WHY Q.";
@@ -349,19 +349,13 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 			return holder;
 		}
 
-		private HeaderHolder getHeaderHolder(View view) {
-			HeaderHolder holder = (HeaderHolder) view.getTag();
-			if (holder == null) {
-				holder = new HeaderHolder(view);
-				view.setTag(holder);
-			}
-			return holder;
-		}
-
 		private class ViewHolder {
 			ImageView avatar;
 			TextView name;
 			Button invite;
+			View header;
+			TextView headerMessage;
+			Button headerFriendAll;
 
 			public ViewHolder(View view) {
 				avatar = (ImageView) view.findViewById(R.id.avatar);
@@ -371,15 +365,6 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 				}
 				name = (TextView) view.findViewById(R.id.name);
 				invite = (Button) view.findViewById(R.id.invite);
-			}
-		}
-
-		private class HeaderHolder {
-			View header;
-			TextView headerMessage;
-			Button headerFriendAll;
-
-			public HeaderHolder(View view) {
 				header = view.findViewById(R.id.header);
 				headerMessage = (TextView) header.findViewById(R.id.message);
 				headerFriendAll = (Button) header.findViewById(R.id.friendAll);
