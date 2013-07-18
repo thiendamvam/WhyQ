@@ -18,6 +18,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="@dimen/base_padding"
         android:background="@drawable/filter_bg"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:visibility="gone"
         android:orientation="vertical" >
 

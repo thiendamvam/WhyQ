@@ -87,8 +87,6 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 			String avatar) {
 		Intent i = new Intent(this, WhyqUserProfileActivity.class);
 		i.putExtra(WhyqUserProfileActivity.ARG_USER_ID, userId);
-		i.putExtra(WhyqUserProfileActivity.ARG_USER_NAME, userName);
-		i.putExtra(WhyqUserProfileActivity.ARG_AVATAR, avatar);
 		startActivity(i);
 	}
 
@@ -227,6 +225,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 				}
 				name = (TextView) view.findViewById(R.id.name);
 				invite = (Button) view.findViewById(R.id.invite);
+				invite.setVisibility(View.GONE);
 			}
 		}
 

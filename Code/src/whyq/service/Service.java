@@ -516,5 +516,13 @@ public class Service implements Runnable {
 		params.put("text-search", string);
 		request("getlocation", params, true, false);
 	}
+	
+	public void getProfiles(String encryptedToken, String userId) {
+		_action = ServiceAction.ActionGetProfiles;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("user_id", userId);
+		request("/m/member/profile", params, true, false);
+	}
 
 }

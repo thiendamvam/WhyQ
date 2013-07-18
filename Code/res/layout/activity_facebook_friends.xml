@@ -9,41 +9,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bgListView"
-        android:cacheColorHint="@null"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp" />
+        android:cacheColorHint="@null" />
 
-    <!-- <LinearLayout
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/inviteContainer"
+        android:background="#D9D9D9" />
+
+    <LinearLayout
         android:id="@+id/inviteContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/base_padding"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:paddingTop="@dimen/base_padding"
-        android:visibility="invisible" >
+        android:visibility="gone" >
 
         <TextView
-            android:id="@+id/inviteMessage"
+            android:id="@+id/message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="2"
             android:textColor="#808080"
+            android:textIsSelectable="true"
             android:textSize="@dimen/font_small" />
 
-        <FrameLayout
-            android:id="@+id/inviteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/base_button_pressed" >
-
-            <TextView
-                style="@style/listview_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white" />
-        </FrameLayout>
-    </LinearLayout> -->
+        <Button
+            android:id="@+id/invite"
+            style="@style/listview_button"
+            android:layout_width="70dp"
+            android:layout_height="32dp"
+            android:background="@drawable/base_button_pressed"
+            android:gravity="center"
+            android:text="@string/invite"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
 </RelativeLayout>

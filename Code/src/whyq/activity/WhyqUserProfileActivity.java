@@ -11,6 +11,7 @@ import java.util.Map;
 import whyq.WhyqApplication;
 import whyq.model.ActivityItem;
 import whyq.model.Photo;
+import whyq.model.UserProfile;
 import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
@@ -47,9 +48,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	private static final String TIME_FORMAT = "HH:mm a";
 	private static final String DATE_FORMAT = "dd/MM/yyyy";
 
-	public static final String ARG_USER_NAME = "username";
 	public static final String ARG_USER_ID = "userid";
-	public static final String ARG_AVATAR = "avatar";
 
 	private static final Map<String, String> ACTIVITY_MAP;
 	static {
@@ -64,7 +63,6 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 	private ActivitiesAdapter mActivitiesAdapter;
 	private PhotoAdapter mPhotoAdapter;
-	private String mUserFirstName;
 	protected String mUserId;
 
 	@Override
@@ -73,30 +71,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 		setContentView(R.layout.activity_profile);
 
-		initCategory();
-
 		Intent i = getIntent();
-
-		mUserFirstName = i.getStringExtra(ARG_USER_NAME);
-		if (mUserFirstName == null) {
-			mUserFirstName = XMLParser
-					.getValue(this, XMLParser.STORE_USER_NAME);
-		}
-		if (mUserFirstName != null) {
-			setTitle(mUserFirstName);
-		}
-		String avatar = i.getStringExtra(ARG_AVATAR);
-		if (avatar == null) {
-			avatar = XMLParser.getValue(this, XMLParser.STORE_USER_AVATAR);
-		}
-
-		if (avatar != null) {
-			ImageView imageView = (ImageView) findViewById(R.id.avatar);
-			LayoutParams LP = imageView.getLayoutParams();
-			LP.width = AVATAR_SIZE;
-			LP.height = AVATAR_SIZE;
-			mImageWorker.downloadImage(avatar, imageView);
-		}
 
 		ExtendedListView lv = (ExtendedListView) findViewById(R.id.listview);
 		lv.setOnPositionChangedListener(this);
@@ -138,7 +113,25 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 		getService().getUserActivities(getEncryptedToken(), mUserId);
 		getService().getPhotos(getEncryptedToken(), mUserId);
+		getService().getProfiles(getEncryptedToken(), mUserId);
 
+	}
+	
+	
+	private void bindData(UserProfile user) {
+		String userName = user.getFirst_name();
+		if (userName != null) {
+			setTitle(userName);
+		}
+		String avatar = user.getAvatar();
+		if (avatar != null) {
+			ImageView imageView = (ImageView) findViewById(R.id.avatar);
+			LayoutParams LP = imageView.getLayoutParams();
+			LP.width = AVATAR_SIZE;
+			LP.height = AVATAR_SIZE;
+			mImageWorker.downloadImage(avatar, imageView);
+		}
+		initCategory(user);
 	}
 
 	@Override
@@ -218,12 +211,14 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		} else if (result.getAction() == ServiceAction.ActionGetPhotos) {
 			mPhotoAdapter.setItems(DataParser.parsePhotos(String.valueOf(result
 					.getData())));
+		} else if (result.getAction() == ServiceAction.ActionGetProfiles) {
+			UserProfile user = DataParser.parseUerProfiles(String.valueOf(result.getData()));
+			bindData(user);
 		}
 	}
 
-	private void initCategory() {
-		final String totalCheckBill = XMLParser.getValue(this,
-				XMLParser.STORE_TOTAL_CHECK_BILL);
+	private void initCategory(UserProfile user) {
+		final int totalCheckBill = user.getTotal_count().getTotal_check_bill();
 		bindCategory(R.id.check_bill, R.drawable.btn_blue_place,
 				totalCheckBill + " places", "checked bills",
 				new OnClickListener() {
@@ -236,8 +231,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 						startActivity(i);
 					}
 				});
-		final String totalHistory = XMLParser.getValue(this, XMLParser.STORE_TOTAL_HISTORY);
-		bindCategory(R.id.history, R.drawable.btn_blue_history, totalHistory,
+		final int totalHistory = user.getTotal_count().getTotal_place_check_bill();
+		bindCategory(R.id.history, R.drawable.btn_blue_history, totalHistory + "",
 				"History", new OnClickListener() {
 
 					@Override
@@ -249,8 +244,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 					}
 				});
 
-		final String totalSaving = XMLParser.getValue(this,
-				XMLParser.STORE_TOTAL_SAVING);
+		final String totalSaving = user.getTotal_count().getTotal_saving_money();
 		bindCategory(R.id.saving, R.drawable.btn_blue_saving, "$" + totalSaving,
 				"Saving", new OnClickListener() {
 
@@ -260,10 +254,9 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 					}
 				});
 
-		final String totalComment = XMLParser.getValue(this,
-				XMLParser.STORE_TOTAL_COMMENT);
+		final int totalComment = user.getTotal_count().getTotal_comment();
 		bindCategory(R.id.comment, R.drawable.btn_blue_tips,
-				totalComment == "" ? "0" : totalComment, "Tips",
+				totalComment + "", "Tips",
 				new OnClickListener() {
 
 					@Override

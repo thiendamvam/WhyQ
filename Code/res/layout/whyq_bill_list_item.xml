@@ -48,7 +48,8 @@
     <Button
         android:id="@+id/price"
         style="@style/listview_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="70dp"
+        android:layout_height="32dp"
+        android:background="@drawable/base_button" />
 
 </LinearLayout>

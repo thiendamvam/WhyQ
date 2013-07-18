@@ -27,6 +27,7 @@ import whyq.handler.FriendFacebookHandler;
 import whyq.handler.FriendWhyqHandler;
 import whyq.handler.PhotoHandler;
 import whyq.handler.UserHandler;
+import whyq.handler.UserProfileHandler;
 import whyq.interfaces.FriendFacebookController;
 import whyq.model.ActivityItem;
 import whyq.model.BillItem;
@@ -40,6 +41,7 @@ import whyq.model.Store;
 import whyq.model.StoreInfo;
 import whyq.model.User;
 import whyq.model.UserCheckBill;
+import whyq.model.UserProfile;
 import whyq.model.WhyqImage;
 import whyq.utils.Util;
 
@@ -104,6 +106,23 @@ public class DataParser {
 			xmlReader.setContentHandler(handler);
 			xmlReader.parse(new InputSource(new StringReader(inputString)));
 			return handler.getBills();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static final UserProfile parseUerProfiles(String inputString) {
+		try {
+			XMLReader xmlReader = initializeReader();
+			UserProfileHandler handler = new UserProfileHandler();
+			xmlReader.setContentHandler(handler);
+			xmlReader.parse(new InputSource(new StringReader(inputString)));
+			return handler.getUser();
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {

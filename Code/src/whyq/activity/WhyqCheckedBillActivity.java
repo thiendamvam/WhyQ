@@ -48,7 +48,11 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-
+				if (checkedId == R.id.viewPlace) {
+					mAdapter.switchPlaceMode(true);
+				} else {
+					mAdapter.switchPlaceMode(false);
+				}
 			}
 		});
 
@@ -92,6 +96,11 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 			this.mItems = new ArrayList<BillItem>();
 			this.mImageWorker = imageWorker;
 		}
+		
+		public void switchPlaceMode(boolean placeMode) {
+			isPlaceMode = placeMode;
+			notifyDataSetChanged();
+		}
 
 		public void setItems(List<BillItem> items) {
 			if (items == null || items.size() == 0) {
@@ -129,11 +138,12 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 			ViewHolder holder = getViewHolder(convertView);
 			BillItem item = mItems.get(position);
 			if (isPlaceMode) {
-				holder.name.setText(item.getBusiness_info().getName_store());
-				holder.unit.setText("Bill normal");
+				int count  = item.getBusiness_info().getCount_favourite_member();
+				holder.unit.setText("Visit " + count + (count > 1 ? " times" : " time"));
 			} else {
-				holder.name.setText(item.getBusiness_info().getName_store());
+				holder.unit.setText("Bill normal");
 			}
+			holder.name.setText(item.getBusiness_info().getName_store());
 			holder.price.setText("$ " + item.getTotal_value());
 
 			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
