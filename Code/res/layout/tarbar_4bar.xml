@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:baselineAligned="false"
     android:gravity="center"
     android:orientation="horizontal"
@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/lnCutleryTab"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/bg_tab_left_active"
         android:gravity="center"
@@ -22,16 +22,15 @@
             android:id="@+id/imgCutleryIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_cat_cutlery" />
+            android:background="@drawable/icon_tab_cutlery_active" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/lnWineTab"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/bg_tab_middle_normal"
-        android:baselineAligned="false"
         android:gravity="center"
         android:onClick="onWineTabCliked"
         android:orientation="vertical"
@@ -41,13 +40,13 @@
             android:id="@+id/imgWinIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_cat_wine" />
+            android:background="@drawable/icon_tab_wine_normal" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/lnCoffeTab"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/bg_tab_middle_normal"
         android:baselineAligned="false"
@@ -60,15 +59,15 @@
             android:id="@+id/imgCoffeeIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_cat_coffee" />
+            android:background="@drawable/icon_tab_coffee_normal" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/lnHotel"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/bg_tab_right_normal"
+        android:background="@drawable/bg_tab_middle_normal"
         android:baselineAligned="false"
         android:gravity="center"
         android:onClick="onHotelTabClicked"
@@ -79,7 +78,7 @@
             android:id="@+id/imgHotelIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_cat_hotel" />
+            android:background="@drawable/icon_tab_hotel_normal" />
     </LinearLayout>
 
 </LinearLayout>

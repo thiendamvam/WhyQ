@@ -198,7 +198,7 @@ public class WhyqListController implements WhyqList_Delegate {
 				boolean isPlace = getValue(permElement, "is_at_place").equals("1")?true:false;
 				String minimunTimeDeliver = getValue(permElement, "minimun_time_deliver");
 				String tableQuantity = getValue(permElement, "table_quantity");
-				String countFavouriteMemebr = getValue(permElement, "count_favourite");
+				String countFavouriteMemebr = getValue(permElement, "count_favourite_member");
 				String coutBill =getValue(permElement, "count_bill");
 				String inCome = getValue(permElement, "income");
 				String nameCate = getValue(permElement, "name_cate");

@@ -139,7 +139,11 @@ public class Util {
 	
 	public static void loginAgain(Context context){
 		Intent intent = new Intent(context, LoginHome.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
+		
 	}
 	static int clearCacheFolder(final File dir, final int numDays) {
 

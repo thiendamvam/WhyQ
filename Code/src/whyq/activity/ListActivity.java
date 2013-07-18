@@ -181,6 +181,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createUI();
+		resetTabBarFocus(1);
 		getLocation();
 		regisReceiver();
 		WhyqUtils.clearViewHistory();
@@ -662,7 +663,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_middle_normal);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_left_active);
 			lnHotel.setBackgroundResource(R.drawable.bg_tab_right_normal);
-			setIconTab(1);
+			
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.bg_tab_active);
 			cateId = "1";
@@ -671,6 +672,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 		case 2:
+			setIconTab(2);
 			lnWine.setBackgroundResource(R.drawable.bg_tab_middle_active);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_left_normal);
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_middle_normal);
@@ -678,17 +680,18 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			storeType = 2;
 //			lnCoffe.setBackgroundResource(R.drawable.icon_cat_coffee);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
-			setIconTab(2);
+		
 			cateId = "2";
 //			exeSearch(etTextSearch.getText().toString());
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 		case 3:
+			setIconTab(3);
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_middle_active);
 			lnWine.setBackgroundResource(R.drawable.bg_tab_middle_normal);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_left_normal);
 			lnHotel.setBackgroundResource(R.drawable.bg_tab_right_normal);
-			setIconTab(3);
+			
 			storeType = 3;
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
@@ -697,11 +700,12 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 		case 4:
+			setIconTab(4);
 			lnHotel.setBackgroundResource(R.drawable.bg_tab_right_active);
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_middle_normal);
 			lnWine.setBackgroundResource(R.drawable.bg_tab_middle_normal);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_left_normal);
-			setIconTab(4);
+			
 			storeType = 4;
 //			lnWine.setBackgroundResource(R.drawable.icon_cat_wine);
 //			lnCutlery.setBackgroundResource(R.drawable.icon_cat_cutlery);
