@@ -10,7 +10,6 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageViewHelper;
-import whyq.utils.Logger;
 import whyq.utils.Util;
 import android.content.Context;
 import android.os.Bundle;
@@ -86,6 +85,7 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 		private Context mContext;
 		private List<BillItem> mItems;
 		private ImageViewHelper mImageWorker;
+		private boolean isPlaceMode;
 
 		public BillAdapter(Context context, ImageViewHelper imageWorker) {
 			this.mContext = context;
@@ -128,8 +128,12 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 
 			ViewHolder holder = getViewHolder(convertView);
 			BillItem item = mItems.get(position);
-			holder.name.setText(item.getBusiness_info().getName_store());
-			holder.unit.setText("Bill normal");
+			if (isPlaceMode) {
+				holder.name.setText(item.getBusiness_info().getName_store());
+				holder.unit.setText("Bill normal");
+			} else {
+				holder.name.setText(item.getBusiness_info().getName_store());
+			}
 			holder.price.setText("$ " + item.getTotal_value());
 
 			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
