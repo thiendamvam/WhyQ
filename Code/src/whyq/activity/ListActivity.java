@@ -1,7 +1,9 @@
 package whyq.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -59,7 +61,7 @@ import android.widget.Toast;
 
 import com.whyq.R;
 
-public class ListActivity extends FragmentActivity implements Login_delegate, OnClickListener,OnFocusChangeListener, IServiceListener{
+public class ListActivity extends FragmentActivity implements  OnClickListener,OnFocusChangeListener, IServiceListener{
 
 	
 	public static final String DOWNLOAD_COMPLETED = "DOWNLOAD_COMPLETED";
@@ -455,12 +457,6 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			whyqListView.setAdapter(permListAdapter);
 			permListAdapter.notifyDataSetChanged();
 
-//			int selected = permListAdapter.getCount() - permListMain.size() - 2;
-//			if(selected >= 0) {
-//				whyqListView.setSelection(selected);
-//			} else {
-//				whyqListView.setSelection(0);
-//			}
 
 		}else{
 			
@@ -501,6 +497,7 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 		protected ArrayList<Store> doInBackground(ArrayList<Store>... params) {
 			// TODO Auto-generated method stub
 			WhyqListController whyqListController = new WhyqListController();
+			Map<String, String> postParams = new HashMap<String, String>();
 			ArrayList<Store> permList = null;
 			try {				
 				if (nextItem != -1) {
@@ -509,40 +506,40 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 
 					if(isCalendar){
 						nameValuePairs.add(new BasicNameValuePair("uid", WhyqMain.UID));
-//						isCalendar =false;
 					}else{
+						
 						RSA rsa = new RSA();
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
-						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+//						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+						postParams.put("token", enToken);
 						if(filterType.equals("1")){
 							
 						}else if(filterType.equals("2")){
-							nameValuePairs.add(new BasicNameValuePair("friend_visit",filterType));
+//							nameValuePairs.add(new BasicNameValuePair("friend_visit",filterType));
+							postParams.put("friend_visit", filterType);
 						}else if(filterType.equals("3")){
-							nameValuePairs.add(new BasicNameValuePair("friend_favourite",filterType));
+//							nameValuePairs.add(new BasicNameValuePair("friend_favourite",filterType));
+							postParams.put("friend_favourite", filterType);
 						}
 						
 						if(isSearch){
-							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
-							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
-							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
-							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
-							
+//							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
+//							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
+//							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
+//							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
+							postParams.put("key", searchKey);
+							postParams.put("search_longitude", longitude);
+							postParams.put("search_latitude", latgitude);
+							postParams.put("cate_id", cateId);
 							
 						}else{
-//							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
-							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
-//							if(friendVisited !=null){
-//								nameValuePairs.add(new BasicNameValuePair("friend_visit", friendVisited));
-//							}else if(friendFavourite !=null){
-//								nameValuePairs.add(new BasicNameValuePair("friend_favourite", friendFavourite));
-//							}else{
-//								
-//							}
+//							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
+							postParams.put("cate_id", cateId);
 						}
 					}
 
-					permList = whyqListController.getBusinessList(url, nameValuePairs);
+//					permList = whyqListController.getBusinessList(url, nameValuePairs);
+					service.getBusinessList(postParams, url);
 				} else {
 					if(isCalendar){
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -552,41 +549,39 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 					}else{
 						RSA rsa = new RSA();
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
-						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+//						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+						postParams.put("token", enToken);
 						if(filterType.equals("1")){
 							
 						}else if(filterType.equals("2")){
-							nameValuePairs.add(new BasicNameValuePair("friend_visit",filterType));
+//							nameValuePairs.add(new BasicNameValuePair("friend_visit",filterType));
+							postParams.put("friend_visit", filterType);
 						}else if(filterType.equals("3")){
-							nameValuePairs.add(new BasicNameValuePair("friend_favourite",filterType));
+//							nameValuePairs.add(new BasicNameValuePair("friend_favourite",filterType));
+							postParams.put("friend_favourite", filterType);
 						}
+						
 						if(isSearch){
-							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
-							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
-							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
-							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
-							
+//							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
+//							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
+//							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
+//							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
+							postParams.put("key", searchKey);
+							postParams.put("search_longitude", longitude);
+							postParams.put("search_latitude", latgitude);
+							postParams.put("cate_id", cateId);
 							
 						}else{
-//							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
-							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
-//							if(friendVisited !=null){
-//								nameValuePairs.add(new BasicNameValuePair("friend_visit", friendVisited));
-//							}else if(friendFavourite !=null){
-//								nameValuePairs.add(new BasicNameValuePair("friend_favourite", friendFavourite));
-//							}else{
-//								
-//							}
+//							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
+							postParams.put("cate_id", cateId);
 						}
-						permList = whyqListController.getBusinessList(url, nameValuePairs);	
 					}
-					
+
+//					permList = whyqListController.getBusinessList(url, nameValuePairs);
+					service.getBusinessList(postParams, url);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-
-//				hideProgress();
 			}
 			permListMain = permList;
 			/**
@@ -607,17 +602,13 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 			/**
 			 * MSA
 			 */
-			loadPerms();
+//			loadPerms();
 			WhyqListController.isLoading = false;
-			
-			//permListMain.size();
-//			if (dialog != null && dialog.isShowing()) {
-//				dialog.dismiss();
+
+//			hideProgress();
+//			if(permListAdapter != null) {
+//				permListAdapter.notifyDataSetChanged();
 //			}
-			hideProgress();
-			if(permListAdapter != null) {
-				permListAdapter.notifyDataSetChanged();
-			}
 		}
 
 	}
@@ -632,19 +623,19 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	    return super.onKeyDown(keyCode, event);
 	}
 
-	@Override
-	public void on_success() {
-		// TODO Auto-generated method stub
-		WhyqMain.refeshFollowerActivity();
-	}
-
-	@Override
-	public void on_error() {
-		// TODO Auto-generated method stub
-		//Logger.appendLog("test log", "loginerror");
-		Intent intent = new Intent(getApplicationContext(), JoinWhyqActivity.class);
-		this.startActivity(intent);		
-	}
+//	@Override
+//	public void on_success() {
+//		// TODO Auto-generated method stub
+//		WhyqMain.refeshFollowerActivity();
+//	}
+//
+//	@Override
+//	public void on_error() {
+//		// TODO Auto-generated method stub
+//		//Logger.appendLog("test log", "loginerror");
+//		Intent intent = new Intent(getApplicationContext(), JoinWhyqActivity.class);
+//		this.startActivity(intent);		
+//	}
 
 	@Override
 	public void onClick(View v) {
@@ -1007,8 +998,15 @@ public class ListActivity extends FragmentActivity implements Login_delegate, On
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
 //		Store store = (Store)result.getData();
-		
-		if(result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
+		if(result.isSuccess()&& result.getAction() == ServiceAction.ActionGetBusinessList){
+			permListMain = (ArrayList<Store>)result.getData();
+			loadPerms();
+			hideProgress();
+			WhyqListController.isLoading = false;
+			if(permListAdapter != null) {
+				permListAdapter.notifyDataSetChanged();
+			}
+		} else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
 //			Toast.makeText(context, "Favourite successfully", Toast.LENGTH_SHORT).show();
 			updateFavoriteWitId(currentStoreId, true);
 		}else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){

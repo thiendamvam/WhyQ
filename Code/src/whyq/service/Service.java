@@ -13,6 +13,7 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -261,6 +262,9 @@ public class Service implements Runnable {
 		case ActionGetBusinessDetail:
 			resObj = parser.parseBusinessDetail(result);
 			break;
+		case ActionGetBusinessList:
+			resObj = parser.parseBusinessList(result);
+			break;
 		case ActionComment:
 			resObj = parser.parseCommentResult(result);
 			break;
@@ -444,11 +448,14 @@ public class Service implements Runnable {
 
 		return formList;
 	}
-
+	public void getBusinessList(Map<String, String> params, String url){
+		_action = ServiceAction.ActionGetBusinessList;
+		request(url, params, true, false);
+	}
 	public void getBusinessDetail(String id) {
 		_action = ServiceAction.ActionGetBusinessDetail;
 		Map<String, String> params = new HashMap<String, String>();
-//		params.put("token", WhyqApplication.Instance().getRSAToken());
+		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", id);
 		request("/m/business/show", params, true, false);
 	}

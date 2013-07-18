@@ -23,9 +23,11 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import whyq.WhyqApplication;
+import whyq.activity.LoginHome;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Criteria;
@@ -133,6 +135,11 @@ public class Util {
 			}
 		});
 		alertError.show();
+	}
+	
+	public static void loginAgain(Context context){
+		Intent intent = new Intent(context, LoginHome.class);
+		context.startActivity(intent);
 	}
 	static int clearCacheFolder(final File dir, final int numDays) {
 

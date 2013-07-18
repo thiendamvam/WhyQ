@@ -41,8 +41,10 @@ public class WhyqLogout extends Activity implements IServiceListener{
 		Log.d("Logout",""+result.getAction()+"status"+result.isSuccess());
 //		if(result.isSuccess()){
 			WhyqApplication.Instance().setToken(null);
-			Intent i = new Intent(WhyqLogout.this, LoginWhyqActivity.class);
+			Intent i = new Intent(WhyqLogout.this, LoginHome.class);
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			finish();
 			startActivity(i);
 			
 //		}

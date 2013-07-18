@@ -542,101 +542,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 	 * show the dialog and user can choose Facebook or Twitter login or login to
 	 * Permping directly.
 	 */
-	class OptionsDialog extends Dialog implements
-			android.view.View.OnClickListener {
 
-		// The "Login with Facebook" button
-		private Button facebookLogin;
-
-		// The "Login with Twitter" button
-		private Button twitterLogin;
-
-		// The "Join Permping" button
-		private Button joinPermping;
-
-		// PermpingApplication state;
-		
-		Context context;
-		
-		
-		
-		
-
-		public OptionsDialog(Context context) {
-			super(context);
-			setContentView(R.layout.join_options);
-			this.context = context;
-			facebookLogin = (Button) findViewById(R.id.bt_login_with_facebook);
-			facebookLogin.setOnClickListener(this);
-			twitterLogin = (Button) findViewById(R.id.bt_login_with_twitter);
-			twitterLogin.setOnClickListener(this);
-			joinPermping = (Button) findViewById(R.id.bt_join_permping);
-			joinPermping.setOnClickListener(this);
-		}
-
-		public void onClick(View v) {
-			if (v == facebookLogin) {
-				    Facebook mFacebook;
-					mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
-					//final Activity activity = getParent();
-					mFacebook.authorize( ListActivityGroup.context, new String[] { "email", "status_update",
-							"user_birthday" }, new DialogListener() {
-						@Override
-						public void onComplete(Bundle values) {
-							//Log.d("", "=====>"+values.toString());
-							WhyqUtils permutils = new WhyqUtils();
-							String accessToken = values.getString("access_token");
-							permutils.saveFacebookToken("oauth_token", accessToken, activity);
-//								// Check on server
-							List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-							nameValuePairs.add(new BasicNameValuePair("type", Constants.FACEBOOK_LOGIN));
-							nameValuePairs.add(new BasicNameValuePair("oauth_token", accessToken));
-							nameValuePairs.add(new BasicNameValuePair("email", ""));
-							nameValuePairs.add(new BasicNameValuePair("password", ""));
-							if(activity instanceof ListActivity) {
-								AuthorizeController authorizeController = new AuthorizeController((ListActivity)activity);
-								authorizeController.authorize(getContext(), nameValuePairs);	
-							}
-														
-						}
-
-							@Override
-							public void onFacebookError(FacebookError error) {
-
-							}
-
-							@Override
-							public void onError(DialogError e) {
-
-							}
-
-							@Override
-							public void onCancel() {
-								// cancel press or back press
-							}
-						});
-					//}				
-					
-					this.dismiss();
-				
-			} else if (v == twitterLogin) {
-				Intent i = new Intent(context,
-						PrepareRequestTokenActivity.class);
-				context.startActivity(i);
-				this.dismiss();
-
-			} else { // Show Join Permping screen
-				prefs.edit().putString(Constants.LOGIN_TYPE,
-						Constants.PERMPING_LOGIN);
-				Intent i = new Intent(context, JoinWhyqActivity.class);
-				context.startActivity(i);
-				this.dismiss();
-			}
-
-			// this.dismiss();
-
-		}
-	}
 
 	/**
 	 * @return the count
@@ -745,9 +651,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 		case R.id.bt_login:
 			exeLogin();
 			break;
-		case R.id.bt_join:
-			exeJoin();
-			break;
+
 		case R.id.btnLike:
 //			exeLike(v);
 			break;
@@ -926,11 +830,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 //		}	
 //	}
 
-	private void exeJoin() {
-		// TODO Auto-generated method stub
-		final OptionsDialog dialog = new OptionsDialog(context);
-		dialog.show();
-	}
+
 
 	private void exeLogin() {
 		// TODO Auto-generated method stub
