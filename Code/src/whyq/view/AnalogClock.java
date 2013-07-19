@@ -93,8 +93,8 @@ public class AnalogClock extends View {
 		super.onDraw(canvas);
 
 		// Here you can set the size of your clock
-		int availableWidth = 48;
-		int availableHeight = 48;
+		int availableWidth = getMeasuredWidth();
+		int availableHeight = getMeasuredHeight();
 
 		// Actual size
 		int x = availableWidth / 2;

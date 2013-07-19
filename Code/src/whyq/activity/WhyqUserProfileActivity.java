@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,6 +65,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	private ActivitiesAdapter mActivitiesAdapter;
 	private PhotoAdapter mPhotoAdapter;
 	protected String mUserId;
+	private int clockHeight;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		setContentView(R.layout.activity_profile);
 
 		Intent i = getIntent();
+		
+		clockHeight = (int) (getResources().getDisplayMetrics().density * 32);
 
 		ExtendedListView lv = (ExtendedListView) findViewById(R.id.listview);
 		lv.setOnPositionChangedListener(this);
@@ -140,10 +144,16 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 		final TextView tvTime = (TextView) scrollBarPanel
 				.findViewById(R.id.textTime);
+		tvTime.getLayoutParams().height = clockHeight / 2;
+		Util.adjustTextSizeByTextHeight(tvTime, clockHeight / 3);
 		final TextView tvDate = (TextView) scrollBarPanel
 				.findViewById(R.id.textDate);
+		tvDate.getLayoutParams().height = clockHeight / 2;
+		Util.adjustTextSizeByTextHeight(tvDate, clockHeight / 3);
+		
 		final whyq.view.AnalogClock analogClock = (whyq.view.AnalogClock) scrollBarPanel
 				.findViewById(R.id.clock);
+		
 		ActivityItem item = (ActivityItem) mActivitiesAdapter.getItem(position);
 		if (item != null) {
 			Date date = getDate(item.getUpdatedate());

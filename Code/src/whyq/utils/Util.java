@@ -28,6 +28,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Criteria;
@@ -39,6 +40,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.text.format.DateUtils;
 import android.text.style.BulletSpan;
 import android.view.View;
@@ -253,6 +255,39 @@ public class Util {
 	        }
 	    }
 	     return bundle;
+	}
+	
+	/**
+	 * Convenience method to adjust font size to fit the given height.
+	 * 
+	 * @param tv
+	 *            The text view to be adjust text size.
+	 * @param height
+	 *            the expect height of text.
+	 */
+	public static void adjustTextSizeByTextHeight(TextView tv, int height) {
+		final String text = "dp";
+		float textSize = tv.getTextSize();
+
+		TextPaint tp = tv.getPaint();
+		Rect bound = new Rect();
+		tp.getTextBounds(text, 0, text.length(), bound);
+
+		if (Math.abs(bound.bottom - bound.top) > height) {
+			while (Math.abs(bound.bottom - bound.top) > height) {
+				textSize--;
+				tp.setTextSize(textSize);
+				tp.getTextBounds(text, 0, text.length(), bound);
+			}
+		}
+		if (Math.abs(bound.bottom - bound.top) < height) {
+			while (Math.abs(bound.bottom - bound.top) < height) {
+				textSize++;
+				tp.setTextSize(textSize);
+				tp.getTextBounds(text, 0, text.length(), bound);
+			}
+			textSize--;
+		}
 	}
 
 }

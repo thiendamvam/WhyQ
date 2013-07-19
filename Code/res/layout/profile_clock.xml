@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="48dp"
-    android:background="@drawable/timescroll_pointer"
-    android:paddingRight="@dimen/base_padding" >
+    android:layout_height="32dp"
+    android:background="@drawable/timescroll_pointer">
 
     <whyq.view.AnalogClock
         android:id="@+id/clock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_centerVertical="true"
-        android:layout_margin="@dimen/base_padding" />
+        android:layout_marginRight="@dimen/base_padding" />
 
     <TextView
         android:id="@+id/textTime"
@@ -18,6 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/clock"
+        android:gravity="center_vertical"
         android:textColor="@android:color/white" />
 
     <TextView
@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textTime"
         android:layout_toRightOf="@+id/clock"
+        android:gravity="center_vertical"
         android:textColor="@android:color/secondary_text_dark" />
 
 </RelativeLayout>
