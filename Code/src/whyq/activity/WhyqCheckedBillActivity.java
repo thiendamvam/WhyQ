@@ -32,6 +32,10 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 
 	public static final String ARG_USER_ID = "userid";
 
+	protected static final String ARG_MODE = "mode";
+
+	protected static final String SAVING = "saving";
+
 	private BillAdapter mAdapter;
 
 	@Override

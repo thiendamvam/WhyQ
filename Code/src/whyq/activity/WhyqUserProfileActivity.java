@@ -11,6 +11,7 @@ import java.util.Map;
 import whyq.WhyqApplication;
 import whyq.model.ActivityItem;
 import whyq.model.Photo;
+import whyq.model.TotalCount;
 import whyq.model.UserProfile;
 import whyq.service.DataParser;
 import whyq.service.Service;
@@ -26,7 +27,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,6 +66,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	private PhotoAdapter mPhotoAdapter;
 	protected String mUserId;
 	private int clockHeight;
+	private HorizontalListView mPhotos;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +85,11 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 		mPhotoAdapter = new PhotoAdapter(this, mImageWorker);
 		int PHOTO_SIZE = WhyqApplication.sScreenWidth / 5;
-		HorizontalListView listPhoto = (HorizontalListView) findViewById(R.id.gallery);
-		listPhoto.getLayoutParams().height = PHOTO_SIZE;
-		listPhoto.setAdapter(mPhotoAdapter);
-		listPhoto.setOnItemClickListener(new OnItemClickListener() {
+		mPhotos = (HorizontalListView) findViewById(R.id.gallery);
+		mPhotos.setVisibility(View.GONE);
+		mPhotos.getLayoutParams().height = PHOTO_SIZE;
+		mPhotos.setAdapter(mPhotoAdapter);
+		mPhotos.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -205,13 +207,19 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return "00:00 AM";
 	}
 
+	int count = 0;
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
-		setLoading(false);
+		count++;
+		if (count == 3) {
+			setLoading(false);
+			count = 0;
+		}
+		
 		showExtraButton();
 		if (result == null)
 			return;
@@ -219,8 +227,13 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			mActivitiesAdapter.setItems(DataParser.parseActivities(String
 					.valueOf(result.getData())));
 		} else if (result.getAction() == ServiceAction.ActionGetPhotos) {
-			mPhotoAdapter.setItems(DataParser.parsePhotos(String.valueOf(result
-					.getData())));
+			List<Photo> photos = DataParser.parsePhotos(String.valueOf(result
+					.getData()));
+			if (photos == null || photos.size() == 0) {
+				return;
+			}
+			mPhotos.setVisibility(View.VISIBLE);
+			mPhotoAdapter.setItems(photos);
 		} else if (result.getAction() == ServiceAction.ActionGetProfiles) {
 			UserProfile user = DataParser.parseUerProfiles(String.valueOf(result.getData()));
 			bindData(user);
@@ -228,7 +241,11 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	}
 
 	private void initCategory(UserProfile user) {
-		final int totalCheckBill = user.getTotal_count().getTotal_check_bill();
+		TotalCount total = user.getTotal_count();
+		if (total == null) {
+			return;
+		}
+		final int totalCheckBill = total.getTotal_check_bill();
 		bindCategory(R.id.check_bill, R.drawable.btn_blue_place,
 				totalCheckBill + " places", "checked bills",
 				new OnClickListener() {
@@ -241,7 +258,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 						startActivity(i);
 					}
 				});
-		final int totalHistory = user.getTotal_count().getTotal_place_check_bill();
+		final int totalHistory = total.getTotal_place_check_bill();
 		bindCategory(R.id.history, R.drawable.btn_blue_history, totalHistory + "",
 				"History", new OnClickListener() {
 
@@ -254,17 +271,21 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 					}
 				});
 
-		final String totalSaving = user.getTotal_count().getTotal_saving_money();
+		final String totalSaving = total.getTotal_saving_money();
 		bindCategory(R.id.saving, R.drawable.btn_blue_saving, "$" + totalSaving,
 				"Saving", new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
-
+						Intent i = new Intent(WhyqUserProfileActivity.this,
+								WhyqCheckedBillActivity.class);
+						i.putExtra(WhyqCheckedBillActivity.ARG_USER_ID, mUserId);
+						i.putExtra(WhyqCheckedBillActivity.ARG_MODE, WhyqCheckedBillActivity.SAVING);
+						startActivity(i);
 					}
 				});
 
-		final int totalComment = user.getTotal_count().getTotal_comment();
+		final int totalComment = total.getTotal_comment();
 		bindCategory(R.id.comment, R.drawable.btn_blue_tips,
 				totalComment + "", "Tips",
 				new OnClickListener() {

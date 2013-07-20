@@ -161,14 +161,14 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 	}
 
 	void addInviteFriend(FriendFacebook friend) {
-		INVITED_LIST.put(friend.getFacebookId(),
+		INVITED_LIST.put(friend.getId(),
 				friend.getFirstName() + " " + friend.getLast_name());
 		mInviteContainer.setVisibility(View.VISIBLE);
-		displayInviteMessage(friend.getFacebookId());
+		displayInviteMessage(friend.getId());
 	}
 
 	void removeIntiveFriend(FriendFacebook friend) {
-		INVITED_LIST.remove(friend.getFacebookId());
+		INVITED_LIST.remove(friend.getId());
 		if (INVITED_LIST.size() == 0) {
 			mInviteContainer.setVisibility(View.GONE);
 		} else {
@@ -306,25 +306,27 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 				holder.invite.setText("");
 			} else {
 				displayInviteButtn(holder, item);
-				holder.invite.setOnClickListener(new View.OnClickListener() {
+				if (item.getIs_join() == 1) {
+					holder.invite.setOnClickListener(new View.OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						if (INVITED_LIST.containsKey(item.getFacebookId())) {
-							mActivity.removeIntiveFriend(item);
-						} else {
-							mActivity.addInviteFriend(item);
+						@Override
+						public void onClick(View v) {
+							if (INVITED_LIST.containsKey(item.getId())) {
+								mActivity.removeIntiveFriend(item);
+							} else {
+								mActivity.addInviteFriend(item);
+							}
+							displayInviteButtn(holder, item);
 						}
-						displayInviteButtn(holder, item);
-					}
-				});
+					});
+				}
 			}
 
 			return convertView;
 		}
 
 		private void displayInviteButtn(ViewHolder holder, FriendFacebook item) {
-			if (INVITED_LIST.containsKey(item.getFacebookId())) {
+			if (INVITED_LIST.containsKey(item.getId())) {
 				holder.invite.setBackgroundResource(R.drawable.btn_accept);
 				holder.invite.setText("");
 			} else {
