@@ -80,7 +80,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="whyq.activity.WhyqLogout"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Translucent"  />
         <activity
             android:name="whyq.activity.ChangeLocationActivity"
             android:screenOrientation="portrait"
@@ -247,7 +248,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name="whyq.activity.CommentActivity"
+            android:name="com.share.twitter.TwitterActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity

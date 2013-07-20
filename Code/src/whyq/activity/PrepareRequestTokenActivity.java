@@ -83,7 +83,7 @@ public class PrepareRequestTokenActivity extends Activity {
 			//Log.i(TAG, "Callback received : " + uri);
 			//Log.i(TAG, "Retrieving Access Token");
 			new RetrieveAccessTokenTask(this,consumer,provider,prefs).execute(uri);
-			if(!LoginWhyqActivity.isTwitter)
+			if(!LoginHome.isTwitter)
 				finish();	
 		}
 	}
@@ -129,10 +129,11 @@ public class PrepareRequestTokenActivity extends Activity {
 				consumer.setTokenWithSecret(token, secret);
 				AccessToken accessToken = new AccessToken(token, secret);
 				WhyqUtils whyqUtils = new WhyqUtils();
-				whyqUtils.saveTwitterAccess("twitter", accessToken, getApplicationContext());
+				whyqUtils.saveTwitterAccess("twitter", accessToken, context);
 				//TODO: validate user before forwarding to new page.
 				// Check on server
-				if(LoginWhyqActivity.isTwitter){
+				if(LoginHome.isTwitter){
+				Log.d("RetrieveAccessTokenTask","Token "+token);
 					Intent data = new Intent();
 					data.putExtra("token", token);
 					data.putExtra("token_secret", secret);

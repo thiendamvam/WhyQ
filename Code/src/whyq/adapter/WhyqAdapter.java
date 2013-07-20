@@ -210,7 +210,12 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					if(userCheckBill !=null){
 						if(userCheckBill.getTotalMember()!=null && !userCheckBill.getTotalMember().equals("")){
 							if(userCheckBill.getAvatar()!=null && !userCheckBill.getAvatar().equals("")){
-								viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalFriend()+" other visited");
+								if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
+									viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" others visited");	
+								}else{
+									viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" other visited");
+								}
+								
 								viewHolder.imgFriendThumb.setVisibility(View.VISIBLE);
 								UrlImageViewHelper.setUrlDrawable(viewHolder.imgFriendThumb, userCheckBill.getAvatar());	
 							}else{

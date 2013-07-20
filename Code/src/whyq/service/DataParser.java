@@ -69,12 +69,24 @@ public class DataParser {
 	public Object parserLoginData(String inputString) {
 		// TODO Auto-generated method stub
 		try {
-			XMLReader xmlReader = initializeReader();
-			UserHandler userHandler = new UserHandler();
-			// assign the handler
-			xmlReader.setContentHandler(userHandler);
-			xmlReader.parse(new InputSource(new StringReader(inputString)));
-			return userHandler.getUser();
+			Document doc = XMLfromString(inputString);
+			ArrayList<Store> permList = new ArrayList<Store>();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+				XMLReader xmlReader = initializeReader();
+				UserHandler userHandler = new UserHandler();
+				// assign the handler
+				xmlReader.setContentHandler(userHandler);
+				xmlReader.parse(new InputSource(new StringReader(inputString)));
+				return userHandler.getUser();
+			}else{
+				String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				User user = new User();
+				user.setMessageLogin(mes);
+				user.isLogined();
+				return user;
+			}
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -311,7 +323,12 @@ public class DataParser {
 				}
 			}
 		}else if(statusResponse.equals("401")){
-			Util.loginAgain(WhyqApplication.Instance().getApplicationContext());
+			String message = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			Util.loginAgain(WhyqApplication.Instance().getApplicationContext(), message);
+			return message;
+		}else{
+			String message = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+			
 		}
 
 		return permList;

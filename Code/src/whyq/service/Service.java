@@ -399,10 +399,11 @@ public class Service implements Runnable {
 
 	public void loginTwitter(String oauthToken, String oauthTokenSecret) {
 		// TODO Auto-generated method stub
+		Log.d("loginTwitter","loginTwitter");
 		_action = ServiceAction.ActionLoginTwitter;
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("access_token", oauthToken);
-		params.put("access_token", oauthTokenSecret);
+		params.put("oauth_token", oauthToken);
+		params.put("oauth_token_secret", oauthTokenSecret);
 		request("/m/login/tw", params, true, false);
 	}
 

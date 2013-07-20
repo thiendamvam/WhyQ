@@ -13,6 +13,7 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.Constants;
+import whyq.utils.SharedPreferencesManager;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
 import whyq.utils.facebook.FacebookConnector;
@@ -22,6 +23,7 @@ import whyq.utils.facebook.sdk.Facebook.DialogListener;
 import whyq.utils.facebook.sdk.FacebookError;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -34,6 +36,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.share.twitter.TwitterActivity;
 import com.whyq.R;
 
 /**
@@ -125,8 +128,18 @@ public class LoginHome extends Activity
 
 			public void onClick(View v) {
 				isTwitter = true;
-				Intent i = new Intent(v.getContext(), PrepareRequestTokenActivity.class);
-				startActivityForResult(i, LOGIN_TWITTER);
+				SharedPreferencesManager shareManager = new SharedPreferencesManager(
+						WhyqApplication.Instance().getApplicationContext());
+				AccessToken a = shareManager.loadTwitterToken();
+				if(a!=null){
+		        	String token = a.getToken();
+		        	String tokenSecret = a.getTokenSecret();
+		        	exeLoginTwitter(token, tokenSecret);
+				}else{
+					Intent i = new Intent(LoginHome.this, TwitterActivity.class);
+					startActivityForResult(i, LOGIN_TWITTER);					
+				}
+				
 			}
 		});
 	}
@@ -211,23 +224,52 @@ public class LoginHome extends Activity
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
 		if (result.isSuccess() == true  && result.getAction() == ServiceAction.ActionLoginFacebook) {
-			ListActivity.isLogin = true;
-			ListActivity.loginType = 1;
-			isLoginFb = true;
-			Log.d("LoginHome by Facebook", "result: " + result.getData());
-			User user = (User) result.getData();
-			WhyqApplication.Instance().setToken(user);
-//			XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(), user);
-			Intent intent = new Intent(LoginHome.this, WhyqMain.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+
+			User user = (User)result.getData();
+			if(user.isLogined()){
+				ListActivity.isLogin = true;
+				ListActivity.loginType = 1;
+				isLoginFb = true;
+				Log.d("LoginHome by Facebook", "result: " + result.getData());
+				WhyqApplication.Instance().setToken(user);
+//				XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(), user);
+				Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);	
+			}else{
+				
+			}
+
 		} else if (result.isSuccess() == true && result.getAction() == ServiceAction.ActionLoginTwitter) {
-			ListActivity.isLogin = true;
-			ListActivity.loginType = 2;
-			dismissLoadingDialog();
-			Intent intent = new Intent(LoginHome.this, WhyqMain.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+
+			User user = (User)result.getData();
+			if(user.isLogined()){
+				ListActivity.isLogin = true;
+				ListActivity.loginType = 2;
+//				dismissLoadingDialog();
+				Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			}else{
+				String mes = user.getMessageLogin();
+				android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+				builder.setTitle(context.getString(R.string.app_name_title));
+				builder.setMessage(mes);
+				final android.app.AlertDialog alertError = builder.create();
+				alertError.setButton("Login", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						alertError.dismiss();
+					}
+				});
+				alertError.setButton("Cancel", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						alertError.dismiss();
+					}
+				});
+				alertError.show();
+			}
 		}
 	}
 

@@ -24,6 +24,7 @@ public class ProfileWhyQActivty extends Activity {
 		Log.d("signoutClicked","signoutClicked");
 		Intent i = new Intent(ProfileWhyQActivty.this, WhyqLogout.class);
 		startActivity(i);
+		overridePendingTransition(R.anim.issue_list_show, R.anim.issue_list_show);
 	}
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)

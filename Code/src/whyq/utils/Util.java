@@ -139,12 +139,29 @@ public class Util {
 		alertError.show();
 	}
 	
-	public static void loginAgain(Context context){
-		Intent intent = new Intent(context, LoginHome.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(intent);
+	public static void loginAgain(final Context context, String mes){
+		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+		builder.setTitle(context.getString(R.string.app_name_title));
+		builder.setMessage(mes);
+		final android.app.AlertDialog alertError = builder.create();
+		alertError.setButton("Login", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent intent = new Intent(context, LoginHome.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				context.startActivity(intent);
+			}
+		});
+		alertError.setButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				alertError.dismiss();
+			}
+		});
+		alertError.show();
+
 		
 	}
 	static int clearCacheFolder(final File dir, final int numDays) {

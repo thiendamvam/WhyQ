@@ -48,7 +48,8 @@ public class User implements Serializable {
 	private int notiCreateDate;
 	private int notiUpdateDate;
 	private String address;
-	
+	private boolean logined;
+	private String messageLogin;
 	/**
 	 * Default constructor
 	 */
@@ -611,6 +612,34 @@ public class User implements Serializable {
 	 */
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	/**
+	 * @return the logined
+	 */
+	public boolean isLogined() {
+		return logined;
+	}
+
+	/**
+	 * @param logined the logined to set
+	 */
+	public void setLogined(boolean logined) {
+		this.logined = logined;
+	}
+
+	/**
+	 * @return the messageLogin
+	 */
+	public String getMessageLogin() {
+		return messageLogin;
+	}
+
+	/**
+	 * @param messageLogin the messageLogin to set
+	 */
+	public void setMessageLogin(String messageLogin) {
+		this.messageLogin = messageLogin;
 	}
 	
 	
