@@ -125,6 +125,10 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	
 	
 	private void bindData(UserProfile user) {
+		if (user == null) {
+			finish();
+			return;
+		}
 		String userName = user.getFirst_name();
 		if (userName != null) {
 			setTitle(userName);

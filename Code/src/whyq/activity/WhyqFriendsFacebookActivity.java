@@ -13,15 +13,21 @@ import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
+import whyq.utils.Constants;
 import whyq.utils.ImageViewHelper;
 import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
+import whyq.utils.facebook.sdk.DialogError;
+import whyq.utils.facebook.sdk.Facebook;
+import whyq.utils.facebook.sdk.Facebook.DialogListener;
+import whyq.utils.facebook.sdk.FacebookError;
 import whyq.view.AmazingListView;
 import whyq.view.SearchField;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,6 +37,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.whyq.BuildConfig;
 import com.whyq.R;
 
 public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
@@ -74,6 +81,9 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 		mFriendFacebookAdapter = new FriendsFacebookAdapter(this, mImageWorker);
 		mAccessToken = getAccessToken();
+		if (BuildConfig.DEBUG) {
+			Log.d("WhyqFriendsFacebookActivity", "access token: " + mAccessToken);
+		}
 
 		setTitle(R.string.friend_from_facebook);
 		getFriends();
@@ -214,6 +224,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		private ImageViewHelper mImageWorker;
 		private static int countListNotJoinWhyq = 0;
 		private static int countListWhyq = 0;
+		private Facebook facebookSdk = new Facebook(Constants.FACEBOOK_APP_ID);
 
 		public FriendsFacebookAdapter(WhyqFriendsFacebookActivity context,
 				ImageViewHelper imageWorker) {
@@ -306,20 +317,49 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 				holder.invite.setText("");
 			} else {
 				displayInviteButtn(holder, item);
-				if (item.getIs_join() == 1) {
-					holder.invite.setOnClickListener(new View.OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
+				holder.invite.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						if (item.getIs_join()) {
 							if (INVITED_LIST.containsKey(item.getId())) {
 								mActivity.removeIntiveFriend(item);
 							} else {
 								mActivity.addInviteFriend(item);
 							}
 							displayInviteButtn(holder, item);
+						} else {
+							Bundle params = new Bundle();
+							params.putString("to", item.getFacebookId());
+							facebookSdk.dialog(mActivity, "apprequests", params, new DialogListener() {
+								
+								@Override
+								public void onFacebookError(FacebookError e) {
+									// TODO Auto-generated method stub
+									
+								}
+								
+								@Override
+								public void onError(DialogError e) {
+									// TODO Auto-generated method stub
+									
+								}
+								
+								@Override
+								public void onComplete(Bundle values) {
+									// TODO Auto-generated method stub
+									
+								}
+								
+								@Override
+								public void onCancel() {
+									// TODO Auto-generated method stub
+									
+								}
+							});
 						}
-					});
-				}
+					}
+				});
 			}
 
 			return convertView;
