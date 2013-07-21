@@ -36,57 +36,48 @@ public class FriendFacebookHandler extends BaseHandler implements
 	private List<FriendFacebook> listJoinWhyq;
 	private boolean isListNotJoinWhyq;
 
-	private StringBuffer buffer = new StringBuffer();
-
-	@Override
-	public void characters(char[] ch, int start, int length)
-			throws SAXException {
-		buffer.append(ch, start, length);
-	}
-
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 
-		if (localName.equals(TAG_FACEBOOK_ID)) {
-			friendfacebook.setFacebookId(buffer.toString());
-		} else if (localName.equals(TAG_FIRST_NAME)) {
-			friendfacebook.setFirstName(buffer.toString());
-		} else if (localName.equals(TAG_ID)) {
-			friendfacebook.setId(buffer.toString());
-		} else if (localName.equals(TAG_IS_FRIEND)) {
-			friendfacebook.setIsFriend(Integer.parseInt(buffer.toString()));
-		} else if (localName.equals(TAG_AVATAR)) {
-			friendfacebook.setAvatar(buffer.toString());
-		} else if (localName.equals(TAG_ITUNE_URL)) {
-			friendfacebook.setItuneUrl(buffer.toString());
-		} else if (localName.equals(TAG_LAST_NAME)) {
-			friendfacebook.setLast_name(getString());
-		} else if (localName.equals(TAG_IS_JOIN)) {
-			friendfacebook.setIs_join(getInt());
-		} else if (localName.equals(TAG_DATA)) {
-			if (isListNotJoinWhyq) {
-				listNotJoinWhyq.add(friendfacebook);
-			} else {
-				listJoinWhyq.add(friendfacebook);
+		if (friendfacebook != null) {
+			if (localName.equalsIgnoreCase(TAG_FACEBOOK_ID)) {
+				friendfacebook.setFacebookId(builder.toString());
+			} else if (localName.equalsIgnoreCase(TAG_FIRST_NAME)) {
+				friendfacebook.setFirstName(builder.toString());
+			} else if (localName.equalsIgnoreCase(TAG_ID)) {
+				friendfacebook.setId(builder.toString());
+			} else if (localName.equalsIgnoreCase(TAG_IS_FRIEND)) {
+				friendfacebook.setIsFriend(Integer.parseInt(builder.toString()));
+			} else if (localName.equalsIgnoreCase(TAG_AVATAR)) {
+				friendfacebook.setAvatar(builder.toString());
+			} else if (localName.equalsIgnoreCase(TAG_ITUNE_URL)) {
+				friendfacebook.setItuneUrl(builder.toString());
+			} else if (localName.equalsIgnoreCase(TAG_LAST_NAME)) {
+				friendfacebook.setLast_name(getString());
+			} else if (localName.equalsIgnoreCase(TAG_IS_JOIN)) {
+				friendfacebook.setIs_join(getBoolean());
+			} else if (localName.equalsIgnoreCase(TAG_DATA)) {
+				if (isListNotJoinWhyq) {
+					listNotJoinWhyq.add(friendfacebook);
+				} else {
+					listJoinWhyq.add(friendfacebook);
+				}
 			}
 		}
+		builder.setLength(0);
 	}
 
 	@Override
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
 
-		buffer.setLength(0);
-
-		if (localName.equals(TAG_DATA)) {
+		if (localName.equalsIgnoreCase(TAG_DATA)) {
 			friendfacebook = new FriendFacebook();
-		} else if (localName.equals(TAG_LIST_NOT_JOIN_WHYQ)) {
+		} else if (localName.equalsIgnoreCase(TAG_LIST_NOT_JOIN_WHYQ)) {
 			isListNotJoinWhyq = true;
-			listNotJoinWhyq = new ArrayList<FriendFacebook>();
-		} else if (localName.equals(TAG_LIST_JOIN_WHYQ)) {
+		} else if (localName.equalsIgnoreCase(TAG_LIST_JOIN_WHYQ)) {
 			isListNotJoinWhyq = false;
-			listJoinWhyq = new ArrayList<FriendFacebook>();
 		}
 	}
 
@@ -98,6 +89,13 @@ public class FriendFacebookHandler extends BaseHandler implements
 	@Override
 	public List<FriendFacebook> getListWhyq() {
 		return listJoinWhyq;
+	}
+	
+	@Override
+	public void startDocument() throws SAXException {
+		super.startDocument();
+		listJoinWhyq = new ArrayList<FriendFacebook>();
+		listNotJoinWhyq = new ArrayList<FriendFacebook>();
 	}
 
 }

@@ -17,7 +17,8 @@
 
         <include
             android:id="@+id/check_bill"
-            layout="@layout/category_item1" />
+            layout="@layout/category_item1" 
+            android:background="@drawable/btn_blue_place"/>
 
         <include
             android:id="@+id/history"

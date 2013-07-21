@@ -9,7 +9,7 @@ public class FriendFacebook {
 	private int isFriend;
 	private String avatar;
 	private String last_name;
-	private int is_join;
+	private boolean is_join;
 
 	public String getLast_name() {
 		return last_name;
@@ -19,11 +19,11 @@ public class FriendFacebook {
 		this.last_name = last_name;
 	}
 
-	public int getIs_join() {
+	public boolean getIs_join() {
 		return is_join;
 	}
 
-	public void setIs_join(int is_join) {
+	public void setIs_join(boolean is_join) {
 		this.is_join = is_join;
 	}
 

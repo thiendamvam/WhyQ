@@ -125,6 +125,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	
 	
 	private void bindData(UserProfile user) {
+
 		if(user!=null){
 
 			String userName = user.getFirst_name();
@@ -141,6 +142,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			}
 			initCategory(user);
 		
+
 		}
 	}
 
