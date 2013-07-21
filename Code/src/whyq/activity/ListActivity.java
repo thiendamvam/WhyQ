@@ -1020,9 +1020,9 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 					permListAdapter.notifyDataSetChanged();
 				}
 			}else if(data.getStatus().equals("401")){
-				Util.loginAgain(context, data.getMessage());
+				Util.loginAgain(getParent(), data.getMessage());
 			}else{
-				Util.showDialog(context, data.getMessage());
+				Util.showDialog(getParent(), data.getMessage());
 			}
 			hideProgress();
 		} else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
@@ -1032,9 +1032,9 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			if(data.getStatus().equals("200")){
 				updateFavoriteWitId(currentStoreId, true);
 			}else if(data.getStatus().equals("401")){
-				Util.loginAgain(context, data.getMessage());
+				Util.loginAgain(getParent(), data.getMessage());
 			}else{
-				Util.showDialog(context, data.getMessage());
+				Util.showDialog(getParent(), data.getMessage());
 			}
 			hideProgress();
 		}else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){
@@ -1043,9 +1043,9 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			if(data.getStatus().equals("200")){
 				updateFavoriteWitId(currentStoreId, false);
 			}else if(data.getStatus().equals("401")){
-				Util.loginAgain(context, data.getMessage());
+				Util.loginAgain(getParent(), data.getMessage());
 			}else{
-				Util.showDialog(context, data.getMessage());
+				Util.showDialog(getParent(), data.getMessage());
 			}
 			hideProgress();
 		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
