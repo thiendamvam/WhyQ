@@ -9,6 +9,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
+import whyq.activity.FavouriteActivity;
 import whyq.activity.GoogleMapActivity;
 import whyq.activity.ListActivity;
 import whyq.activity.ListActivityGroup;
@@ -252,7 +253,10 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 						@Override
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
-							((ListActivity)context).onFavouriteClicked(v);
+							if( FavouriteActivity.isFavorite)
+								((FavouriteActivity)context).onFavouriteClicked(v);
+							else
+								((ListActivity)context).onFavouriteClicked(v);
 						}
 					});
 					UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());

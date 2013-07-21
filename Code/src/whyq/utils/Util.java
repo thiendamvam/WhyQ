@@ -175,6 +175,22 @@ public class Util {
 
 		
 	}
+	public static void showDialog(final Context context, String mes){
+		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+		builder.setTitle(context.getString(R.string.app_name_title));
+		builder.setMessage(mes);
+		final android.app.AlertDialog alertError = builder.create();
+		alertError.setButton("Ok", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				alertError.dismiss();
+			}
+		});
+
+		alertError.show();
+
+		
+	}
 	static int clearCacheFolder(final File dir, final int numDays) {
 
 	    int deletedFiles = 0;

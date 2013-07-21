@@ -861,4 +861,19 @@ public class DataParser {
 		
 	}
 
+	public Object parseLFavouriteResult(String result) {
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			data.setStatus(statusResponse);
+			return data;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

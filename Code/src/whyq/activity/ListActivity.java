@@ -179,6 +179,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createUI();
+		FavouriteActivity.isFavorite = false;
 		service = new Service(ListActivity.this);
 		resetTabBarFocus(1);
 		getLocation();
@@ -996,8 +997,10 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		Store item = (Store)v.getTag();
 		currentStoreId = item.getStoreId();
 		if(item.getIsFavourite()){
+			showProgress();
 			service.removeFavorite(currentStoreId);
 		}else{
+			showProgress();
 			service.postFavorite(currentStoreId);
 		}
 	}
@@ -1016,27 +1019,35 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 				if(permListAdapter != null) {
 					permListAdapter.notifyDataSetChanged();
 				}
+			}else if(data.getStatus().equals("401")){
+				Util.loginAgain(context, data.getMessage());
 			}else{
-				Util.loginAgain(getParent(), data.getMessage());
+				Util.showDialog(context, data.getMessage());
 			}
 			hideProgress();
 		} else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
 //			Toast.makeText(context, "Favourite successfully", Toast.LENGTH_SHORT).show();
 			ResponseData data = (ResponseData)result.getData();
+			
 			if(data.getStatus().equals("200")){
 				updateFavoriteWitId(currentStoreId, true);
-			}else{
+			}else if(data.getStatus().equals("401")){
 				Util.loginAgain(context, data.getMessage());
+			}else{
+				Util.showDialog(context, data.getMessage());
 			}
-			
+			hideProgress();
 		}else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){
 //			Toast.makeText(context, "Un favourite successfully", Toast.LENGTH_SHORT).show();
 			ResponseData data = (ResponseData)result.getData();
 			if(data.getStatus().equals("200")){
 				updateFavoriteWitId(currentStoreId, false);
-			}else{
+			}else if(data.getStatus().equals("401")){
 				Util.loginAgain(context, data.getMessage());
+			}else{
+				Util.showDialog(context, data.getMessage());
 			}
+			hideProgress();
 		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
 			Toast.makeText(context, "Can not favourite for now", Toast.LENGTH_SHORT).show();
 		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){

@@ -50,6 +50,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -173,6 +174,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		tvHeader.setTextSize(20);
 		params = (RelativeLayout.LayoutParams)tvHeader.getLayoutParams();
 		params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+		context = FavouriteActivity.this;
 //		tvHeader.setLayoutParams(params);
 		hideFilterGroup();
 		isAddHeader = true;
@@ -350,7 +352,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 //			clearData();
 			//createUI();
 			if(this.permListAdapter == null) {
-				this.permListAdapter = new WhyqAdapter(ListActivityGroup.context,
+				this.permListAdapter = new WhyqAdapter(FavouriteActivity.this,
 					getSupportFragmentManager(),R.layout.whyq_item_1, permListMain, this, screenWidth, screenHeight, header, user);
 			} else {
 				for(int i = 0; i < permListMain.size(); i++) {
@@ -539,7 +541,33 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		}
 	}
 
-
+	private void updateFavoriteWitId(String id, boolean b) {
+		// TODO Auto-generated method stub
+		int size = whyqListView.getChildCount();
+		int value;
+		Store item2;
+		ViewHolder holder;
+		for(int i=0;i< size;i++){
+			item2 = permListMain.get(i);
+			if(item2.getStoreId().equals(id)){
+				holder = (ViewHolder)whyqListView.getChildAt(i).getTag();
+				if(b){
+					value = Integer.parseInt(holder.tvNumberFavourite.getText().toString())+Integer.parseInt("1");
+					holder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
+					item2.setIsFavourite(true);
+				}else{
+					value = Integer.parseInt(holder.tvNumberFavourite.getText().toString())-Integer.parseInt("1");
+					holder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_disable);
+					item2.setIsFavourite(false);
+				}
+				if(value < 0 )
+					value= 0;
+				holder.tvNumberFavourite.setText(""+value);
+				holder.imgFavouriteThumb.setTag(item2);
+				whyqListView.getChildAt(i).requestLayout();
+			}
+		}
+	}
 	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
 		public void beforeTextChanged(CharSequence s, int start, int count,
 				int after) {
@@ -577,6 +605,8 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 			}
 		}
 	};
+	private Context context;
+	private String currentStoreId;
 
 	public void onCancelClicked(View v){
 		exeDisableSearchFocus();
@@ -622,6 +652,17 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	private void hideNotifyNoData(){
 		tvNotifyNoData.setVisibility(View.GONE);
 	}
+	public void onFavouriteClicked(View v){
+		Store item = (Store)v.getTag();
+		currentStoreId = item.getStoreId();
+		if(item.getIsFavourite()){
+			showProgress();
+			service.removeFavorite(currentStoreId);
+		}else{
+			showProgress();
+			service.postFavorite(currentStoreId);
+		}
+	}
 
 
 	@Override
@@ -637,10 +678,39 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 				if(permListAdapter != null) {
 					permListAdapter.notifyDataSetChanged();
 				}
-			}else{
+			}else if(data.getStatus().equals("401")){
 				Util.loginAgain(getParent(), data.getMessage());
+			}else{
+				Util.showDialog(getParent(), data.getMessage());
 			}
 			hideProgress();
+		} else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
+//			Toast.makeText(context, "Favourite successfully", Toast.LENGTH_SHORT).show();
+			ResponseData data = (ResponseData)result.getData();
+			
+			if(data.getStatus().equals("200")){
+				updateFavoriteWitId(currentStoreId, true);
+			}else if(data.getStatus().equals("401")){
+				Util.loginAgain(context, data.getMessage());
+			}else{
+				Util.showDialog(context, data.getMessage());
+			}
+			hideProgress();
+		}else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){
+//			Toast.makeText(context, "Un favourite successfully", Toast.LENGTH_SHORT).show();
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				updateFavoriteWitId(currentStoreId, false);
+			}else if(data.getStatus().equals("401")){
+				Util.loginAgain(getParent(), data.getMessage());
+			}else{
+				Util.showDialog(getParent(), data.getMessage());
+			}
+			hideProgress();
+		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
+			Toast.makeText(context, "Can not favourite for now", Toast.LENGTH_SHORT).show();
+		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){
+			Toast.makeText(context, "Can not un-favourite for now", Toast.LENGTH_SHORT).show();
 		}
 	}
 }

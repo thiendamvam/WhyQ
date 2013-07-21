@@ -268,6 +268,12 @@ public class Service implements Runnable {
 		case ActionGetLocation:
 			resObj = parser.parseLCationResult(result);
 			break;
+		case ActionPostFavorite:
+			resObj = parser.parseLFavouriteResult(result);
+			break;
+		case ActionRemoveFavorite:
+			resObj = parser.parseLFavouriteResult(result);
+			break;
 		default:
 			resObj = result;
 			Logger.appendLog(result);

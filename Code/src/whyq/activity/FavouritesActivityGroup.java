@@ -8,12 +8,14 @@ import android.view.View;
 
 public class FavouritesActivityGroup extends TabGroupActivity {
 	public static boolean isTabChanged = false;
+	private FavouritesActivityGroup context;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//View view = getLocalActivityManager().startActivity( "ExplorerActivity", new Intent(this, ExplorerActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
 		setTabGroup(this);
 		//replaceView(view);
 		createUI();
+		this.context = this;
 	}
 	
 	public void onPause() {
