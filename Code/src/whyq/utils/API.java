@@ -7,7 +7,7 @@ public class API {
 	
 	public static final String popularBusinessListURL = "/m/business";
 	public static final String searchBusinessListURL = "/m/member/search/business";
-	public static final String favoriteListURL = hostURL + "/m/member/favourite";
+	public static final String favoriteListURL = "/m/member/favourite";
 	public static final String authorizeURL    = hostURL + "/m/login";
 	public static final String createAccountURL = hostURL + "/m/register";//"/userservice/createaccount";
 

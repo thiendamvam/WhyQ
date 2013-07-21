@@ -125,19 +125,23 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	
 	
 	private void bindData(UserProfile user) {
-		String userName = user.getFirst_name();
-		if (userName != null) {
-			setTitle(userName);
+		if(user!=null){
+
+			String userName = user.getFirst_name();
+			if (userName != null) {
+				setTitle(userName);
+			}
+			String avatar = user.getAvatar();
+			if (avatar != null) {
+				ImageView imageView = (ImageView) findViewById(R.id.avatar);
+				LayoutParams LP = imageView.getLayoutParams();
+				LP.width = AVATAR_SIZE;
+				LP.height = AVATAR_SIZE;
+				mImageWorker.downloadImage(avatar, imageView);
+			}
+			initCategory(user);
+		
 		}
-		String avatar = user.getAvatar();
-		if (avatar != null) {
-			ImageView imageView = (ImageView) findViewById(R.id.avatar);
-			LayoutParams LP = imageView.getLayoutParams();
-			LP.width = AVATAR_SIZE;
-			LP.height = AVATAR_SIZE;
-			mImageWorker.downloadImage(avatar, imageView);
-		}
-		initCategory(user);
 	}
 
 	@Override
@@ -224,10 +228,12 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		if (result == null)
 			return;
 		if (result.getAction() == ServiceAction.ActionGetUserActivities) {
-			mActivitiesAdapter.setItems(DataParser.parseActivities(String
+			DataParser parser = new DataParser();
+			mActivitiesAdapter.setItems((List<ActivityItem>)parser.parseActivities(String
 					.valueOf(result.getData())));
 		} else if (result.getAction() == ServiceAction.ActionGetPhotos) {
-			List<Photo> photos = DataParser.parsePhotos(String.valueOf(result
+			DataParser parser = new DataParser();
+			List<Photo> photos = (List<Photo>)parser.parsePhotos(String.valueOf(result
 					.getData()));
 			if (photos == null || photos.size() == 0) {
 				return;

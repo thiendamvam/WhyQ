@@ -65,7 +65,8 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 		setLoading(false);
 		if (result != null && result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionGetHistories) {
-			mAdapter.setItems(DataParser.parseBills(String.valueOf(result
+			DataParser parser = new DataParser();
+			mAdapter.setItems((List<BillItem>)parser.parseBills(String.valueOf(result
 					.getData())));
 		}
 	}

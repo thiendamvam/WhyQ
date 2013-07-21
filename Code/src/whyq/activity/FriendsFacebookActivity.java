@@ -122,12 +122,14 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 			} else {
 				if (result.getAction() == ServiceAction.ActionGetFriendsFacebook
 						|| result.getAction() == ServiceAction.ActionSearchFriendsFacebook) {
-					FriendFacebookController handler = DataParser
+					DataParser paser = new DataParser();
+					FriendFacebookController handler = (FriendFacebookController)paser
 							.parseFriendFacebook(String.valueOf(result
 									.getData()));
 					mFriendFacebookAdapter.setController(handler);
 				} else {
-					mFriendWhyqAdapter.setItems(DataParser
+					DataParser paser = new DataParser();
+					mFriendWhyqAdapter.setItems((List<FriendWhyq>)paser
 							.parseFriendWhyq(String.valueOf(result.getData())));
 				}
 			}

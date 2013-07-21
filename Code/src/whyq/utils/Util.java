@@ -40,9 +40,11 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextPaint;
 import android.text.format.DateUtils;
-import android.text.style.BulletSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -138,7 +140,16 @@ public class Util {
 		});
 		alertError.show();
 	}
-	
+	public static Handler loginAgain = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			int value = msg.arg1;
+			View view = (View)msg.obj;
+			String mes = String.valueOf(msg.arg2);
+			Log.d("loginAgain","="+value);
+			loginAgain(WhyqApplication.Instance().getApplicationContext(),mes);
+		}
+	};
 	public static void loginAgain(final Context context, String mes){
 		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
 		builder.setTitle(context.getString(R.string.app_name_title));
@@ -154,7 +165,7 @@ public class Util {
 				context.startActivity(intent);
 			}
 		});
-		alertError.setButton("Cancel", new DialogInterface.OnClickListener() {
+		alertError.setButton2("Cancel", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				alertError.dismiss();
@@ -263,8 +274,8 @@ public class Util {
 	            user = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 	        lat=(double)user.get(0).getLatitude();
 	        lng=(double)user.get(0).getLongitude();
-	        bundle.putString("getLocation","lat"+ String.valueOf(lat));
-	        bundle.putString("getLocation","lon"+ String.valueOf(lng));
+	        bundle.putString("lat",""+ String.valueOf(lat));
+	        bundle.putString("lon",""+ String.valueOf(lng));
 	        System.out.println(" DDD lat: " +lat+",  longitude: "+lng);
 
 	        }catch (Exception e) {

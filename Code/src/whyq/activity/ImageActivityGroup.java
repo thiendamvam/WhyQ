@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import whyq.TabGroupActivity;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;

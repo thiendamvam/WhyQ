@@ -1,7 +1,9 @@
 package whyq.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -11,14 +13,20 @@ import whyq.WhyqMain;
 import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
+import whyq.interfaces.IServiceListener;
 import whyq.interfaces.Login_delegate;
+import whyq.model.ResponseData;
 import whyq.model.Store;
 import whyq.model.User;
+import whyq.service.ServiceAction;
+import whyq.service.ServiceResponse;
 import whyq.utils.API;
 import whyq.utils.RSA;
 import whyq.utils.UrlImageViewHelper;
+import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -37,14 +45,17 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.whyq.R;
 
-public class FavouriteActivity extends FragmentActivity implements Login_delegate, OnClickListener{
+public class FavouriteActivity extends FragmentActivity implements Login_delegate, OnClickListener, IServiceListener{
 
 	
 	public static final String DOWNLOAD_COMPLETED = "DOWNLOAD_COMPLETED";
@@ -113,6 +124,11 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		}
 	};
 	private TextView tvNotifyNoData;
+	private whyq.service.Service service;
+	private Button btnCacel;
+	private RelativeLayout rlSearchTools;
+	private TextView tvHeader;
+	private LayoutParams params;
 	public static boolean  isFavorite = false;
 
 	@Override
@@ -121,6 +137,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		createUI();
 		IntentFilter intentFilter = new IntentFilter(DOWNLOAD_COMPLETED);
 		registerReceiver(receiver, intentFilter);
+		service = new whyq.service.Service(FavouriteActivity.this);
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(FavouriteActivity.this.getIntent());
@@ -143,11 +160,21 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	public void createUI() {
 		setContentView(R.layout.whyq_favorite_screen);//
 		isFavorite = true;
+		
 		whyqListView = (ListView) findViewById(R.id.lvWhyqList);
 		loadPermList = new LoadPermList(false);
 		progressBar = (ProgressBar)findViewById(R.id.prgBar);
 		etTextSearch =(EditText) findViewById(R.id.etTextSearch);
 		tvNotifyNoData = (TextView)findViewById(R.id.tvNotifyNoResult);
+		btnCacel = (Button)findViewById(R.id.btnCancel);
+		rlSearchTools = (RelativeLayout)findViewById(R.id.rlSearchtool);
+		tvHeader = (TextView)findViewById(R.id.tvHeaderTittle);
+		tvHeader.setText("Favourites");
+		tvHeader.setTextSize(20);
+		params = (RelativeLayout.LayoutParams)tvHeader.getLayoutParams();
+		params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+//		tvHeader.setLayoutParams(params);
+		hideFilterGroup();
 		isAddHeader = true;
 		whyqListView.setOnItemClickListener(onStoreItemListener);
 		etTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -178,7 +205,11 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		etTextSearch.addTextChangedListener(mTextEditorWatcher);
 
 	}
-	
+
+	private void hideFilterGroup() {
+		// TODO Auto-generated method stub
+		rlSearchTools.setVisibility(View.GONE);
+	}
 	protected void exeSearch(String string) {
 		// TODO Auto-generated method stub
 		searchKey = string;
@@ -379,19 +410,22 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		@Override
 		protected ArrayList<Store> doInBackground(ArrayList<Store>... params) {
 			// TODO Auto-generated method stub
+			Util.getLocation(FavouriteActivity.this);
 			WhyqListController whyqListController = new WhyqListController();
 			ArrayList<Store> permList = null;
 			try {				
 				if (nextItem != -1) {
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("nextItem", String.valueOf(nextItem)));
-
+//					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+					Map<String, String> postParams = new HashMap<String, String>();
+//					nameValuePairs.add(new BasicNameValuePair("nextItem", String.valueOf(nextItem)));
+					postParams.put("nextItem", String.valueOf(nextItem));
 					if(isCalendar){
-						nameValuePairs.add(new BasicNameValuePair("uid", WhyqMain.UID));
+//						nameValuePairs.add(new BasicNameValuePair("uid", WhyqMain.UID));
 //						isCalendar =false;
+						postParams.put("uid", WhyqMain.UID);
 					}
 
-					permList = whyqListController.getBusinessList(url, nameValuePairs);
+//					permList = whyqListController.getBusinessList(url, nameValuePairs);
 				} else {
 					if(isCalendar){
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -401,19 +435,28 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 					}else{
 						RSA rsa = new RSA();
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
-						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+//						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						Map<String, String> postParams = new HashMap<String, String>();
+//						nameValuePairs.add(new BasicNameValuePair("token",enToken));
+						postParams.put("token", enToken);
+						postParams.put("longitude", longitude);
+						postParams.put("latitude", latgitude);
 						Log.d("Favourite","Favourite is search"+isSearch);
 						if(isSearch){
-							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
-							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
-							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
-							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
+//							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
+//							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
+//							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
+//							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
 							
+							postParams.put("key", searchKey);
+							postParams.put("search_longitude", longitude);
+							postParams.put("search_latitude", latgitude);
+							postParams.put("cate_id", cateId);
 						}else{
 
 						}
-						permList = whyqListController.getBusinessList(url, nameValuePairs);	
+						service.getBusinessList(postParams, url);
+//						permList = whyqListController.getBusinessList(url, nameValuePairs);	
 					}
 					
 				}
@@ -441,17 +484,17 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 			/**
 			 * MSA
 			 */
-			loadPerms();
-			WhyqListController.isLoading = false;
+//			loadPerms();
+//			WhyqListController.isLoading = false;
 			
 			//permListMain.size();
 //			if (dialog != null && dialog.isShowing()) {
 //				dialog.dismiss();
 //			}
-			hideProgress();
-			if(permListAdapter != null) {
-				permListAdapter.notifyDataSetChanged();
-			}
+//			hideProgress();
+//			if(permListAdapter != null) {
+//				permListAdapter.notifyDataSetChanged();
+//			}
 		}
 
 	}
@@ -500,21 +543,32 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
 		public void beforeTextChanged(CharSequence s, int start, int count,
 				int after) {
+//			exeSearchFocus();
 		}
 
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			// This sets a textview to the current length
 
+
+		}
+
+		public void afterTextChanged(Editable s) {
+			
 			try {
 				String text = s.toString();
 				Log.d("Text serch","Text "+text);
 				if(text.equals(""))
 				{
+					exeDisableSearchFocus();
 					isSearch = false;
+					exeDisableSearchFocus();
 					exeListActivity(false);
+					
 				}else{
+					exeSearchFocus();
 					isSearch = true;
+					exeSearchFocus();
 					exeSearch(text);
 				}
 			
@@ -522,11 +576,33 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 				// TODO: handle exception
 			}
 		}
-
-		public void afterTextChanged(Editable s) {
-		}
 	};
-	
+
+	public void onCancelClicked(View v){
+		exeDisableSearchFocus();
+		etTextSearch.setText("");
+		
+	}
+
+	private void exeDisableSearchFocus() {
+		// TODO Auto-generated method stub
+		btnCacel.setVisibility(View.GONE);
+//		params.width = 60;
+	}
+	protected void exeSearchFocus() {
+		// TODO Auto-generated method stub
+		if(btnCacel.getVisibility()!=View.VISIBLE){
+			
+//			params.width =WhyqApplication.Instance().getDisplayMetrics().densityDpi*10;// LayoutParams.WRAP_CONTENT;
+//			params.height = LayoutParams.WRAP_CONTENT;
+//			params.addRule(RelativeLayout.CENTER_VERTICAL,1);
+//			params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,1);
+//			rlSearchTools.setLayoutParams(params);
+
+			btnCacel.setVisibility(View.VISIBLE);
+		}
+	}
+
 	private void hideProgress() {
 		// TODO Auto-generated method stub
     	if(progressBar.getVisibility() == View.VISIBLE){
@@ -545,5 +621,26 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	}
 	private void hideNotifyNoData(){
 		tvNotifyNoData.setVisibility(View.GONE);
+	}
+
+
+	@Override
+	public void onCompleted(whyq.service.Service service, ServiceResponse result) {
+		// TODO Auto-generated method stub
+		if(result.isSuccess()&& result.getAction() == ServiceAction.ActionGetBusinessList){
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				permListMain = (ArrayList<Store>)data.getData();
+				loadPerms();
+				
+				WhyqListController.isLoading = false;
+				if(permListAdapter != null) {
+					permListAdapter.notifyDataSetChanged();
+				}
+			}else{
+				Util.loginAgain(getParent(), data.getMessage());
+			}
+			hideProgress();
+		}
 	}
 }

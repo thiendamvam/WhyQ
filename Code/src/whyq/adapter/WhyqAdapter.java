@@ -10,16 +10,14 @@ import org.apache.http.message.BasicNameValuePair;
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.activity.GoogleMapActivity;
-import whyq.activity.JoinWhyqActivity;
 import whyq.activity.ListActivity;
 import whyq.activity.ListActivityGroup;
 import whyq.activity.ListDetailActivity;
-import whyq.activity.PrepareRequestTokenActivity;
-import whyq.controller.AuthorizeController;
 import whyq.controller.WhyqListController;
 import whyq.model.Comment;
-import whyq.model.User;
+import whyq.model.Promotion;
 import whyq.model.Store;
+import whyq.model.User;
 import whyq.model.UserCheckBill;
 import whyq.utils.API;
 import whyq.utils.Constants;
@@ -27,10 +25,6 @@ import whyq.utils.HttpPermUtils;
 import whyq.utils.UrlImageViewHelper;
 import whyq.utils.WhyqUtils;
 import whyq.utils.facebook.FacebookConnector;
-import whyq.utils.facebook.sdk.DialogError;
-import whyq.utils.facebook.sdk.Facebook;
-import whyq.utils.facebook.sdk.Facebook.DialogListener;
-import whyq.utils.facebook.sdk.FacebookError;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -53,9 +47,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,6 +73,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 		public String id;
 		public ImageView imgFavouriteThumb;
 		public ProgressBar prgFavourite;
+		public RelativeLayout rlDiscount;
 	}
 	private Activity activity;
 	private Boolean header;
@@ -105,6 +101,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 	final String repermString = this.getContext().getResources().getString(R.string.bt_reperm);
 	final String commentString = this.getContext().getResources().getString(R.string.bt_comment);
 	final String textCurrentLike = this.getContext().getResources().getString(R.string.delete);
+	private Promotion promotion;
 //	private ArrayList<Whyq> listProducts;
 /*	
 	PermAdapter(ArrayList<Perm> perms) {
@@ -200,10 +197,20 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					viewHolder.btnDistance = (Button)rowView.findViewById(R.id.btnDistance);
 					viewHolder.imgFavouriteThumb = (ImageView)rowView.findViewById(R.id.imgFavourite);
 					viewHolder.prgFavourite = (ProgressBar)rowView.findViewById(R.id.prgFavourite);
+					viewHolder.rlDiscount = (RelativeLayout)rowView.findViewById(R.id.rlDiscount);
 					viewHolder.tvItemName.setText(item.getNameStore().toUpperCase());
 					viewHolder.tvItemAddress.setText(item.getAddress());
 					viewHolder.tvNumberFavourite.setText(""+item.getCountFavaouriteMember());
-					viewHolder.btnDistance.setText(item.getRadius()+" km");
+					if(item.getPromotionList().size() > 0){
+						viewHolder.tvDiscoutNumber.setVisibility(View.VISIBLE);
+						promotion = item.getPromotionList().get(0);
+						viewHolder.tvDiscoutNumber.setText(""+promotion.getValuePromotion()+promotion.getTypeValue()+ " for bill over $"+promotion.getConditionPromotion());
+					}else{
+						viewHolder.rlDiscount.setVisibility(View.GONE);
+						
+					}
+					
+					viewHolder.btnDistance.setText((int)Float.parseFloat(item.getDistance())+" km");
 					viewHolder.imgFriendThumb = (ImageView)rowView.findViewById(R.id.imgFriendThumb);
 					
 					UserCheckBill userCheckBill = item.getUserCheckBill();

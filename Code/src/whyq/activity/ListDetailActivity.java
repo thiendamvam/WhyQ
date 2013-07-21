@@ -8,7 +8,6 @@ import whyq.adapter.WhyqMenuAdapter;
 import whyq.adapter.WhyqMenuAdapter.ViewHolderMitemInfo;
 import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
-import whyq.model.BillItem;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
 import whyq.model.Store;

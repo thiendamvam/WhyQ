@@ -3,6 +3,7 @@ package whyq.adapter;
 
 
 import java.util.List;
+
 import whyq.activity.ListDetailActivity;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.model.GroupMenu;
@@ -19,8 +20,6 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.custom.WebImageView;

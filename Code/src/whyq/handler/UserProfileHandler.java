@@ -3,24 +3,11 @@
  */
 package whyq.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
-import android.util.Log;
-
-import whyq.model.BillItem;
-import whyq.model.BusinessInfo;
-import whyq.model.FriendFacebook;
 import whyq.model.TotalCount;
 import whyq.model.UserProfile;
-import whyq.model.WhyqBoard;
-import whyq.model.WhyqImage;
-import whyq.model.User;
-import whyq.utils.Constants;
 
 
 /**

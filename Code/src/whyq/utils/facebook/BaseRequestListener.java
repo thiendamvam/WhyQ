@@ -4,9 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import whyq.utils.facebook.sdk.FacebookError;
 import whyq.utils.facebook.sdk.AsyncFacebookRunner.RequestListener;
-
+import whyq.utils.facebook.sdk.FacebookError;
 import android.util.Log;
 
 

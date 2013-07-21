@@ -2,7 +2,6 @@ package whyq.activity;
 
 import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
-import whyq.interfaces.LogoutDelegate;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import android.app.Activity;

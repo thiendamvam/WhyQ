@@ -3,8 +3,8 @@
  */
 package whyq.activity;
 
-import whyq.WhyqMain;
 import whyq.TabGroupActivity;
+import whyq.WhyqMain;
 import whyq.model.User;
 import whyq.utils.WhyqUtils;
 import android.content.Intent;

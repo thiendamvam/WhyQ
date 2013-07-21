@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import whyq.WhyqApplication;
-import whyq.activity.ListActivityGroup;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.ComponentName;

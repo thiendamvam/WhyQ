@@ -23,7 +23,8 @@ public class UserProfile {
 	private String paypal_email;
 	private String status_user;
 	private TotalCount total_count;
-	
+	private boolean logined;
+	private String messageLogin;
 	public String getId() {
 		return id;
 	}
@@ -149,6 +150,30 @@ public class UserProfile {
 	}
 	public void setTotal_count(TotalCount total_count) {
 		this.total_count = total_count;
+	}
+	/**
+	 * @return the logined
+	 */
+	public boolean isLogined() {
+		return logined;
+	}
+	/**
+	 * @param logined the logined to set
+	 */
+	public void setLogined(boolean logined) {
+		this.logined = logined;
+	}
+	/**
+	 * @return the messageLogin
+	 */
+	public String getMessageLogin() {
+		return messageLogin;
+	}
+	/**
+	 * @param messageLogin the messageLogin to set
+	 */
+	public void setMessageLogin(String messageLogin) {
+		this.messageLogin = messageLogin;
 	}
 
 }

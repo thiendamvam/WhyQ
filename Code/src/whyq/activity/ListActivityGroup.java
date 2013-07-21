@@ -1,19 +1,8 @@
 package whyq.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import whyq.TabGroupActivity;
-import whyq.controller.AuthorizeController;
 import whyq.interfaces.Login_delegate;
 import whyq.model.Comment;
-import whyq.utils.Constants;
-import whyq.utils.WhyqUtils;
-import whyq.utils.XMLParser;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

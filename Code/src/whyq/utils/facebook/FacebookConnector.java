@@ -10,9 +10,8 @@ import whyq.utils.facebook.SessionEvents.LogoutListener;
 import whyq.utils.facebook.sdk.AsyncFacebookRunner;
 import whyq.utils.facebook.sdk.DialogError;
 import whyq.utils.facebook.sdk.Facebook;
-import whyq.utils.facebook.sdk.FacebookError;
 import whyq.utils.facebook.sdk.Facebook.DialogListener;
-
+import whyq.utils.facebook.sdk.FacebookError;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;

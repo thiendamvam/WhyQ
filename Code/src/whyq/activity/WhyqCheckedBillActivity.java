@@ -82,7 +82,8 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 		setLoading(false);
 		if (result != null && result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionGetOrder) {
-			mAdapter.setItems(DataParser.parseBills(String.valueOf(result
+			DataParser parser = new DataParser();
+			mAdapter.setItems((List<BillItem>)parser.parseBills(String.valueOf(result
 					.getData())));
 		}
 	}

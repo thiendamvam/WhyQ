@@ -1,37 +1,30 @@
 package com.share.twitter;
 
-import oauth.signpost.OAuth;
-
-import com.whyq.R;
-
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.http.AccessToken;
 import twitter4j.http.RequestToken;
 import whyq.WhyqApplication;
-import whyq.activity.LoginHome;
 import whyq.utils.SharedPreferencesManager;
 import whyq.utils.WhyqUtils;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.SyncStateContract.Constants;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import com.whyq.R;
 
 
 public class TwitterActivity extends Activity {

@@ -13,7 +13,6 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -25,15 +24,12 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
-import com.whyq.BuildConfig;
-
 import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
 import whyq.model.SearchFriendCriteria;
 import whyq.utils.API;
 import whyq.utils.Logger;
 import whyq.utils.Util;
-import whyq.utils.XMLParser;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -307,7 +303,7 @@ public class Service implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		Log.d(_action.toString(), "=========== run ===========");
+		Log.d(_action.toString(), "=========== run ===========\n"+_actionURI);
 		httpclient = new DefaultHttpClient();
 		// AndroidHttpClient httpclient = AndroidHttpClient
 		// .newInstance(_actionURI);

@@ -8,7 +8,6 @@ import whyq.model.GroupMenu;
 import whyq.model.Menu;
 import whyq.utils.UrlImageViewHelper;
 import android.content.Context;
-import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;

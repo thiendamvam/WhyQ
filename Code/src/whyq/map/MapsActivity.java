@@ -13,7 +13,6 @@ import java.util.List;
 import org.json.JSONObject;
 
 import whyq.WhyqApplication;
-
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.AsyncTask;

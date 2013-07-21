@@ -7,6 +7,7 @@ import whyq.WhyqApplication;
 import whyq.interfaces.FriendFacebookController;
 import whyq.model.FriendFacebook;
 import whyq.model.FriendWhyq;
+import whyq.model.ResponseData;
 import whyq.model.SearchFriendCriteria;
 import whyq.model.StatusWithFriend;
 import whyq.service.DataParser;
@@ -121,15 +122,27 @@ public class SearchFriendsActivity extends ImageWorkerActivity {
 			if (result.getAction() == ServiceAction.ActionInviteFriendsFacebook) {
 
 			} else {
-				if (result.getAction() == ServiceAction.ActionGetFriendsFacebook
+				if (result.isSuccess() && result.getAction() == ServiceAction.ActionGetFriendsFacebook
 						|| result.getAction() == ServiceAction.ActionSearchFriendsFacebook) {
-					FriendFacebookController handler = DataParser
-							.parseFriendFacebook(String.valueOf(result
-									.getData()));
-					mFriendFacebookAdapter.setController(handler);
+					ResponseData data = (ResponseData)result.getData();
+					if(data.getStatus().equals("200")){
+						DataParser parser = new DataParser();
+						FriendFacebookController handler = (FriendFacebookController)parser
+								.parseFriendFacebook(String.valueOf(result
+										.getData()));
+						mFriendFacebookAdapter.setController(handler);
+					}else{
+						Util.loginAgain(SearchFriendsActivity.this, data.getMessage());
+					}
 				} else {
-					mFriendWhyqAdapter.setItems(DataParser
-							.parseFriendWhyq(String.valueOf(result.getData())));
+					ResponseData data = (ResponseData)result.getData();
+					if(data.getStatus().equals("200")){
+						DataParser parser = new DataParser();
+						mFriendWhyqAdapter.setItems((List<FriendWhyq>)parser
+								.parseFriendWhyq(String.valueOf(result.getData())));
+					}else{
+						Util.loginAgain(SearchFriendsActivity.this, data.getMessage());
+					}
 				}
 			}
 		}

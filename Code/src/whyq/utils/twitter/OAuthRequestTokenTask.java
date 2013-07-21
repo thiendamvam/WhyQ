@@ -8,7 +8,6 @@ import oauth.signpost.OAuthProvider;
 import org.apache.http.protocol.HTTP;
 
 import whyq.utils.Constants;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;

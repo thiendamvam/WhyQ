@@ -10,9 +10,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import whyq.model.WhyqBoard;
-import whyq.model.WhyqImage;
 import whyq.model.User;
+import whyq.model.WhyqBoard;
 import whyq.utils.Constants;
 
 

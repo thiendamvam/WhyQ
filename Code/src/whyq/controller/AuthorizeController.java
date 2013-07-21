@@ -12,7 +12,6 @@ import whyq.interfaces.Login_delegate;
 import whyq.model.User;
 import whyq.utils.API;
 import whyq.utils.XMLParser;
-
 import android.content.Context;
 
 

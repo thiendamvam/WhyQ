@@ -12,8 +12,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import whyq.model.Comment;
 import whyq.model.Store;
-import whyq.model.WhyqImage;
 import whyq.model.User;
+import whyq.model.WhyqImage;
 import whyq.utils.Constants;
 
 

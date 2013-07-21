@@ -93,8 +93,8 @@
                             android:id="@+id/prgFavourite"
                             android:layout_width="10dp"
                             android:layout_height="10dp"
-                            android:visibility="invisible"
-                            android:layout_centerInParent="true" />
+                            android:layout_centerInParent="true"
+                            android:visibility="invisible" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -122,21 +122,29 @@
                 android:orientation="horizontal"
                 android:weightSum="4" >
 
-                <ImageView
-                    android:id="@+id/imgFriendThumb"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="3dp"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/tvVisited"
+                <RelativeLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2.5"
-                    android:gravity="center_vertical"
-                    android:text="No one visited"
-                    android:textColor="#b2b2b2" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5" >
+
+                    <ImageView
+                        android:id="@+id/imgFriendThumb"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginRight="3dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tvVisited"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/imgFriendThumb"
+                        android:layout_weight="2.5"
+                        android:singleLine="true"
+                        android:gravity="center_vertical"
+                        android:text="No one visited"
+                        android:textColor="#b2b2b2" />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -148,7 +156,7 @@
                         android:id="@+id/btnDistance"
                         style="@style/small_grey_text"
                         android:layout_width="match_parent"
-                        android:layout_height="22dp"
+                        android:layout_height="20dp"
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/btn_distance"
                         android:gravity="center"
@@ -162,8 +170,10 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/rlDiscount"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:paddingTop="0dp"
         android:layout_weight="1"
         android:background="@color/white" >
 
@@ -177,7 +187,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/icon_tag" />
 
         <TextView

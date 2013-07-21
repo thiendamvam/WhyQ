@@ -32,12 +32,14 @@ public class Store {
 	private String coutBill;
 	private String income;
 	private String nameCate;
+	private String distance;
+	private String discription;
 	private String photos;
 	private boolean isFavourite;
 	private UserCheckBill userCheckBill;
 	private ArrayList<User> userList;
 	private ArrayList<Menu> menuList;
-
+	private ArrayList<Promotion> promotionList;
 
 	private ArrayList<ProductTypeInfo> productTypeInfo;
 	private ArrayList<Tag> tagList;
@@ -560,5 +562,41 @@ public class Store {
 	 */
 	public void setUserCheckBill(UserCheckBill userCheckBill) {
 		this.userCheckBill = userCheckBill;
+	}
+	/**
+	 * @return the distance
+	 */
+	public String getDistance() {
+		return distance;
+	}
+	/**
+	 * @param distance the distance to set
+	 */
+	public void setDistance(String distance) {
+		this.distance = distance;
+	}
+	/**
+	 * @return the discription
+	 */
+	public String getDiscription() {
+		return discription;
+	}
+	/**
+	 * @param discription the discription to set
+	 */
+	public void setDiscription(String discription) {
+		this.discription = discription;
+	}
+	/**
+	 * @return the promotionList
+	 */
+	public ArrayList<Promotion> getPromotionList() {
+		return promotionList;
+	}
+	/**
+	 * @param promotionList the promotionList to set
+	 */
+	public void setPromotionList(ArrayList<Promotion> promotionList) {
+		this.promotionList = promotionList;
 	}
 }

@@ -1,22 +1,12 @@
 package whyq.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import twitter4j.http.AccessToken;
-import whyq.WhyqMain;
-import whyq.controller.AuthorizeController;
 import whyq.interfaces.LoginTWDelegate;
-import whyq.interfaces.Login_delegate;
 import whyq.utils.Constants;
 import whyq.utils.WhyqUtils;
 import whyq.utils.twitter.OAuthRequestTokenTask;

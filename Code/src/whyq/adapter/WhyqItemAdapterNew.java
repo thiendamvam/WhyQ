@@ -2,25 +2,19 @@ package whyq.adapter;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import com.whyq.R;
 
 import whyq.model.Store;
 import whyq.utils.UrlImageViewHelper;
-
 import android.content.Context;
-import android.graphics.Color;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.whyq.R;
 
 
 public class WhyqItemAdapterNew extends BaseAdapter {

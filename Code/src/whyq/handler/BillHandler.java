@@ -6,10 +6,9 @@ import java.util.List;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import android.util.Log;
-
 import whyq.model.BillItem;
 import whyq.model.BusinessInfo;
+import android.util.Log;
 
 public class BillHandler extends BaseHandler {
 

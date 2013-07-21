@@ -3,19 +3,24 @@
  */
 package whyq.activity;
 
+import java.util.ArrayList;
+
 import twitter4j.http.AccessToken;
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
+import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
 import whyq.interfaces.LoginTWDelegate;
+import whyq.model.ResponseData;
+import whyq.model.Store;
 import whyq.model.User;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.Constants;
 import whyq.utils.SharedPreferencesManager;
+import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
-import whyq.utils.XMLParser;
 import whyq.utils.facebook.FacebookConnector;
 import whyq.utils.facebook.sdk.DialogError;
 import whyq.utils.facebook.sdk.Facebook;
@@ -224,52 +229,63 @@ public class LoginHome extends Activity
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
 		if (result.isSuccess() == true  && result.getAction() == ServiceAction.ActionLoginFacebook) {
-
-			User user = (User)result.getData();
-			if(user.isLogined()){
-				ListActivity.isLogin = true;
-				ListActivity.loginType = 1;
-				isLoginFb = true;
-				Log.d("LoginHome by Facebook", "result: " + result.getData());
-				WhyqApplication.Instance().setToken(user);
-//				XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(), user);
-				Intent intent = new Intent(LoginHome.this, WhyqMain.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);	
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				User user = (User)result.getData();
+				if(user.isLogined()){
+					ListActivity.isLogin = true;
+					ListActivity.loginType = 1;
+					isLoginFb = true;
+					Log.d("LoginHome by Facebook", "result: " + result.getData());
+					WhyqApplication.Instance().setToken(user);
+//					XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(), user);
+					Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(intent);	
+				}else{
+					
+				}
 			}else{
-				
+				Util.loginAgain(context, data.getMessage());
 			}
+
 
 		} else if (result.isSuccess() == true && result.getAction() == ServiceAction.ActionLoginTwitter) {
 
-			User user = (User)result.getData();
-			if(user.isLogined()){
-				ListActivity.isLogin = true;
-				ListActivity.loginType = 2;
-//				dismissLoadingDialog();
-				Intent intent = new Intent(LoginHome.this, WhyqMain.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				User user = (User)data.getData();
+				if(user.isLogined()){
+					ListActivity.isLogin = true;
+					ListActivity.loginType = 2;
+//					dismissLoadingDialog();
+					Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(intent);
+				}else{
+					String mes = user.getMessageLogin();
+					android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+					builder.setTitle(context.getString(R.string.app_name_title));
+					builder.setMessage(mes);
+					final android.app.AlertDialog alertError = builder.create();
+					alertError.setButton("Login", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							alertError.dismiss();
+						}
+					});
+					alertError.setButton2("Cancel", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							alertError.dismiss();
+						}
+					});
+					alertError.show();
+				}
 			}else{
-				String mes = user.getMessageLogin();
-				android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
-				builder.setTitle(context.getString(R.string.app_name_title));
-				builder.setMessage(mes);
-				final android.app.AlertDialog alertError = builder.create();
-				alertError.setButton("Login", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						alertError.dismiss();
-					}
-				});
-				alertError.setButton("Cancel", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						alertError.dismiss();
-					}
-				});
-				alertError.show();
+				Util.loginAgain(context, data.getMessage());
 			}
+
 		}
 	}
 

@@ -95,7 +95,8 @@ public class CommentActivity extends ImageWorkerActivity {
 		setLoading(false);
 		if (result != null && result.getCode() == ResultCode.Success
 				&& result.getAction() == ServiceAction.ActionGetComment) {
-			List<Comment> comments = DataParser.parseComments(String
+			DataParser paser = new DataParser();
+			List<Comment> comments = (List<Comment>) paser.parseComments(String
 					.valueOf(result.getData()));
 			mAdapter.setItems(comments);
 		}

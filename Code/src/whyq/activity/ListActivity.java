@@ -14,8 +14,7 @@ import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
-import whyq.interfaces.Login_delegate;
-import whyq.map.MapsActivity;
+import whyq.model.ResponseData;
 import whyq.model.Store;
 import whyq.model.User;
 import whyq.service.Service;
@@ -23,7 +22,6 @@ import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.API;
 import whyq.utils.RSA;
-import whyq.activity.GoogleMapActivity;
 import whyq.utils.UrlImageViewHelper;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
@@ -181,13 +179,14 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createUI();
+		service = new Service(ListActivity.this);
 		resetTabBarFocus(1);
 		getLocation();
 		regisReceiver();
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(ListActivity.this.getIntent());
-		service = new Service(ListActivity.this);
+		
     	showProgress();
 
 	}
@@ -497,10 +496,12 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		@Override
 		protected ArrayList<Store> doInBackground(ArrayList<Store>... params) {
 			// TODO Auto-generated method stub
+			getLocation();
 			WhyqListController whyqListController = new WhyqListController();
 			Map<String, String> postParams = new HashMap<String, String>();
 			ArrayList<Store> permList = null;
-			try {				
+			try {			
+				Log.d("LoadPermList","lat "+latgitude);
 				if (nextItem != -1) {
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("nextItem", String.valueOf(nextItem)));
@@ -513,6 +514,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
 //						nameValuePairs.add(new BasicNameValuePair("token",enToken));
 						postParams.put("token", enToken);
+						postParams.put("longitude", longitude);
+						postParams.put("latitude", latgitude);
 						if(filterType.equals("1")){
 							
 						}else if(filterType.equals("2")){
@@ -529,10 +532,9 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 //							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
 //							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
 							postParams.put("key", searchKey);
+							postParams.put("cate_id", cateId);
 							postParams.put("search_longitude", longitude);
 							postParams.put("search_latitude", latgitude);
-							postParams.put("cate_id", cateId);
-							
 						}else{
 //							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
 							postParams.put("cate_id", cateId);
@@ -552,6 +554,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
 //						nameValuePairs.add(new BasicNameValuePair("token",enToken));
 						postParams.put("token", enToken);
+						postParams.put("longitude", longitude);
+						postParams.put("latitude", latgitude);
 						if(filterType.equals("1")){
 							
 						}else if(filterType.equals("2")){
@@ -561,16 +565,16 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 //							nameValuePairs.add(new BasicNameValuePair("friend_favourite",filterType));
 							postParams.put("friend_favourite", filterType);
 						}
-						
+
 						if(isSearch){
 //							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
 //							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
 //							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
 //							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
 							postParams.put("key", searchKey);
+							postParams.put("cate_id", cateId);
 							postParams.put("search_longitude", longitude);
 							postParams.put("search_latitude", latgitude);
-							postParams.put("cate_id", cateId);
 							
 						}else{
 //							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
@@ -1003,19 +1007,36 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		// TODO Auto-generated method stub
 //		Store store = (Store)result.getData();
 		if(result.isSuccess()&& result.getAction() == ServiceAction.ActionGetBusinessList){
-			permListMain = (ArrayList<Store>)result.getData();
-			loadPerms();
-			hideProgress();
-			WhyqListController.isLoading = false;
-			if(permListAdapter != null) {
-				permListAdapter.notifyDataSetChanged();
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				permListMain = (ArrayList<Store>)data.getData();
+				loadPerms();
+				
+				WhyqListController.isLoading = false;
+				if(permListAdapter != null) {
+					permListAdapter.notifyDataSetChanged();
+				}
+			}else{
+				Util.loginAgain(getParent(), data.getMessage());
 			}
+			hideProgress();
 		} else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
 //			Toast.makeText(context, "Favourite successfully", Toast.LENGTH_SHORT).show();
-			updateFavoriteWitId(currentStoreId, true);
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				updateFavoriteWitId(currentStoreId, true);
+			}else{
+				Util.loginAgain(context, data.getMessage());
+			}
+			
 		}else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){
 //			Toast.makeText(context, "Un favourite successfully", Toast.LENGTH_SHORT).show();
-			updateFavoriteWitId(currentStoreId, false);
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				updateFavoriteWitId(currentStoreId, false);
+			}else{
+				Util.loginAgain(context, data.getMessage());
+			}
 		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
 			Toast.makeText(context, "Can not favourite for now", Toast.LENGTH_SHORT).show();
 		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){

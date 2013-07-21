@@ -19,7 +19,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import whyq.WhyqApplication;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;

@@ -16,8 +16,6 @@ package whyq.activity;
 import java.net.URL;
 import java.util.ArrayList;
 
-import com.whyq.R;
-
 import whyq.interfaces.IServiceListener;
 import whyq.model.Location;
 import whyq.service.ParseChangedLocationXMLFile;
@@ -46,6 +44,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.whyq.R;
 
 /**
  * Class description: TODO

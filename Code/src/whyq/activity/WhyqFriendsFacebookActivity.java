@@ -127,7 +127,8 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 			} else {
 				if (result.getAction() == ServiceAction.ActionGetFriendsFacebook
 						|| result.getAction() == ServiceAction.ActionSearchFriendsFacebook) {
-					FriendFacebookController handler = DataParser
+					DataParser parser = new DataParser();
+					FriendFacebookController handler = (FriendFacebookController)parser
 							.parseFriendFacebook(String.valueOf(result
 									.getData()));
 					mFriendFacebookAdapter.setController(handler);
