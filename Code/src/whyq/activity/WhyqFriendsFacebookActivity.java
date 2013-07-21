@@ -8,6 +8,7 @@ import whyq.WhyqApplication;
 import whyq.adapter.AmazingAdapter;
 import whyq.interfaces.FriendFacebookController;
 import whyq.model.FriendFacebook;
+import whyq.model.ResponseData;
 import whyq.model.SearchFriendCriteria;
 import whyq.service.DataParser;
 import whyq.service.Service;
@@ -73,15 +74,18 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 					long arg3) {
 				final Object item = arg0.getItemAtPosition(arg2);
 				FriendFacebook facebook = (FriendFacebook) item;
-				startUserProfileActivity(facebook.getId(),
-						facebook.getFirstName(), facebook.getAvatar());
+				if (facebook.getIs_join()) {
+					startUserProfileActivity(facebook.getId(),
+							facebook.getFirstName(), facebook.getAvatar());
+				}
 			}
 		});
 
 		mFriendFacebookAdapter = new FriendsFacebookAdapter(this, mImageWorker);
 		mAccessToken = getAccessToken();
 		if (BuildConfig.DEBUG) {
-			Log.d("WhyqFriendsFacebookActivity", "access token: " + mAccessToken);
+			Log.d("WhyqFriendsFacebookActivity", "access token: "
+					+ mAccessToken);
 		}
 
 		setTitle(R.string.friend_from_facebook);
@@ -137,10 +141,14 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 				if (result.getAction() == ServiceAction.ActionGetFriendsFacebook
 						|| result.getAction() == ServiceAction.ActionSearchFriendsFacebook) {
 					DataParser parser = new DataParser();
-					FriendFacebookController handler = (FriendFacebookController)parser
+					ResponseData data = (ResponseData) parser
 							.parseFriendFacebook(String.valueOf(result
 									.getData()));
-					mFriendFacebookAdapter.setController(handler);
+					if (data.getStatus().equals("401")) {
+						Util.loginAgain(this, data.getMessage());
+					} else {
+						mFriendFacebookAdapter.setController((FriendFacebookController) data.getData());
+					}
 				}
 			}
 		}
@@ -182,7 +190,8 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		if (INVITED_LIST.size() == 0) {
 			mInviteContainer.setVisibility(View.GONE);
 		} else {
-			displayInviteMessage(INVITED_LIST.keySet().toArray(new String[]{})[INVITED_LIST.size() - 1]);
+			displayInviteMessage(INVITED_LIST.keySet().toArray(new String[] {})[INVITED_LIST
+					.size() - 1]);
 		}
 	}
 
@@ -191,8 +200,8 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		if (INVITED_LIST.size() > 1) {
 			String message = "Invite " + key + " and "
 					+ (INVITED_LIST.size() - 1) + " other to join WHYQ?";
-			Spannable messageSpannable = SpannableUtils.stylistTextBold(message,
-					key, R.color.orange);
+			Spannable messageSpannable = SpannableUtils.stylistTextBold(
+					message, key, R.color.orange);
 			mInviteMessage.setText(messageSpannable);
 		} else {
 			String message = "Invite " + key + " to join WHYQ?";
@@ -222,8 +231,8 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		private List<FriendFacebook> listWhyq;
 		private List<FriendFacebook> listNotJoinWhyq;
 		private ImageViewHelper mImageWorker;
-		private static int countListNotJoinWhyq = 0;
-		private static int countListWhyq = 0;
+		private int countListNotJoinWhyq = 0;
+		private int countListWhyq = 0;
 		private Facebook facebookSdk = new Facebook(Constants.FACEBOOK_APP_ID);
 
 		public FriendsFacebookAdapter(WhyqFriendsFacebookActivity context,
@@ -318,7 +327,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 			} else {
 				displayInviteButtn(holder, item);
 				holder.invite.setOnClickListener(new View.OnClickListener() {
-					
+
 					@Override
 					public void onClick(View v) {
 						if (item.getIs_join()) {
@@ -331,32 +340,34 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 						} else {
 							Bundle params = new Bundle();
 							params.putString("to", item.getFacebookId());
-							facebookSdk.dialog(mActivity, "apprequests", params, new DialogListener() {
-								
-								@Override
-								public void onFacebookError(FacebookError e) {
-									// TODO Auto-generated method stub
-									
-								}
-								
-								@Override
-								public void onError(DialogError e) {
-									// TODO Auto-generated method stub
-									
-								}
-								
-								@Override
-								public void onComplete(Bundle values) {
-									// TODO Auto-generated method stub
-									
-								}
-								
-								@Override
-								public void onCancel() {
-									// TODO Auto-generated method stub
-									
-								}
-							});
+							facebookSdk.dialog(mActivity, "apprequests",
+									params, new DialogListener() {
+
+										@Override
+										public void onFacebookError(
+												FacebookError e) {
+											// TODO Auto-generated method stub
+
+										}
+
+										@Override
+										public void onError(DialogError e) {
+											// TODO Auto-generated method stub
+
+										}
+
+										@Override
+										public void onComplete(Bundle values) {
+											// TODO Auto-generated method stub
+
+										}
+
+										@Override
+										public void onCancel() {
+											// TODO Auto-generated method stub
+
+										}
+									});
 						}
 					}
 				});

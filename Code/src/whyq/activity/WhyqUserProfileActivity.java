@@ -11,6 +11,7 @@ import java.util.Map;
 import whyq.WhyqApplication;
 import whyq.model.ActivityItem;
 import whyq.model.Photo;
+import whyq.model.ResponseData;
 import whyq.model.TotalCount;
 import whyq.model.UserProfile;
 import whyq.service.DataParser;
@@ -101,8 +102,6 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			}	
 		});
 
-		setLoading(true);
-
 		mUserId = i.getStringExtra(ARG_USER_ID);
 		if (mUserId == null) {
 			mUserId = XMLParser.getUserId(this);
@@ -117,6 +116,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 		hideExtraButton();
 
+		setLoading(true);
 		getService().getUserActivities(getEncryptedToken(), mUserId);
 		getService().getPhotos(getEncryptedToken(), mUserId);
 		getService().getProfiles(getEncryptedToken(), mUserId);
@@ -217,6 +217,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	}
 
 	int count = 0;
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
@@ -229,14 +230,20 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		showExtraButton();
 		if (result == null)
 			return;
+		DataParser parser = new DataParser();
+		
 		if (result.getAction() == ServiceAction.ActionGetUserActivities) {
-			DataParser parser = new DataParser();
-			mActivitiesAdapter.setItems((List<ActivityItem>)parser.parseActivities(String
-					.valueOf(result.getData())));
+			ResponseData data = (ResponseData) parser.parseActivities(String.valueOf(result.getData()));
+			
+			if (data.getStatus().equals("401")) {
+				Util.loginAgain(this, data.getMessage());
+				return;
+			} else {
+				mActivitiesAdapter.setItems((List<ActivityItem>) data.getData());
+			}
 		} else if (result.getAction() == ServiceAction.ActionGetPhotos) {
-			DataParser parser = new DataParser();
-			List<Photo> photos = (List<Photo>)parser.parsePhotos(String.valueOf(result
-					.getData()));
+			ResponseData data = (ResponseData) parser.parsePhotos(String.valueOf(result.getData()));
+			List<Photo> photos = (List<Photo>) data.getData();
 			if (photos == null || photos.size() == 0) {
 				return;
 			}

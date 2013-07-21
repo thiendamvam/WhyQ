@@ -5,6 +5,8 @@ import java.util.List;
 
 import whyq.WhyqApplication;
 import whyq.model.BillItem;
+import whyq.model.BillPlaceItem;
+import whyq.model.ResponseData;
 import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
@@ -36,7 +38,9 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 
 	protected static final String SAVING = "saving";
 
-	private BillAdapter mAdapter;
+	private BillAdapter mBillAdapter;
+	
+	private PlaceAdapter mPlaceAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,26 +48,33 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 
 		setContentView(R.layout.activity_checked_bill);
 
-		setTitle(R.string.checked_bills);
+		final String mode = getIntent().getStringExtra(ARG_MODE);
 
-		RadioGroup group = (RadioGroup) findViewById(R.id.radioGroup);
-		group.getLayoutParams().width = WhyqApplication.sScreenWidth * 3 / 5;
-		group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		mBillAdapter = new BillAdapter(this, mImageWorker);
+		mPlaceAdapter = new PlaceAdapter(this, mImageWorker);
+		
+		if (mode != null && mode.equals(SAVING)) {
+			setTitle(R.string.saving);
+			mBillAdapter.setSavingMode(true);
+			mPlaceAdapter.setSavingMode(true);
+		} else {
+			setTitle(R.string.checked_bills);
+			mBillAdapter.setSavingMode(false);
+			mPlaceAdapter.setSavingMode(false);
+		}
+
+		mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+		mRadioGroup.getLayoutParams().width = WhyqApplication.sScreenWidth * 3 / 5;
+		mRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				if (checkedId == R.id.viewPlace) {
-					mAdapter.switchPlaceMode(true);
-				} else {
-					mAdapter.switchPlaceMode(false);
-				}
+				bindAdapter();
 			}
 		});
-
-		mAdapter = new BillAdapter(this, mImageWorker);
-		ListView listview = (ListView) findViewById(R.id.listview);
-		listview.setAdapter(mAdapter);
-		listview.setOnItemClickListener(new OnItemClickListener() {
+		
+		mListview = (ListView) findViewById(R.id.listview);
+		mListview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -76,6 +87,14 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 		getService().getOrder(getEncryptedToken(), userId);
 	}
 
+	private List<BillItem> mBillItems;
+	private List<BillPlaceItem> mBillPlaceItems = new ArrayList<BillPlaceItem>();
+
+	private ListView mListview;
+
+	private RadioGroup mRadioGroup;
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
@@ -83,9 +102,69 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 		if (result != null && result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionGetOrder) {
 			DataParser parser = new DataParser();
-			mAdapter.setItems((List<BillItem>)parser.parseBills(String.valueOf(result
-					.getData())));
+			Object dataObj = parser
+					.parseBills(String.valueOf(result.getData()));
+			if (dataObj == null) {
+				return;
+			}
+
+			ResponseData data = (ResponseData) dataObj;
+			if (data.getStatus().equals("401")) {
+				Util.loginAgain(this, data.getMessage());
+			} else {
+				createBillItems((List<BillItem>) data.getData());
+				mBillAdapter.setItems(mBillItems);
+				mPlaceAdapter.setItems(mBillPlaceItems);
+				bindAdapter();
+			}
 		}
+	}
+
+	private void bindAdapter() {
+		if (mRadioGroup.getCheckedRadioButtonId() == R.id.viewBill) {
+			mListview.setAdapter(mBillAdapter);
+		} else {
+			mListview.setAdapter(mPlaceAdapter);
+		}
+	}
+
+	private void createBillItems(List<BillItem> data) {
+		mBillItems = data;
+		for (BillItem billItem : data) {
+			addToPlace(billItem);
+		}
+	}
+
+	private void addToPlace(BillItem item) {
+		int index = -1;
+		for (int i = 0, count = mBillPlaceItems.size(); i < count; i++) {
+			final BillPlaceItem placeItem = mBillPlaceItems.get(i);
+			if (placeItem.getStoreId().equals(item.getStore_id())) {
+				index = i;
+				break;
+			}
+		}
+
+		BillPlaceItem tmp = null;
+		if (index == -1) {
+			tmp = new BillPlaceItem();
+			tmp.setStoreId(item.getStore_id());
+			tmp.setCountVisited(1);
+			tmp.setStoreAddress(item.getBusiness_info().getAddress());
+			tmp.setStoreName(item.getBusiness_info().getName_store());
+			tmp.setTotalDiscountValue(item.getDiscount_value());
+			tmp.setTotalValue(item.getTotal_value());
+			tmp.setStoreLogo(item.getBusiness_info().getLogo());
+			mBillPlaceItems.add(tmp);
+		} else {
+			tmp = mBillPlaceItems.get(index);
+			tmp.setCountVisited(tmp.getCountVisited() + 1);
+			tmp.setTotalDiscountValue(tmp.getTotalDiscountValue()
+					+ item.getDiscount_value());
+			tmp.setTotalValue(tmp.getTotalValue() + item.getTotal_value());
+			mBillPlaceItems.set(index, tmp);
+		}
+
 	}
 
 	static class BillAdapter extends BaseAdapter {
@@ -94,16 +173,16 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 		private Context mContext;
 		private List<BillItem> mItems;
 		private ImageViewHelper mImageWorker;
-		private boolean isPlaceMode;
+		private boolean isSavingMode;
 
 		public BillAdapter(Context context, ImageViewHelper imageWorker) {
 			this.mContext = context;
 			this.mItems = new ArrayList<BillItem>();
 			this.mImageWorker = imageWorker;
 		}
-		
-		public void switchPlaceMode(boolean placeMode) {
-			isPlaceMode = placeMode;
+
+		public void setSavingMode(boolean savingMode) {
+			isSavingMode = savingMode;
 			notifyDataSetChanged();
 		}
 
@@ -142,17 +221,115 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 
 			ViewHolder holder = getViewHolder(convertView);
 			BillItem item = mItems.get(position);
-			if (isPlaceMode) {
-				int count  = item.getBusiness_info().getCount_favourite_member();
-				holder.unit.setText("Visit " + count + (count > 1 ? " times" : " time"));
+			if (isSavingMode) {
+				int disCount = (int) (item.getDiscount_value() * 100 / item.getTotal_real_value());
+				holder.unit.setText("Discount " + disCount + " %");
+				holder.price.setText("$ " + item.getDiscount_value());
 			} else {
-				holder.unit.setText("Bill normal");
+				holder.unit.setText("Normal bill");
+				holder.price.setText("$ " + item.getTotal_value());
 			}
 			holder.name.setText(item.getBusiness_info().getName_store());
-			holder.price.setText("$ " + item.getTotal_value());
 
 			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
 					holder.photo);
+
+			return convertView;
+		}
+
+		private ViewHolder getViewHolder(View view) {
+			ViewHolder holder = (ViewHolder) view.getTag();
+			if (holder == null) {
+				holder = new ViewHolder(view);
+				view.setTag(holder);
+			}
+			return holder;
+		}
+
+		class ViewHolder {
+			ImageView photo;
+			TextView name;
+			TextView unit;
+			Button price;
+
+			public ViewHolder(View view) {
+				photo = (ImageView) view.findViewById(R.id.photo);
+				photo.getLayoutParams().width = PHOTO_SIZE;
+				photo.getLayoutParams().height = PHOTO_SIZE;
+				name = (TextView) view.findViewById(R.id.name);
+				unit = (TextView) view.findViewById(R.id.unit);
+				price = (Button) view.findViewById(R.id.price);
+			}
+		}
+
+	}
+
+	static class PlaceAdapter extends BaseAdapter {
+
+		private static final int PHOTO_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
+		private Context mContext;
+		private List<BillPlaceItem> mItems;
+		private ImageViewHelper mImageWorker;
+		private boolean isSavingMode;
+
+		public PlaceAdapter(Context context, ImageViewHelper imageWorker) {
+			this.mContext = context;
+			this.mItems = new ArrayList<BillPlaceItem>();
+			this.mImageWorker = imageWorker;
+		}
+
+		public void setSavingMode(boolean saving) {
+			isSavingMode = saving;
+			notifyDataSetChanged();
+		}
+
+		public void setItems(List<BillPlaceItem> items) {
+			if (items == null || items.size() == 0) {
+				mItems.clear();
+			} else {
+				mItems = items;
+			}
+			notifyDataSetChanged();
+		}
+
+		@Override
+		public int getCount() {
+			return mItems.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return mItems.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				convertView = LayoutInflater.from(mContext).inflate(
+						R.layout.whyq_bill_list_item, parent, false);
+				Util.applyTypeface(convertView,
+						WhyqApplication.sTypefaceRegular);
+			}
+
+			ViewHolder holder = getViewHolder(convertView);
+			BillPlaceItem item = mItems.get(position);
+			int count = item.getCountVisited();
+			if (isSavingMode) {
+				holder.unit.setText("Visit " + count
+						+ (count > 1 ? " times" : " time"));
+				holder.price.setText("$ " + item.getTotalDiscountValue());
+			} else {
+				holder.unit.setText(item.getStoreAddress());
+				holder.price.setText("$ " + item.getTotalValue());
+			}
+			holder.name.setText(item.getStoreName());
+
+			mImageWorker.downloadImage(item.getStoreLogo(), holder.photo);
 
 			return convertView;
 		}

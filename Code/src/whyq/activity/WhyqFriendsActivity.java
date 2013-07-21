@@ -6,6 +6,7 @@ import java.util.List;
 import whyq.WhyqApplication;
 import whyq.model.FriendFacebook;
 import whyq.model.FriendWhyq;
+import whyq.model.ResponseData;
 import whyq.model.SearchFriendCriteria;
 import whyq.service.DataParser;
 import whyq.service.Service;
@@ -99,6 +100,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
@@ -106,14 +108,20 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 		if (result != null
 				&& result.getAction() == ServiceAction.ActionGetFriends) {
 			DataParser parser = new DataParser();
-			List<FriendWhyq> friends = (List<FriendWhyq>)parser.parseFriendWhyq(String
+			ResponseData data =  (ResponseData) parser.parseFriendWhyq(String
 					.valueOf(result.getData()));
-			if (friends != null && friends.size() == 0) {
-				AlertFindFriendDialog dialog = new AlertFindFriendDialog();
-				dialog.setOnDialogButtonClickListern(this);
-				dialog.show(getSupportFragmentManager(), "Dialog");
+			
+			if (data.equals("401")) {
+				Util.loginAgain(this, data.getMessage());
 			} else {
-				mFriendWhyqAdapter.setItems(friends);
+				List<FriendWhyq> friends = (List<FriendWhyq>) data.getData();;
+				if (friends == null || friends.size() == 0) {
+					AlertFindFriendDialog dialog = new AlertFindFriendDialog();
+					dialog.setOnDialogButtonClickListern(this);
+					dialog.show(getSupportFragmentManager(), "Dialog");
+				} else {
+					mFriendWhyqAdapter.setItems(friends);
+				}
 			}
 		}
 	}
