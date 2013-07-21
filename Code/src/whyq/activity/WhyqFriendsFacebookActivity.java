@@ -65,8 +65,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		tvSearch.setBackgroundResource(R.drawable.textfield_search_default_holo_dark);
 
 		mListview = (AmazingListView) findViewById(R.id.listview);
-		mListview.setPinnedHeaderView(getLayoutInflater().inflate(
-				R.layout.friend_list_item_header, mListview, false));
+		mListview.setPinnedHeaderView(findViewById(R.id.header));
 		mListview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override

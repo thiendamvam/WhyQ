@@ -46,6 +46,8 @@ public class AmazingListView extends ListView implements HasMorePagesListener {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (mHeaderView != null) {
         	measureChild(mHeaderView, widthMeasureSpec, heightMeasureSpec);
+        	mHeaderViewWidth = mHeaderView.getMeasuredWidth();
+        	mHeaderViewHeight = mHeaderView.getMeasuredHeight();
         }
     }
 
@@ -103,15 +105,6 @@ public class AmazingListView extends ListView implements HasMorePagesListener {
             }
         }
     }
-
-    @Override
-    protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
-        if (mHeaderViewVisible) {
-            drawChild(canvas, mHeaderView, getDrawingTime());
-        }
-    }
-    
     
     public AmazingListView(Context context) {
         super(context);

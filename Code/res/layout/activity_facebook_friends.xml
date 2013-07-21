@@ -11,6 +11,11 @@
         android:background="@color/bgListView"
         android:cacheColorHint="@null" />
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/friend_list_item_header" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
