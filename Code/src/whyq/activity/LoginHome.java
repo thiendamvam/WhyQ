@@ -231,24 +231,25 @@ public class LoginHome extends Activity
 		if (result.isSuccess() == true  && result.getAction() == ServiceAction.ActionLoginFacebook) {
 			ResponseData data = (ResponseData)result.getData();
 			if(data.getStatus().equals("200")){
-				User user = (User)result.getData();
-				if(user.isLogined()){
+				User user = (User)data.getData();
+//				if(user.isLogined()){
 					ListActivity.isLogin = true;
 					ListActivity.loginType = 1;
 					isLoginFb = true;
-					Log.d("LoginHome by Facebook", "result: " + result.getData());
+					Log.d("LoginHome by Facebook", "result: ");
 					WhyqApplication.Instance().setToken(user);
 //					XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(), user);
 					Intent intent = new Intent(LoginHome.this, WhyqMain.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);	
-				}else{
-					
-				}
+//				}else{
+//					
+//				}
+			}else if(data.getStatus().equals("401")){
+				Util.loginAgain(getParent(), data.getMessage());
 			}else{
-				Util.loginAgain(context, data.getMessage());
+				Util.showDialog(getParent(), data.getMessage());
 			}
-
 
 		} else if (result.isSuccess() == true && result.getAction() == ServiceAction.ActionLoginTwitter) {
 

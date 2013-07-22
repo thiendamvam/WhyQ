@@ -211,7 +211,8 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 						
 					}
 					
-					viewHolder.btnDistance.setText((int)Float.parseFloat(item.getDistance())+" km");
+					if(!item.getDistance().equals(""))
+						viewHolder.btnDistance.setText((int)Float.parseFloat(item.getDistance())+" km");
 					viewHolder.imgFriendThumb = (ImageView)rowView.findViewById(R.id.imgFriendThumb);
 					
 					UserCheckBill userCheckBill = item.getUserCheckBill();

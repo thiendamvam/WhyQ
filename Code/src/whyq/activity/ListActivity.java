@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -182,6 +183,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		FavouriteActivity.isFavorite = false;
 		service = new Service(ListActivity.this);
 		resetTabBarFocus(1);
+//		checkLocationAccess();
 		getLocation();
 		regisReceiver();
 		WhyqUtils.clearViewHistory();
@@ -193,9 +195,16 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	}
 
 
+	private void checkLocationAccess() {
+		// TODO Auto-generated method stub
+		Util.checkLocationSetting(getParent());
+	}
+
+
 	private void getLocation() {
 		// TODO Auto-generated method stub
-		Bundle bundle = Util.getLocation(ListActivity.this);
+		Util.checkLocationSetting(getParent());
+		Bundle bundle = Util.getLocation(getParent());
 		if(bundle!=null){
 			longitude = bundle.getString("lat");
 			latgitude = bundle.getString("lon");
@@ -400,11 +409,17 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		}
 		clearData();
 		showProgress();
-
+		exeGetBusinessList();
+	}
+	
+	private void exeGetBusinessList() {
+		// TODO Auto-generated method stub
+		getLocation();
 		loadPermList = new LoadPermList(isSearch);
 		loadPermList.execute();
 	}
-	
+
+
 	private void timeoutDialog() {
 		// TODO Auto-generated method stub
 
@@ -416,8 +431,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			clearData();
 			showProgress();
 			
-			loadPermList = new LoadPermList(isSearch);
-			loadPermList.execute();
+			exeGetBusinessList();
 		}
 		
 	}
@@ -426,8 +440,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		if(permListAdapter != null) {
 			nextItem = permListAdapter.getNextItems();
 			showProgress();
-	    	loadPermList = new LoadPermList(isSearch);
-			loadPermList.execute();
+			exeGetBusinessList();
 		}		
 	}
 	
@@ -491,13 +504,13 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		public boolean isSearch;
 
 		public LoadPermList(boolean isSearch){
-			this.isSearch = isSearch; 
+			this.isSearch = isSearch;
+			
 		}
 		
 		@Override
 		protected ArrayList<Store> doInBackground(ArrayList<Store>... params) {
 			// TODO Auto-generated method stub
-			getLocation();
 			WhyqListController whyqListController = new WhyqListController();
 			Map<String, String> postParams = new HashMap<String, String>();
 			ArrayList<Store> permList = null;
