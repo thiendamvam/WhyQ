@@ -262,28 +262,31 @@ public class LoginHome extends Activity
 					Intent intent = new Intent(LoginHome.this, WhyqMain.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);
-				}else{
-					String mes = user.getMessageLogin();
-					android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
-					builder.setTitle(context.getString(R.string.app_name_title));
-					builder.setMessage(mes);
-					final android.app.AlertDialog alertError = builder.create();
-					alertError.setButton("Login", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							alertError.dismiss();
-						}
-					});
-					alertError.setButton2("Cancel", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							alertError.dismiss();
-						}
-					});
-					alertError.show();
 				}
+//				}else{
+//					String mes = user.getMessageLogin();
+//					android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+//					builder.setTitle(context.getString(R.string.app_name_title));
+//					builder.setMessage(mes);
+//					final android.app.AlertDialog alertError = builder.create();
+//					alertError.setButton("Login", new DialogInterface.OnClickListener() {
+//						@Override
+//						public void onClick(DialogInterface dialog, int which) {
+//							alertError.dismiss();
+//						}
+//					});
+//					alertError.setButton2("Cancel", new DialogInterface.OnClickListener() {
+//						@Override
+//						public void onClick(DialogInterface dialog, int which) {
+//							alertError.dismiss();
+//						}
+//					});
+//					alertError.show();
+//				}
+			}else if(data.getStatus().equals("401")){
+				Util.loginAgain(getParent(), data.getMessage());
 			}else{
-				Util.loginAgain(context, data.getMessage());
+				Util.showDialog(getParent(), data.getMessage());
 			}
 
 		}

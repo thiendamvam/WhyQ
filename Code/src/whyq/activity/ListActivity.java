@@ -534,8 +534,9 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 //							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
 							postParams.put("key", searchKey);
 							postParams.put("cate_id", cateId);
-							postParams.put("search_longitude", longitude);
-							postParams.put("search_latitude", latgitude);
+							postParams.put("mode", "suggest");
+//							postParams.put("search_longitude", longitude);
+//							postParams.put("search_latitude", latgitude);
 						}else{
 //							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
 							postParams.put("cate_id", cateId);
@@ -555,6 +556,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
 //						nameValuePairs.add(new BasicNameValuePair("token",enToken));
 						postParams.put("token", enToken);
+						
 						postParams.put("longitude", longitude);
 						postParams.put("latitude", latgitude);
 						if(filterType.equals("1")){
@@ -573,9 +575,10 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 //							nameValuePairs.add(new BasicNameValuePair("search_latitude", latgitude));
 //							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));
 							postParams.put("key", searchKey);
+							postParams.put("mode", "suggest");
 							postParams.put("cate_id", cateId);
-							postParams.put("search_longitude", longitude);
-							postParams.put("search_latitude", latgitude);
+//							postParams.put("search_longitude", longitude);
+//							postParams.put("search_latitude", latgitude);
 							
 						}else{
 //							nameValuePairs.add(new BasicNameValuePair("cate_id", cateId));

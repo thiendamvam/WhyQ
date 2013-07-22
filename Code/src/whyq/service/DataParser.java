@@ -62,6 +62,7 @@ public class DataParser {
 	public Object parserLoginData(String inputString) {
 		// TODO Auto-generated method stub
 		try {
+			ResponseData data = new ResponseData();
 			Document doc = XMLfromString(inputString);
 			ArrayList<Store> permList = new ArrayList<Store>();
 			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
@@ -71,13 +72,17 @@ public class DataParser {
 				// assign the handler
 				xmlReader.setContentHandler(userHandler);
 				xmlReader.parse(new InputSource(new StringReader(inputString)));
-				return userHandler.getUser();
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(userHandler.getUser());
+				data.setMessage(mes);
+				return data;
 			}else{
-				String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
-				User user = new User();
-				user.setMessageLogin(mes);
-				user.isLogined();
-				return user;
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
 			}
 
 		} catch (Exception e) {

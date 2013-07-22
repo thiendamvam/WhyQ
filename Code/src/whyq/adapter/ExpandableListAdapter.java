@@ -1,19 +1,32 @@
 package whyq.adapter;
 
+import java.util.HashMap;
 import java.util.List;
 
 import whyq.WhyqApplication;
+import whyq.activity.FavouriteActivity;
+import whyq.activity.ListActivity;
 import whyq.activity.ListDetailActivity;
+import whyq.adapter.WhyqAdapter.ViewHolder;
+import whyq.model.GroupList;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
+import whyq.model.Promotion;
+import whyq.model.Store;
+import whyq.model.UserCheckBill;
 import whyq.utils.UrlImageViewHelper;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
@@ -25,15 +38,18 @@ import com.whyq.R;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
-	private Context mContext;
 	private ExpandableListView mExpandableListView;
-	private List<GroupMenu> mGroupCollection;
+	private List<GroupList> mGroupCollection;
 	private int[] groupStatus;
-
+	private Context context;
+	private String currentPermId;
+	private View convertView;
+	private HashMap<String, View> viewList = new HashMap<String, View>();
+	private HashMap<String, Store> newPermList = new HashMap<String, Store>();
 	public ExpandableListAdapter(Context pContext,
 			ExpandableListView pExpandableListView,
-			List<GroupMenu> pGroupCollection) {
-		mContext = pContext;
+			List<GroupList> pGroupCollection) {
+		context = pContext;
 		mGroupCollection = pGroupCollection;
 		mExpandableListView = pExpandableListView;
 		groupStatus = new int[mGroupCollection.size()];
@@ -97,30 +113,117 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			ViewGroup arg4) {
 		// TODO Auto-generated method stub
 		View view = arg3;
-		Menu item = mGroupCollection.get(arg0).getMenuList().get(arg1);
-//		// if (v == null) {
-//		view = LayoutInflater.from(mContext).inflate(R.layout.whyq_menu_item_,
-//				null);
+		Store store = mGroupCollection.get(arg0).getMenuList().get(arg1);
+		final String viewId = store.getId();
 
-		LayoutInflater inflator = ((ListDetailActivity) WhyqApplication
-				.Instance().getApplicationContext()).getLayoutInflater();
-		view = inflator.inflate(R.layout.whyq_menu_item_, null);
-		final ViewHolderMitemInfo viewHolder = new ViewHolderMitemInfo();
-		viewHolder.tvType = (TextView) view.findViewById(R.id.tvType);
-		viewHolder.tvPrice = (TextView) view.findViewById(R.id.tvPrice);
-		viewHolder.imgThumb = (ImageView) view.findViewById(R.id.imgThumbnail);
-		viewHolder.tvCount = (TextView) view.findViewById(R.id.totalForItem);
-		// viewHolder.MenuId = item.getS;
-		viewHolder.tvType.setText(item.getNameProduct());
-		viewHolder.tvPrice.setText("$" + item.getValue());
-		viewHolder.MenuId = item.getStoreId();
-		viewHolder.tvCount.setText(item.getSort());
-		UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb,
-				item.getImageThumb());
+		currentPermId = viewId;
+		convertView = viewList.get(viewId);
+		newPermList.put(viewId, store);
+		if (convertView != null){
 
-		view.setTag(viewHolder);
+			return convertView;
+		}else{
 
-		return view;
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View rowView = inflater.inflate(R.layout.whyq_item_new, null);
+			LayoutParams PARAMS = (LinearLayout.LayoutParams)rowView.getLayoutParams();
+			ViewHolder viewHolder = new ViewHolder();
+			viewHolder.id = store.getStoreId();
+			viewHolder.imgThumb = (ImageView) rowView.findViewById(R.id.imgThumbnal2);
+			viewHolder.tvItemName = (TextView) rowView.findViewById(R.id.tvItemName);
+			viewHolder.tvItemAddress = (TextView)rowView.findViewById(R.id.tvItemAddress);
+			viewHolder.tvNumberFavourite = (TextView)rowView.findViewById(R.id.tvNumberFavourite);
+			viewHolder.tvVisited = (TextView)rowView.findViewById(R.id.tvVisited);
+			viewHolder.tvDiscoutNumber = (TextView)rowView.findViewById(R.id.tvNumberDiscount);
+			viewHolder.btnDistance = (Button)rowView.findViewById(R.id.btnDistance);
+			viewHolder.imgFavouriteThumb = (ImageView)rowView.findViewById(R.id.imgFavourite);
+			viewHolder.prgFavourite = (ProgressBar)rowView.findViewById(R.id.prgFavourite);
+			viewHolder.rlDiscount = (RelativeLayout)rowView.findViewById(R.id.rlDiscount);
+			viewHolder.tvItemName.setText(store.getNameStore().toUpperCase());
+			viewHolder.tvItemAddress.setText(store.getAddress());
+			viewHolder.tvNumberFavourite.setText(""+store.getCountFavaouriteMember());
+			if(store.getPromotionList().size() > 0){
+				viewHolder.tvDiscoutNumber.setVisibility(View.VISIBLE);
+				Promotion promotion = store.getPromotionList().get(0);
+				viewHolder.tvDiscoutNumber.setText(""+promotion.getValuePromotion()+promotion.getTypeValue()+ " for bill over $"+promotion.getConditionPromotion());
+			}else{
+				viewHolder.rlDiscount.setVisibility(View.GONE);
+				
+			}
+			
+			viewHolder.btnDistance.setText((int)Float.parseFloat(store.getDistance())+" km");
+			viewHolder.imgFriendThumb = (ImageView)rowView.findViewById(R.id.imgFriendThumb);
+			
+			UserCheckBill userCheckBill = store.getUserCheckBill();
+			if(userCheckBill !=null){
+				if(userCheckBill.getTotalMember()!=null && !userCheckBill.getTotalMember().equals("")){
+					if(userCheckBill.getAvatar()!=null && !userCheckBill.getAvatar().equals("")){
+						if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
+							viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" others visited");	
+						}else{
+							viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" other visited");
+						}
+						
+						viewHolder.imgFriendThumb.setVisibility(View.VISIBLE);
+						UrlImageViewHelper.setUrlDrawable(viewHolder.imgFriendThumb, userCheckBill.getAvatar());	
+					}else{
+						if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
+							viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" others visited");
+						}else{
+							viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" other visited");
+						}
+						
+					}
+
+				}
+			}
+//			if(item.getCountFavaouriteMember() !=null)
+//				if(!item.getCountFavaouriteMember().equals(""))
+//					if(Integer.parseInt(item.getCountFavaouriteMember()) >0){
+////						viewHolder.imgFavouriteThumb.setBackgroundResource(R.drawable.icon_fav_enable);
+//						viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
+//			}
+			if(store.getIsFavourite()){
+				viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
+			}else{
+				viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_disable);
+			}
+			viewHolder.imgFavouriteThumb.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if( FavouriteActivity.isFavorite)
+						((FavouriteActivity)context).onFavouriteClicked(v);
+					else
+						((ListActivity)context).onFavouriteClicked(v);
+				}
+			});
+			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, store.getLogo());
+			rowView.setTag(viewHolder);
+			rowView.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Log.d("fdsfsfsdfs","fdsfsdfsf");
+					Intent intent = new Intent(context, ListDetailActivity.class);
+					intent.putExtra("store_id", ListActivity.storeId);
+					intent.putExtra("id", store.getId());
+					context.startActivity(intent);
+				}
+			});
+			if (store != null) {
+				
+
+			}
+			viewHolder.imgFavouriteThumb.setTag(store);
+			viewHolder.btnDistance.setTag(store);
+			rowView.setEnabled(true);
+			viewList.put(store.getId(), rowView);
+			return rowView;
+
 	}
 
 	@Override
@@ -152,7 +255,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		// TODO Auto-generated method stub
 		GroupHolder groupHolder;
 		if (arg2 == null) {
-			arg2 = LayoutInflater.from(mContext).inflate(R.layout.list_group,
+			arg2 = LayoutInflater.from(context).inflate(R.layout.list_group,
 					null);
 			groupHolder = new GroupHolder();
 			groupHolder.img = (ImageView) arg2.findViewById(R.id.tag_img);

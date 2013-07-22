@@ -221,8 +221,8 @@ public class TwitterActivity extends Activity {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{
-			if(progressBar.getVisibility() != View.VISIBLE)
-				progressBar.setVisibility(View.GONE);
+//			if(progressBar.getVisibility() != View.VISIBLE)
+			progressBar.setVisibility(View.GONE);
 			if( url.contains(CALLBACK_URL))
 			{
 				Uri uri = Uri.parse( url );
