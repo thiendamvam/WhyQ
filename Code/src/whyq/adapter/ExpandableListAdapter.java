@@ -113,7 +113,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			ViewGroup arg4) {
 		// TODO Auto-generated method stub
 		View view = arg3;
-		Store store = mGroupCollection.get(arg0).getMenuList().get(arg1);
+		final Store store = mGroupCollection.get(arg0).getMenuList().get(arg1);
 		final String viewId = store.getId();
 
 		currentPermId = viewId;
@@ -127,7 +127,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View rowView = inflater.inflate(R.layout.whyq_item_new, null);
-			LayoutParams PARAMS = (LinearLayout.LayoutParams)rowView.getLayoutParams();
+//			LayoutParams PARAMS = (LinearLayout.LayoutParams)rowView.getLayoutParams();
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.id = store.getStoreId();
 			viewHolder.imgThumb = (ImageView) rowView.findViewById(R.id.imgThumbnal2);
@@ -223,6 +223,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			rowView.setEnabled(true);
 			viewList.put(store.getId(), rowView);
 			return rowView;
+			}
 
 	}
 
