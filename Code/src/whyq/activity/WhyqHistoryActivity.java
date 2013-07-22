@@ -6,6 +6,7 @@ import java.util.List;
 import whyq.WhyqApplication;
 import whyq.model.BillItem;
 import whyq.model.BusinessInfo;
+import whyq.model.ResponseData;
 import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
@@ -59,6 +60,7 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 		getService().getHistories(getEncryptedToken(), userId);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
@@ -66,8 +68,12 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 		if (result != null && result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionGetHistories) {
 			DataParser parser = new DataParser();
-			mAdapter.setItems((List<BillItem>)parser.parseBills(String.valueOf(result
-					.getData())));
+			ResponseData data = (ResponseData) parser.parseBills(String.valueOf(result.getData()));
+			if (data.getStatus().equals("401")) {
+				Util.loginAgain(this, data.getMessage()) ;
+			} else {
+				mAdapter.setItems((List<BillItem>) data.getData());
+			}
 		}
 	}
 

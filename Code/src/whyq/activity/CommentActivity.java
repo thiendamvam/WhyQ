@@ -6,6 +6,7 @@ import java.util.List;
 import whyq.WhyqApplication;
 import whyq.model.Comment;
 import whyq.model.Photo;
+import whyq.model.ResponseData;
 import whyq.service.DataParser;
 import whyq.service.ResultCode;
 import whyq.service.Service;
@@ -52,11 +53,11 @@ public class CommentActivity extends ImageWorkerActivity {
 		if (mStoreId == null) {
 			mStoreId = "";
 		}
-		
+
 		mFilterLayout = (RadioGroup) findViewById(R.id.filterLayout);
 		mFilterLayout.getLayoutParams().width = WhyqApplication.sScreenWidth * 2 / 3;
 		mFilterLayout.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				if (checkedId == R.id.viewAll) {
@@ -66,17 +67,18 @@ public class CommentActivity extends ImageWorkerActivity {
 				}
 			}
 		});
-		
+
 		View filter = getLayoutInflater().inflate(R.layout.filter, null);
 		setExtraView(filter);
 		getComments(false);
 	}
-	
-	private void getComments(boolean onlyFriend){
+
+	private void getComments(boolean onlyFriend) {
 		setLoading(true);
-		getService().getComments(getEncryptedToken(), mStoreId, 1, 20, onlyFriend);
+		getService().getComments(getEncryptedToken(), mStoreId, 1, 20,
+				onlyFriend);
 	}
-	
+
 	@Override
 	protected void onExtraButtonPressed() {
 		super.onExtraButtonPressed();
@@ -89,6 +91,7 @@ public class CommentActivity extends ImageWorkerActivity {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
@@ -96,9 +99,17 @@ public class CommentActivity extends ImageWorkerActivity {
 		if (result != null && result.getCode() == ResultCode.Success
 				&& result.getAction() == ServiceAction.ActionGetComment) {
 			DataParser paser = new DataParser();
-			List<Comment> comments = (List<Comment>) paser.parseComments(String
+			ResponseData data = (ResponseData) paser.parseComments(String
 					.valueOf(result.getData()));
-			mAdapter.setItems(comments);
+			if (data == null) {
+				return;
+			}
+			
+			if (data.getStatus().equals("401")) {
+				Util.loginAgain(this, data.getStatus());
+			} else {
+				mAdapter.setItems((List<Comment>) data.getData());
+			}
 		}
 	}
 
@@ -155,6 +166,15 @@ public class CommentActivity extends ImageWorkerActivity {
 			holder.name.setText(item.getUser().getFirstName());
 			holder.comment.setText(item.getContent());
 			holder.like.setText("" + item.getCount_like());
+			holder.like.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+
+				}
+			});
+
 			mImageWorker.downloadImage(item.getUser().getUrlAvatar(),
 					holder.avatar);
 			Photo photo = item.getPhotos();

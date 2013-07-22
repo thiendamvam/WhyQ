@@ -104,5 +104,6 @@
     <string name="Promotion">Promotion</string>
     <string name="filter_view_all">View All</string>
     <string name="filter_friend_comment">Friend\'s Comment</string>
+    <string name="saving">Saving</string>
 
 </resources>
