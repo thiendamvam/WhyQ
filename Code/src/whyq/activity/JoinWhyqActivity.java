@@ -123,6 +123,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 
 			public void onClick(View v) {
 				if(checkInputData()){
+					showDialog();
 					exeSignup();
 				}else{
 //					Util.showDialog(context, notify);
@@ -234,22 +235,22 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 					lastNameValue));
 			
 			
-			try {
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				// Bitmap bm = BitmapFactory.decodeFile(filePath);
-				Bitmap bm = getBitmap2(avatarPath);
-//				bm.compress(CompressFormat.JPEG, 75, bos);
-				bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-				byte[] data = bos.toByteArray();
-
-				String fileName = new File(avatarPath).getName();
-				ByteArrayBody bab = new ByteArrayBody(data, fileName);
-				nameValuePairs.add(new BasicNameValuePair("avatar",
-						bab.toString()));
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
+//			try {
+//				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//				// Bitmap bm = BitmapFactory.decodeFile(filePath);
+//				Bitmap bm = getBitmap2(avatarPath);
+////				bm.compress(CompressFormat.JPEG, 75, bos);
+//				bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+//				byte[] data = bos.toByteArray();
+//
+//				String fileName = new File(avatarPath).getName();
+//				ByteArrayBody bab = new ByteArrayBody(data, fileName);
+//				nameValuePairs.add(new BasicNameValuePair("avatar",
+//						bab.toString()));
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//				e.printStackTrace();
+//			}
 
 
 		}
