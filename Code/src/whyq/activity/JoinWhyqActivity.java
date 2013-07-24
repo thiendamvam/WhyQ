@@ -286,6 +286,13 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 			notify+="Input Email";
 			status = false;
 			email.setError("Please input your email");
+		}else{
+			if(!Util.isValidEmail(emailValue)){
+				notify+="Your email format is not correct. Please try again";
+				status = false;
+				email.setError("Your email format is not correct. Please try again");
+				
+			}
 		}
 		if(userNameValue.equals("")){
 			notify+="Input Username";
@@ -304,6 +311,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 		}
 		if(!passValue.equals(confirmPassValue)){
 			status = false;
+			Toast.makeText(context, "Your confirmed password is not match", Toast.LENGTH_SHORT).show();
 		}
 		return status;
 	}
