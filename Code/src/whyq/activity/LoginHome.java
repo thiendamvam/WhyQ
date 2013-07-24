@@ -155,6 +155,15 @@ public class LoginHome extends Activity
 				
 			}
 		});
+		
+		String token = WhyqApplication.Instance().getToken();
+		if (token == null || token.equals("")) {
+
+		} else {
+			Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+			startActivity(intent);
+			finish();
+		}
 	}
 //	public Handler loginFbTw = new Handler() {
 //		@Override

@@ -303,6 +303,9 @@ public class Service implements Runnable {
 		case ActionRemoveFavorite:
 			resObj = parser.parseLFavouriteResult(result);
 			break;
+		case ActionForgotPassword:
+			resObj = parser.parseLResetPasswordResult(result);
+			break;
 		default:
 			resObj = result;
 			Logger.appendLog(result);
@@ -612,6 +615,16 @@ public class Service implements Runnable {
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/profile", params, true, false);
+	}
+
+	public void exeResetPass(String string) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionForgotPassword;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("email", string);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/forget_password", params, true, false);
 	}
 
 }

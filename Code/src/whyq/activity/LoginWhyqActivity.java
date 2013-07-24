@@ -335,7 +335,10 @@ private void showDialog() {
 	// dialog.show();
 	progressBar.setVisibility(View.VISIBLE);
 }
-
+public void onForgotPasswordClicked(View v){
+	Intent i = new Intent(LoginWhyqActivity.this, WhyqForgotPasswordActivity.class);
+	startActivity(i);
+}
 private void hideDialog() {
 	// dialog.dismiss();
 	progressBar.setVisibility(View.INVISIBLE);
