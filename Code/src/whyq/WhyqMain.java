@@ -48,10 +48,10 @@ public class WhyqMain extends TabActivity {
 
 		token = XMLParser.getToken(WhyqApplication.Instance()
 				.getApplicationContext());
-		if (token == null || token.equals("")) {
-			Intent intent = new Intent(WhyqMain.this, LoginHome.class);
-			startActivity(intent);
-		} else {
+//		if (token == null || token.equals("")) {
+//			Intent intent = new Intent(WhyqMain.this, LoginHome.class);
+//			startActivity(intent);
+//		} else {
 			tabHost = getTabHost();
 			context = WhyqMain.this;
 //			tabHost.getTabWidget().setBackgroundResource(
@@ -200,7 +200,7 @@ public class WhyqMain extends TabActivity {
 			// getListData();
 		}
 
-	}
+//	}
 	private void initTabsAppearance(TabHost tabhost) {
 	    // Change background
 	    for(int i=0; i < tabhost.getTabWidget().getChildCount(); i++)

@@ -147,6 +147,15 @@ public class LoginHome extends Activity
 				
 			}
 		});
+		
+		String token = WhyqApplication.Instance().getToken();
+		if (token == null || token.equals("")) {
+
+		} else {
+			Intent intent = new Intent(LoginHome.this, WhyqMain.class);
+			startActivity(intent);
+			finish();
+		}
 	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

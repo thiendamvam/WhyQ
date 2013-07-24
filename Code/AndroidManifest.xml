@@ -11,12 +11,12 @@
         android:resizeable="true"
         android:smallScreens="true" />
     <!-- Setup for Google map -->
-           <!-- Google maps -->
-        <!-- Debug key store -->
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBxN9NmcS5wPo5ZB9XDsHb_ts3hnbuM7oM" />
-        <!-- End of Google maps -->
+    <!-- Google maps -->
+    <!-- Debug key store -->
+    <meta-data
+        android:name="com.google.android.maps.v2.API_KEY"
+        android:value="AIzaSyBxN9NmcS5wPo5ZB9XDsHb_ts3hnbuM7oM" />
+    <!-- End of Google maps -->
     <permission
         android:name="com.example.krlayout_maps.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
@@ -27,9 +27,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- Maps API needs OpenGL ES 2.0. -->
-<!--     <uses-feature
+    <!--
+         <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true" /> -->
+        android:required="true" />
+    -->
     <!-- End of setup for google map -->
     <uses-sdk
         android:minSdkVersion="8"
@@ -60,11 +62,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomTheme"
             android:windowSoftInputMode="adjustPan" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="whyq.activity.FavouriteActivity"
@@ -81,7 +78,7 @@
         <activity
             android:name="whyq.activity.WhyqLogout"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Translucent"  />
+            android:theme="@style/Theme.Translucent" />
         <activity
             android:name="whyq.activity.ChangeLocationActivity"
             android:screenOrientation="portrait"
@@ -173,6 +170,11 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustResize" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="whyq.activity.CreateBoardActivity"
