@@ -282,6 +282,13 @@ public class Service implements Runnable {
 			result = result.replace("<0></0>", "");
 			resObj = parser.parserLoginData(result);
 			break;
+		case ActionLoginWhyq:
+			result = result.replace("<0></0>", "");
+			resObj = parser.parserLoginData(result);
+			break;
+		case ActionSigup:
+			resObj = parser.parserSignupResult(result);
+			break;
 		case ActionLoginTwitter:
 			resObj = parser.parserLoginData(result);
 			break;
@@ -625,6 +632,26 @@ public class Service implements Runnable {
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/forget_password", params, true, false);
+	}
+
+
+	public void loginWhyq(String email, String pass) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionLoginWhyq;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/login", params, true, false);
+		params.put("email", email);
+		params.put("password", pass);
+	}
+
+	public void register(HashMap<String, String> params) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionSigup;
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/signup", params, true, false);
 	}
 
 }

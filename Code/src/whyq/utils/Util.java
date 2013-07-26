@@ -53,6 +53,8 @@ import android.widget.Toast;
 import com.whyq.R;
 
 public class Util {
+	public static final int TIME_OUT = 30000;
+
 	public Util(){
 		
 	}
