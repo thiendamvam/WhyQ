@@ -64,6 +64,12 @@
             android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
+            android:name="whyq.activity.InvitationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomTheme"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
             android:name="whyq.activity.FavouriteActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
