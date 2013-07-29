@@ -15,8 +15,8 @@ public class Constants {
 	//public static final String CONSUMER_KEY = "uMtOaN3CLE7dvvVSR1giLA";
 	//public static final String CONSUMER_SECRET= "erVQyuoDUu3cwOG48cgUm5V14puqN3JbjSP4v4NE";
 	
-	public static final String CONSUMER_KEY = "5jjck7r7otsgKP826GKXw";//"mpaQ9GA3ICVbnZTZH2FEdg";
-	public static final String CONSUMER_SECRET= "zVOFi8cnMz7WInNh21KOJfJevcY5fiQ3FgGJRGLI4";//"BH37EUqAHc1vAnxvdS2X4fJsxxuZRCJlT6VtT4avQNI";
+	public static final String CONSUMER_KEY = "mpaQ9GA3ICVbnZTZH2FEdg";//"mpaQ9GA3ICVbnZTZH2FEdg";
+	public static final String CONSUMER_SECRET= "BH37EUqAHc1vAnxvdS2X4fJsxxuZRCJlT6VtT4avQNI";//"BH37EUqAHc1vAnxvdS2X4fJsxxuZRCJlT6VtT4avQNI";
 	
 	public static final String REQUEST_URL = "https://api.twitter.com/oauth/request_token";
 	public static final String ACCESS_URL = "https://api.twitter.com/oauth/access_token";
@@ -25,7 +25,8 @@ public class Constants {
 	public static final String	OAUTH_CALLBACK_SCHEME	= "perm";
 	public static final String	OAUTH_CALLBACK_HOST		= "twitter";
 	public static final String	OAUTH_CALLBACK_URL		=  "perm://twitter";
-	
+	public static final String APP = "android";
+	public static final String APP_NAME = "whyq";
 	/**
 	 * Facebook app configuration
 	 */

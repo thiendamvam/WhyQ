@@ -16,7 +16,7 @@
             android:id="@+id/imgAvatar"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/logo_whyq"
+            android:src="@drawable/logo_whyq"
             android:scaleType="fitXY" />
     </LinearLayout>
 

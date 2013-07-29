@@ -1,7 +1,13 @@
 package whyq.service;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,6 +34,7 @@ import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
 import whyq.model.SearchFriendCriteria;
 import whyq.utils.API;
+import whyq.utils.Constants;
 import whyq.utils.Logger;
 import whyq.utils.Util;
 import android.graphics.Bitmap;
@@ -57,6 +64,8 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionGetRetaurentList;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("deviceType", "kindle-fire");
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/v1/shop/purchase", params, true, false);
 	}
 
@@ -65,6 +74,8 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionLogout;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/logout", params, true, false);
 	}
 	public void postFavorite(String storeId) {
@@ -73,6 +84,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", storeId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/favourite/business", params, true, false);
 	}
 	public void removeFavorite(String storeId) {
@@ -81,6 +94,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", storeId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/favourite/business", params, true, false);
 	}
 	public void getComments(String encryptedToken, String store_id, int page,
@@ -92,6 +107,8 @@ public class Service implements Runnable {
 		params.put("page", String.valueOf(page));
 		params.put("count", String.valueOf(count));
 		params.put("only_friend", onlyFriend ? "1" : "");
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/comment", params, true, false);
 	}
 
@@ -99,6 +116,8 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionGetFriends;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", token);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		if (user_id != null) {
 			params.put("user_id", user_id);
 		}
@@ -110,6 +129,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("access_token", accessToken);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/friend/facebook", params, true, false);
 	}
 
@@ -120,6 +141,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("key", key);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		params.put("search", criteria.toString());
 		switch (criteria) {
 		case facebook:
@@ -140,6 +163,8 @@ public class Service implements Runnable {
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("access_token", accessToken);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/friend/facebook/invite", params, true, false);
 	}
 
@@ -148,6 +173,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/recent/activity", params, true, false);
 	}
 
@@ -158,6 +185,8 @@ public class Service implements Runnable {
 		params.put("token", encryptedToken);
 		params.put("content", content);
 		params.put("photo", photoFile);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/comment/post", params, true, false);
 	}
 
@@ -253,6 +282,13 @@ public class Service implements Runnable {
 			result = result.replace("<0></0>", "");
 			resObj = parser.parserLoginData(result);
 			break;
+		case ActionLoginWhyq:
+			result = result.replace("<0></0>", "");
+			resObj = parser.parserLoginData(result);
+			break;
+		case ActionSigup:
+			resObj = parser.parserSignupResult(result);
+			break;
 		case ActionLoginTwitter:
 			resObj = parser.parserLoginData(result);
 			break;
@@ -273,6 +309,9 @@ public class Service implements Runnable {
 			break;
 		case ActionRemoveFavorite:
 			resObj = parser.parseLFavouriteResult(result);
+			break;
+		case ActionForgotPassword:
+			resObj = parser.parseLResetPasswordResult(result);
 			break;
 		default:
 			resObj = result;
@@ -367,7 +406,7 @@ public class Service implements Runnable {
 					Bitmap bm = BitmapFactory.decodeStream(in);
 					dispatchResult(bm);
 				} else {
-					String temp = Util.convertStreamToString(in);// text.toString();
+					String temp = convertStreamToString(in);// text.toString();
 					Log.d(_action.toString(), "==" + temp + "");
 					in.close();
 					dispatchResult(temp);
@@ -388,6 +427,43 @@ public class Service implements Runnable {
 		}
 	}
 
+	private String convertStreamToString(InputStream is) {
+		// TODO Auto-generated method stub
+
+		/*
+		 * To convert the InputStream to String we use the Reader.read(char[]
+		 * buffer) method. We iterate until the Reader return -1 which means
+		 * there's no more data to read. We use the StringWriter class to
+		 * produce the string.
+		 */
+
+		if (is != null) {
+			Writer writer = new StringWriter();
+
+			char[] buffer = new char[1024];
+			try {
+				Reader reader = new BufferedReader(new InputStreamReader(is,
+						"UTF-8"));
+				int n;
+				while ((n = reader.read(buffer)) != -1) {
+					writer.write(buffer, 0, n);
+				}
+			} catch (IOException e) {
+				return "";
+			} finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+
+				}
+			}
+			return writer.toString();
+		} else {
+			return "";
+		}
+	
+	}
+
 	public int getConnectionTimeout() {
 		return _connection.getConnectTimeout();
 	}
@@ -396,6 +472,8 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionLoginFacebook;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("access_token", accessToken);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/login/fb", params, true, false);
 	}
 
@@ -406,6 +484,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("oauth_token", oauthToken);
 		params.put("oauth_token_secret", oauthTokenSecret);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/login/tw", params, true, false);
 	}
 
@@ -461,6 +541,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", id);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/business/show", params, true, false);
 	}
 
@@ -469,6 +551,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("store_id", store_id);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/business/member/check_bill", params, true, false);
 	}
 	
@@ -477,6 +561,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/profile/order", params, true, false);
 	}
 
@@ -485,6 +571,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/order", params, true, false);
 	}
 
@@ -494,6 +582,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", storeId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/business/show", params, true, false);
 
 	}
@@ -509,6 +599,8 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/profile/photo", params, true, false);
 	}
 
@@ -517,6 +609,8 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionGetLocation;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("text-search", string);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("getlocation", params, true, false);
 	}
 	
@@ -525,7 +619,39 @@ public class Service implements Runnable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/profile", params, true, false);
+	}
+
+	public void exeResetPass(String string) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionForgotPassword;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("email", string);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/forget_password", params, true, false);
+	}
+
+
+	public void loginWhyq(String email, String pass) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionLoginWhyq;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/login", params, true, false);
+		params.put("email", email);
+		params.put("password", pass);
+	}
+
+	public void register(HashMap<String, String> params) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionSigup;
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/register", params, true, false);
 	}
 
 }

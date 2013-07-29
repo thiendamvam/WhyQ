@@ -34,7 +34,7 @@ public class Store {
 	private String nameCate;
 	private String distance;
 	private String discription;
-	private String photos;
+	private ArrayList<Photo> photos;
 	private boolean isFavourite;
 	private UserCheckBill userCheckBill;
 	private ArrayList<User> userList;
@@ -530,15 +530,7 @@ public class Store {
 	/**
 	 * @return the photos
 	 */
-	public String getPhotos() {
-		return photos;
-	}
-	/**
-	 * @param photos the photos to set
-	 */
-	public void setPhotos(String photos) {
-		this.photos = photos;
-	}
+
 	/**
 	 * @return the isFavourite
 	 */
@@ -598,5 +590,17 @@ public class Store {
 	 */
 	public void setPromotionList(ArrayList<Promotion> promotionList) {
 		this.promotionList = promotionList;
+	}
+	/**
+	 * @return the photos
+	 */
+	public ArrayList<Photo> getPhotos() {
+		return photos;
+	}
+	/**
+	 * @param photos the photos to set
+	 */
+	public void setPhotos(ArrayList<Photo> photos) {
+		this.photos = photos;
 	}
 }

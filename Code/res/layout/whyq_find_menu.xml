@@ -26,7 +26,7 @@
             android:id="@+id/lnFindFromFb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/list_bg"
+            android:background="@drawable/base_button"
             android:gravity="center_vertical"
             android:onClick="findFromFaccebookClicked"
             android:padding="4dp" >
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/lnFindFromFb"
             android:layout_marginTop="10dp"
-            android:background="@color/list_bg"
+            android:background="@drawable/base_button"
             android:onClick="findFromTwitterClicked"
             android:gravity="center_vertical"
             android:padding="4dp" >
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/lnFindFromFW"
             android:layout_marginTop="10dp"
-            android:background="@color/list_bg"
+            android:background="@drawable/base_button"
             android:onClick="searchByNameClicked"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -96,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/icon_add_friend" />
     </RelativeLayout>
 
 </LinearLayout>

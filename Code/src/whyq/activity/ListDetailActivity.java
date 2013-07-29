@@ -10,7 +10,9 @@ import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
+import whyq.model.Promotion;
 import whyq.model.Store;
+import whyq.model.UserCheckBill;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import whyq.utils.UrlImageViewHelper;
@@ -193,11 +195,12 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private void bindData() {
 		// TODO Auto-generated method stub
 		try {
+			bindUserChecked();
 			if(store.getLogo() !=null)
 				UrlImageViewHelper.setUrlDrawable(imgThumbnail, store.getLogo());
 			tvAddresss.setText(store.getAddress());
 
-			tvOpeningTime.setText(store.getCreatedate());
+			tvOpeningTime.setText(store.getStartTime()+" - "+store.getEndTime());
 			tvTelephone.setText(store.getPhoneStore());
 			tvStoreDes.setText(store.getIntroStore());
 			tvHeaderTitle.setText(store.getNameStore());
@@ -210,14 +213,48 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 			}else{
 				tvFromUsr.setVisibility(View.VISIBLE);
 			}
-			UrlImageViewHelper.setUrlDrawable(imgFrienAvatar, store.getUserList()
-					.get(0).getUrlAvatar());
+
+//			UrlImageViewHelper.setUrlDrawable(imgFrienAvatar, store.getUserList()
+//					.get(0).getUrlAvatar());
 			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 
+	}
+
+	private void bindUserChecked() {
+		// TODO Auto-generated method stub
+		try {
+			UserCheckBill userCheckBill = store.getUserCheckBill();
+			if(userCheckBill !=null){
+				if(userCheckBill.getTotalMember()!=null && !userCheckBill.getTotalMember().equals("")){
+					if(userCheckBill.getAvatar()!=null && !userCheckBill.getAvatar().equals("")){
+						if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
+							tvFriendNumber.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" others visited");	
+						}else{
+							tvFriendNumber.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" other visited");
+						}
+						
+						imgFrienAvatar.setVisibility(View.VISIBLE);
+						UrlImageViewHelper.setUrlDrawable(imgFrienAvatar, userCheckBill.getAvatar());	
+					}else{
+						imgFrienAvatar.setVisibility(View.GONE);
+						if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
+							tvFriendNumber.setText(userCheckBill.getTotalMember()+" others visited");
+						}else{
+							tvFriendNumber.setText(userCheckBill.getTotalMember()+" other visited");
+						}
+						
+					}
+
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 
 	private void getDetailData() {
@@ -252,9 +289,17 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private void bindPromotionData() {
 		// TODO Auto-generated method stub
 		try {
-
+			if(store.getPromotionList()!=null){
+				if(store.getPromotionList().size()>0){
+					Promotion promotion = store.getPromotionList().get(0);
+					tvNumberDiscount.setText(promotion.getValuePromotion()+""+promotion.getTypeValue()); 
+					tvDes.setText(promotion.getDescriptionPromotion());
+					tvDate.setText(promotion.getStartDate()+" - "+promotion.getEndDate());
+				}
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 

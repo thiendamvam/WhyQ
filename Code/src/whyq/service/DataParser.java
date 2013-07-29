@@ -28,6 +28,7 @@ import whyq.handler.UserHandler;
 import whyq.handler.UserProfileHandler;
 import whyq.model.Location;
 import whyq.model.Menu;
+import whyq.model.Photo;
 import whyq.model.ProductTypeInfo;
 import whyq.model.Promotion;
 import whyq.model.ResponseData;
@@ -526,7 +527,6 @@ public class DataParser {
 					String introStore = getValue(permElement, "intro_store");
 					String phoneStore = getValue(permElement, "phone_store");
 					String logo = getValue(permElement, "logo");
-					String photos = getValue(permElement, "photos");
 					String style = getValue(permElement, "style");
 					;
 					String startTime = getValue(permElement, "start_time");
@@ -571,7 +571,6 @@ public class DataParser {
 					item.setHomeDeliver(isHomeDeliver);
 					item.setHotelDeliver(isHotelDeliver);
 					item.setTakeAway(isTakeAway);
-					item.setPhotos(photos);
 					
 					item.setTableQuantity(tableQuantity);
 					item.setCountFavaouriteMember(countFavouriteMemebr);
@@ -738,6 +737,48 @@ public class DataParser {
 					}
 					item.setPromotionList(promotionList);
 					
+					/*
+					 * Get Photos
+					 */			
+					NodeList photoNode = (NodeList) permElement.getElementsByTagName("photos");
+					int photoSize  = photoNode.getLength();
+					ArrayList<Photo> photos = new ArrayList<Photo>();
+					for(int i2=0;i2< photoSize;i2++){
+						Element element = (Element)photoNode.item(i2);
+						Photo photoItem = new Photo();
+						photoItem.setId(getValue(element, "TotalFriend"));
+						photoItem.setStore_id(getValue(element, "TotalFriend"));
+						photoItem.setUser_id(getValue(element, "TotalFriend"));
+						photoItem.setLocation_id(getValue(element, "TotalFriend"));
+						photoItem.setComment_id(getValue(element, "TotalFriend"));
+						photoItem.setImage(getValue(element, "TotalFriend"));
+						photoItem.setThumb(getValue(element, "TotalFriend"));
+						photoItem.setStatus(getValue(element, "TotalFriend"));
+						photoItem.setType_photo(getValue(element, "TotalFriend"));
+						photoItem.setCreatedate(getValue(element, "TotalFriend"));
+						photoItem.setUpdatedate(getValue(element, "TotalFriend"));
+						photos.add(photoItem);					
+					}
+					item.setPhotos(photos);
+					
+					NodeList userNode = (NodeList) permElement.getElementsByTagName("user_check_bill");
+					int size  = userNode.getLength();
+					for(int i2=0;i2< size;i2++){
+						Element element = (Element)userNode.item(i2);
+						UserCheckBill userCheckBill= new UserCheckBill();
+						userCheckBill.setTotalFriend(getValue(element, "TotalFriend"));
+						userCheckBill.setTotalMember(getValue(element, "TotalMember"));
+						userCheckBill.setId(getValue(element, "id"));
+						userCheckBill.setFirstName(getValue(element, "first_name"));
+						userCheckBill.setLastName(getValue(element, "last_name"));
+						userCheckBill.setAvatar(getValue(element, "avatar"));
+						userCheckBill.setStoreId(getValue(element, "store_id"));
+						userCheckBill.setStatusBill(getValue(element, "status_bill"));
+						userCheckBill.setInteractionPoint(getValue(element, "interaction_point"));
+						item.setUserCheckBill(userCheckBill);
+						i2=size;
+					}
+					
 					NodeList tagNodes = permElement.getElementsByTagName("tags");
 					int tagLenth = nodes.getLength();
 					ArrayList<whyq.model.Tag> tagList = new ArrayList<whyq.model.Tag>();
@@ -879,6 +920,59 @@ public class DataParser {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public Object parseLResetPasswordResult(String result) {
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+			data.setStatus(statusResponse);
+			data.setMessage(mes);
+			return data;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public Object parserSignupResult(String result) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+		try {
+			ResponseData data = new ResponseData();
+			Document doc = XMLfromString(result);
+			ArrayList<Store> permList = new ArrayList<Store>();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+				XMLReader xmlReader = initializeReader();
+				UserHandler userHandler = new UserHandler();
+				// assign the handler
+				xmlReader.setContentHandler(userHandler);
+				xmlReader.parse(new InputSource(new StringReader(result)));
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(userHandler.getUser());
+				data.setMessage(mes);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	
 	}
 
 }

@@ -24,7 +24,6 @@ import javax.crypto.NoSuchPaddingException;
 
 import whyq.WhyqApplication;
 import whyq.activity.LoginHome;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,6 +53,11 @@ import android.widget.Toast;
 import com.whyq.R;
 
 public class Util {
+	public static final int TIME_OUT = 30000;
+
+	public Util(){
+		
+	}
 	public static Typeface sTypefaceRegular = Typeface.createFromAsset(
 			WhyqApplication.Instance().getApplicationContext().getAssets(),
 			"Roboto-Regular.ttf");;
@@ -79,7 +83,7 @@ public class Util {
 		return pattern.matcher(inputMail).matches();
 	}
 
-	public static String convertStreamToString(InputStream is) {
+	public String convertStreamToString(InputStream is) {
 		/*
 		 * To convert the InputStream to String we use the Reader.read(char[]
 		 * buffer) method. We iterate until the Reader return -1 which means

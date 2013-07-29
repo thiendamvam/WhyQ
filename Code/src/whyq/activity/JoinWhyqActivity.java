@@ -3,14 +3,19 @@
  */
 package whyq.activity;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -25,8 +30,13 @@ import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
+import whyq.interfaces.IServiceListener;
 import whyq.interfaces.JoinPerm_Delegate;
+import whyq.model.ResponseData;
 import whyq.model.User;
+import whyq.service.Service;
+import whyq.service.ServiceAction;
+import whyq.service.ServiceResponse;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.RSA;
@@ -34,6 +44,7 @@ import whyq.utils.Util;
 import whyq.utils.XMLParser;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -63,7 +74,7 @@ import com.whyq.R;
  * @author Linh Nguyen This activity supports to create new Perming account.
  */
 public class JoinWhyqActivity extends Activity implements TextWatcher,
-		JoinPerm_Delegate {
+		JoinPerm_Delegate, IServiceListener {
 	private static final int GET_IMAGE = 0;
 	// Button createAccount;
 	EditText firstName;
@@ -86,13 +97,15 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 	private String notify;
 	private EditText userName;
 	private String userNameValue;
+	private Service service;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_join);
-
+		
 		context = JoinWhyqActivity.this;
+		service = new Service(this);
 		TextView textView = (TextView) findViewById(R.id.permpingTitle);
 //		Typeface tf = Typeface.createFromAsset(getAssets(),
 //				"ufonts.com_franklin-gothic-demi-cond-2.ttf");
@@ -123,6 +136,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 
 			public void onClick(View v) {
 				if(checkInputData()){
+					showDialog();
 					exeSignup();
 				}else{
 //					Util.showDialog(context, notify);
@@ -196,6 +210,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 			nameValuePairs.add(new BasicNameValuePair("cpassword",
 					confirmPassword.getText().toString()));
 		} else { // Whyq
+			HashMap<String, String> params = new HashMap<String, String>();
 			RSA rsa = new RSA();
 			String pass = "", confirmPass = "";
 			try {
@@ -225,19 +240,24 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 			nameValuePairs.add(new BasicNameValuePair("email",emailValue));
 			nameValuePairs
 					.add(new BasicNameValuePair("password", pass));
-			// nameValuePairs.add(new BasicNameValuePair("cpassword",
-			// confirmPass));
 			nameValuePairs.add(new BasicNameValuePair("first_name",
 					firstNameValue));// prefs.getString(Constants.ACCESS_TOKEN,
 														// ""))
 			nameValuePairs.add(new BasicNameValuePair("last_name",
 					lastNameValue));
 			
+			params.put("email",emailValue);
+			params.put("password", pass);
+			params.put("first_name", firstNameValue);
+			params.put("lastNameValue", lastNameValue);
 			
+//			
 			try {
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				// Bitmap bm = BitmapFactory.decodeFile(filePath);
-				Bitmap bm = getBitmap2(avatarPath);
+//				Bitmap bm = getBitmap2(avatarPath);
+				Bitmap bm = getBitmapWithCareMemory(avatarPath);
+				
 //				bm.compress(CompressFormat.JPEG, 75, bos);
 				bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 				byte[] data = bos.toByteArray();
@@ -251,14 +271,14 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 				e.printStackTrace();
 			}
 
-
+			service.register(params);
+//			XMLParser parser = new XMLParser(XMLParser.JOIN_WHYQ,
+//					JoinWhyqActivity.this, API.createAccountURL,
+//					nameValuePairs);
+//			User user = parser.getUser();
+//			hideDialog();
 		}
 
-		XMLParser parser = new XMLParser(XMLParser.JOIN_WHYQ,
-				JoinWhyqActivity.this, API.createAccountURL,
-				nameValuePairs);
-		User user = parser.getUser();
-		hideDialog();
 	
 	}
 	protected boolean checkInputData() {
@@ -286,6 +306,13 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 			notify+="Input Email";
 			status = false;
 			email.setError("Please input your email");
+		}else{
+			if(!Util.isValidEmail(emailValue)){
+				notify+="Your email format is not correct. Please try again";
+				status = false;
+				email.setError("Your email format is not correct. Please try again");
+				
+			}
 		}
 		if(userNameValue.equals("")){
 			notify+="Input Username";
@@ -304,8 +331,73 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 		}
 		if(!passValue.equals(confirmPassValue)){
 			status = false;
+			Toast.makeText(context, "Your confirmed password is not match", Toast.LENGTH_SHORT).show();
 		}
 		return status;
+	}
+	private Bitmap getBitmapWithCareMemory(String filename){
+		try {
+			int IMAGE_MAX_SIZE = 1024000;
+			FileOutputStream fos = context.openFileOutput(Util.getFileName(filename),
+					Context.MODE_PRIVATE);
+			InputStream is = new BufferedInputStream(new FileInputStream(filename));
+			copyStream(is, fos);
+			fos.close();
+			is.close();
+			FileInputStream fis = context.openFileInput(filename);
+			int fileSize = (int) fis.getChannel().size();
+
+			// Decode image size
+			BitmapFactory.Options o = new BitmapFactory.Options();
+			o.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(fis, null, o);
+			fis.close();
+
+			int oiw = o.outWidth;
+			int oih = o.outHeight;
+			Runtime.getRuntime().gc();
+			int scale = 1;
+//              scale = (int)Math.max(oiw/IMAGE_MAX_SIZE, oih/IMAGE_MAX_SIZE)+1;
+//              if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
+			// // scale = 2;
+//            	  int scale2 = (int)Math.pow(2.0, (int) Math.round(Math.log(IMAGE_MAX_SIZE / (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
+			// }
+//              while (o.outWidth * o.outHeight / Math.pow(scale, 2) > IMAGE_MAX_SIZE) {
+			// scale+= 1;
+			// }
+			do {
+				scale++;
+			} while (fileSize / Math.pow(2, scale) > IMAGE_MAX_SIZE);
+
+			Log.d("aaaa", "=========>Scale=: " + scale);
+			// Decode with inSampleSize
+			BitmapFactory.Options o2 = new BitmapFactory.Options();
+			o2.inSampleSize = scale;
+			fis = context.openFileInput(filename);
+			Bitmap b = null;
+			if (fis != null){
+				b = BitmapFactory.decodeStream(fis, null, o2);
+
+			
+			}
+			fis.close();
+			return b;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public static int copyStream(InputStream input, OutputStream output)
+			throws IOException {
+		byte[] stuff = new byte[1024];
+		int read = 0;
+		int total = 0;
+		while ((read = input.read(stuff)) != -1) {
+			output.write(stuff, 0, read);
+			total += read;
+		}
+		return total;
 	}
 	private Bitmap getBitmap2(String path) {
 		try {
@@ -468,6 +560,33 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 
 	public void onBack(View v) {
 		finish();
+	}
+	@Override
+	public void onCompleted(Service service, ServiceResponse result) {
+		// TODO Auto-generated method stub
+		hideDialog();
+		
+		if(result.isSuccess()&& result.getAction()==ServiceAction.ActionSigup){
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				User user = (User)data.getData();
+					WhyqApplication.Instance().setToken(user);
+					ListActivity.isLogin = true;
+					ListActivity.loginType = 2;
+					Intent intent = new Intent(JoinWhyqActivity.this, WhyqMain.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(intent);
+					finish();
+
+			}else if(data.getStatus().equals("401")){
+				Util.loginAgain(context, data.getMessage());
+			}else{
+				Util.showDialog(context, data.getMessage());
+			}
+
+		}else{
+			Util.showDialog(context,"Can not login for now\nTry again!");
+		}
 	}
 	
 

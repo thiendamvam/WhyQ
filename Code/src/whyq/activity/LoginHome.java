@@ -4,6 +4,9 @@
 package whyq.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import twitter4j.http.AccessToken;
 import whyq.WhyqApplication;
@@ -33,6 +36,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -107,7 +112,10 @@ public class LoginHome extends Activity
 								permutils.saveFacebookToken("oauth_token",
 										accessToken, getApplication());
 								// // Check on server
+								HashMap<String, String> params = new HashMap<String, String>();
+								params.put("access_token", accessToken);
 								exeLoginFacebook(accessToken);
+//								exeSendMessage(true, params);
 							}
 
 							@Override
@@ -157,6 +165,34 @@ public class LoginHome extends Activity
 			finish();
 		}
 	}
+//	public Handler loginFbTw = new Handler() {
+//		@Override
+//		public void handleMessage(Message msg) {
+//			HashMap<String, String> params = (HashMap<String, String>) msg.obj;
+//			int isFb = msg.what;
+//			if(isFb == 1){
+//				String access_token = params.get("access_token");
+//				exeLoginFacebook(access_token);
+//			}else{
+//				String token = params.get("token");
+//				String tokenSecret = params.get("token_secret");
+//				exeLoginTwitter(token, tokenSecret);
+//			}
+//			
+//		}
+//	};
+//	public void exeSendMessage(boolean isFb, HashMap<String, String> params){
+//		Message message = new Message().obtain();
+//		message.obj = params ;
+//		if(isFb){
+//			message.what = 1;
+//			loginFbTw.sendMessage(message);
+//		}else{
+//			message.what = 0;
+//			loginFbTw.sendMessage(message);
+//		}
+//	}
+//	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    // Check which request we're responding to
@@ -165,6 +201,10 @@ public class LoginHome extends Activity
 	        if (resultCode == RESULT_OK) {
 	        	String token = data.getStringExtra("token");
 	        	String tokenSecret = data.getStringExtra("token_secret");
+//	        	HashMap<String, String>params = new HashMap<String, String>();
+//	        	params.put("token", token);
+//	        	params.put("token_secret", tokenSecret);
+//	        	exeSendmessage
 	        	exeLoginTwitter(token, tokenSecret);
 	        }
 	    }
@@ -228,7 +268,8 @@ public class LoginHome extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-			WhyqMain.back();
+//			WhyqMain.back();
+			finish();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
@@ -255,9 +296,9 @@ public class LoginHome extends Activity
 //					
 //				}
 			}else if(data.getStatus().equals("401")){
-				Util.loginAgain(getParent(), data.getMessage());
+				Util.loginAgain(context, data.getMessage());
 			}else{
-				Util.showDialog(getParent(), data.getMessage());
+				Util.showDialog(context, data.getMessage());
 			}
 
 		} else if (result.isSuccess() == true && result.getAction() == ServiceAction.ActionLoginTwitter) {
@@ -265,14 +306,15 @@ public class LoginHome extends Activity
 			ResponseData data = (ResponseData)result.getData();
 			if(data.getStatus().equals("200")){
 				User user = (User)data.getData();
-				if(user.isLogined()){
+//				if(user.isLogined()){
+					WhyqApplication.Instance().setToken(user);
 					ListActivity.isLogin = true;
 					ListActivity.loginType = 2;
 //					dismissLoadingDialog();
 					Intent intent = new Intent(LoginHome.this, WhyqMain.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);
-				}
+//				}
 //				}else{
 //					String mes = user.getMessageLogin();
 //					android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
@@ -294,9 +336,9 @@ public class LoginHome extends Activity
 //					alertError.show();
 //				}
 			}else if(data.getStatus().equals("401")){
-				Util.loginAgain(getParent(), data.getMessage());
+				Util.loginAgain(context, data.getMessage());
 			}else{
-				Util.showDialog(getParent(), data.getMessage());
+				Util.showDialog(context, data.getMessage());
 			}
 
 		}
