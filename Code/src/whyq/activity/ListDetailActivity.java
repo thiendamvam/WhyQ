@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import whyq.adapter.ExampleAdapter;
+import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.WhyqMenuAdapter;
 import whyq.adapter.WhyqMenuAdapter.ViewHolderMitemInfo;
 import whyq.interfaces.IServiceListener;
@@ -19,10 +21,12 @@ import whyq.utils.UrlImageViewHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -34,7 +38,7 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class ListDetailActivity extends Activity implements IServiceListener {
+public class ListDetailActivity extends FragmentActivity implements IServiceListener {
 
 	private Service service;
 	// ProgressDialog dialog;
@@ -67,7 +71,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 	private LinearLayout lnAboutContent;
 	private LinearLayout lnMenuContent;
 	private LinearLayout lnPromotionContent;
-	private ListView lvMenu;
+	private ExpandableListView lvMenu;
 	private TextView tvNumberDiscount;
 	private TextView tvDate;
 	private TextView tvDes;
@@ -112,7 +116,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 		tvDes = (TextView)findViewById(R.id.tvDescription);
 		btnTotalValue = (Button) findViewById(R.id.btnTotalValue);
 		btnTotalValue.setText("0");
-		lvMenu = (ListView)findViewById(R.id.lvMenu);
+		lvMenu = (ExpandableListView)findViewById(R.id.lvMenu);
 		billList = new HashMap<String, Bill>();
 //		showHeaderImage();
 		initTabbar();
@@ -205,7 +209,7 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 			tvStoreDes.setText(store.getIntroStore());
 			tvHeaderTitle.setText(store.getNameStore());
 			tvNumberFavourtie.setText(""+store.getCountFavaouriteMember());
-			UrlImageViewHelper.setUrlDrawable(imgView, store.getPhotos());
+//			UrlImageViewHelper.setUrlDrawable(imgView, store.getPhotos());
 			if(!store.getCountFavaouriteMember().equals("0")){
 				tvCommendRever.setText(store.getCountFavaouriteMember()+" comments");
 				tvCommendRever.setTextColor(getResources().getColor(R.color.profifle_blue));
@@ -310,37 +314,40 @@ public class ListDetailActivity extends Activity implements IServiceListener {
 			
 			int size = menuList.size();
 			if(size > 0 ){
-				menuAdapter = new WhyqMenuAdapter(ListDetailActivity.this, menuList);
-				lvMenu.setAdapter(menuAdapter);
-//				ArrayList<GroupMenu> mGroupCollection = new ArrayList<GroupMenu>();
-//				ArrayList<String> idList = getProductTypeIdList(menuList);
-//				int length = idList.size();
-//				for (int i = 0; i < length; i++) {
-//					try {
-//
-//						String id = idList.get(i);
-//						GroupMenu group= getGroupFromId(
-//								menuList, id);
-//						
-//						if (group != null)
-//							mGroupCollection.add(group);
-//
-//					} catch (Exception e) {
-//						// TODO: handle exception
-//						e.printStackTrace();
-//					}
-//				}
-//				ExpanMenuAdapter adapter = new ExpanMenuAdapter(
-//						ListDetailActivity.this,
-//						lvMenu,
-//						mGroupCollection);
-//
+//				menuAdapter = new WhyqMenuAdapter(ListDetailActivity.this, menuList);
+//				lvMenu.setAdapter(menuAdapter);
+//				ExampleAdapter adapter = new ExampleAdapter(ListDetailActivity.this);
 //				lvMenu.setAdapter(adapter);
-//				adapter.notifyDataSetChanged();
-//
-//				for (int i = 0; i < mGroupCollection.size(); i++) {
-//					lvMenu.expandGroup(i);
-//				}
+				ArrayList<GroupMenu> mGroupCollection = new ArrayList<GroupMenu>();
+				ArrayList<String> idList = getProductTypeIdList(menuList);
+				int length = idList.size();
+				for (int i = 0; i < length; i++) {
+					try {
+
+						String id = idList.get(i);
+						GroupMenu group= getGroupFromId(
+								menuList, id);
+						
+						if (group != null)
+							mGroupCollection.add(group);
+
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}
+				ExpanMenuAdapter adapter = new ExpanMenuAdapter(
+						ListDetailActivity.this,
+						lvMenu,
+						mGroupCollection);
+
+				lvMenu.setAdapter(adapter);
+				adapter.notifyDataSetChanged();
+				
+				lvMenu.setAdapter(adapter);
+				for (int i = 0; i < mGroupCollection.size(); i++) {
+					lvMenu.expandGroup(i);
+				}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

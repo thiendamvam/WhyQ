@@ -424,13 +424,13 @@ public class LoginWhyqActivity extends Activity implements Login_delegate,
 					startActivity(intent);
 
 			}else if(data.getStatus().equals("401")){
-				Util.loginAgain(getParent(), data.getMessage());
+				Util.loginAgain(context, data.getMessage());
 			}else{
-				Util.showDialog(getParent(), data.getMessage());
+				Util.showDialog(context, data.getMessage());
 			}
 
 		}else{
-			Util.showDialog(getParent(),"Can not login for now\nTry again!");
+			Util.showDialog(context,"Can not login for now\nTry again!");
 		}
 	}
 }

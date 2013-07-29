@@ -613,7 +613,7 @@ public class DataParser {
 					item.setUserList(userList);
 
 					NodeList menuNodes = permElement.getElementsByTagName("menu");
-					int lengthMenuNode = nodes.getLength();
+					int lengthMenuNode = menuNodes.getLength();
 					ArrayList<Menu> menuList = new ArrayList<Menu>();
 
 					for (int c = 0; c < lengthMenuNode; c++) {

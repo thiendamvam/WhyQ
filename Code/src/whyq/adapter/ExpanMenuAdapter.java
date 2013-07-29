@@ -109,6 +109,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 	@Override
 	public int getChildrenCount(int arg0) {
 		// TODO Auto-generated method stub
+		Log.d("getChildrenCount","size: "+mGroupCollection.get(arg0).getMenuList().size());
 		return mGroupCollection.get(arg0).getMenuList().size();
 	}
 	@Override
