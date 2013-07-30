@@ -292,7 +292,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	public static class ViewHolderMitemInfo {
 		public TextView tvType, tvPrice, tvCount;
 		public ImageView imgThumb;
-		public String MenuId;
+		public String storeId;
+		public Button btnAdd;
+		public Button btnRemove;
+		public String menuId;
 
 		public ViewHolderMitemInfo() {
 

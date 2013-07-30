@@ -39,6 +39,7 @@ public class WhyqMenuAdapter extends ArrayAdapter<Menu> {
 		public ImageView imgThumb;
 		public String storeId;
 		public Button btnAdd, btnRemove;
+		public String menuId;
 		public ViewHolderMitemInfo() {
 
 		}
@@ -65,9 +66,11 @@ public class WhyqMenuAdapter extends ArrayAdapter<Menu> {
 //			viewHolder.tvCount.setText(item.getSort());
 			viewHolder.btnAdd = (Button)view.findViewById(R.id.btnAdd);
 			viewHolder.btnRemove = (Button) view.findViewById(R.id.btnRemove);
+			viewHolder.menuId = item.getId();
 			
 			viewHolder.btnAdd.setTag(item);
 			viewHolder.btnRemove.setTag(item);
+			
 			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getImageThumb());
 			
 			view.setTag(viewHolder);

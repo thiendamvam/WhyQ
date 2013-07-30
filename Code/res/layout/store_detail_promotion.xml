@@ -1,11 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/lnStoreDetailPromotion"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:baselineAligned="false"
     android:orientation="vertical"
-    android:visibility="invisible"
+    android:visibility="gone"
     android:padding="10dp"
     android:weightSum="10" >
 

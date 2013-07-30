@@ -2,6 +2,7 @@ package whyq.adapter;
 
 
 
+import java.util.HashMap;
 import java.util.List;
 
 import whyq.activity.ListDetailActivity;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
@@ -32,7 +34,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 		// TODO Auto-generated method stub
 		super.notifyDataSetChanged();
 	}
-
+	private HashMap<String, View> viewList = new HashMap<String, View>();
 	private Context mContext;
 	private ExpandableListView mExpandableListView;
 	private List<GroupMenu> mGroupCollection;
@@ -119,26 +121,36 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 		Log.d("getChildView","getChildView");
 		View view = arg3;
 		Menu item = mGroupCollection.get(arg0).getMenuList().get(arg1);
-//		// if (v == null) {
-//		view = LayoutInflater.from(mContext).inflate(R.layout.whyq_menu_item_,
-//				null);
+		if (arg3 == null) {
+			LayoutInflater inflator = ((ListDetailActivity) mContext)
+					.getLayoutInflater();
+			view = inflator.inflate(R.layout.whyq_menu_item_, null);
+			final ViewHolderMitemInfo viewHolder = new ViewHolderMitemInfo();
+			viewHolder.tvType = (TextView) view.findViewById(R.id.tvType);
+			viewHolder.tvPrice = (TextView) view.findViewById(R.id.tvPrice);
+			viewHolder.imgThumb = (ImageView) view.findViewById(R.id.imgThumbnail);
+			viewHolder.tvCount = (TextView)view.findViewById(R.id.totalForItem);
+//			viewHolder.storeId = item.getS;
+			viewHolder.tvType.setText(item.getNameProduct());
+			viewHolder.tvPrice.setText("$"+item.getValue());
+			viewHolder.storeId = item.getStoreId();
+//			viewHolder.tvCount.setText(item.getSort());
+			viewHolder.btnAdd = (Button)view.findViewById(R.id.btnAdd);
+			viewHolder.btnRemove = (Button) view.findViewById(R.id.btnRemove);
+			viewHolder.menuId = item.getId();
+//			viewHolder.btnAdd.setTag(item);
+			
+			viewHolder.btnRemove.setTag(viewHolder);
+			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getImageThumb());
+			
+			viewHolder.btnAdd.setTag(viewHolder);
+			view.setTag(viewHolder);
+			
+			viewList.put(String.valueOf(item.getStoreId()), view);
+		} else {
+			view = arg3;
 
-		LayoutInflater inflator = ((ListDetailActivity)mContext).getLayoutInflater();
-		view = inflator.inflate(R.layout.whyq_menu_item_, null);
-		final ViewHolderMitemInfo viewHolder = new ViewHolderMitemInfo();
-		viewHolder.tvType = (TextView) view.findViewById(R.id.tvType);
-		viewHolder.tvPrice = (TextView) view.findViewById(R.id.tvPrice);
-		viewHolder.imgThumb = (ImageView) view.findViewById(R.id.imgThumbnail);
-		viewHolder.tvCount = (TextView) view.findViewById(R.id.totalForItem);
-		// viewHolder.MenuId = item.getS;
-		viewHolder.tvType.setText(item.getNameProduct());
-		viewHolder.tvPrice.setText("$" + item.getValue());
-		viewHolder.MenuId = item.getStoreId();
-		viewHolder.tvCount.setText(item.getSort());
-		UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb,
-				item.getImageThumb());
-
-		view.setTag(viewHolder);
+		}
 
 		return view;
 	}

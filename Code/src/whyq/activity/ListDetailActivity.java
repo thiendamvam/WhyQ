@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import whyq.adapter.ExampleAdapter;
 import whyq.adapter.ExpanMenuAdapter;
+import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.adapter.WhyqMenuAdapter;
-import whyq.adapter.WhyqMenuAdapter.ViewHolderMitemInfo;
 import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
 import whyq.model.GroupMenu;
@@ -78,6 +77,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 	private ImageView imgView;
 	private WhyqMenuAdapter menuAdapter;
 	private Button btnTotalValue;
+	private ArrayList<Menu> menuList;
 	public static HashMap<String,Bill> billList;
 
 	@Override
@@ -162,15 +162,15 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		// TODO Auto-generated method stub
 		if(i==1){
 			lnAboutContent.setVisibility(View.VISIBLE);
-			lnMenuContent.setVisibility(View.INVISIBLE);
-			lnPromotionContent.setVisibility(View.INVISIBLE);
+			lnMenuContent.setVisibility(View.GONE);
+			lnPromotionContent.setVisibility(View.GONE);
 		}else if(i==2){
-			lnAboutContent.setVisibility(View.INVISIBLE);
+			lnAboutContent.setVisibility(View.GONE);
 			lnMenuContent.setVisibility(View.VISIBLE);
-			lnPromotionContent.setVisibility(View.INVISIBLE);
+			lnPromotionContent.setVisibility(View.GONE);
 		}else if(i==3){
-			lnAboutContent.setVisibility(View.INVISIBLE);
-			lnMenuContent.setVisibility(View.INVISIBLE);
+			lnAboutContent.setVisibility(View.GONE);
+			lnMenuContent.setVisibility(View.GONE);
 			lnPromotionContent.setVisibility(View.VISIBLE);
 		}
 	}
@@ -274,7 +274,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 
 	private void hideDialog() {
 		// dialog.dismiss();
-		progressBar.setVisibility(View.INVISIBLE);
+		progressBar.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -310,7 +310,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 	private void bindMenuData() {
 		// TODO Auto-generated method stub
 		try {
-			ArrayList<Menu> menuList = store.getMenuList();
+			menuList = store.getMenuList();
 			
 			int size = menuList.size();
 			if(size > 0 ){
@@ -432,57 +432,146 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		
 	}
 	
+//	public void onAddClicked(View v){
+//		Log.d("onAddClicked","id ="+v.getId());
+//		Menu item = (Menu)v.getTag();
+//		if(item!=null){
+//			if(billList.containsKey(item.getId())){
+//				int value = Integer.parseInt(billList.get(item.getId()).getUnit())+1;
+//				billList.get(item.getId()).setUnit(""+value);
+//			}else{
+//				Bill bill = new Bill();
+//				bill.setId(item.getId());
+//				bill.setPrice(item.getValue());
+//				bill.setUnit("1");
+//				billList.put(item.getId(),bill);
+//			}
+//
+//			updateCount(item,true);
+//		}
+//	}
+//	
+//	public void onRemoveClicked(View v){
+//		Log.d("onRemoveClicked","id ="+v.getId());
+//		Menu item = (Menu)v.getTag();
+//		updateCount(item,false);
+//		if(billList.containsKey(item.getId())){
+//			int value = Integer.parseInt(billList.get(item.getId()).getUnit())-1;
+//
+//			billList.get(item.getId()).setUnit(""+value);
+//			if(value < 0)
+//				billList.remove(item.getId());
+//		}else{
+//			Bill bill = new Bill();
+//			bill.setId(item.getId());
+//			bill.setPrice(item.getValue());
+//			bill.setThumb(item.getImageThumb());
+//			bill.setUnit("1");
+//			billList.put(item.getId(),bill);
+//		}
+//	}
 	public void onAddClicked(View v){
 		Log.d("onAddClicked","id ="+v.getId());
-		Menu item = (Menu)v.getTag();
-		if(billList.containsKey(item.getId())){
-			int value = Integer.parseInt(billList.get(item.getId()).getUnit())+1;
-			billList.get(item.getId()).setUnit(""+value);
-		}else{
-			Bill bill = new Bill();
-			bill.setId(item.getId());
-			bill.setPrice(item.getValue());
-			bill.setUnit("1");
-			billList.put(item.getId(),bill);
+		ViewHolderMitemInfo holder = (ViewHolderMitemInfo)v.getTag();
+		Menu item = getMenuById(holder.menuId);
+		if(item!=null){
+			if(billList.containsKey(item.getId())){
+				int value = Integer.parseInt(billList.get(item.getId()).getUnit())+1;
+				billList.get(item.getId()).setUnit(""+value);
+			}else{
+				Bill bill = new Bill();
+				bill.setId(item.getId());
+				bill.setPrice(item.getValue());
+				bill.setUnit("1");
+				billList.put(item.getId(),bill);
+			}
+	
+			updateCount(holder,true);
 		}
-
-		updateCount(item,true);
+	}
+	private Menu getMenuById(String storeId) {
+		// TODO Auto-generated method stub
+		int size = menuList.size();
+		for(Menu menu: menuList){
+			if(id.equals(menu.getId())){
+				return menu;
+			}
+		}
+		return null;
 	}
 	public void onRemoveClicked(View v){
 		Log.d("onRemoveClicked","id ="+v.getId());
-		Menu item = (Menu)v.getTag();
-		updateCount(item,false);
-		if(billList.containsKey(item.getId())){
-			int value = Integer.parseInt(billList.get(item.getId()).getUnit())-1;
+		ViewHolderMitemInfo holder = (ViewHolderMitemInfo)v.getTag();
+		Menu item = getMenuById(holder.menuId);
+		updateCount(holder,false);
 
-			billList.get(item.getId()).setUnit(""+value);
-			if(value < 0)
-				billList.remove(item.getId());
-		}else{
-			Bill bill = new Bill();
-			bill.setId(item.getId());
-			bill.setPrice(item.getValue());
-			bill.setThumb(item.getImageThumb());
-			bill.setUnit("1");
-			billList.put(item.getId(),bill);
+		if(item!=null){
+			if(billList.containsKey(item.getId())){
+				int value = Integer.parseInt(billList.get(item.getId()).getUnit())-1;
+
+				billList.get(item.getId()).setUnit(""+value);
+				if(value < 0)
+					billList.remove(item.getId());
+			}else{
+				Bill bill = new Bill();
+				bill.setId(item.getId());
+				bill.setPrice(item.getValue());
+				bill.setThumb(item.getImageThumb());
+				bill.setUnit("1");
+				billList.put(item.getId(),bill);
+			}
 		}
 	}
 	public void onViewBillClicked(View v){
 		Intent intent = new Intent(ListDetailActivity.this, WhyQBillScreen.class);
 		startActivity(intent);
 	}
-	private void updateCount(Menu item, boolean b) {
+//	private void updateCount(Menu item, boolean b) {
+//		// TODO Auto-generated method stub
+//		int size = lvMenu.getChildCount();
+//		float value,totalValue = Float.parseFloat(btnTotalValue.getText().toString());
+//		Menu item2;
+//		ViewHolderMitemInfo holder;
+//		for(int i=0;i< size;i++){
+//			try {
+//
+//				item2 = store.getMenuList().get(i);
+//				if(item2.getId().equals(item.getId()) && !item.getValue().equals("")){
+//					holder = (ViewHolderMitemInfo)lvMenu.getChildAt(i).getTag();
+//					if(b){
+//						value = Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
+//						totalValue+=Float.parseFloat(item.getValue());
+//					}else{
+//						value = Float.parseFloat(holder.tvCount.getText().toString())-Float.parseFloat("1");
+//						totalValue-=Float.parseFloat(item.getValue());
+//					}
+//					if(value < 0 )
+//						value= 0;
+//					if(totalValue < 0)
+//						totalValue = 0;
+//					holder.tvCount.setText(""+value);
+//					lvMenu.getChildAt(i).requestLayout();
+//					btnTotalValue.setText(""+totalValue);
+//				}
+//			
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//				e.printStackTrace();
+//			}
+//		}
+//	}
+	private void updateCount(ViewHolderMitemInfo holder, boolean b) {
 		// TODO Auto-generated method stub
 		int size = lvMenu.getChildCount();
 		float value,totalValue = Float.parseFloat(btnTotalValue.getText().toString());
 		Menu item2;
-		ViewHolderMitemInfo holder;
+		Menu item = getMenuById(holder.menuId);
 		for(int i=0;i< size;i++){
 			try {
 
-				item2 = store.getMenuList().get(0);
+				item2 = store.getMenuList().get(i);
 				if(item2.getId().equals(item.getId()) && !item.getValue().equals("")){
-					holder = (ViewHolderMitemInfo)lvMenu.getChildAt(i).getTag();
+//					holder = (ViewHolderMitemInfo)lvMenu.getChildAt(i).getTag();
 					if(b){
 						value = Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
 						totalValue+=Float.parseFloat(item.getValue());
@@ -505,7 +594,6 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 			}
 		}
 	}
-
 	public void gotoCommentScreen(View v){
 		if(store !=null){
 			if(store.getCountFavaouriteMember() !=null){
