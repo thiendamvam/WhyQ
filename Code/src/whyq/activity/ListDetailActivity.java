@@ -486,14 +486,15 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 				billList.put(item.getId(),bill);
 			}
 	
-			updateCount(holder,true);
+//			updateCount(holder,true);
+			updateCountInExpandListview(holder, true);
 		}
 	}
-	private Menu getMenuById(String storeId) {
+	private Menu getMenuById(String menuId) {
 		// TODO Auto-generated method stub
 		int size = menuList.size();
 		for(Menu menu: menuList){
-			if(id.equals(menu.getId())){
+			if(menuId.equals(menu.getId())){
 				return menu;
 			}
 		}
@@ -503,8 +504,8 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		Log.d("onRemoveClicked","id ="+v.getId());
 		ViewHolderMitemInfo holder = (ViewHolderMitemInfo)v.getTag();
 		Menu item = getMenuById(holder.menuId);
-		updateCount(holder,false);
-
+//		updateCount(holder,false);
+		updateCountInExpandListview(holder, false);
 		if(item!=null){
 			if(billList.containsKey(item.getId())){
 				int value = Integer.parseInt(billList.get(item.getId()).getUnit())-1;
@@ -560,6 +561,26 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 //			}
 //		}
 //	}
+	private void updateCountInExpandListview(ViewHolderMitemInfo holder, boolean b) {
+		int size = lvMenu.getChildCount();
+		float value,totalValue = Float.parseFloat(btnTotalValue.getText().toString());
+		Menu item2;
+		Menu item = getMenuById(holder.menuId);
+		if(b){
+			value = Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
+			totalValue+=Float.parseFloat(item.getValue());
+		}else{
+			value = Float.parseFloat(holder.tvCount.getText().toString())-Float.parseFloat("1");
+			totalValue-=Float.parseFloat(item.getValue());
+		}
+		if(value < 0 )
+			value= 0;
+		if(totalValue < 0)
+			totalValue = 0;
+		holder.tvCount.setText(""+value);
+		holder.tvCount.requestLayout();
+		btnTotalValue.setText(""+totalValue);
+	}
 	private void updateCount(ViewHolderMitemInfo holder, boolean b) {
 		// TODO Auto-generated method stub
 		int size = lvMenu.getChildCount();
