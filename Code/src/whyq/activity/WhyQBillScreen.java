@@ -7,11 +7,15 @@ import java.util.Iterator;
 
 import whyq.adapter.WhyQBillAdapter;
 import whyq.model.Bill;
+import whyq.paypal.LoginPaypalActivity;
+import whyq.paypal.helper.AccessHelperConnect;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whyq.R;
 
@@ -26,6 +30,7 @@ public class WhyQBillScreen extends Activity{
 	private TextView tvTotalAfterDiscount;
 	private float totalValue = 0;
 	private float totalafterDiscount = 0;
+	public static int LOGIN_REQUEST = 1;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,23 @@ public class WhyQBillScreen extends Activity{
 		finish();
 	}
 	public void onDoneClicked(View v){
-		
+		final Intent loginIntent = new Intent(this, LoginPaypalActivity.class);
+		startActivityForResult(loginIntent, LOGIN_REQUEST);
+
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == LOGIN_REQUEST && resultCode == RESULT_OK) {
+			Toast.makeText(getApplicationContext(), R.string.toast_login_ok,
+					Toast.LENGTH_LONG).show();
+
+			// Set the raw json representation as content of the TextView
+//			profileText.setText(data
+//					.getStringExtra(AccessHelperConnect.DATA_PROFILE));
+		} else {
+			Toast.makeText(getApplicationContext(),
+					R.string.toast_login_failed, Toast.LENGTH_LONG).show();
+		}
 	}
 }

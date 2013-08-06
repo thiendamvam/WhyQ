@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import whyq.adapter.BasicImageListAdapter;
 import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.adapter.WhyqMenuAdapter;
@@ -11,15 +12,17 @@ import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
+import whyq.model.Photo;
 import whyq.model.Promotion;
 import whyq.model.Store;
 import whyq.model.UserCheckBill;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import whyq.utils.UrlImageViewHelper;
-import android.app.Activity;
+import whyq.view.CustomViewPager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +46,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 	// ProgressDialog dialog;
 	ProgressBar progressBar;
 	private String id;
-	private Store store;
+	public static Store store;
 	private TextView tvAddresss;
 	private ImageView imgThumbnail;
 	private TextView tvNumberFavourtie;
@@ -78,6 +81,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 	private WhyqMenuAdapter menuAdapter;
 	private Button btnTotalValue;
 	private ArrayList<Menu> menuList;
+	private CustomViewPager vpPhotoList;
 	public static HashMap<String,Bill> billList;
 
 	@Override
@@ -118,6 +122,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		btnTotalValue.setText("0");
 		lvMenu = (ExpandableListView)findViewById(R.id.lvMenu);
 		billList = new HashMap<String, Bill>();
+		vpPhotoList = (CustomViewPager)findViewById(R.id.vpStorephoto);
 //		showHeaderImage();
 		initTabbar();
 		getDetailData();
@@ -140,6 +145,9 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		});
 	}
 
+	public void onDoneClicked( View v){
+		
+	}
 	protected void exeAboutFocus() {
 		// TODO Auto-generated method stub
 		Log.d("exeAboutFocus","exeAboutFocus");
@@ -203,12 +211,13 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 			if(store.getLogo() !=null)
 				UrlImageViewHelper.setUrlDrawable(imgThumbnail, store.getLogo());
 			tvAddresss.setText(store.getAddress());
-
+			tvNumberFavourtie.setText(""+store.getCountFavaouriteMember());
+			
 			tvOpeningTime.setText(store.getStartTime()+" - "+store.getEndTime());
 			tvTelephone.setText(store.getPhoneStore());
 			tvStoreDes.setText(store.getIntroStore());
 			tvHeaderTitle.setText(store.getNameStore());
-			tvNumberFavourtie.setText(""+store.getCountFavaouriteMember());
+			
 //			UrlImageViewHelper.setUrlDrawable(imgView, store.getPhotos());
 			if(!store.getCountFavaouriteMember().equals("0")){
 				tvCommendRever.setText(store.getCountFavaouriteMember()+" comments");
@@ -288,7 +297,42 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 			bindData();
 			bindMenuData();
 			bindPromotionData();
+			bindImageList();
 		}
+	}
+	private void bindImageList() {
+		// TODO Auto-generated method stub
+		ArrayList<Photo> photoList = store.getPhotos();
+		if(photoList.size()>0){
+			exePutPhotoListData();
+		}
+	}
+	private void exePutPhotoListData() {
+		// TODO Auto-generated method stub
+
+		List<Fragment> fragments = getFragments(store.getPhotos());
+		whyq.adapter.CoverStoryAdapter coverStoryAdapter = new whyq.adapter.CoverStoryAdapter(
+				getSupportFragmentManager(), fragments);
+		vpPhotoList.setAdapter(coverStoryAdapter);
+		coverStoryAdapter.notifyDataSetChanged();
+		vpPhotoList.requestLayout();
+		
+	}
+	private List<Fragment> getFragments(ArrayList<Photo> photoList) {
+		// TODO Auto-generated method stub
+		List<Fragment> fList = new ArrayList<Fragment>();
+
+
+		for (int i= 0; i< photoList.size(); i++) {
+			try {
+				Photo photo = photoList.get(i);
+				fList.add(BasicImageListAdapter.newInstance(photo));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+		return fList;
 	}
 	private void bindPromotionData() {
 		// TODO Auto-generated method stub
@@ -367,7 +411,8 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		}
 		if (storiesList.size() > 0) {
 			ge.setMenuList(storiesList);
-			ge.setName(storiesList.get(0).getTypeProductId());
+			if(storiesList.get(0).getProductTypeInfo()!=null)
+				ge.setName(storiesList.get(0).getProductTypeInfo().getNameProductType());
 //			ge.setName(storiesList.get(0).getProductTypeInfo().getNameProductType());
 			ge.setColor("ffffff");
 			return ge;

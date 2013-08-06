@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
+    android:background="@color/white"
     android:orientation="vertical"
     android:weightSum="10" >
 
@@ -17,13 +18,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@android:color/white"
+        android:background="@drawable/bg_bill"
         android:baselineAligned="false"
         android:orientation="vertical"
-        android:padding="30dp"
+        android:padding="10dp"
         android:weightSum="14" >
 
         <LinearLayout

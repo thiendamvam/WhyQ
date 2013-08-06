@@ -28,11 +28,11 @@
         android:background="@color/white"
         android:orientation="vertical" >
 
-        <include
+        <whyq.view.CustomViewPager
+            android:id="@+id/vpStorephoto"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            layout="@layout/image_item" >
-        </include>
+            />
 
         <ScrollView
             android:layout_width="match_parent"
