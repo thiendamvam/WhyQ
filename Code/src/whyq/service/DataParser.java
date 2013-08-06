@@ -640,8 +640,7 @@ public class DataParser {
 							Element inElement = (Element) productTypeInfoNodes.item(y);
 							ProductTypeInfo product = new ProductTypeInfo();
 							product.setId(getValue(inElement, "id"));
-							product.setNameProductType(getValue(inElement,
-									"name_product_type"));
+							product.setNameProductType(getValue(inElement,"name_product_type"));
 							product.setCreateDate(getValue(inElement, "createdate"));
 							product.setSort(getValue(inElement, "sort"));
 							productTypeInfoList.add(product);
@@ -694,10 +693,10 @@ public class DataParser {
 							storeInfo
 									.setUpdateDate(getValue(infoElement, "updatedate"));
 							menu.setStoreInfo(storeInfo);
-
+							
 						}
-
 						menuList.add(menu);
+						
 					}
 					item.setMenuList(menuList);
 

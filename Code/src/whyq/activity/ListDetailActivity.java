@@ -367,8 +367,8 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		}
 		if (storiesList.size() > 0) {
 			ge.setMenuList(storiesList);
-			ge.setName(storiesList.get(0).getTypeProductId());
-//			ge.setName(storiesList.get(0).getProductTypeInfo().getNameProductType());
+//			ge.setName(storiesList.get(0).getTypeProductId());
+			ge.setName(storiesList.get(0).getProductTypeInfoList().get(0).getNameProductType());
 			ge.setColor("ffffff");
 			return ge;
 		} else {
