@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:background="@color/list_bg"
+    android:background="@color/white"
     android:padding="0dp" >
 
     <LinearLayout

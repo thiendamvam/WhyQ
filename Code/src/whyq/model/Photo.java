@@ -13,6 +13,7 @@ public class Photo {
 	private String createdate;
 	private String updatedate;
 	private String location_id;
+	
 
 	
 	public String getId() {

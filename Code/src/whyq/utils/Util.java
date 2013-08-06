@@ -318,7 +318,7 @@ public class Util {
 		Location location = lm.getLastKnownLocation(bestProvider);
 
 		if (location == null) {
-			 Toast.makeText(activity,"Location Not found",Toast.LENGTH_LONG).show();
+//			 Toast.makeText(activity,"Location Not found",Toast.LENGTH_LONG).show();
 		} else {
 			geocoder = new Geocoder(activity);
 			try {

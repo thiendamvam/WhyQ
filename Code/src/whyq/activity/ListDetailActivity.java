@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import whyq.adapter.BasicImageListAdapter;
 import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.adapter.WhyqMenuAdapter;
@@ -11,15 +12,17 @@ import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
+import whyq.model.Photo;
 import whyq.model.Promotion;
 import whyq.model.Store;
 import whyq.model.UserCheckBill;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import whyq.utils.UrlImageViewHelper;
-import android.app.Activity;
+import whyq.view.CustomViewPager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +46,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 	// ProgressDialog dialog;
 	ProgressBar progressBar;
 	private String id;
-	private Store store;
+	public static Store store;
 	private TextView tvAddresss;
 	private ImageView imgThumbnail;
 	private TextView tvNumberFavourtie;
@@ -78,6 +81,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 	private WhyqMenuAdapter menuAdapter;
 	private Button btnTotalValue;
 	private ArrayList<Menu> menuList;
+	private CustomViewPager vpPhotoList;
 	public static HashMap<String,Bill> billList;
 
 	@Override
@@ -118,6 +122,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		btnTotalValue.setText("0");
 		lvMenu = (ExpandableListView)findViewById(R.id.lvMenu);
 		billList = new HashMap<String, Bill>();
+		vpPhotoList = (CustomViewPager)findViewById(R.id.vpStorephoto);
 //		showHeaderImage();
 		initTabbar();
 		getDetailData();
@@ -140,6 +145,9 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		});
 	}
 
+	public void onDoneClicked( View v){
+		
+	}
 	protected void exeAboutFocus() {
 		// TODO Auto-generated method stub
 		Log.d("exeAboutFocus","exeAboutFocus");
@@ -203,12 +211,13 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 			if(store.getLogo() !=null)
 				UrlImageViewHelper.setUrlDrawable(imgThumbnail, store.getLogo());
 			tvAddresss.setText(store.getAddress());
-
+			tvNumberFavourtie.setText(""+store.getCountFavaouriteMember());
+			
 			tvOpeningTime.setText(store.getStartTime()+" - "+store.getEndTime());
 			tvTelephone.setText(store.getPhoneStore());
 			tvStoreDes.setText(store.getIntroStore());
 			tvHeaderTitle.setText(store.getNameStore());
-			tvNumberFavourtie.setText(""+store.getCountFavaouriteMember());
+			
 //			UrlImageViewHelper.setUrlDrawable(imgView, store.getPhotos());
 			if(!store.getCountFavaouriteMember().equals("0")){
 				tvCommendRever.setText(store.getCountFavaouriteMember()+" comments");
@@ -288,7 +297,42 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 			bindData();
 			bindMenuData();
 			bindPromotionData();
+			bindImageList();
 		}
+	}
+	private void bindImageList() {
+		// TODO Auto-generated method stub
+		ArrayList<Photo> photoList = store.getPhotos();
+		if(photoList.size()>0){
+			exePutPhotoListData();
+		}
+	}
+	private void exePutPhotoListData() {
+		// TODO Auto-generated method stub
+
+		List<Fragment> fragments = getFragments(store.getPhotos());
+		whyq.adapter.CoverStoryAdapter coverStoryAdapter = new whyq.adapter.CoverStoryAdapter(
+				getSupportFragmentManager(), fragments);
+		vpPhotoList.setAdapter(coverStoryAdapter);
+		coverStoryAdapter.notifyDataSetChanged();
+		vpPhotoList.requestLayout();
+		
+	}
+	private List<Fragment> getFragments(ArrayList<Photo> photoList) {
+		// TODO Auto-generated method stub
+		List<Fragment> fList = new ArrayList<Fragment>();
+
+
+		for (int i= 0; i< photoList.size(); i++) {
+			try {
+				Photo photo = photoList.get(i);
+				fList.add(BasicImageListAdapter.newInstance(photo));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+		return fList;
 	}
 	private void bindPromotionData() {
 		// TODO Auto-generated method stub
@@ -367,8 +411,10 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		}
 		if (storiesList.size() > 0) {
 			ge.setMenuList(storiesList);
+
 //			ge.setName(storiesList.get(0).getTypeProductId());
 			ge.setName(storiesList.get(0).getProductTypeInfoList().get(0).getNameProductType());
+
 			ge.setColor("ffffff");
 			return ge;
 		} else {
@@ -486,14 +532,15 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 				billList.put(item.getId(),bill);
 			}
 	
-			updateCount(holder,true);
+//			updateCount(holder,true);
+			updateCountInExpandListview(holder, true);
 		}
 	}
-	private Menu getMenuById(String storeId) {
+	private Menu getMenuById(String menuId) {
 		// TODO Auto-generated method stub
 		int size = menuList.size();
 		for(Menu menu: menuList){
-			if(id.equals(menu.getId())){
+			if(menuId.equals(menu.getId())){
 				return menu;
 			}
 		}
@@ -503,8 +550,8 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		Log.d("onRemoveClicked","id ="+v.getId());
 		ViewHolderMitemInfo holder = (ViewHolderMitemInfo)v.getTag();
 		Menu item = getMenuById(holder.menuId);
-		updateCount(holder,false);
-
+//		updateCount(holder,false);
+		updateCountInExpandListview(holder, false);
 		if(item!=null){
 			if(billList.containsKey(item.getId())){
 				int value = Integer.parseInt(billList.get(item.getId()).getUnit())-1;
@@ -560,6 +607,26 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 //			}
 //		}
 //	}
+	private void updateCountInExpandListview(ViewHolderMitemInfo holder, boolean b) {
+		int size = lvMenu.getChildCount();
+		float value,totalValue = Float.parseFloat(btnTotalValue.getText().toString());
+		Menu item2;
+		Menu item = getMenuById(holder.menuId);
+		if(b){
+			value = Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
+			totalValue+=Float.parseFloat(item.getValue());
+		}else{
+			value = Float.parseFloat(holder.tvCount.getText().toString())-Float.parseFloat("1");
+			totalValue-=Float.parseFloat(item.getValue());
+		}
+		if(value < 0 )
+			value= 0;
+		if(totalValue < 0)
+			totalValue = 0;
+		holder.tvCount.setText(""+value);
+		holder.tvCount.requestLayout();
+		btnTotalValue.setText(""+totalValue);
+	}
 	private void updateCount(ViewHolderMitemInfo holder, boolean b) {
 		// TODO Auto-generated method stub
 		int size = lvMenu.getChildCount();

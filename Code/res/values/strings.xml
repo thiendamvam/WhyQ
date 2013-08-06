@@ -106,4 +106,16 @@
     <string name="filter_friend_comment">Friend\'s Comment</string>
     <string name="saving">Saving</string>
 
+    
+    <string name="title_activity_main">PayPal Access</string>
+    <string name="title_activity_login">Login</string>
+    <string name="btn_login">Login with PayPal</string>
+    <string name="progress_loading_title">Loading&#8320;</string>
+    <string name="progress_loading_msg">Login is possible in a few seconds</string>
+    <string name="toast_login_ok">Logged in</string>
+    <string name="toast_login_failed">Login failed</string>
+    <string name="login_description">This enables the user to use his PayPal credentials to login. Thus he doesn\'t have to create yet another account and remember yet another password.</string>
+	<string name="login_oauth">OAuth 2.0</string>
+	<string name="login_openid">OpenID</string>
+    
 </resources>

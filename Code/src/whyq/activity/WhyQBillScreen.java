@@ -7,11 +7,15 @@ import java.util.Iterator;
 
 import whyq.adapter.WhyQBillAdapter;
 import whyq.model.Bill;
+import whyq.paypal.LoginPaypalActivity;
+import whyq.paypal.helper.AccessHelperConnect;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whyq.R;
 
@@ -20,7 +24,14 @@ public class WhyQBillScreen extends Activity{
 	private TextView tvTitle;
 	private ListView lvBill;
 	private ArrayList<Bill> listBill;
-	private float totalValue;
+	private float valueDiscount = 0;
+	private TextView tvTotal;
+	private TextView tvDiscount;
+	private TextView tvTotalAfterDiscount;
+	private float totalValue = 0;
+	private float totalafterDiscount = 0;
+	public static int LOGIN_REQUEST = 1;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,8 +41,22 @@ public class WhyQBillScreen extends Activity{
 		lvBill = (ListView)findViewById(R.id.lvBill);
 		listBill = new ArrayList<Bill>();
 		listBill = getBillList(ListDetailActivity.billList);
+		tvTotal = (TextView)findViewById(R.id.tvTotal);
+		tvDiscount = (TextView)findViewById(R.id.tvDiscount);
+		tvTotalAfterDiscount = (TextView)findViewById(R.id.tvTotalafterDiscount);
 		bindDatatoListview();
-		
+		bindBillValue();
+	}
+	private void bindBillValue() {
+		// TODO Auto-generated method stub
+		tvTotal.setText("$"+totalValue);
+		if(valueDiscount!=0)
+			tvDiscount.setText("%"+ valueDiscount*100);
+		if(valueDiscount!=0)
+			totalafterDiscount = (float)(totalValue*valueDiscount);
+		else
+			totalafterDiscount = totalValue;
+		tvTotalAfterDiscount.setText("$"+totalafterDiscount);
 	}
 	private void bindDatatoListview() {
 		// TODO Auto-generated method stub
@@ -40,11 +65,13 @@ public class WhyQBillScreen extends Activity{
 	}
 	private ArrayList<Bill> getBillList(HashMap<String, Bill> billList) {
 		// TODO Auto-generated method stub
-
+		totalValue = 0;
+		totalafterDiscount = 0;
 		Collection<Bill> c = billList.values();
 		for (Iterator collectionItr = c.iterator(); collectionItr.hasNext(); ) {
 			  Bill item = (Bill)collectionItr.next();
 			  this.listBill.add(item);
+			  totalValue+= totalValue+Float.parseFloat(item.getPrice())*Float.parseFloat(item.getUnit());
 		}
 		
 		return this.listBill;
@@ -53,6 +80,23 @@ public class WhyQBillScreen extends Activity{
 		finish();
 	}
 	public void onDoneClicked(View v){
-		
+		final Intent loginIntent = new Intent(this, LoginPaypalActivity.class);
+		startActivityForResult(loginIntent, LOGIN_REQUEST);
+
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == LOGIN_REQUEST && resultCode == RESULT_OK) {
+			Toast.makeText(getApplicationContext(), R.string.toast_login_ok,
+					Toast.LENGTH_LONG).show();
+
+			// Set the raw json representation as content of the TextView
+//			profileText.setText(data
+//					.getStringExtra(AccessHelperConnect.DATA_PROFILE));
+		} else {
+			Toast.makeText(getApplicationContext(),
+					R.string.toast_login_failed, Toast.LENGTH_LONG).show();
+		}
 	}
 }

@@ -202,7 +202,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 //		params.addRule(RelativeLayout.LEFT_OF, R.id.tag_img);
 //		groupHolder.title.setLayoutParams(params);
 		groupHolder.title.setText(mGroupCollection.get(arg0).getName());
-		groupHolder.title.setTextColor(Color.parseColor("#ffffff"));
+//		groupHolder.title.setTextColor(Color.parseColor("#ffffff"));
 //		arg2.setBackgroundColor(Color.parseColor("#000000"));
 		// arg2.getBackground().setAlpha(40);
 
