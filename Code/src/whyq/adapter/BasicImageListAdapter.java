@@ -42,7 +42,7 @@ public class BasicImageListAdapter extends Fragment implements OnScrollListener 
 		photo = stories.get(id);
 		View v;
 
-			String url = photo.getThumb();
+			String url = photo.getImage();
 
 			v = inflater.inflate(R.layout.image_item, container, false);
 
