@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0" >
+        android:layout_weight="1" >
 
         <include layout="@layout/navigate_text_2" />
     </LinearLayout>
@@ -43,8 +43,8 @@
             android:layout_height="wrap_content"
             android:background="@color/transparent"
             android:gravity="left"
-            android:padding="15dp"
             android:onClick="onFAQClicked"
+            android:padding="15dp"
             android:text="FAQ" />
 
         <View
@@ -60,8 +60,8 @@
             android:layout_height="wrap_content"
             android:background="@color/transparent"
             android:gravity="left"
-            android:padding="15dp"
             android:onClick="onNotifyClicked"
+            android:padding="15dp"
             android:text="Ntification - Personals" />
 
         <View
@@ -77,8 +77,8 @@
             android:layout_height="wrap_content"
             android:background="@color/transparent"
             android:gravity="left"
-            android:padding="15dp"
             android:onClick="onEditClicked"
+            android:padding="15dp"
             android:text="Edit Account" />
 
         <View
@@ -117,9 +117,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:padding="15dp"
-            android:onClick="onRateClicked"
             android:background="@color/transparent"
+            android:gravity="left"
+            android:onClick="onRateClicked"
+            android:padding="15dp"
             android:text="WHYQ v2.0. Rate it!" />
 
         <View
@@ -135,8 +136,8 @@
             android:layout_height="wrap_content"
             android:background="@color/transparent"
             android:gravity="left"
-            android:padding="15dp"
             android:onClick="onTeamsClicked"
+            android:padding="15dp"
             android:text="Terms and conditions" />
 
         <View
@@ -150,9 +151,10 @@
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"
+            android:gravity="left"
             android:background="@color/transparent"
             android:onClick="onSupportClicked"
+            android:padding="15dp"
             android:text="Support" />
     </LinearLayout>
 

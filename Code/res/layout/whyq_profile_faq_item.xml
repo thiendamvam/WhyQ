@@ -5,13 +5,18 @@
     android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="horizontal"
+    android:onClick="onItemClicked"
     android:weightSum="10" >
 
     <TextView
         android:id="@+id/tvItemName"
         style="@style/small_grey_text"
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        android:layout_height="60dp"
+        android:text="adfdf"
+        android:gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="7dp" />
 
     <ImageView
         android:id="@+id/imgArrow"

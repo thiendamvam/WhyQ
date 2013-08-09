@@ -53,14 +53,14 @@ public class WhyqProfileFAQItemAdapter extends ArrayAdapter<String> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
-		convertView = viewList.get(position);
+//		convertView = viewList.get(position);
 		String item = list.get(position);
 		if (convertView == null) {
 			LayoutInflater inflator = ((WhyqProflleFAQActivity) context)
 					.getLayoutInflater();
 			view = inflator.inflate(R.layout.whyq_profile_faq_item, null);
 			final FAQViewHolder viewHolder = new FAQViewHolder();
-			viewHolder.tvName = (TextView) view.findViewById(R.id.tvName);
+			viewHolder.tvName = (TextView) view.findViewById(R.id.tvItemName);
 			
 			if(item!=null){
 				viewHolder.tvName.setText(item);

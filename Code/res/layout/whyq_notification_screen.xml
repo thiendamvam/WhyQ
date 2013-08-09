@@ -10,7 +10,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <include layout="@layout/navigation_title_text" >
+        <include layout="@layout/navigation_back_done" >
         </include>
     </LinearLayout>
 

@@ -54,7 +54,7 @@ public class WhyqProflleFAQActivity extends Activity{
 	}
 	public void onItemClicked(View v){
 		FAQViewHolder holder = (FAQViewHolder)v.getTag();
-		if(holder.tvName.equals("How does WHY Q work?")){
+		if(holder.tvName.getText().equals("How does WHY Q work?")){
 			Intent i = new Intent(WhyqProflleFAQActivity.this, WhyqProfileChildBasic.class);
 			i.putExtra("title", holder.tvName.getText().toString());
 			startActivity(i);				
@@ -64,5 +64,9 @@ public class WhyqProflleFAQActivity extends Activity{
 			startActivity(i);	
 		}
 		
+	}
+	public void onBack(View v) {
+		// WhyqMain.back();
+		finish();
 	}
 }
