@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_weight="0" >
 
         <include layout="@layout/navigate_text_2" />
     </LinearLayout>
@@ -37,12 +37,14 @@
             android:background="@color/profifle_blue" />
 
         <Button
+            android:id="@+id/btnFAQ"
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
             android:gravity="left"
             android:padding="15dp"
+            android:onClick="onFAQClicked"
             android:text="FAQ" />
 
         <View
@@ -59,6 +61,7 @@
             android:background="@color/transparent"
             android:gravity="left"
             android:padding="15dp"
+            android:onClick="onNotifyClicked"
             android:text="Ntification - Personals" />
 
         <View
@@ -75,6 +78,7 @@
             android:background="@color/transparent"
             android:gravity="left"
             android:padding="15dp"
+            android:onClick="onEditClicked"
             android:text="Edit Account" />
 
         <View
@@ -108,12 +112,14 @@
             android:layout_marginRight="15dp"
             android:background="@color/profifle_blue" />
 
-        <TextView
+        <Button
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:padding="15dp"
+            android:onClick="onRateClicked"
+            android:background="@color/transparent"
             android:text="WHYQ v2.0. Rate it!" />
 
         <View
@@ -130,6 +136,7 @@
             android:background="@color/transparent"
             android:gravity="left"
             android:padding="15dp"
+            android:onClick="onTeamsClicked"
             android:text="Terms and conditions" />
 
         <View
@@ -139,11 +146,13 @@
             android:layout_marginRight="15dp"
             android:background="@color/normal_delivery_color" />
 
-        <TextView
+        <Button
             style="@style/normail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
+            android:background="@color/transparent"
+            android:onClick="onSupportClicked"
             android:text="Support" />
     </LinearLayout>
 

@@ -8,16 +8,15 @@
         android:id="@+id/ln_back"
         android:layout_width="40dp"
         android:layout_height="match_parent"
-        android:onClick="onBack"
-        android:gravity="center" >
+        android:gravity="center"
+        android:onClick="onBack" >
 
         <Button
             android:id="@+id/btn_back"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_margin="12dp"
-            android:background="@drawable/icon_back"
-             />
+            android:background="@drawable/icon_back" />
     </LinearLayout>
 
     <View
@@ -32,7 +31,9 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="7dp"
         android:layout_toRightOf="@+id/ln_back"
+        android:ellipsize="end"
         android:gravity="center_vertical"
+        android:singleLine="true"
         android:text="Login"
         android:textColor="#FFFFFF"
         android:textSize="@dimen/text_size_header"

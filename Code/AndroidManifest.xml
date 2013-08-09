@@ -31,7 +31,7 @@
     <!--
          <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true" />
+        android:required="true" />
     -->
     <!-- End of setup for google map -->
 
@@ -87,6 +87,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Translucent" />
         <activity
+            android:name="whyq.activity.WhyqProfileEditAccountActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Translucent" />
+        <activity
+            android:name="whyq.activity.WhyqProfileNotifyPersionalActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Translucent" />
+        <activity
             android:name="whyq.activity.ChangeLocationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
@@ -98,6 +106,24 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="whyq.activity.InvitationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomTheme"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="whyq.activity.WhyqProfileChildBasic"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomTheme"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="whyq.activity.WhyqProfileChildDotsMean"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomTheme"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="whyq.activity.WhyqProflleFAQActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomTheme"
             android:windowSoftInputMode="adjustPan" >
@@ -135,8 +161,6 @@
             android:name="whyq.paypal.LoginPaypalActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        
-        
         <activity
             android:name="whyq.activity.NewWhyqActivity"
             android:screenOrientation="portrait"
