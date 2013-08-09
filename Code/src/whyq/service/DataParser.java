@@ -613,90 +613,102 @@ public class DataParser {
 					item.setUserList(userList);
 
 					NodeList menuNodes = permElement.getElementsByTagName("menu");
-					int lengthMenuNode = menuNodes.getLength();
+					int lengthMenuNode2 = menuNodes.getLength();
 					ArrayList<Menu> menuList = new ArrayList<Menu>();
 
-					for (int c = 0; c < lengthMenuNode; c++) {
-						Element element = (Element) menuNodes.item(c);
-						Menu menu = new Menu();
-						menu.setId(getValue(element, "id"));
-						menu.setStoreId(getValue(element, "store_id"));
-						menu.setNameProduct(getValue(element, "name_product"));
-						menu.setValue(getValue(element, "value"));
-						menu.setValuePromotion(getValue(element, "value_promotion"));
-						menu.setImageProduct(getValue(element, "image_product"));
-						menu.setImageThumb(getValue(element, "image_thumb"));
-						menu.setStatus(getValue(element, "status"));
-						menu.setTypeProductId(getValue(element, "type_product_id"));
-						menu.setCreateDate(getValue(element, "createdate"));
-						menu.setUpdateData(getValue(element, "updatedate"));
-						menu.setSort(getValue(element, "sort"));
+					for (int c2 = 0; c2 < lengthMenuNode2; c2++) {	
+						try {
 
-						NodeList productTypeInfoNodes = permElement
-								.getElementsByTagName("product_type_info");
-						int length = productTypeInfoNodes.getLength();
-						ArrayList<ProductTypeInfo> productTypeInfoList = new ArrayList<ProductTypeInfo>();
-						for (int y = 0; y < length; y++) {
-							Element inElement = (Element) productTypeInfoNodes.item(y);
-							ProductTypeInfo product = new ProductTypeInfo();
-							product.setId(getValue(inElement, "id"));
-							product.setNameProductType(getValue(inElement,"name_product_type"));
-							product.setCreateDate(getValue(inElement, "createdate"));
-							product.setSort(getValue(inElement, "sort"));
-							productTypeInfoList.add(product);
-						}
-						menu.setProductTypeInfoList(productTypeInfoList);
+							Element elementPr = (Element) menuNodes.item(c2);
+							NodeList childList = elementPr.getChildNodes();
+							int lengthMenuNode = childList.getLength();
+							for (int c = 0; c < lengthMenuNode; c++) {	
+								Element element = (Element)childList.item(c);
+								Menu menu = new Menu();
+								menu.setId(getValue(element, "id"));
+								menu.setStoreId(getValue(element, "store_id"));
+								menu.setNameProduct(getValue(element, "name_product"));
+								menu.setValue(getValue(element, "value"));
+								menu.setValuePromotion(getValue(element, "value_promotion"));
+								menu.setImageProduct(getValue(element, "image_product"));
+								menu.setImageThumb(getValue(element, "image_thumb"));
+								menu.setStatus(getValue(element, "status"));
+								menu.setTypeProductId(getValue(element, "type_product_id"));
+								menu.setCreateDate(getValue(element, "createdate"));
+								menu.setUpdateData(getValue(element, "updatedate"));
+								menu.setSort(getValue(element, "sort"));
 
-						NodeList storeInfoNodes = permElement
-								.getElementsByTagName("store_info");
-						int storeInfoLength = productTypeInfoNodes.getLength();
-						for (int w = 0; w < storeInfoLength; w++) {
-							Element infoElement = (Element) storeInfoNodes.item(w);
-							StoreInfo storeInfo = new StoreInfo();
-							storeInfo.setId(getValue(infoElement, "id"));
-							storeInfo.setCateid(getValue(infoElement, "cate_id"));
-							storeInfo.setUserId(getValue(infoElement, "user_id"));
-							storeInfo.setNameSore(getValue(infoElement, "name_store"));
-							storeInfo
-									.setIntroStore(getValue(infoElement, "intro_store"));
-							storeInfo
-									.setPhoneStore(getValue(infoElement, "phone_store"));
-							storeInfo.setLogo(getValue(infoElement, "logo"));
-							storeInfo.setStyle(getValue(infoElement, "style"));
-							storeInfo.setStartTime(getValue(infoElement, "start_time"));
-							storeInfo.setEndTime(getValue(infoElement, "end_time"));
-							storeInfo.setHomeDeliver(getValue(infoElement,
-									"is_home_deliver").equals("1") ? true : false);
-							storeInfo.setHotelDeliver(getValue(infoElement,
-									"is_hotel_deliver").equals("2") ? true : false);
-							storeInfo.setTakeAray(getValue(infoElement, "is_take_away")
-									.equals("1") ? true : false);
-							storeInfo.setAtPlace(getValue(infoElement, "is_at_place")
-									.equals("2") ? true : false);
-							storeInfo.setStartTimeDeliver(getValue(infoElement,
-									"start_time_deliver"));
-							storeInfo.setEndtimeDeliver(getValue(infoElement,
-									"end_time_deliver"));
-							storeInfo.setMinimunTimeDeliever(getValue(infoElement,
-									"minimun_time_deliver"));
-							storeInfo.setValueConditionDeliver(getValue(infoElement,
-									"value_condition_deliver"));
-							storeInfo.setTableWuantity(getValue(infoElement,
-									"table_quantity"));
-							storeInfo.setCountFavouriteMember(getValue(infoElement,
-									"count_favourite_member"));
-							storeInfo.setCountBill(getValue(infoElement, "count_bill"));
-							storeInfo.setIncome(getValue(infoElement, "income"));
-							storeInfo.setStatus(getValue(infoElement, "status"));
-							storeInfo
-									.setCreateDate(getValue(infoElement, "createdate"));
-							storeInfo
-									.setUpdateDate(getValue(infoElement, "updatedate"));
-							menu.setStoreInfo(storeInfo);
+								NodeList productTypeInfoNodes = permElement
+										.getElementsByTagName("product_type_info");
+								int length = productTypeInfoNodes.getLength();
+								ArrayList<ProductTypeInfo> productTypeInfoList = new ArrayList<ProductTypeInfo>();
+								for (int y = 0; y < length; y++) {
+									Element inElement = (Element) productTypeInfoNodes.item(y);
+									ProductTypeInfo product = new ProductTypeInfo();
+									product.setId(getValue(inElement, "id"));
+									product.setNameProductType(getValue(inElement,"name_product_type"));
+									product.setCreateDate(getValue(inElement, "createdate"));
+									product.setSort(getValue(inElement, "sort"));
+									productTypeInfoList.add(product);
+								}
+								menu.setProductTypeInfoList(productTypeInfoList);
+
+								NodeList storeInfoNodes = permElement
+										.getElementsByTagName("store_info");
+								int storeInfoLength = productTypeInfoNodes.getLength();
+								for (int w = 0; w < storeInfoLength; w++) {
+									Element infoElement = (Element) storeInfoNodes.item(w);
+									StoreInfo storeInfo = new StoreInfo();
+									storeInfo.setId(getValue(infoElement, "id"));
+									storeInfo.setCateid(getValue(infoElement, "cate_id"));
+									storeInfo.setUserId(getValue(infoElement, "user_id"));
+									storeInfo.setNameSore(getValue(infoElement, "name_store"));
+									storeInfo
+											.setIntroStore(getValue(infoElement, "intro_store"));
+									storeInfo
+											.setPhoneStore(getValue(infoElement, "phone_store"));
+									storeInfo.setLogo(getValue(infoElement, "logo"));
+									storeInfo.setStyle(getValue(infoElement, "style"));
+									storeInfo.setStartTime(getValue(infoElement, "start_time"));
+									storeInfo.setEndTime(getValue(infoElement, "end_time"));
+									storeInfo.setHomeDeliver(getValue(infoElement,
+											"is_home_deliver").equals("1") ? true : false);
+									storeInfo.setHotelDeliver(getValue(infoElement,
+											"is_hotel_deliver").equals("2") ? true : false);
+									storeInfo.setTakeAray(getValue(infoElement, "is_take_away")
+											.equals("1") ? true : false);
+									storeInfo.setAtPlace(getValue(infoElement, "is_at_place")
+											.equals("2") ? true : false);
+									storeInfo.setStartTimeDeliver(getValue(infoElement,
+											"start_time_deliver"));
+									storeInfo.setEndtimeDeliver(getValue(infoElement,
+											"end_time_deliver"));
+									storeInfo.setMinimunTimeDeliever(getValue(infoElement,
+											"minimun_time_deliver"));
+									storeInfo.setValueConditionDeliver(getValue(infoElement,
+											"value_condition_deliver"));
+									storeInfo.setTableWuantity(getValue(infoElement,
+											"table_quantity"));
+									storeInfo.setCountFavouriteMember(getValue(infoElement,
+											"count_favourite_member"));
+									storeInfo.setCountBill(getValue(infoElement, "count_bill"));
+									storeInfo.setIncome(getValue(infoElement, "income"));
+									storeInfo.setStatus(getValue(infoElement, "status"));
+									storeInfo
+											.setCreateDate(getValue(infoElement, "createdate"));
+									storeInfo
+											.setUpdateDate(getValue(infoElement, "updatedate"));
+									menu.setStoreInfo(storeInfo);
+									
+								}
+								menuList.add(menu);
+							}
+
 							
-						}
-						menuList.add(menu);
 						
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
 					}
 					item.setMenuList(menuList);
 
@@ -740,23 +752,36 @@ public class DataParser {
 					 * Get Photos
 					 */			
 					NodeList photoNode = (NodeList) permElement.getElementsByTagName("photos");
-					int photoSize  = photoNode.getLength();
+					int photoSizePr  = photoNode.getLength();
 					ArrayList<Photo> photos = new ArrayList<Photo>();
-					for(int i2=0;i2< photoSize;i2++){
-						Element element = (Element)photoNode.item(i2);
-						Photo photoItem = new Photo();
-						photoItem.setId(getValue(element, "TotalFriend"));
-						photoItem.setStore_id(getValue(element, "TotalFriend"));
-						photoItem.setUser_id(getValue(element, "TotalFriend"));
-						photoItem.setLocation_id(getValue(element, "TotalFriend"));
-						photoItem.setComment_id(getValue(element, "TotalFriend"));
-						photoItem.setImage(getValue(element, "TotalFriend"));
-						photoItem.setThumb(getValue(element, "TotalFriend"));
-						photoItem.setStatus(getValue(element, "TotalFriend"));
-						photoItem.setType_photo(getValue(element, "TotalFriend"));
-						photoItem.setCreatedate(getValue(element, "TotalFriend"));
-						photoItem.setUpdatedate(getValue(element, "TotalFriend"));
-						photos.add(photoItem);					
+					for(int i2=0;i2< photoSizePr;i2++){
+						try {
+
+							Element elementPr = (Element)photoNode.item(i2);
+							NodeList childrent = elementPr.getChildNodes();
+							int photoSize = childrent.getLength();
+							for(int i3=0;i3< photoSize;i3++){
+								Element element = (Element)childrent.item(i3);
+								Photo photoItem = new Photo();
+								photoItem.setId(getValue(element, "TotalFriend"));
+								photoItem.setStore_id(getValue(element, "TotalFriend"));
+								photoItem.setUser_id(getValue(element, "TotalFriend"));
+								photoItem.setLocation_id(getValue(element, "TotalFriend"));
+								photoItem.setComment_id(getValue(element, "TotalFriend"));
+								photoItem.setImage(getValue(element, "TotalFriend"));
+								photoItem.setThumb(getValue(element, "TotalFriend"));
+								photoItem.setStatus(getValue(element, "TotalFriend"));
+								photoItem.setType_photo(getValue(element, "TotalFriend"));
+								photoItem.setCreatedate(getValue(element, "TotalFriend"));
+								photoItem.setUpdatedate(getValue(element, "TotalFriend"));
+								photos.add(photoItem);	
+							}
+							
+				
+						
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
 					}
 					item.setPhotos(photos);
 					
