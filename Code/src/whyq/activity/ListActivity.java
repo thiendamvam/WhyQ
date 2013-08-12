@@ -206,8 +206,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		Util.checkLocationSetting(getParent());
 		Bundle bundle = Util.getLocation(getParent());
 		if(bundle!=null){
-			longitude = bundle.getString("lat");
-			latgitude = bundle.getString("lon");
+			longitude = bundle.getString("lon");
+			latgitude = bundle.getString("lat");
 		}
 	}
 

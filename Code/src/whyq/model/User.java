@@ -38,6 +38,38 @@ public class User implements Serializable {
 	private int gender;
 	private String urlAvatar;
 	private String statusUser;
+	private String city;
+	private String phoneNumber;
+	private String paypalEmail;
+	private boolean isFriend;
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getPaypalEmail() {
+		return paypalEmail;
+	}
+
+	public void setPaypalEmail(String paypalEmail) {
+		this.paypalEmail = paypalEmail;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	private String totalCount;
 	private String notificationId;
 	private boolean isReceiveNotification;
@@ -50,6 +82,8 @@ public class User implements Serializable {
 	private String address;
 	private boolean logined;
 	private String messageLogin;
+	
+	
 	/**
 	 * Default constructor
 	 */
@@ -640,6 +674,20 @@ public class User implements Serializable {
 	 */
 	public void setMessageLogin(String messageLogin) {
 		this.messageLogin = messageLogin;
+	}
+
+	/**
+	 * @return the isFriend
+	 */
+	public boolean isFriend() {
+		return isFriend;
+	}
+
+	/**
+	 * @param isFriend the isFriend to set
+	 */
+	public void setFriend(boolean isFriend) {
+		this.isFriend = isFriend;
 	}
 	
 	

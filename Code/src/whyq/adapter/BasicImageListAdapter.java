@@ -56,8 +56,8 @@ public class BasicImageListAdapter extends Fragment implements OnScrollListener 
 //			tvAddresss.setText(ListDetailActivity.store.getAddress());
 //			tvNumberFavourtie.setText(ListDetailActivity.store.getCountFavaouriteMember());
 
-			if(photo.getImage() !=null)
-				UrlImageViewHelper.setUrlDrawable(imgView, photo.getImage());
+			if(photo.getThumb() !=null)
+				UrlImageViewHelper.setUrlDrawable(imgView, photo.getThumb());
 
 			return v;
 		}

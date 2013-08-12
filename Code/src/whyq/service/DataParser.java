@@ -33,6 +33,7 @@ import whyq.model.Photo;
 import whyq.model.ProductTypeInfo;
 import whyq.model.Promotion;
 import whyq.model.ResponseData;
+import whyq.model.StatusUser;
 import whyq.model.Store;
 import whyq.model.StoreInfo;
 import whyq.model.User;
@@ -824,9 +825,12 @@ public class DataParser {
 						tag.setCreateDate(getValue(element2, "createdate"));
 						tagList.add(tag);
 					}
-					item.setTagList(tagList);
 
-					return item;
+					item.setTagList(tagList);
+					
+					data.setStatus(statusResponse);
+					data.setData(item);
+					return data;
 				}
 			}else{
 				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
@@ -1003,6 +1007,96 @@ public class DataParser {
 			return null;
 		}
 	
+	}
+
+	public Object parseLUserCheckedResult(String result) {
+		// TODO Auto-generated method stub
+		try {
+			ResponseData data = new ResponseData();
+			Document doc = XMLfromString(result);
+			ArrayList<Store> permList = new ArrayList<Store>();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+				XMLReader xmlReader = initializeReader();
+				UserHandler userHandler = new UserHandler();
+				// assign the handler
+				xmlReader.setContentHandler(userHandler);
+				xmlReader.parse(new InputSource(new StringReader(result)));
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+//				data.setData(userHandler.getUser());
+				data.setMessage(mes);
+				NodeList permNodeList =  doc.getElementsByTagName("obj");
+				int size  = permNodeList.getLength();
+				ArrayList<User> userList = new ArrayList<User>();
+				for( int i = 0; i< size; i++ ){
+					try {
+
+						Element element = (Element ) permNodeList.item(i);
+						User user = new User();
+						user.setId(getValue(element, "id"));
+						user.setEmail(getValue(element, "email"));
+						user.setRoleId(getValue(element, "role_id"));
+						user.setAcive(getValue(element, "is_active").equals("1") ? true
+								: false);
+						user.setTotalMoney(getValue(element, "total_saving_money"));
+						user.setTotalSavingMoney(getValue(element, "total_comment"));
+						user.setTotalComment(getValue(element, "total_comment"));
+						user.setTotalCommentLike(getValue(element, "total_comment_like"));
+						user.setTotalFriend(getValue(element, "total_friend"));
+						user.setTotalFavourite(getValue(element, "total_favourite"));
+						user.setTotalCheckBill(getValue(element, "total_check_bill"));
+						user.setStatus(getValue(element, "status"));
+						user.setCreateDate(getValue(element, "createdate"));
+						user.setUpdateDate(getValue(element, "updatedate"));
+						user.setFirstName(getValue(element, "first_name"));
+						user.setLastName(getValue(element, "last_name"));
+						user.setGender(Integer.parseInt(getValue(element, "gender")));
+						WhyqImage image = new WhyqImage(getValue(element, "avatar"));
+						user.setAvatar(image);
+						user.setAddress(getValue(element, "city"));
+						user.setCity(getValue(element, "address"));
+						user.setPhoneNumber(getValue(element, "phone_number"));
+						user.setPaypalEmail(getValue(element, "paypal_email"));
+						
+						/*
+						 * Get isFriend
+						 */
+						NodeList statusNodes = element.getElementsByTagName("status_user");
+						int tagLenth = statusNodes.getLength();
+						ArrayList<whyq.model.Tag> tagList = new ArrayList<whyq.model.Tag>();
+						for (int k = 0; k < tagLenth; k++) {
+							Element element2 = (Element) statusNodes.item(k);
+							StatusUser item = new StatusUser();
+							String isFriend = getValue(element2, "is_friend");
+							if(isFriend!=null){
+								user.setFriend(isFriend.equals("1")?true:false);
+								k = tagLenth;
+							}
+						}
+						userList.add(user);
+						
+				
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}		
+				data.setData(userList);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

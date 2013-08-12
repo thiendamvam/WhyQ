@@ -313,6 +313,9 @@ public class Service implements Runnable {
 		case ActionForgotPassword:
 			resObj = parser.parseLResetPasswordResult(result);
 			break;
+		case ActionGetUserChecked:
+			resObj = parser.parseLUserCheckedResult(result);
+			break;
 		default:
 			resObj = result;
 			Logger.appendLog(result);
@@ -555,7 +558,21 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/business/member/check_bill", params, true, false);
 	}
-	
+	public void getUserCheckedBills(String encryptedToken, String store_id, String text) {
+		_action = ServiceAction.ActionGetUserChecked;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("store_id", store_id);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		if(text!=null){
+			params.put("key", text);
+			request("/m/business/member/check_bill/search", params, true, false);
+		}else{
+			request("/m/business/member/check_bill", params, true, false);
+		}
+		
+	}
 	public void getOrder(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetOrder;
 		Map<String, String> params = new HashMap<String, String>();
