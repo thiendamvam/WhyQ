@@ -31,7 +31,7 @@
     <!--
          <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true" />
+        android:required="true" />
     -->
     <!-- End of setup for google map -->
 
@@ -88,6 +88,22 @@
             android:theme="@style/Theme.Translucent" />
         <activity
             android:name="whyq.activity.WhyqProfileEditAccountActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Translucent" />
+        <activity
+            android:name="whyq.activity.WhyqOrderMenuActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Translucent" />
+        <activity
+            android:name="whyq.activity.WhyQHomeDeliveryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Translucent" />
+        <activity
+            android:name="whyq.activity.WhyQTakeAwayActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Translucent" />
+        <activity
+            android:name="whyq.activity.WhyQHotelRoomDelivery"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Translucent" />
         <activity

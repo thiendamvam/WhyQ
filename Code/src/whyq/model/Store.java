@@ -1,6 +1,7 @@
 package whyq.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Store {
 
@@ -36,6 +37,7 @@ public class Store {
 	private String discription;
 	private ArrayList<Photo> photos;
 	private boolean isFavourite;
+	private List<UserCheckBill> userCheckBillList;
 	private UserCheckBill userCheckBill;
 	private ArrayList<User> userList;
 	private ArrayList<Menu> menuList;
@@ -546,14 +548,14 @@ public class Store {
 	/**
 	 * @return the userCheckBill
 	 */
-	public UserCheckBill getUserCheckBill() {
-		return userCheckBill;
+	public List<UserCheckBill> getUserCheckBillList() {
+		return userCheckBillList;
 	}
 	/**
 	 * @param userCheckBill the userCheckBill to set
 	 */
-	public void setUserCheckBill(UserCheckBill userCheckBill) {
-		this.userCheckBill = userCheckBill;
+	public void setUserCheckBillList(List<UserCheckBill> userchCheckBills) {
+		this.userCheckBillList = userchCheckBills;
 	}
 	/**
 	 * @return the distance
@@ -602,5 +604,17 @@ public class Store {
 	 */
 	public void setPhotos(ArrayList<Photo> photos) {
 		this.photos = photos;
+	}
+	/**
+	 * @return the userCheckBill
+	 */
+	public UserCheckBill getUserCheckBill() {
+		return userCheckBill;
+	}
+	/**
+	 * @param userCheckBill the userCheckBill to set
+	 */
+	public void setUserCheckBill(UserCheckBill userCheckBill) {
+		this.userCheckBill = userCheckBill;
 	}
 }

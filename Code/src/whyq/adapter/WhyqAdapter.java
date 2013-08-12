@@ -701,20 +701,20 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 
 		// TODO Auto-generated method stub
 		String permId = (String)view.getTag();
-		if(permId != null){
-			Store store = newPermList.get(permId);
-			Intent googleMap = new Intent(context,
-					GoogleMapActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putFloat("lat", Float.parseFloat(store.getLatitude()));
-			bundle.putFloat("lon", Float.parseFloat(store.getLongitude()));
-			bundle.putString("thumbnail", store.getLogo());
-			googleMap.putExtra("locationData", bundle);
-			//Log.d("AA+++++============","========="+perm.getImage().getUrl());
-			View view2 = ListActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+store.getId(), googleMap).getDecorView();
-			ListActivityGroup.group.replaceView(view2);
-
-		}	
+//		if(permId != null){
+//			Store store = newPermList.get(permId);
+//			Intent googleMap = new Intent(context,
+//					GoogleMapActivity.class);
+//			Bundle bundle = new Bundle();
+//			bundle.putFloat("lat", Float.parseFloat(store.getLatitude()));
+//			bundle.putFloat("lon", Float.parseFloat(store.getLongitude()));
+//			bundle.putString("thumbnail", store.getLogo());
+//			googleMap.putExtra("locationData", bundle);
+//			//Log.d("AA+++++============","========="+perm.getImage().getUrl());
+//			View view2 = ListActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+store.getId(), googleMap).getDecorView();
+//			ListActivityGroup.group.replaceView(view2);
+//
+//		}	
 	}
 
 	private void exeComment(View view) {

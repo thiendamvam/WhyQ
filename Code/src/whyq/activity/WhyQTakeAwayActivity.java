@@ -35,8 +35,8 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener {
 		tvBycicalTime = (TextView)findViewById(R.id.tvBycicalTime);
 		tvWalkTime = (TextView)findViewById(R.id.tvWalkTime);
 		
-		btnDone = (Button)findViewById(R.id.btnDone);
-		btnDone.setOnClickListener(this);
+//		btnDone = (Button)findViewById(R.id.btnDone);
+//		btnDone.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View arg0) {

@@ -396,7 +396,7 @@ public final class UrlImageViewHelper {
 
 							imageView.setImageDrawable(newImage);
 //							imageView.setScaleType(ScaleType.FIT_XY);
-							imageView.setScaleType(ScaleType.FIT_START);
+//							imageView.setScaleType(ScaleType.FIT_START);
 						}
 					}
 				

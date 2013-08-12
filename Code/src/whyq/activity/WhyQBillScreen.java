@@ -12,14 +12,16 @@ import whyq.paypal.helper.AccessHelperConnect;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whyq.R;
 
-public class WhyQBillScreen extends Activity{
+public class WhyQBillScreen extends FragmentActivity{
 	
 	private TextView tvTitle;
 	private ListView lvBill;
@@ -30,6 +32,7 @@ public class WhyQBillScreen extends Activity{
 	private TextView tvTotalAfterDiscount;
 	private float totalValue = 0;
 	private float totalafterDiscount = 0;
+	private Button btnDone;
 	public static int LOGIN_REQUEST = 1;
 	
 	@Override
@@ -44,6 +47,8 @@ public class WhyQBillScreen extends Activity{
 		tvTotal = (TextView)findViewById(R.id.tvTotal);
 		tvDiscount = (TextView)findViewById(R.id.tvDiscount);
 		tvTotalAfterDiscount = (TextView)findViewById(R.id.tvTotalafterDiscount);
+		btnDone = (Button)findViewById(R.id.btnDone);
+		btnDone.setText("Order");
 		bindDatatoListview();
 		bindBillValue();
 	}
@@ -68,10 +73,19 @@ public class WhyQBillScreen extends Activity{
 		totalValue = 0;
 		totalafterDiscount = 0;
 		Collection<Bill> c = billList.values();
-		for (Iterator collectionItr = c.iterator(); collectionItr.hasNext(); ) {
-			  Bill item = (Bill)collectionItr.next();
-			  this.listBill.add(item);
-			  totalValue+= totalValue+Float.parseFloat(item.getPrice())*Float.parseFloat(item.getUnit());
+		if(c!=null){
+			for (Iterator collectionItr = c.iterator(); collectionItr.hasNext(); ) {
+				try {
+
+					  Bill item = (Bill)collectionItr.next();
+					  this.listBill.add(item);
+					  totalValue+= totalValue+Float.parseFloat(item.getPrice())*Float.parseFloat(item.getUnit());
+				
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		return this.listBill;
@@ -80,9 +94,12 @@ public class WhyQBillScreen extends Activity{
 		finish();
 	}
 	public void onDoneClicked(View v){
-		final Intent loginIntent = new Intent(this, LoginPaypalActivity.class);
-		startActivityForResult(loginIntent, LOGIN_REQUEST);
-
+//		final Intent loginIntent = new Intent(this, LoginPaypalActivity.class);
+//		startActivityForResult(loginIntent, LOGIN_REQUEST);
+		WhyqOrderMenuActivity frag = new WhyqOrderMenuActivity();	
+		frag.show(getFragmentManager(), "WhyqOrderMenuActivity");
+//		Intent intent = new Intent(WhyQBillScreen.this, WhyqOrderMenuActivity.class	);
+//		startActivity(intent);
 	}
 	
 	@Override

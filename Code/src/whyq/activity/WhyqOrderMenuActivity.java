@@ -1,9 +1,12 @@
 package whyq.activity;
 
+import whyq.WhyqApplication;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +19,7 @@ import com.whyq.R;
 public class WhyqOrderMenuActivity extends DialogFragment implements OnClickListener{
 	private String storeId;
 	private Display display;
-	private Activity context;
+	private Context context;
 	private Button btnHomeDelivery;
 	private Button btnTakeAway;
 	private Button btnHotelDelivery;
@@ -36,7 +39,9 @@ public class WhyqOrderMenuActivity extends DialogFragment implements OnClickList
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		context = getActivity();
-		View v = LayoutInflater.from(context).inflate(R.layout.whyq_store_order_menu, null);
+		View v = LayoutInflater.from(WhyqApplication.Instance().getApplicationContext()).inflate(R.layout.whyq_store_order_menu, null);
+//		setContentView(v);
+//		context = this;
 		btnHomeDelivery =(Button)v.findViewById(R.id.btnHomeDelivery);
 		btnTakeAway = (Button)v.findViewById(R.id.btnHomeTakeAway);
 		btnHotelDelivery = (Button)v.findViewById(R.id.btnHotelRoomDelivery);
@@ -48,7 +53,7 @@ public class WhyqOrderMenuActivity extends DialogFragment implements OnClickList
 		btnHotelDelivery.setOnClickListener(this);
 		btnDinein.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
-		// v.setBackgroundResource(android.R.color.transparent);
+		 v.setBackgroundResource(android.R.color.transparent);
 		getDialog().getWindow().setBackgroundDrawableResource(
 				android.R.color.transparent);
 		getDialog().getWindow().setLayout(100,300);//display.getWidth()/3, display.getHeight() / 4
@@ -64,14 +69,14 @@ public class WhyqOrderMenuActivity extends DialogFragment implements OnClickList
 	}
 
 	public void homeTakeawayClicked() {
-		Intent intent = new Intent(context,WhyQHotelRoomDelivery.class );
+		Intent intent = new Intent(context,WhyQTakeAwayActivity.class );
 		intent.putExtra("store_id", storeId);
 		startActivity(intent);
 	}
 
 	public void hotelRoomDeliveryClicked() {
 		Intent intent = new Intent(context,WhyQHotelRoomDelivery.class );
-		intent.putExtra("store_id", storeId);
+		intent.putExtra("store_id", ""+storeId);
 		startActivity(intent);
 	}
 
@@ -82,6 +87,7 @@ public class WhyqOrderMenuActivity extends DialogFragment implements OnClickList
 
 	public void cancelClicked() {
 		dismiss();
+//		finish();
 	}
 	@Override
 	public void onClick(View arg0) {

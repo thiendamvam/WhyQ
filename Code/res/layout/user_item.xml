@@ -6,6 +6,7 @@
     android:weightSum="8" >
 
     <LinearLayout
+        android:id="@+id/lnAvatar"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -16,16 +17,18 @@
             android:id="@+id/imgAvatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_margin="5dp"
             android:background="@drawable/logo_whyq"
             android:scaleType="fitXY" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvFriendCount"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/imgAvatar"
+        android:layout_toLeftOf="@+id/imgFriend"
+        android:layout_toRightOf="@+id/lnAvatar"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:textColor="@color/black" >
@@ -37,6 +40,7 @@
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
         android:background="@drawable/logo_whyq"
         android:scaleType="fitXY" />
 

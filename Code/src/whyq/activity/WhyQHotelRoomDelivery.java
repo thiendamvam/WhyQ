@@ -5,6 +5,7 @@ import whyq.interfaces.IServiceListener;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -12,10 +13,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.maps.MapActivity;
 import com.whyq.R;
 
-public class WhyQHotelRoomDelivery extends MapActivity implements IServiceListener {
+public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceListener {
 	private EditText etOtherAddress;
 	private EditText etPhoneNumber;
 	private EditText etHours;
@@ -37,12 +37,12 @@ public class WhyQHotelRoomDelivery extends MapActivity implements IServiceListen
 		cbASAP = (CheckBox)findViewById(R.id.cbASAP);
 	}
 
-	@Override
-	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	public void onBack(){
+//	@Override
+//	protected boolean isRouteDisplayed() {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+	public void onBack(View v){
 		finish();
 	}
 	public void onDoneClicked(View v){

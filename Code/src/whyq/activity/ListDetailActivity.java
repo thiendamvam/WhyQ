@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import whyq.adapter.BasicImageListAdapter;
+import whyq.adapter.BasicUserCheckBillAdapter;
 import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.adapter.WhyqMenuAdapter;
@@ -13,6 +14,7 @@ import whyq.model.Bill;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
 import whyq.model.Photo;
+import whyq.model.ProductTypeInfo;
 import whyq.model.Promotion;
 import whyq.model.Store;
 import whyq.model.UserCheckBill;
@@ -298,8 +300,15 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 			bindMenuData();
 			bindPromotionData();
 			bindImageList();
+			bindFriend();
 		}
 	}
+	private void bindFriend() {
+		// TODO Auto-generated method stub
+		BasicUserCheckBillAdapter adapter = new BasicUserCheckBillAdapter(ListDetailActivity.this, store.getUserCheckBillList());
+		lvResult.setAdapter(adapter);
+	}
+
 	private void bindImageList() {
 		// TODO Auto-generated method stub
 		ArrayList<Photo> photoList = store.getPhotos();
@@ -411,9 +420,12 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		}
 		if (storiesList.size() > 0) {
 			ge.setMenuList(storiesList);
-
-//			ge.setName(storiesList.get(0).getTypeProductId());
-			ge.setName(storiesList.get(0).getProductTypeInfoList().get(0).getNameProductType());
+			String name = getNameProductTypeById(storyList, id);
+			if(name!=null){
+				ge.setName(name);
+			}else{
+				ge.setName("");				
+			}
 
 			ge.setColor("ffffff");
 			return ge;
@@ -422,6 +434,32 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		}
 
 	}
+	private String getNameProductTypeById(List<Menu> storyList, String id) {
+		// TODO Auto-generated method stub
+		for(Menu menu: storyList){
+			try {
+				ArrayList<ProductTypeInfo> productTypeInfoList = menu.getProductTypeInfoList();
+				for(ProductTypeInfo productTypeInfo:productTypeInfoList){
+					try {
+						if(productTypeInfo.getId().equals(id)){
+							return productTypeInfo.getNameProductType();
+						}				
+					
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}
+
+			
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
 	private ArrayList<String> getProductTypeIdList(List<Menu> menuList) {
 		// TODO Auto-generated method stub
 		ArrayList<String> listId = new ArrayList<String>();
@@ -529,6 +567,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 				bill.setId(item.getId());
 				bill.setPrice(item.getValue());
 				bill.setUnit("1");
+				bill.setProductName(item.getNameProduct());
 				billList.put(item.getId(),bill);
 			}
 	

@@ -10,6 +10,7 @@ import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
 import whyq.utils.UrlImageViewHelper;
+import whyq.utils.Util;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -131,6 +132,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 			viewHolder.imgThumb = (ImageView) view.findViewById(R.id.imgThumbnail);
 			viewHolder.tvCount = (TextView)view.findViewById(R.id.totalForItem);
 //			viewHolder.storeId = item.getS;
+			viewHolder.tvType.setTypeface(Util.sTypefaceRegular);
+			viewHolder.tvPrice.setTypeface(Util.sTypefaceRegular);
 			viewHolder.tvType.setText(item.getNameProduct());
 			viewHolder.tvPrice.setText("$"+item.getValue());
 			viewHolder.storeId = item.getStoreId();
@@ -201,6 +204,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 //		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
 //		params.addRule(RelativeLayout.LEFT_OF, R.id.tag_img);
 //		groupHolder.title.setLayoutParams(params);
+		groupHolder.title.setTypeface(Util.sTypefaceRegular);
 		groupHolder.title.setText(mGroupCollection.get(arg0).getName());
 //		groupHolder.title.setTextColor(Color.parseColor("#ffffff"));
 //		arg2.setBackgroundColor(Color.parseColor("#000000"));

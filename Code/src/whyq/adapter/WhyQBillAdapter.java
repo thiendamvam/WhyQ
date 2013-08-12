@@ -34,8 +34,8 @@ public class WhyQBillAdapter extends ArrayAdapter<Bill> {
 		return list;
 	}
 	public static class ViewBillHolder {
-		public TextView tvPrice, unit,tvAmount;
-		public ImageView imgThumb;
+		public TextView tvName,tvPrice, unit,tvAmount;
+//		public ImageView imgThumb;
 		public String storeId;
 		public ViewBillHolder() {
 
@@ -53,7 +53,8 @@ public class WhyQBillAdapter extends ArrayAdapter<Bill> {
 			view = inflator.inflate(R.layout.whyq_bill_item, null);
 			final ViewBillHolder viewHolder = new ViewBillHolder();
 			viewHolder.tvPrice = (TextView) view.findViewById(R.id.tvPrice);
-			viewHolder.imgThumb = (ImageView) view.findViewById(R.id.imgThumb);
+//			viewHolder.imgThumb = (ImageView) view.findViewById(R.id.imgThumb);
+			viewHolder.tvName = (TextView)view.findViewById(R.id.tvName);
 			viewHolder.unit = (TextView)view.findViewById(R.id.tvUnit);
 			viewHolder.tvAmount = (TextView)view.findViewById(R.id.tvAmount);
 			viewHolder.tvPrice.setText("$"+item.getPrice());
@@ -61,7 +62,8 @@ public class WhyQBillAdapter extends ArrayAdapter<Bill> {
 			float value = Float.parseFloat(item.getUnit())*Float.parseFloat(item.getPrice());
 			viewHolder.tvAmount.setText(""+value);
 //			viewHolder.tvCount.setText(item.getSort());
-			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getThumb());
+//			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getThumb());
+			viewHolder.tvName.setText(item.getProductName());
 			
 			view.setTag(viewHolder);
 			

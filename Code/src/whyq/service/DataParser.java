@@ -3,6 +3,7 @@ package whyq.service;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -419,6 +420,7 @@ public class DataParser {
 						
 						NodeList userNode = (NodeList) permElement.getElementsByTagName("user_check_bill");
 						int size  = userNode.getLength();
+						List<UserCheckBill> userCheckBillList = new ArrayList<UserCheckBill>();
 						for(int i2=0;i2< size;i2++){
 							Element element = (Element)userNode.item(i2);
 							UserCheckBill userCheckBill= new UserCheckBill();
@@ -432,8 +434,10 @@ public class DataParser {
 							userCheckBill.setStatusBill(getValue(element, "status_bill"));
 							userCheckBill.setInteractionPoint(getValue(element, "interaction_point"));
 							item.setUserCheckBill(userCheckBill);
+							userCheckBillList.add(userCheckBill);
 							i2=size;
 						}
+						item.setUserCheckBillList(userCheckBillList);
 						item.setId(id);
 						item.setStoreId(storeId);
 						item.setAddress(address);
@@ -763,17 +767,17 @@ public class DataParser {
 							for(int i3=0;i3< photoSize;i3++){
 								Element element = (Element)childrent.item(i3);
 								Photo photoItem = new Photo();
-								photoItem.setId(getValue(element, "TotalFriend"));
-								photoItem.setStore_id(getValue(element, "TotalFriend"));
-								photoItem.setUser_id(getValue(element, "TotalFriend"));
-								photoItem.setLocation_id(getValue(element, "TotalFriend"));
-								photoItem.setComment_id(getValue(element, "TotalFriend"));
-								photoItem.setImage(getValue(element, "TotalFriend"));
-								photoItem.setThumb(getValue(element, "TotalFriend"));
-								photoItem.setStatus(getValue(element, "TotalFriend"));
-								photoItem.setType_photo(getValue(element, "TotalFriend"));
-								photoItem.setCreatedate(getValue(element, "TotalFriend"));
-								photoItem.setUpdatedate(getValue(element, "TotalFriend"));
+								photoItem.setId(getValue(element, "id"));
+								photoItem.setStore_id(getValue(element, "store_id"));
+								photoItem.setUser_id(getValue(element, "user_id"));
+								photoItem.setLocation_id(getValue(element, "location_id"));
+								photoItem.setComment_id(getValue(element, "comment_id"));
+								photoItem.setImage(getValue(element, "image"));
+								photoItem.setThumb(getValue(element, "thumb"));
+								photoItem.setStatus(getValue(element, "status"));
+								photoItem.setType_photo(getValue(element, "type_photo"));
+								photoItem.setCreatedate(getValue(element, "createdate"));
+								photoItem.setUpdatedate(getValue(element, "updatedate"));
 								photos.add(photoItem);	
 							}
 							
@@ -787,6 +791,7 @@ public class DataParser {
 					
 					NodeList userNode = (NodeList) permElement.getElementsByTagName("user_check_bill");
 					int size  = userNode.getLength();
+					List<UserCheckBill> userCheckBillList = new ArrayList<UserCheckBill>();
 					for(int i2=0;i2< size;i2++){
 						Element element = (Element)userNode.item(i2);
 						UserCheckBill userCheckBill= new UserCheckBill();
@@ -800,9 +805,10 @@ public class DataParser {
 						userCheckBill.setStatusBill(getValue(element, "status_bill"));
 						userCheckBill.setInteractionPoint(getValue(element, "interaction_point"));
 						item.setUserCheckBill(userCheckBill);
+						userCheckBillList.add(userCheckBill);
 						i2=size;
 					}
-					
+					item.setUserCheckBillList(userCheckBillList);
 					NodeList tagNodes = permElement.getElementsByTagName("tags");
 					int tagLenth = nodes.getLength();
 					ArrayList<whyq.model.Tag> tagList = new ArrayList<whyq.model.Tag>();

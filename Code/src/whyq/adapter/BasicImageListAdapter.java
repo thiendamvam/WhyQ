@@ -24,11 +24,11 @@ public class BasicImageListAdapter extends Fragment implements OnScrollListener 
 	public static String EXTRA_MESSAGE = "EXTRA_MESSAGE";
 	private static Photo photo;
 	public static  HashMap<String, Photo> stories = new HashMap<String, Photo>();
-	private TextView tvAddresss;
-	private ImageView imgThumbnail;
-	private TextView tvNumberFavourtie;
+//	private TextView tvAddresss;
+//	private ImageView imgThumbnail;
+//	private TextView tvNumberFavourtie;
 	private ImageView imgView;
-	
+	private HashMap<String, View> viewList = new HashMap<String, View>();
 	public BasicImageListAdapter(ArrayList<Photo> photoList){
 		
 	}
@@ -40,24 +40,27 @@ public class BasicImageListAdapter extends Fragment implements OnScrollListener 
 			Bundle savedInstanceState) {
 		String id = getArguments().getString(EXTRA_MESSAGE);
 		photo = stories.get(id);
-		View v;
-
-			String url = photo.getImage();
+		View v = viewList.get(id);
+		if(v!=null){
+			return v;
+		}else{
+			String url = photo.getThumb();
 
 			v = inflater.inflate(R.layout.image_item, container, false);
-
-			tvAddresss = (TextView) v.findViewById(R.id.tvAddress);
 			imgView = (ImageView)v.findViewById(R.id.imgView);
-			imgThumbnail = (ImageView) v.findViewById(R.id.imgThumbnail);
-			tvNumberFavourtie = (TextView) v.findViewById(R.id.tvNumberOfFavourite);
-			if(url !=null)
-				UrlImageViewHelper.setUrlDrawable(imgThumbnail, url);
+//			tvAddresss = (TextView) v.findViewById(R.id.tvAddress);
+//			imgThumbnail = (ImageView) v.findViewById(R.id.imgThumbnail);
+//			tvNumberFavourtie = (TextView) v.findViewById(R.id.tvNumberOfFavourite);
+//			if(url !=null)
+//				UrlImageViewHelper.setUrlDrawable(imgThumbnail, url);
+//			tvAddresss.setText(ListDetailActivity.store.getAddress());
+//			tvNumberFavourtie.setText(ListDetailActivity.store.getCountFavaouriteMember());
+
 			if(photo.getImage() !=null)
 				UrlImageViewHelper.setUrlDrawable(imgView, photo.getImage());
 
-			tvAddresss.setText(ListDetailActivity.store.getAddress());
-			tvNumberFavourtie.setText(ListDetailActivity.store.getCountFavaouriteMember());
-		return v;
+			return v;
+		}
 
 	}
 

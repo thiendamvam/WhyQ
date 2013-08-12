@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:orientation="vertical" >
 
-            <include layout="@layout/map_view" />
+	<!--             <include layout="@layout/map_view" /> -->
         </LinearLayout>
 
         <LinearLayout
