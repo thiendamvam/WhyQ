@@ -14,6 +14,7 @@ import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
+import whyq.map.MapsActivity;
 import whyq.model.ResponseData;
 import whyq.model.Store;
 import whyq.model.User;
@@ -994,20 +995,9 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	public void onDistanceClicked(View v){
 		Store item = (Store)v.getTag();
 		Log.d("onDistanceClicked","id "+item.getStoreId());
-//		Intent intent = new Intent(ListActivity.this, MapsActivity.class);
-//		startActivity(intent);
-//		String storeId = item.getStoreId();
-//		if(storeId != null){
-//			Intent googleMap = new Intent(ListActivity.this,
-//					whyq.activity.GoogleMapActivity.class);
-//			Bundle bundle = new Bundle();
-//			bundle.putFloat("lat", Float.parseFloat(item.getLatitude()));
-//			bundle.putFloat("lon", Float.parseFloat(item.getLongitude()));
-//			bundle.putString("thumbnail", item.getLogo());
-//			googleMap.putExtra("locationData", bundle);
-//			View view2 = ListActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+store.getId(), googleMap).getDecorView();
-//			ListActivityGroup.group.replaceView(view2);
-//		}	
+		Intent intent = new Intent(ListActivity.this, MapsActivity.class);
+		startActivity(intent);
+
 	}
 	public void onFavouriteClicked(View v){
 		Store item = (Store)v.getTag();
