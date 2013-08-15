@@ -27,6 +27,7 @@ import whyq.handler.FriendWhyqHandler;
 import whyq.handler.PhotoHandler;
 import whyq.handler.UserHandler;
 import whyq.handler.UserProfileHandler;
+import whyq.model.Faq;
 import whyq.model.Location;
 import whyq.model.Menu;
 import whyq.model.Photo;
@@ -1003,6 +1004,48 @@ public class DataParser {
 			return null;
 		}
 	
+	}
+
+	public Object parseFaqsResult(String result) {
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+				ArrayList<Store> permList = new ArrayList<Store>();
+				NodeList nodeList = doc.getElementsByTagName("Faqs");
+				ArrayList<Faq> faqList = new ArrayList<Faq>();
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					Faq item = new Faq();
+					Element infoElement = (Element) nodeList.item(i);
+					item.setId(getValue(infoElement, "lat"));
+					item.setContentQuestion(getValue(infoElement, "lat"));
+					item.setAnswerQuestion(getValue(infoElement, "lat"));
+					item.setIsPublic(getValue(infoElement, "lat"));
+					item.setCreateDate(getValue(infoElement, "lat"));
+					item.setUpdateDate(getValue(infoElement, "lat"));
+					faqList.add(item);
+				}
+				
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(faqList);
+				data.setMessage(mes);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

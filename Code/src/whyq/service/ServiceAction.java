@@ -9,7 +9,7 @@ public enum ServiceAction {
     ActionLoginTwitter,ActionLoginWhyq,ActionSigup,
     ActionGetFriendsFacebook, 
     ActionGetFriends, ActionGetBusinessList,
-    ActionGetBusinessDetail,
+    ActionGetBusinessDetail,ActionGetFaqs,
     ActionComment,
     ActionGetUserActivities,
     ActionPostComment, ActionGetLocation,ActionPostFavorite, ActionRemoveFavorite,ActionForgotPassword,

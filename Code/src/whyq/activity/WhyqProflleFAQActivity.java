@@ -5,6 +5,9 @@ import java.util.List;
 
 import whyq.adapter.WhyqProfileFAQItemAdapter;
 import whyq.adapter.WhyqProfileFAQItemAdapter.FAQViewHolder;
+import whyq.interfaces.IServiceListener;
+import whyq.service.Service;
+import whyq.service.ServiceResponse;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +17,7 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class WhyqProflleFAQActivity extends Activity{
+public class WhyqProflleFAQActivity extends Activity implements IServiceListener{
 	public static final String HOW_WHYQ_WORK = "How does WHY Q work?";
 	public static final String WHAT_DOTS_MEAN = "What do the coloured dots mean?";
 	public static final String WHY_AM_NOT_FINISH = "Why am I not able to finish paying for my order?";
@@ -24,6 +27,7 @@ public class WhyqProflleFAQActivity extends Activity{
 	private TextView tvTitle;
 	private ListView lvContent;
 	private List<String> list = new ArrayList<String>();
+	private Service service;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +36,20 @@ public class WhyqProflleFAQActivity extends Activity{
 		setContentView(R.layout.whyq_profile_faq_screen);
 		tvTitle = (TextView)findViewById(R.id.tvHeaderTitle);
 		lvContent = (ListView)findViewById(R.id.lvContent);
-		String title = getIntent().getStringExtra("title");
-		if(title!=null){
-			tvTitle.setText(title);
-		}else{
-			tvTitle.setText("");
-		}
+//		String title = getIntent().getStringExtra("title");
+//		if(title!=null){
+//			tvTitle.setText(title);
+//		}else{
+			tvTitle.setText("FAQ");
+//		}
+		service = new Service(this);
+		exeGetData();
 		bindDatatoListview();
+	}
+
+	private void exeGetData() {
+		// TODO Auto-generated method stub
+		service.getFaqs("");
 	}
 
 	private void bindDatatoListview() {
@@ -68,5 +79,11 @@ public class WhyqProflleFAQActivity extends Activity{
 	public void onBack(View v) {
 		// WhyqMain.back();
 		finish();
+	}
+
+	@Override
+	public void onCompleted(Service service, ServiceResponse result) {
+		// TODO Auto-generated method stub
+		
 	}
 }

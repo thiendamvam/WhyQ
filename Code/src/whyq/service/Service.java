@@ -295,6 +295,9 @@ public class Service implements Runnable {
 		case ActionGetBusinessDetail:
 			resObj = parser.parseBusinessDetail(result);
 			break;
+		case ActionGetFaqs:
+			resObj = parser.parseFaqsResult(result);
+			break;
 		case ActionGetBusinessList:
 			resObj = parser.parseBusinessList(result);
 			break;
@@ -544,6 +547,13 @@ public class Service implements Runnable {
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/business/show", params, true, false);
+	}
+	
+	public void getFaqs(String id) {
+		_action = ServiceAction.ActionGetFaqs;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", WhyqApplication.Instance().getRSAToken());
+		request("/m/faqs", params, true, false);
 	}
 
 	public void getCheckedBills(String encryptedToken, String store_id) {
