@@ -51,7 +51,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements IServi
 		storeId = getIntent().getStringExtra("store_id");
 		etOtherAddress = (EditText)findViewById(R.id.etOtherAddress);
 		etPhoneNumber = (EditText)findViewById(R.id.etPhoneNumber);
-		etHours = (EditText)findViewById(R.id.etPhoneNumber);
+		etHours = (EditText)findViewById(R.id.etHours);
 		etMinutes = (EditText)findViewById(R.id.etMinutes);
 		cbASAP = (CheckBox)findViewById(R.id.cbASAP);
 		progressBar = (ProgressBar)findViewById(R.id.prgBar);
@@ -143,7 +143,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements IServi
 			if(cbASAP.isChecked()){
 				params.put("time_deliver", "ASAP");				
 			}else{
-				params.put("time_deliver", ""+etHours.getText().toString()+":"+etMinutes.getText().toString());
+				params.put("time_deliver", getTimeInpu());
 			}
 			params.put("deliver_latitude", longitude);
 			params.put("deliver_longitude", latgitude);
@@ -152,6 +152,20 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements IServi
 			params.put("token", WhyqApplication.Instance().getRSAToken());
 			servivice.orderSend(params);
 		}
+
+		private String getTimeInpu() {
+			// TODO Auto-generated method stub
+			String hours = etHours.getText().toString();
+			String minutes = etMinutes.getText().toString();
+			if(hours.length()<2){
+				hours="0"+hours;
+			}
+			if(minutes.length()<2){
+				minutes="0"+minutes;
+			}
+			return hours+":"+minutes;
+		}
+
 
 		@Override
 		protected HashMap<String, String> doInBackground(

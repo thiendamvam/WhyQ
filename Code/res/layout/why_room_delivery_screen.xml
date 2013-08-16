@@ -13,7 +13,7 @@
         android:gravity="center"
         android:orientation="vertical" >
 
-        <include layout="@layout/navigate_text_2" />
+        <include layout="@layout/navigation_back_done" />
     </LinearLayout>
 
     <LinearLayout
@@ -73,7 +73,7 @@
                 android:singleLine="true" />
 
             <EditText
-                android:id="@+id/etMinute"
+                android:id="@+id/etMinutes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginRight="5dp"

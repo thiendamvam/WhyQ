@@ -74,7 +74,7 @@ public class WhyQDineInActivity extends FragmentActivity implements OnClickListe
 				
 		btnCancel.setOnClickListener(this);
 		btnOk.setOnClickListener(this);
-		
+		context = this;
 		service = new Service(this);
 //		return v;
 	}
@@ -100,7 +100,7 @@ public class WhyQDineInActivity extends FragmentActivity implements OnClickListe
 	}
 	public boolean checkInputData(){
 		boolean status = true;
-		if(etTableNumber.getText().toString().equals("") || cbxNonumber.getText().toString().equals(""))
+		if(etTableNumber.getText().toString().equals("") && !cbxNonumber.isChecked())
 		{
 			return false;
 		}

@@ -721,7 +721,12 @@ public class ListDetailActivity extends FragmentActivity implements
 	        String key=(String)myVeryOwnIterator.next();
 	        Bill bill = billList.get(key);
 	        if(bill!=null){
-	            result+="|"+bill.getProductName()+"|"+bill.getProductId()+"|"+bill.getUnit();
+	        	if(result.equals("")){
+	        		result+=bill.getProductId()+":"+bill.getUnit()+":"+bill.getPrice();	
+	        	}else{
+	        		result+="|"+bill.getProductId()+":"+bill.getUnit()+":"+bill.getPrice();
+	        	}
+	            
 	        }
 	    }
 	    return result;

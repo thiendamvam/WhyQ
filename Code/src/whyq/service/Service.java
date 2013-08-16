@@ -763,7 +763,7 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionOrderSend;
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
-		request("/m/member/search", params, true, false);
+		request("/m/member/order/send", params, true, false);
 	}
 	
 	public void getBillDetail(String billId, String encryptedToken) {

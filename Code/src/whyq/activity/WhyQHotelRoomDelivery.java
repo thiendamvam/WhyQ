@@ -5,7 +5,9 @@ import java.util.HashMap;
 
 import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
+import whyq.model.ResponseData;
 import whyq.service.Service;
+import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.Util;
 import android.content.Context;
@@ -43,7 +45,7 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
 		storeId = getIntent().getStringExtra("store_id");
 		etRoomNo = (EditText)findViewById(R.id.etRoomNo);
 		etHotelChargeCode = (EditText)findViewById(R.id.etHotelChargeCode);
-		etHours = (EditText)findViewById(R.id.etHotelChargeCode);
+		etHours = (EditText)findViewById(R.id.etHours);
 		etMinutes = (EditText)findViewById(R.id.etMinutes);
 		cbASAP = (CheckBox)findViewById(R.id.cbASAP);
 		progressBar = (ProgressBar)findViewById(R.id.prgBar);
@@ -111,7 +113,7 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
 			if(cbASAP.isChecked()){
 				params.put("time_deliver", "ASAP");				
 			}else{
-				params.put("time_deliver", ""+etHours.getText().toString()+":"+etMinutes.getText().toString());
+				params.put("time_deliver", ""+getTimeInpu());
 			}
 
 			params.put("note", note);
@@ -126,9 +128,33 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
-		
+		hideDialog();
+		if(result.getAction() == ServiceAction.ActionOrderSend && result.isSuccess()){
+			ResponseData data = (ResponseData)result.getData();
+			hideDialog();
+			if(data!=null){
+				if(data.getStatus().equals("200")){
+					Util.showDialog(context, data.getMessage());
+				}else if(data.getStatus().equals("401")){
+					Util.loginAgain(context, data.getMessage());
+				}else{
+					Util.showDialog(context, data.getMessage());
+				}
+			}
+		}
 	}
-
+	private String getTimeInpu() {
+		// TODO Auto-generated method stub
+		String hours = etHours.getText().toString();
+		String minutes = etMinutes.getText().toString();
+		if(hours.length()<2){
+			hours="0"+hours;
+		}
+		if(minutes.length()<2){
+			minutes="0"+minutes;
+		}
+		return hours+":"+minutes;
+	}
 	private void showDialog() {
 		// dialog.show();
 		progressBar.setVisibility(View.VISIBLE);

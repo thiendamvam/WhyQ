@@ -70,15 +70,17 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 		int id = arg0.getId();
 		switch (id) {
 		case R.id.btnDone:
-			exeDone();
+//			exeDone();
 			break;
 
 		default:
 			break;
 		}
 	}
-
-	private void exeDone() {
+	public void onBack(View v){
+		finish();
+	}
+	public void onDoneClicked(View v) {
 		// TODO Auto-generated method stub
 		// store_id, deliver_type(1: tike away, 4: dinein),
 		// list_items,deliver_to(empty for typle=1 and 0 if type =4),
@@ -98,7 +100,7 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 			if(cbLeaveNow.isChecked()){
 				params.put("time_deliver", "ASAP");				
 			}else{
-				params.put("time_deliver", ""+etHours.getText().toString()+":"+etMinutes.getText().toString());
+				params.put("time_deliver", ""+getTimeInpu());
 			}
 
 			params.put("note", note);
@@ -111,6 +113,18 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 			etHours.setError("Please input Hours");
 			etMinutes.setError("Please input minutes");
 		}
+	}
+	private String getTimeInpu() {
+		// TODO Auto-generated method stub
+		String hours = etHours.getText().toString();
+		String minutes = etMinutes.getText().toString();
+		if(hours.length()<2){
+			hours="0"+hours;
+		}
+		if(minutes.length()<2){
+			minutes="0"+minutes;
+		}
+		return hours+":"+minutes;
 	}
 	public boolean checkInputData(){
 		boolean status = true;
