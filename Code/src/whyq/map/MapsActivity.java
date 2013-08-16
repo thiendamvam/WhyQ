@@ -385,10 +385,15 @@ public class MapsActivity extends FragmentActivity implements
 		// Init Hashmap here
 		myMaker = new HashMap<String, String>();
 		Bundle bundle = getIntent().getBundleExtra(TAG_BUNDLEBRANCH);
-
-		imgLoader.DisplayImage(
-				bundle.getString(TAG_HOTELICON), loader,
-				icon_hotel);
+		if(bundle!=null){
+			if(bundle.getString(TAG_HOTELICON)!=null)
+			{
+				imgLoader.DisplayImage(
+						bundle.getString(TAG_HOTELICON), loader,
+						icon_hotel);
+				
+			}
+		}
 		
 		if (bundle != null && bundle.getString(TAG_HOTELTITLE_EN) != null) {
 

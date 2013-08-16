@@ -5,6 +5,7 @@ import com.whyq.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 public class WhyqProfileChildBasic extends Activity {
@@ -12,6 +13,7 @@ public class WhyqProfileChildBasic extends Activity {
 	private TextView tvTitle;
 	private String title;
 	private TextView tvContent;
+	private WebView wvContent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,7 @@ public class WhyqProfileChildBasic extends Activity {
 		setContentView(R.layout.whyq_profile_child_basic);
 		tvTitle = (TextView)findViewById(R.id.tvHeaderTitle);
 		tvContent = (TextView)findViewById(R.id.tvContent);
+		wvContent = (WebView)findViewById(R.id.wvContent);
 		title = getIntent().getStringExtra("title");
 		if(title!=null){
 			tvTitle.setText(title);

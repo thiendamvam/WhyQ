@@ -113,6 +113,8 @@ public class Service implements Runnable {
 	}
 
 	public void getFriends(String token, String user_id) {
+//		ÖNedd add page and key = if search
+		
 		_action = ServiceAction.ActionGetFriends;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", token);
@@ -123,7 +125,31 @@ public class Service implements Runnable {
 		}
 		request("/m/member/friend", params, true, false);
 	}
-
+	public void getInvitation(String token, String listInvited) {
+//		ÖNedd add page and key = if search
+		
+		_action = ServiceAction.ActionGetInvitations;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", token);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		if (listInvited != null) {
+			params.put("list_invited", listInvited);
+		}
+		request("/m/member/friend", params, true, false);
+	}
+	public void getInvitationNotification(String token, String listInvited) {
+//		ÖNedd add page and key = if search
+		
+		_action = ServiceAction.ActionGetInvitationsNotification;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", token);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		params.put("list_invited", "");
+		params.put("get_total", "");
+		request("/m/member/friend", params, true, false);
+	}
 	public void getFriendsFacebook(String encryptedToken, String accessToken) {
 		_action = ServiceAction.ActionGetFriendsFacebook;
 		Map<String, String> params = new HashMap<String, String>();
@@ -289,6 +315,27 @@ public class Service implements Runnable {
 		case ActionSigup:
 			resObj = parser.parserSignupResult(result);
 			break;
+		case ActionEditProfile:
+			resObj = parser.parserLoginData(result);
+			break;
+		case ActionGetInvitations:
+			resObj = parser.parseLUserCheckedResult(result);//Same structor data
+			break;
+		case ActionGetInvitationsNotification:
+			resObj = parser.parseInvitationNotification(result);//Same structor data
+			break;
+		case ActionSearchOnlyFriend:
+			resObj = parser.parserSearchOnlFriend(result);
+			break;
+		case ActionDeleteFriend:
+			resObj = parser.parserDeleteFriend(result);
+			break;
+		case ActionOrderSend:
+			resObj = parser.parserOrderSend(result);
+			break;
+		case ActionGetBillDetail:
+			resObj = parser.parserBillDetailResultSend(result);
+			break;
 		case ActionLoginTwitter:
 			resObj = parser.parserLoginData(result);
 			break;
@@ -315,6 +362,9 @@ public class Service implements Runnable {
 			break;
 		case ActionForgotPassword:
 			resObj = parser.parseLResetPasswordResult(result);
+			break;
+		case ActionGetUserChecked:
+			resObj = parser.parseLUserCheckedResult(result);
 			break;
 		default:
 			resObj = result;
@@ -565,7 +615,21 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/business/member/check_bill", params, true, false);
 	}
-	
+	public void getUserCheckedBills(String encryptedToken, String store_id, String text) {
+		_action = ServiceAction.ActionGetUserChecked;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("store_id", store_id);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		if(text!=null){
+			params.put("key", text);
+			request("/m/business/member/check_bill/search", params, true, false);
+		}else{
+			request("/m/business/member/check_bill", params, true, false);
+		}
+		
+	}
 	public void getOrder(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetOrder;
 		Map<String, String> params = new HashMap<String, String>();
@@ -663,5 +727,55 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/register", params, true, false);
 	}
+	
+	public void editProfile(HashMap<String, String> params) {
+		// TODO Auto-generated method stub
+//		first_name, las_name,token,new_password,old_password
+		_action = ServiceAction.ActionEditProfile;
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/profile/edit", params, true, false);
+	}
+
+	public void searchOnlyFriend(HashMap<String, String> params) {
+		// TODO Auto-generated method stub
+//		search, only_friend = 1, key, page =1, token
+		_action = ServiceAction.ActionSearchOnlyFriend;
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/search", params, true, false);
+	}
+
+	public void deleteFriend(String userId, String encryptedToken) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionDeleteFriend;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("user_id", userId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/profile", params, true, false);
+	}
+	
+	public void searchOrderSend(HashMap<String, String> params) {
+		// TODO Auto-generated method stub
+//		store_id, deliver_type(1: tike away, 4: dinein), list_items,deliver_to(empty for typle=1 and 0 if type =4), time_zone,time_deliver(if not empty, oly for type =1),note(commend), token
+		_action = ServiceAction.ActionOrderSend;
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/search", params, true, false);
+	}
+	
+	public void getBillDetail(String billId, String encryptedToken) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionGetBillDetail;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("bill_id", billId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/order/show", params, true, false);
+	}
+	
 
 }

@@ -220,18 +220,18 @@
                             android:layout_marginTop="5dp"
                             layout="@layout/search_feld" >
                         </include>
-
-                        <ListView
-                            android:id="@+id/lvFindResult"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
-                        </ListView>
                     </LinearLayout>
 
                     <include layout="@layout/store_detail_promotion" />
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>
+
+        <ListView
+            android:id="@+id/lvFindResult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </ListView>
 
         <include
             android:layout_width="match_parent"

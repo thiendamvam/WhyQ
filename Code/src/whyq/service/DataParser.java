@@ -27,13 +27,17 @@ import whyq.handler.FriendWhyqHandler;
 import whyq.handler.PhotoHandler;
 import whyq.handler.UserHandler;
 import whyq.handler.UserProfileHandler;
+import whyq.model.BillItem;
 import whyq.model.Faq;
 import whyq.model.Location;
 import whyq.model.Menu;
+import whyq.model.OrderSendResult;
 import whyq.model.Photo;
 import whyq.model.ProductTypeInfo;
 import whyq.model.Promotion;
 import whyq.model.ResponseData;
+import whyq.model.SearchFriend;
+import whyq.model.StatusUser;
 import whyq.model.Store;
 import whyq.model.StoreInfo;
 import whyq.model.User;
@@ -825,9 +829,12 @@ public class DataParser {
 						tag.setCreateDate(getValue(element2, "createdate"));
 						tagList.add(tag);
 					}
-					item.setTagList(tagList);
 
-					return item;
+					item.setTagList(tagList);
+					
+					data.setStatus(statusResponse);
+					data.setData(item);
+					return data;
 				}
 			}else{
 				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
@@ -1006,6 +1013,7 @@ public class DataParser {
 	
 	}
 
+
 	public Object parseFaqsResult(String result) {
 		// TODO Auto-generated method stub
 		try {
@@ -1041,6 +1049,7 @@ public class DataParser {
 				return data;
 				
 			}
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -1048,4 +1057,357 @@ public class DataParser {
 		}
 	}
 
+	public Object parseLUserCheckedResult(String result) {
+		// TODO Auto-generated method stub
+		try {
+			ResponseData data = new ResponseData();
+			Document doc = XMLfromString(result);
+			ArrayList<Store> permList = new ArrayList<Store>();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+				XMLReader xmlReader = initializeReader();
+				UserHandler userHandler = new UserHandler();
+				// assign the handler
+				xmlReader.setContentHandler(userHandler);
+				xmlReader.parse(new InputSource(new StringReader(result)));
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+//				data.setData(userHandler.getUser());
+				data.setMessage(mes);
+				NodeList permNodeList =  doc.getElementsByTagName("obj");
+				int size  = permNodeList.getLength();
+				ArrayList<User> userList = new ArrayList<User>();
+				for( int i = 0; i< size; i++ ){
+					try {
+
+						Element element = (Element ) permNodeList.item(i);
+						User user = new User();
+						user.setId(getValue(element, "id"));
+						user.setEmail(getValue(element, "email"));
+						user.setRoleId(getValue(element, "role_id"));
+						user.setAcive(getValue(element, "is_active").equals("1") ? true
+								: false);
+						user.setTotalMoney(getValue(element, "total_saving_money"));
+						user.setTotalSavingMoney(getValue(element, "total_comment"));
+						user.setTotalComment(getValue(element, "total_comment"));
+						user.setTotalCommentLike(getValue(element, "total_comment_like"));
+						user.setTotalFriend(getValue(element, "total_friend"));
+						user.setTotalFavourite(getValue(element, "total_favourite"));
+						user.setTotalCheckBill(getValue(element, "total_check_bill"));
+						user.setStatus(getValue(element, "status"));
+						user.setCreateDate(getValue(element, "createdate"));
+						user.setUpdateDate(getValue(element, "updatedate"));
+						user.setFirstName(getValue(element, "first_name"));
+						user.setLastName(getValue(element, "last_name"));
+						user.setGender(Integer.parseInt(getValue(element, "gender")));
+						WhyqImage image = new WhyqImage(getValue(element, "avatar"));
+						user.setAvatar(image);
+						user.setAddress(getValue(element, "city"));
+						user.setCity(getValue(element, "address"));
+						user.setPhoneNumber(getValue(element, "phone_number"));
+						user.setPaypalEmail(getValue(element, "paypal_email"));
+						
+						/*
+						 * Get isFriend
+						 */
+						NodeList statusNodes = element.getElementsByTagName("status_user");
+						int tagLenth = statusNodes.getLength();
+						ArrayList<whyq.model.Tag> tagList = new ArrayList<whyq.model.Tag>();
+						for (int k = 0; k < tagLenth; k++) {
+							Element element2 = (Element) statusNodes.item(k);
+							StatusUser item = new StatusUser();
+							String isFriend = getValue(element2, "is_friend");
+							if(isFriend!=null){
+								user.setFriend(isFriend.equals("1")?true:false);
+								k = tagLenth;
+							}
+						}
+						userList.add(user);
+						
+				
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}		
+				data.setData(userList);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+	public Object parserSearchOnlFriend(String result) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+		try {
+			ResponseData data = new ResponseData();
+			Document doc = XMLfromString(result);
+			ArrayList<Store> permList = new ArrayList<Store>();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+				XMLReader xmlReader = initializeReader();
+				UserHandler userHandler = new UserHandler();
+				// assign the handler
+				xmlReader.setContentHandler(userHandler);
+				xmlReader.parse(new InputSource(new StringReader(result)));
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+//				data.setData(userHandler.getUser());
+				data.setMessage(mes);
+				NodeList permNodeList =  doc.getElementsByTagName("obj");
+				int size  = permNodeList.getLength();
+				ArrayList<SearchFriend> friendList = new ArrayList<SearchFriend>();
+				for( int i = 0; i< size; i++ ){
+					try {
+
+						Element element = (Element ) permNodeList.item(i);
+						SearchFriend item = new SearchFriend();
+						item.setId(getValue(element, "id"));
+						item.setFacebookId(getValue(element, "id"));
+						item.setTwitterId(getValue(element, "id"));
+						item.setItuneUrl(getValue(element, "id"));
+						item.setFirstName(getValue(element, "id"));
+						item.setLastName(getValue(element, "id"));
+						item.setIsJoin(getValue(element, "id"));
+						item.setIsFriend(getValue(element, "id"));
+						item.setAvatar(getValue(element, "id"));
+
+						friendList.add(item);
+						
+				
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}		
+				data.setData(friendList);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+
+	
+	}
+
+	public Object parseInvitationNotification(String result) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+
+				
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				final String totalRecordInvited = doc.getElementsByTagName("TotalRecordInvited").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(totalRecordInvited);
+				data.setMessage(mes);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	
+	}
+
+	public Object parserDeleteFriend(String result) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+
+				
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData("1");
+				data.setMessage(mes);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	
+	
+	}
+
+	public Object parserOrderSend(String result) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+
+				
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				
+				final String billId = doc.getElementsByTagName("BillID").item(0).getFirstChild().getNodeValue();
+				final String link = doc.getElementsByTagName("Link").item(0).getFirstChild().getNodeValue();
+				OrderSendResult dataResult = new OrderSendResult();
+				dataResult.setBillId(billId);
+				dataResult.setLink(link);
+				data.setData(dataResult);
+				data.setMessage(mes);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	
+	
+	
+	}
+
+	public Object parserBillDetailResultSend(String result) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+		try {
+			ResponseData data = new ResponseData();
+			Document doc = XMLfromString(result);
+			ArrayList<Store> permList = new ArrayList<Store>();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+				XMLReader xmlReader = initializeReader();
+				UserHandler userHandler = new UserHandler();
+				// assign the handler
+				xmlReader.setContentHandler(userHandler);
+				xmlReader.parse(new InputSource(new StringReader(result)));
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+//				data.setData(userHandler.getUser());
+				data.setMessage(mes);
+				NodeList permNodeList =  doc.getElementsByTagName("obj");
+				int size  = permNodeList.getLength();
+				for( int i = 0; i< size; i++ ){
+					try {
+
+						Element element = (Element ) permNodeList.item(i);
+						BillItem item = new BillItem();
+						item.setItd(getValue(element, "id"));
+						item.setUser_id(getValue(element, "id"));
+						item.setStore_id(getValue(element, "id"));
+						item.setTotal_value(getValue(element, "id"));
+						item.setTotal_real_value(getValue(element, "id"));
+						item.setDiscount_value(getValue(element, "id"));
+						item.setDeliver_fee_value(getValue(element, "id"));
+						item.setProfitValue(getValue(element, "id")	);
+						item.setTransaction_id(getValue(element, "id"));
+						item.setPromotionId(getValue(element, "id"));
+						item.setCode_bill(getValue(element, "id"));
+						item.setNameOrder(getValue(element, "id"));
+						item.setNote(getValue(element, "id"));
+						item.setDeliver_to(getValue(element, "id"));
+						item.setDeliver_type(getValue(element, "id"));
+						item.setTime_deliver_cv(getValue(element, "id"));
+						item.setPhoneDeliver(getValue(element, "id"));
+						item.setStatus_bill(getValue(element, "id"));
+						item.setParent_bill_id(getValue(element, "id"));
+						item.setHotelChargeCode(getValue(element, "id"));
+						item.setOrFrom(getValue(element, "id"));
+						item.setInnscorafrica(getValue(element, "id"));
+						item.setCreatedate(getValue(element, "id"));
+						item.setUpdatedate(getValue(element, "id"));
+						item.setStatus_bill_old(getValue(element, "id"));
+						item.setText_status_bill(getValue(element, "id"));
+						item.setCreatedate_cv(getValue(element, "id"));
+						item.setTime_deliver_cv(getValue(element, "id"));
+						
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}		
+				data.setData(friendList);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+
+	
+	
+	}
 }

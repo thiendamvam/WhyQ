@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import whyq.WhyqApplication;
 import whyq.adapter.BasicImageListAdapter;
-import whyq.adapter.BasicUserCheckBillAdapter;
+import whyq.adapter.BasicUserAdapter;
 import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.adapter.WhyqMenuAdapter;
+import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
 import whyq.model.GroupMenu;
@@ -16,16 +18,23 @@ import whyq.model.Menu;
 import whyq.model.Photo;
 import whyq.model.ProductTypeInfo;
 import whyq.model.Promotion;
+import whyq.model.ResponseData;
 import whyq.model.Store;
+import whyq.model.User;
 import whyq.model.UserCheckBill;
 import whyq.service.Service;
+import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.UrlImageViewHelper;
+import whyq.utils.Util;
 import whyq.view.CustomViewPager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -42,7 +51,8 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class ListDetailActivity extends FragmentActivity implements IServiceListener {
+public class ListDetailActivity extends FragmentActivity implements
+		IServiceListener {
 
 	private Service service;
 	// ProgressDialog dialog;
@@ -84,12 +94,15 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 	private Button btnTotalValue;
 	private ArrayList<Menu> menuList;
 	private CustomViewPager vpPhotoList;
-	public static HashMap<String,Bill> billList;
+	private Context context;
+	private BasicUserAdapter adapter;
+	public static HashMap<String, Bill> billList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.store_detail);
+		context = ListDetailActivity.this;
 		id = getIntent().getStringExtra("id");
 		service = new Service(this);
 		tvAddresss = (TextView) findViewById(R.id.tvAddress);
@@ -102,8 +115,8 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		tvCommendRever = (TextView) findViewById(R.id.tvCommendReview);
 		imgFrienAvatar = (ImageView) findViewById(R.id.imgAvatar);
 		tvFriendNumber = (TextView) findViewById(R.id.tvFriendCount);
-		tvFromUsr = (TextView)findViewById(R.id.tvFromUser);
-		edSearch = (EditText) findViewById(R.id.tvSearch);
+		tvFromUsr = (TextView) findViewById(R.id.tvFromUser);
+		edSearch = (EditText) findViewById(R.id.etTextSearch);
 		lvResult = (ListView) findViewById(R.id.lvFindResult);
 		progressBar = (ProgressBar) findViewById(R.id.prgBar);
 		btnDone = (Button) findViewById(R.id.btn_done);
@@ -111,98 +124,104 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		imgBtnMenu = (RadioButton) findViewById(R.id.rdoMenu);
 		imgBtnPromotion = (RadioButton) findViewById(R.id.rdoPromotion);
 		tvHeaderTitle = (TextView) findViewById(R.id.tvHeaderTitle);
-		imgHeader = (ImageView)findViewById(R.id.imgHeader);
+		imgHeader = (ImageView) findViewById(R.id.imgHeader);
 		storeType = getIntent().getIntExtra("store_type", 0);
-		lnAboutContent = (LinearLayout)findViewById(R.id.lnAboutContent);
-		lnMenuContent = (LinearLayout)findViewById(R.id.lnMenuContent);
-		lnPromotionContent = (LinearLayout)findViewById(R.id.lnStoreDetailPromotion);
-		imgView = (ImageView)findViewById(R.id.imgView);
-		tvNumberDiscount = (TextView)findViewById(R.id.tvNumberDiscount);
-		tvDate = (TextView)findViewById(R.id.tvDate);
-		tvDes = (TextView)findViewById(R.id.tvDescription);
+		lnAboutContent = (LinearLayout) findViewById(R.id.lnAboutContent);
+		lnMenuContent = (LinearLayout) findViewById(R.id.lnMenuContent);
+		lnPromotionContent = (LinearLayout) findViewById(R.id.lnStoreDetailPromotion);
+		imgView = (ImageView) findViewById(R.id.imgView);
+		tvNumberDiscount = (TextView) findViewById(R.id.tvNumberDiscount);
+		tvDate = (TextView) findViewById(R.id.tvDate);
+		tvDes = (TextView) findViewById(R.id.tvDescription);
 		btnTotalValue = (Button) findViewById(R.id.btnTotalValue);
 		btnTotalValue.setText("0");
-		lvMenu = (ExpandableListView)findViewById(R.id.lvMenu);
+		lvMenu = (ExpandableListView) findViewById(R.id.lvMenu);
 		billList = new HashMap<String, Bill>();
-		vpPhotoList = (CustomViewPager)findViewById(R.id.vpStorephoto);
-//		showHeaderImage();
+		vpPhotoList = (CustomViewPager) findViewById(R.id.vpStorephoto);
+		// showHeaderImage();
 		initTabbar();
 		getDetailData();
+		edSearch.addTextChangedListener(mTextEditorWatcher);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// TODO Auto-generated method stub
 				int selectedBtn = radioGroup.getCheckedRadioButtonId();
-				Log.d("setOnCheckedChangeListener", "selectedBtn "+selectedBtn);
-				if(selectedBtn == R.id.rdoAbout){
+				Log.d("setOnCheckedChangeListener", "selectedBtn "
+						+ selectedBtn);
+				if (selectedBtn == R.id.rdoAbout) {
 					exeAboutFocus();
-				}else if(selectedBtn == R.id.rdoMenu){
+				} else if (selectedBtn == R.id.rdoMenu) {
 					exeMenuFocus();
-				}else if(selectedBtn == R.id.rdoPromotion){
+				} else if (selectedBtn == R.id.rdoPromotion) {
 					exePromotionFocus();
 				}
 			}
 		});
 	}
 
-	public void onDoneClicked( View v){
-		
+	public void onDoneClicked(View v) {
+
 	}
+
 	protected void exeAboutFocus() {
 		// TODO Auto-generated method stub
-		Log.d("exeAboutFocus","exeAboutFocus");
+		Log.d("exeAboutFocus", "exeAboutFocus");
 		setViewContent(1);
 	}
 
 	protected void exeMenuFocus() {
 		// TODO Auto-generated method stub
-		Log.d("exeMenuFocus","exeMenuFocus");
+		Log.d("exeMenuFocus", "exeMenuFocus");
 		setViewContent(2);
 	}
 
 	protected void exePromotionFocus() {
 		// TODO Auto-generated method stub
-		Log.d("exePromotionFocus","exePromotionFocus");
+		Log.d("exePromotionFocus", "exePromotionFocus");
 		setViewContent(3);
 	}
 
 	private void setViewContent(int i) {
 		// TODO Auto-generated method stub
-		if(i==1){
+		if (i == 1) {
 			lnAboutContent.setVisibility(View.VISIBLE);
 			lnMenuContent.setVisibility(View.GONE);
 			lnPromotionContent.setVisibility(View.GONE);
-		}else if(i==2){
+			lvResult.setVisibility(View.VISIBLE);
+		} else if (i == 2) {
 			lnAboutContent.setVisibility(View.GONE);
 			lnMenuContent.setVisibility(View.VISIBLE);
 			lnPromotionContent.setVisibility(View.GONE);
-		}else if(i==3){
+			lvResult.setVisibility(View.GONE);
+		} else if (i == 3) {
 			lnAboutContent.setVisibility(View.GONE);
 			lnMenuContent.setVisibility(View.GONE);
 			lnPromotionContent.setVisibility(View.VISIBLE);
+			lvResult.setVisibility(View.GONE);
 		}
 	}
 
 	private void showHeaderImage() {
 		// TODO Auto-generated method stub
-		if(storeType == 1){
+		if (storeType == 1) {
 			imgHeader.setImageResource(R.drawable.icon_result_cutlery);
-		}else if(storeType==2){
+		} else if (storeType == 2) {
 			imgHeader.setImageResource(R.drawable.icon_result_wine);
-		}else if(storeType==3){
+		} else if (storeType == 3) {
 			imgHeader.setImageResource(R.drawable.icon_result_coffee);
-		}else if(storeType==4){
+		} else if (storeType == 4) {
 			imgHeader.setImageResource(R.drawable.icon_result_hotel);
 		}
 	}
 
 	private void initTabbar() {
 		// TODO Auto-generated method stub
-//		imgBtnAbout.setImageResource(R.color.transparent);
-//		imgBtnMenu.setImageResource(R.color.transparent);
-//		imgBtnPromotion.setImageResource(R.color.transparent);
+		// imgBtnAbout.setImageResource(R.color.transparent);
+		// imgBtnMenu.setImageResource(R.color.transparent);
+		// imgBtnPromotion.setImageResource(R.color.transparent);
 		tvHeaderTitle.setText("");
 	}
 
@@ -210,28 +229,33 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		// TODO Auto-generated method stub
 		try {
 			bindUserChecked();
-			if(store.getLogo() !=null)
-				UrlImageViewHelper.setUrlDrawable(imgThumbnail, store.getLogo());
+			if (store.getLogo() != null)
+				UrlImageViewHelper
+						.setUrlDrawable(imgThumbnail, store.getLogo());
 			tvAddresss.setText(store.getAddress());
-			tvNumberFavourtie.setText(""+store.getCountFavaouriteMember());
-			
-			tvOpeningTime.setText(store.getStartTime()+" - "+store.getEndTime());
+			tvNumberFavourtie.setText("" + store.getCountFavaouriteMember());
+
+			tvOpeningTime.setText(store.getStartTime() + " - "
+					+ store.getEndTime());
 			tvTelephone.setText(store.getPhoneStore());
 			tvStoreDes.setText(store.getIntroStore());
 			tvHeaderTitle.setText(store.getNameStore());
-			
-//			UrlImageViewHelper.setUrlDrawable(imgView, store.getPhotos());
-			if(!store.getCountFavaouriteMember().equals("0")){
-				tvCommendRever.setText(store.getCountFavaouriteMember()+" comments");
-				tvCommendRever.setTextColor(getResources().getColor(R.color.profifle_blue));
+
+			// UrlImageViewHelper.setUrlDrawable(imgView, store.getPhotos());
+			if (!store.getCountFavaouriteMember().equals("0")) {
+				tvCommendRever.setText(store.getCountFavaouriteMember()
+						+ " comments");
+				tvCommendRever.setTextColor(getResources().getColor(
+						R.color.profifle_blue));
 				tvFromUsr.setVisibility(View.VISIBLE);
-			}else{
+			} else {
 				tvFromUsr.setVisibility(View.VISIBLE);
 			}
 
-//			UrlImageViewHelper.setUrlDrawable(imgFrienAvatar, store.getUserList()
-//					.get(0).getUrlAvatar());
-			
+			// UrlImageViewHelper.setUrlDrawable(imgFrienAvatar,
+			// store.getUserList()
+			// .get(0).getUrlAvatar());
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -243,25 +267,36 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		// TODO Auto-generated method stub
 		try {
 			UserCheckBill userCheckBill = store.getUserCheckBill();
-			if(userCheckBill !=null){
-				if(userCheckBill.getTotalMember()!=null && !userCheckBill.getTotalMember().equals("")){
-					if(userCheckBill.getAvatar()!=null && !userCheckBill.getAvatar().equals("")){
-						if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
-							tvFriendNumber.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" others visited");	
-						}else{
-							tvFriendNumber.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" other visited");
+			if (userCheckBill != null) {
+				if (userCheckBill.getTotalMember() != null
+						&& !userCheckBill.getTotalMember().equals("")) {
+					if (userCheckBill.getAvatar() != null
+							&& !userCheckBill.getAvatar().equals("")) {
+						if (Integer.parseInt(userCheckBill.getTotalMember()) > 0) {
+							tvFriendNumber.setText(userCheckBill.getFirstName()
+									+ " " + userCheckBill.getLastName() + " & "
+									+ userCheckBill.getTotalMember()
+									+ " others visited");
+						} else {
+							tvFriendNumber.setText(userCheckBill.getFirstName()
+									+ " " + userCheckBill.getLastName() + " & "
+									+ userCheckBill.getTotalMember()
+									+ " other visited");
 						}
-						
+
 						imgFrienAvatar.setVisibility(View.VISIBLE);
-						UrlImageViewHelper.setUrlDrawable(imgFrienAvatar, userCheckBill.getAvatar());	
-					}else{
+						UrlImageViewHelper.setUrlDrawable(imgFrienAvatar,
+								userCheckBill.getAvatar());
+					} else {
 						imgFrienAvatar.setVisibility(View.GONE);
-						if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
-							tvFriendNumber.setText(userCheckBill.getTotalMember()+" others visited");
-						}else{
-							tvFriendNumber.setText(userCheckBill.getTotalMember()+" other visited");
+						if (Integer.parseInt(userCheckBill.getTotalMember()) > 0) {
+							tvFriendNumber.setText(userCheckBill
+									.getTotalMember() + " others visited");
+						} else {
+							tvFriendNumber.setText(userCheckBill
+									.getTotalMember() + " other visited");
 						}
-						
+
 					}
 
 				}
@@ -292,30 +327,70 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
 		hideDialog();
-		store = (Store) result.getData();
-		if(store!=null){
-			storeType = Integer.valueOf(store.getCateid());
-			showHeaderImage();
-			bindData();
-			bindMenuData();
-			bindPromotionData();
-			bindImageList();
-			bindFriend();
+		if(result.getAction()==ServiceAction.ActionGetBusinessDetail){
+			ResponseData data = (ResponseData)result.getData();
+			if(data!=null){
+				if(data.getStatus().equals("200")){
+					store = (Store) data.getData();
+					if (store != null) {
+						storeType = Integer.valueOf(store.getCateid());
+						showHeaderImage();
+						bindData();
+						bindMenuData();
+						bindPromotionData();
+						bindImageList();
+						bindFriend();
+					}
+				}else if(data.getStatus().equals("401")){
+					Util.loginAgain(getParent(), data.getMessage());
+				}else{
+					Util.showDialog(getParent(), data.getMessage());
+				}
+			}
+
+		}else if(result.getAction()==ServiceAction.ActionGetUserChecked){
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				List<User> userList = (List<User>) data.getData();
+				if(userList!=null){
+					if(userList.size() > 0){
+						loadCheckFriend(userList);
+					}
+				}
+			}else if(data.getStatus().equals("401")){
+				Util.loginAgain(context, data.getMessage());
+			}else{
+				Util.showDialog(context, data.getMessage());
+			}
+
+			
 		}
 	}
+
 	private void bindFriend() {
 		// TODO Auto-generated method stub
-		BasicUserCheckBillAdapter adapter = new BasicUserCheckBillAdapter(ListDetailActivity.this, store.getUserCheckBillList());
+		service.getUserCheckedBills(WhyqApplication.Instance().getRSAToken(), store.getId(), null);
+		showDialog();
+	}
+	private void loadCheckFriend(List<User> list){
+		if(adapter!=null){
+			adapter.resetData();
+		}
+		adapter = new BasicUserAdapter(
+				ListDetailActivity.this, list);
 		lvResult.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
+		lvResult.requestLayout();
 	}
 
 	private void bindImageList() {
 		// TODO Auto-generated method stub
 		ArrayList<Photo> photoList = store.getPhotos();
-		if(photoList.size()>0){
+		if (photoList.size() > 0) {
 			exePutPhotoListData();
 		}
 	}
+
 	private void exePutPhotoListData() {
 		// TODO Auto-generated method stub
 
@@ -325,14 +400,14 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		vpPhotoList.setAdapter(coverStoryAdapter);
 		coverStoryAdapter.notifyDataSetChanged();
 		vpPhotoList.requestLayout();
-		
+
 	}
+
 	private List<Fragment> getFragments(ArrayList<Photo> photoList) {
 		// TODO Auto-generated method stub
 		List<Fragment> fList = new ArrayList<Fragment>();
 
-
-		for (int i= 0; i< photoList.size(); i++) {
+		for (int i = 0; i < photoList.size(); i++) {
 			try {
 				Photo photo = photoList.get(i);
 				fList.add(BasicImageListAdapter.newInstance(photo));
@@ -340,18 +415,21 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 				// TODO: handle exception
 			}
 		}
-		
+
 		return fList;
 	}
+
 	private void bindPromotionData() {
 		// TODO Auto-generated method stub
 		try {
-			if(store.getPromotionList()!=null){
-				if(store.getPromotionList().size()>0){
+			if (store.getPromotionList() != null) {
+				if (store.getPromotionList().size() > 0) {
 					Promotion promotion = store.getPromotionList().get(0);
-					tvNumberDiscount.setText(promotion.getValuePromotion()+""+promotion.getTypeValue()); 
+					tvNumberDiscount.setText(promotion.getValuePromotion() + ""
+							+ promotion.getTypeValue());
 					tvDes.setText(promotion.getDescriptionPromotion());
-					tvDate.setText(promotion.getStartDate()+" - "+promotion.getEndDate());
+					tvDate.setText(promotion.getStartDate() + " - "
+							+ promotion.getEndDate());
 				}
 			}
 		} catch (Exception e) {
@@ -364,13 +442,15 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		// TODO Auto-generated method stub
 		try {
 			menuList = store.getMenuList();
-			
+
 			int size = menuList.size();
-			if(size > 0 ){
-//				menuAdapter = new WhyqMenuAdapter(ListDetailActivity.this, menuList);
-//				lvMenu.setAdapter(menuAdapter);
-//				ExampleAdapter adapter = new ExampleAdapter(ListDetailActivity.this);
-//				lvMenu.setAdapter(adapter);
+			if (size > 0) {
+				// menuAdapter = new WhyqMenuAdapter(ListDetailActivity.this,
+				// menuList);
+				// lvMenu.setAdapter(menuAdapter);
+				// ExampleAdapter adapter = new
+				// ExampleAdapter(ListDetailActivity.this);
+				// lvMenu.setAdapter(adapter);
 				ArrayList<GroupMenu> mGroupCollection = new ArrayList<GroupMenu>();
 				ArrayList<String> idList = getProductTypeIdList(menuList);
 				int length = idList.size();
@@ -378,9 +458,8 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 					try {
 
 						String id = idList.get(i);
-						GroupMenu group= getGroupFromId(
-								menuList, id);
-						
+						GroupMenu group = getGroupFromId(menuList, id);
+
 						if (group != null)
 							mGroupCollection.add(group);
 
@@ -390,13 +469,11 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 					}
 				}
 				ExpanMenuAdapter adapter = new ExpanMenuAdapter(
-						ListDetailActivity.this,
-						lvMenu,
-						mGroupCollection);
+						ListDetailActivity.this, lvMenu, mGroupCollection);
 
 				lvMenu.setAdapter(adapter);
 				adapter.notifyDataSetChanged();
-				
+
 				lvMenu.setAdapter(adapter);
 				for (int i = 0; i < mGroupCollection.size(); i++) {
 					lvMenu.expandGroup(i);
@@ -407,6 +484,7 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 			e.printStackTrace();
 		}
 	}
+
 	private GroupMenu getGroupFromId(List<Menu> storyList, String id) {
 		// TODO Auto-generated method stub
 		GroupMenu ge = new GroupMenu();
@@ -421,10 +499,10 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		if (storiesList.size() > 0) {
 			ge.setMenuList(storiesList);
 			String name = getNameProductTypeById(storyList, id);
-			if(name!=null){
+			if (name != null) {
 				ge.setName(name);
-			}else{
-				ge.setName("");				
+			} else {
+				ge.setName("");
 			}
 
 			ge.setColor("ffffff");
@@ -434,24 +512,25 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		}
 
 	}
+
 	private String getNameProductTypeById(List<Menu> storyList, String id) {
 		// TODO Auto-generated method stub
-		for(Menu menu: storyList){
+		for (Menu menu : storyList) {
 			try {
-				ArrayList<ProductTypeInfo> productTypeInfoList = menu.getProductTypeInfoList();
-				for(ProductTypeInfo productTypeInfo:productTypeInfoList){
+				ArrayList<ProductTypeInfo> productTypeInfoList = menu
+						.getProductTypeInfoList();
+				for (ProductTypeInfo productTypeInfo : productTypeInfoList) {
 					try {
-						if(productTypeInfo.getId().equals(id)){
+						if (productTypeInfo.getId().equals(id)) {
 							return productTypeInfo.getNameProductType();
-						}				
-					
+						}
+
 					} catch (Exception e) {
 						// TODO: handle exception
 						e.printStackTrace();
 					}
 				}
 
-			
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
@@ -472,256 +551,322 @@ public class ListDetailActivity extends FragmentActivity implements IServiceList
 		}
 		return listId;
 	}
-	public void onCutleryTabCliked(View v){
+
+	public void onCutleryTabCliked(View v) {
 		resetTabBarFocus(1);
 	}
-	public void onWineTabCliked(View v){
+
+	public void onWineTabCliked(View v) {
 		resetTabBarFocus(2);
 	}
-	public void onCoffeTabClicked(View v){
+
+	public void onCoffeTabClicked(View v) {
 		resetTabBarFocus(3);
 	}
-	public void resetTabBarFocus(int index){
-		
+
+	public void resetTabBarFocus(int index) {
+
 		switch (index) {
 		case 3:
-			
+
 			imgBtnAbout.setBackgroundResource(R.drawable.bg_tab_normal);
 			imgBtnMenu.setBackgroundResource(R.drawable.bg_tab_normal);
 			imgBtnPromotion.setBackgroundResource(R.drawable.bg_tab_active);
-//			imgBtnMenu.setBackgroundResource(R.drawable.icon_cat_coffee);
-//			imgBtnPromotion.setBackgroundResource(R.drawable.bg_tab_active);
+			// imgBtnMenu.setBackgroundResource(R.drawable.icon_cat_coffee);
+			// imgBtnPromotion.setBackgroundResource(R.drawable.bg_tab_active);
 			cateId = "0";
 			break;
 		case 1:
 			imgBtnAbout.setBackgroundResource(R.drawable.bg_tab_active);
 			imgBtnPromotion.setBackgroundResource(R.drawable.bg_tab_normal);
 			imgBtnMenu.setBackgroundResource(R.drawable.bg_tab_normal);
-//			imgBtnMenu.setBackgroundResource(R.drawable.icon_cat_coffee);
-//			imgBtnPromotion.setBackgroundResource(R.drawable.icon_cat_cutlery);
+			// imgBtnMenu.setBackgroundResource(R.drawable.icon_cat_coffee);
+			// imgBtnPromotion.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			cateId = "1";
 			break;
 		case 2:
 			imgBtnMenu.setBackgroundResource(R.drawable.bg_tab_active);
 			imgBtnAbout.setBackgroundResource(R.drawable.bg_tab_normal);
 			imgBtnPromotion.setBackgroundResource(R.drawable.bg_tab_normal);
-//			imgBtnAbout.setBackgroundResource(R.drawable.icon_cat_wine);
-//			imgBtnPromotion.setBackgroundResource(R.drawable.icon_cat_cutlery);
+			// imgBtnAbout.setBackgroundResource(R.drawable.icon_cat_wine);
+			// imgBtnPromotion.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			cateId = "2";
 			break;
 
 		default:
 			break;
 		}
-		
+
 	}
-	
-//	public void onAddClicked(View v){
-//		Log.d("onAddClicked","id ="+v.getId());
-//		Menu item = (Menu)v.getTag();
-//		if(item!=null){
-//			if(billList.containsKey(item.getId())){
-//				int value = Integer.parseInt(billList.get(item.getId()).getUnit())+1;
-//				billList.get(item.getId()).setUnit(""+value);
-//			}else{
-//				Bill bill = new Bill();
-//				bill.setId(item.getId());
-//				bill.setPrice(item.getValue());
-//				bill.setUnit("1");
-//				billList.put(item.getId(),bill);
-//			}
-//
-//			updateCount(item,true);
-//		}
-//	}
-//	
-//	public void onRemoveClicked(View v){
-//		Log.d("onRemoveClicked","id ="+v.getId());
-//		Menu item = (Menu)v.getTag();
-//		updateCount(item,false);
-//		if(billList.containsKey(item.getId())){
-//			int value = Integer.parseInt(billList.get(item.getId()).getUnit())-1;
-//
-//			billList.get(item.getId()).setUnit(""+value);
-//			if(value < 0)
-//				billList.remove(item.getId());
-//		}else{
-//			Bill bill = new Bill();
-//			bill.setId(item.getId());
-//			bill.setPrice(item.getValue());
-//			bill.setThumb(item.getImageThumb());
-//			bill.setUnit("1");
-//			billList.put(item.getId(),bill);
-//		}
-//	}
-	public void onAddClicked(View v){
-		Log.d("onAddClicked","id ="+v.getId());
-		ViewHolderMitemInfo holder = (ViewHolderMitemInfo)v.getTag();
+
+	// public void onAddClicked(View v){
+	// Log.d("onAddClicked","id ="+v.getId());
+	// Menu item = (Menu)v.getTag();
+	// if(item!=null){
+	// if(billList.containsKey(item.getId())){
+	// int value = Integer.parseInt(billList.get(item.getId()).getUnit())+1;
+	// billList.get(item.getId()).setUnit(""+value);
+	// }else{
+	// Bill bill = new Bill();
+	// bill.setId(item.getId());
+	// bill.setPrice(item.getValue());
+	// bill.setUnit("1");
+	// billList.put(item.getId(),bill);
+	// }
+	//
+	// updateCount(item,true);
+	// }
+	// }
+	//
+	// public void onRemoveClicked(View v){
+	// Log.d("onRemoveClicked","id ="+v.getId());
+	// Menu item = (Menu)v.getTag();
+	// updateCount(item,false);
+	// if(billList.containsKey(item.getId())){
+	// int value = Integer.parseInt(billList.get(item.getId()).getUnit())-1;
+	//
+	// billList.get(item.getId()).setUnit(""+value);
+	// if(value < 0)
+	// billList.remove(item.getId());
+	// }else{
+	// Bill bill = new Bill();
+	// bill.setId(item.getId());
+	// bill.setPrice(item.getValue());
+	// bill.setThumb(item.getImageThumb());
+	// bill.setUnit("1");
+	// billList.put(item.getId(),bill);
+	// }
+	// }
+	public void onAddClicked(View v) {
+		Log.d("onAddClicked", "id =" + v.getId());
+		ViewHolderMitemInfo holder = (ViewHolderMitemInfo) v.getTag();
 		Menu item = getMenuById(holder.menuId);
-		if(item!=null){
-			if(billList.containsKey(item.getId())){
-				int value = Integer.parseInt(billList.get(item.getId()).getUnit())+1;
-				billList.get(item.getId()).setUnit(""+value);
-			}else{
+		if (item != null) {
+			if (billList.containsKey(item.getId())) {
+				int value = Integer.parseInt(billList.get(item.getId())
+						.getUnit()) + 1;
+				billList.get(item.getId()).setUnit("" + value);
+			} else {
 				Bill bill = new Bill();
 				bill.setId(item.getId());
 				bill.setPrice(item.getValue());
 				bill.setUnit("1");
 				bill.setProductName(item.getNameProduct());
-				billList.put(item.getId(),bill);
+				billList.put(item.getId(), bill);
 			}
-	
-//			updateCount(holder,true);
+
+			// updateCount(holder,true);
 			updateCountInExpandListview(holder, true);
 		}
 	}
+
 	private Menu getMenuById(String menuId) {
 		// TODO Auto-generated method stub
 		int size = menuList.size();
-		for(Menu menu: menuList){
-			if(menuId.equals(menu.getId())){
+		for (Menu menu : menuList) {
+			if (menuId.equals(menu.getId())) {
 				return menu;
 			}
 		}
 		return null;
 	}
-	public void onRemoveClicked(View v){
-		Log.d("onRemoveClicked","id ="+v.getId());
-		ViewHolderMitemInfo holder = (ViewHolderMitemInfo)v.getTag();
-		Menu item = getMenuById(holder.menuId);
-//		updateCount(holder,false);
-		updateCountInExpandListview(holder, false);
-		if(item!=null){
-			if(billList.containsKey(item.getId())){
-				int value = Integer.parseInt(billList.get(item.getId()).getUnit())-1;
 
-				billList.get(item.getId()).setUnit(""+value);
-				if(value < 0)
+	public void onRemoveClicked(View v) {
+		Log.d("onRemoveClicked", "id =" + v.getId());
+		ViewHolderMitemInfo holder = (ViewHolderMitemInfo) v.getTag();
+		Menu item = getMenuById(holder.menuId);
+		// updateCount(holder,false);
+		updateCountInExpandListview(holder, false);
+		if (item != null) {
+			if (billList.containsKey(item.getId())) {
+				int value = Integer.parseInt(billList.get(item.getId())
+						.getUnit()) - 1;
+
+				billList.get(item.getId()).setUnit("" + value);
+				if (value < 0)
 					billList.remove(item.getId());
-			}else{
+			} else {
 				Bill bill = new Bill();
 				bill.setId(item.getId());
 				bill.setPrice(item.getValue());
 				bill.setThumb(item.getImageThumb());
 				bill.setUnit("1");
-				billList.put(item.getId(),bill);
+				billList.put(item.getId(), bill);
 			}
 		}
 	}
-	public void onViewBillClicked(View v){
-		Intent intent = new Intent(ListDetailActivity.this, WhyQBillScreen.class);
+
+	public void onViewBillClicked(View v) {
+		Intent intent = new Intent(ListDetailActivity.this,
+				WhyQBillScreen.class);
 		startActivity(intent);
 	}
-//	private void updateCount(Menu item, boolean b) {
-//		// TODO Auto-generated method stub
-//		int size = lvMenu.getChildCount();
-//		float value,totalValue = Float.parseFloat(btnTotalValue.getText().toString());
-//		Menu item2;
-//		ViewHolderMitemInfo holder;
-//		for(int i=0;i< size;i++){
-//			try {
-//
-//				item2 = store.getMenuList().get(i);
-//				if(item2.getId().equals(item.getId()) && !item.getValue().equals("")){
-//					holder = (ViewHolderMitemInfo)lvMenu.getChildAt(i).getTag();
-//					if(b){
-//						value = Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
-//						totalValue+=Float.parseFloat(item.getValue());
-//					}else{
-//						value = Float.parseFloat(holder.tvCount.getText().toString())-Float.parseFloat("1");
-//						totalValue-=Float.parseFloat(item.getValue());
-//					}
-//					if(value < 0 )
-//						value= 0;
-//					if(totalValue < 0)
-//						totalValue = 0;
-//					holder.tvCount.setText(""+value);
-//					lvMenu.getChildAt(i).requestLayout();
-//					btnTotalValue.setText(""+totalValue);
-//				}
-//			
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				e.printStackTrace();
-//			}
-//		}
-//	}
-	private void updateCountInExpandListview(ViewHolderMitemInfo holder, boolean b) {
+
+	// private void updateCount(Menu item, boolean b) {
+	// // TODO Auto-generated method stub
+	// int size = lvMenu.getChildCount();
+	// float value,totalValue =
+	// Float.parseFloat(btnTotalValue.getText().toString());
+	// Menu item2;
+	// ViewHolderMitemInfo holder;
+	// for(int i=0;i< size;i++){
+	// try {
+	//
+	// item2 = store.getMenuList().get(i);
+	// if(item2.getId().equals(item.getId()) && !item.getValue().equals("")){
+	// holder = (ViewHolderMitemInfo)lvMenu.getChildAt(i).getTag();
+	// if(b){
+	// value =
+	// Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
+	// totalValue+=Float.parseFloat(item.getValue());
+	// }else{
+	// value =
+	// Float.parseFloat(holder.tvCount.getText().toString())-Float.parseFloat("1");
+	// totalValue-=Float.parseFloat(item.getValue());
+	// }
+	// if(value < 0 )
+	// value= 0;
+	// if(totalValue < 0)
+	// totalValue = 0;
+	// holder.tvCount.setText(""+value);
+	// lvMenu.getChildAt(i).requestLayout();
+	// btnTotalValue.setText(""+totalValue);
+	// }
+	//
+	// } catch (Exception e) {
+	// // TODO: handle exception
+	// e.printStackTrace();
+	// }
+	// }
+	// }
+	private void updateCountInExpandListview(ViewHolderMitemInfo holder,
+			boolean b) {
 		int size = lvMenu.getChildCount();
-		float value,totalValue = Float.parseFloat(btnTotalValue.getText().toString());
+		float value, totalValue = Float.parseFloat(btnTotalValue.getText()
+				.toString());
 		Menu item2;
 		Menu item = getMenuById(holder.menuId);
-		if(b){
-			value = Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
-			totalValue+=Float.parseFloat(item.getValue());
-		}else{
-			value = Float.parseFloat(holder.tvCount.getText().toString())-Float.parseFloat("1");
-			totalValue-=Float.parseFloat(item.getValue());
+		if (b) {
+			value = Float.parseFloat(holder.tvCount.getText().toString())
+					+ Float.parseFloat("1");
+			totalValue += Float.parseFloat(item.getValue());
+		} else {
+			value = Float.parseFloat(holder.tvCount.getText().toString())
+					- Float.parseFloat("1");
+			totalValue -= Float.parseFloat(item.getValue());
 		}
-		if(value < 0 )
-			value= 0;
-		if(totalValue < 0)
+		if (value < 0)
+			value = 0;
+		if (totalValue < 0)
 			totalValue = 0;
-		holder.tvCount.setText(""+value);
+		holder.tvCount.setText("" + value);
 		holder.tvCount.requestLayout();
-		btnTotalValue.setText(""+totalValue);
+		btnTotalValue.setText("" + totalValue);
 	}
+
 	private void updateCount(ViewHolderMitemInfo holder, boolean b) {
 		// TODO Auto-generated method stub
 		int size = lvMenu.getChildCount();
-		float value,totalValue = Float.parseFloat(btnTotalValue.getText().toString());
+		float value, totalValue = Float.parseFloat(btnTotalValue.getText()
+				.toString());
 		Menu item2;
 		Menu item = getMenuById(holder.menuId);
-		for(int i=0;i< size;i++){
+		for (int i = 0; i < size; i++) {
 			try {
 
 				item2 = store.getMenuList().get(i);
-				if(item2.getId().equals(item.getId()) && !item.getValue().equals("")){
-//					holder = (ViewHolderMitemInfo)lvMenu.getChildAt(i).getTag();
-					if(b){
-						value = Float.parseFloat(holder.tvCount.getText().toString())+Float.parseFloat("1");
-						totalValue+=Float.parseFloat(item.getValue());
-					}else{
-						value = Float.parseFloat(holder.tvCount.getText().toString())-Float.parseFloat("1");
-						totalValue-=Float.parseFloat(item.getValue());
+				if (item2.getId().equals(item.getId())
+						&& !item.getValue().equals("")) {
+					// holder =
+					// (ViewHolderMitemInfo)lvMenu.getChildAt(i).getTag();
+					if (b) {
+						value = Float.parseFloat(holder.tvCount.getText()
+								.toString()) + Float.parseFloat("1");
+						totalValue += Float.parseFloat(item.getValue());
+					} else {
+						value = Float.parseFloat(holder.tvCount.getText()
+								.toString()) - Float.parseFloat("1");
+						totalValue -= Float.parseFloat(item.getValue());
 					}
-					if(value < 0 )
-						value= 0;
-					if(totalValue < 0)
+					if (value < 0)
+						value = 0;
+					if (totalValue < 0)
 						totalValue = 0;
-					holder.tvCount.setText(""+value);
+					holder.tvCount.setText("" + value);
 					lvMenu.getChildAt(i).requestLayout();
-					btnTotalValue.setText(""+totalValue);
+					btnTotalValue.setText("" + totalValue);
 				}
-			
+
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
 		}
 	}
-	public void gotoCommentScreen(View v){
-		if(store !=null){
-			if(store.getCountFavaouriteMember() !=null){
-				if(store.getCountFavaouriteMember().equals("0")){
-					Intent intent = new Intent(ListDetailActivity.this, WhyQCommentActivity.class);
+
+	public void gotoCommentScreen(View v) {
+		if (store != null) {
+			if (store.getCountFavaouriteMember() != null) {
+				if (store.getCountFavaouriteMember().equals("0")) {
+					Intent intent = new Intent(ListDetailActivity.this,
+							WhyQCommentActivity.class);
 					intent.putExtra("store_id", store.getId());
 					startActivity(intent);
-				}else{
-					Intent intent = new Intent(ListDetailActivity.this, CommentActivity.class);
+				} else {
+					Intent intent = new Intent(ListDetailActivity.this,
+							CommentActivity.class);
 					intent.putExtra("store_id", store.getId());
 					startActivity(intent);
 				}
-				
-			}else{
-				Intent intent = new Intent(ListDetailActivity.this, WhyQCommentActivity.class);
+
+			} else {
+				Intent intent = new Intent(ListDetailActivity.this,
+						WhyQCommentActivity.class);
 				intent.putExtra("store_id", store.getId());
 				startActivity(intent);
 			}
 		}
-	} 
-	public void onBack(View v){
+	}
+
+	public void onBack(View v) {
 		finish();
-		
+
+	}
+	
+	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+//			exeSearchFocus();
+		}
+
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			// This sets a textview to the current length
+
+
+		}
+
+		public void afterTextChanged(Editable s) {
+			
+			try {
+				String text = s.toString();
+				Log.d("Text serch","Text "+text);
+				if(!text.equals(""))
+				{
+					exeSearchUserChecked(text);
+				}else{
+
+				}
+			
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+	};
+
+	protected void exeSearchUserChecked(String text) {
+		// TODO Auto-generated method stub
+		service.getUserCheckedBills(WhyqApplication.Instance().getRSAToken(), store.getId(),text);
+		showDialog();
 	}
 }
