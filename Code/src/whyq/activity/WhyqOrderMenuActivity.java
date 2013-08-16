@@ -81,8 +81,10 @@ public class WhyqOrderMenuActivity extends DialogFragment implements OnClickList
 	}
 
 	public void dineinClicked() {
-		WhyQDineInFragment dineIn = new WhyQDineInFragment(storeId);
-		 dineIn.show(getFragmentManager(), "orderMenuFrag");
+//		WhyQDineInFragment dineIn = new WhyQDineInFragment(storeId);
+//		 dineIn.show(getFragmentManager(), "orderMenuFrag");
+		Intent i = new Intent(context, WhyQDineInActivity.class);
+		startActivity(i);
 	}
 
 	public void cancelClicked() {

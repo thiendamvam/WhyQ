@@ -34,11 +34,13 @@
         </TextView>
 
         <EditText
+            android:id="@+id/etHotelChargeCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="User Name" />
 
         <EditText
+            android:id="@+id/etRoomNo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tell Us your room No"

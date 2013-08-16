@@ -2,7 +2,10 @@ package whyq.activity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 
 import whyq.WhyqApplication;
 import whyq.adapter.BasicImageListAdapter;
@@ -10,7 +13,6 @@ import whyq.adapter.BasicUserAdapter;
 import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.adapter.WhyqMenuAdapter;
-import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
 import whyq.model.GroupMenu;
@@ -96,6 +98,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private CustomViewPager vpPhotoList;
 	private Context context;
 	private BasicUserAdapter adapter;
+	public static Bundle bundle;
 	public static HashMap<String, Bill> billList;
 
 	@Override
@@ -104,7 +107,9 @@ public class ListDetailActivity extends FragmentActivity implements
 		setContentView(R.layout.store_detail);
 		context = ListDetailActivity.this;
 		id = getIntent().getStringExtra("id");
+
 		service = new Service(this);
+		bundle = new Bundle();
 		tvAddresss = (TextView) findViewById(R.id.tvAddress);
 		imgThumbnail = (ImageView) findViewById(R.id.imgThumbnail);
 		tvNumberFavourtie = (TextView) findViewById(R.id.tvNumberOfFavourite);
@@ -327,10 +332,10 @@ public class ListDetailActivity extends FragmentActivity implements
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
 		hideDialog();
-		if(result.getAction()==ServiceAction.ActionGetBusinessDetail){
-			ResponseData data = (ResponseData)result.getData();
-			if(data!=null){
-				if(data.getStatus().equals("200")){
+		if (result.getAction() == ServiceAction.ActionGetBusinessDetail) {
+			ResponseData data = (ResponseData) result.getData();
+			if (data != null) {
+				if (data.getStatus().equals("200")) {
 					store = (Store) data.getData();
 					if (store != null) {
 						storeType = Integer.valueOf(store.getCateid());
@@ -341,43 +346,43 @@ public class ListDetailActivity extends FragmentActivity implements
 						bindImageList();
 						bindFriend();
 					}
-				}else if(data.getStatus().equals("401")){
-					Util.loginAgain(getParent(), data.getMessage());
-				}else{
-					Util.showDialog(getParent(), data.getMessage());
+				} else if (data.getStatus().equals("401")) {
+					Util.loginAgain(context, data.getMessage());
+				} else {
+					Util.showDialog(context, data.getMessage());
 				}
 			}
 
-		}else if(result.getAction()==ServiceAction.ActionGetUserChecked){
-			ResponseData data = (ResponseData)result.getData();
-			if(data.getStatus().equals("200")){
+		} else if (result.getAction() == ServiceAction.ActionGetUserChecked) {
+			ResponseData data = (ResponseData) result.getData();
+			if (data.getStatus().equals("200")) {
 				List<User> userList = (List<User>) data.getData();
-				if(userList!=null){
-					if(userList.size() > 0){
+				if (userList != null) {
+					if (userList.size() > 0) {
 						loadCheckFriend(userList);
 					}
 				}
-			}else if(data.getStatus().equals("401")){
+			} else if (data.getStatus().equals("401")) {
 				Util.loginAgain(context, data.getMessage());
-			}else{
+			} else {
 				Util.showDialog(context, data.getMessage());
 			}
 
-			
 		}
 	}
 
 	private void bindFriend() {
 		// TODO Auto-generated method stub
-		service.getUserCheckedBills(WhyqApplication.Instance().getRSAToken(), store.getId(), null);
+		service.getUserCheckedBills(WhyqApplication.Instance().getRSAToken(),
+				store.getId(), null);
 		showDialog();
 	}
-	private void loadCheckFriend(List<User> list){
-		if(adapter!=null){
+
+	private void loadCheckFriend(List<User> list) {
+		if (adapter != null) {
 			adapter.resetData();
 		}
-		adapter = new BasicUserAdapter(
-				ListDetailActivity.this, list);
+		adapter = new BasicUserAdapter(ListDetailActivity.this, list);
 		lvResult.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		lvResult.requestLayout();
@@ -651,6 +656,7 @@ public class ListDetailActivity extends FragmentActivity implements
 				bill.setId(item.getId());
 				bill.setPrice(item.getValue());
 				bill.setUnit("1");
+				bill.setProductId(item.getId());
 				bill.setProductName(item.getNameProduct());
 				billList.put(item.getId(), bill);
 			}
@@ -699,7 +705,26 @@ public class ListDetailActivity extends FragmentActivity implements
 	public void onViewBillClicked(View v) {
 		Intent intent = new Intent(ListDetailActivity.this,
 				WhyQBillScreen.class);
+		
+		bundle.putString("store_id", store.getId());
+		bundle.putString("list_items", getListItem());
+		intent.putExtra("data", bundle);
 		startActivity(intent);
+	}
+
+	private String getListItem() {
+		// TODO Auto-generated method stub
+		String result = "";
+
+	    Iterator myVeryOwnIterator = billList.keySet().iterator();
+	    while(myVeryOwnIterator.hasNext()) {
+	        String key=(String)myVeryOwnIterator.next();
+	        Bill bill = billList.get(key);
+	        if(bill!=null){
+	            result+="|"+bill.getProductName()+"|"+bill.getProductId()+"|"+bill.getUnit();
+	        }
+	    }
+	    return result;
 	}
 
 	// private void updateCount(Menu item, boolean b) {
@@ -832,32 +857,30 @@ public class ListDetailActivity extends FragmentActivity implements
 		finish();
 
 	}
-	
+
 	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
 		public void beforeTextChanged(CharSequence s, int start, int count,
 				int after) {
-//			exeSearchFocus();
+			// exeSearchFocus();
 		}
 
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			// This sets a textview to the current length
 
-
 		}
 
 		public void afterTextChanged(Editable s) {
-			
+
 			try {
 				String text = s.toString();
-				Log.d("Text serch","Text "+text);
-				if(!text.equals(""))
-				{
+				Log.d("Text serch", "Text " + text);
+				if (!text.equals("")) {
 					exeSearchUserChecked(text);
-				}else{
+				} else {
 
 				}
-			
+
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -866,7 +889,8 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	protected void exeSearchUserChecked(String text) {
 		// TODO Auto-generated method stub
-		service.getUserCheckedBills(WhyqApplication.Instance().getRSAToken(), store.getId(),text);
+		service.getUserCheckedBills(WhyqApplication.Instance().getRSAToken(),
+				store.getId(), text);
 		showDialog();
 	}
 }

@@ -33,12 +33,14 @@ public class WhyQBillScreen extends FragmentActivity{
 	private float totalValue = 0;
 	private float totalafterDiscount = 0;
 	private Button btnDone;
+	private Bundle bundle;
 	public static int LOGIN_REQUEST = 1;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_bill_screen);
+		bundle = getIntent().getBundleExtra("data");
 		tvTitle = (TextView)findViewById(R.id.tvHeaderTitle);
 		tvTitle.setText("Bills");
 		lvBill = (ListView)findViewById(R.id.lvBill);
@@ -99,7 +101,9 @@ public class WhyQBillScreen extends FragmentActivity{
 		WhyqOrderMenuActivity frag = new WhyqOrderMenuActivity();	
 		frag.show(getFragmentManager(), "WhyqOrderMenuActivity");
 //		Intent intent = new Intent(WhyQBillScreen.this, WhyqOrderMenuActivity.class	);
+//		intent.putExtra("data", bundle);
 //		startActivity(intent);
+		
 	}
 	
 	@Override

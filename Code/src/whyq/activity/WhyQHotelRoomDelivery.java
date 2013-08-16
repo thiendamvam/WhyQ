@@ -1,9 +1,14 @@
 package whyq.activity;
 
 
+import java.util.HashMap;
+
+import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
+import whyq.utils.Util;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -11,17 +16,23 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.whyq.R;
 
 public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceListener {
-	private EditText etOtherAddress;
-	private EditText etPhoneNumber;
+	private EditText etRoomNo;
+	private EditText etHotelChargeCode;
 	private EditText etHours;
 	private EditText etMinutes;
 	private CheckBox cbASAP;
 	private String storeId;
+	private String listItem;
+	private ProgressBar progressBar;
+	private String note;
+	private Service service;
+	private Context context;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -30,11 +41,14 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
 		TextView headerTitle = (TextView)findViewById(R.id.tvHeaderTitle);
 		headerTitle.setText("Home Deliver");
 		storeId = getIntent().getStringExtra("store_id");
-		etOtherAddress = (EditText)findViewById(R.id.etOtherAddress);
-		etPhoneNumber = (EditText)findViewById(R.id.etPhoneNumber);
-		etHours = (EditText)findViewById(R.id.etPhoneNumber);
+		etRoomNo = (EditText)findViewById(R.id.etRoomNo);
+		etHotelChargeCode = (EditText)findViewById(R.id.etHotelChargeCode);
+		etHours = (EditText)findViewById(R.id.etHotelChargeCode);
 		etMinutes = (EditText)findViewById(R.id.etMinutes);
 		cbASAP = (CheckBox)findViewById(R.id.cbASAP);
+		progressBar = (ProgressBar)findViewById(R.id.prgBar);
+		context = this;
+		service = new Service(this);
 	}
 
 //	@Override
@@ -53,21 +67,21 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
     {
         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
         
-		String otherAddress = etOtherAddress.getText().toString();
-		String phoneNumber = etPhoneNumber.getText().toString();
+		String otherAddress = etRoomNo.getText().toString();
+		String phoneNumber = etHotelChargeCode.getText().toString();
 		String hours = etHours.getText().toString();
 		String minutes = etMinutes.getText().toString();
         if (otherAddress.length() == 0)
         {
-        	etOtherAddress.setFocusable(true);
-        	etOtherAddress.startAnimation(shake);
-        	etOtherAddress.requestFocus();
+        	etRoomNo.setFocusable(true);
+        	etRoomNo.startAnimation(shake);
+        	etRoomNo.requestFocus();
         	return false;
         } else if (phoneNumber.length() == 0)
         {
-        	etPhoneNumber.setFocusable(true);
-        	etPhoneNumber.startAnimation(shake);
-        	etPhoneNumber.requestFocus();
+        	etHotelChargeCode.setFocusable(true);
+        	etHotelChargeCode.startAnimation(shake);
+        	etHotelChargeCode.requestFocus();
         	return false;
         }else if (hours.length() == 0)
         {
@@ -84,9 +98,28 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
         } 
         else
         {
-        	Service service = new Service(WhyQHotelRoomDelivery.this);
-        	service.orderDelivery(storeId, otherAddress,phoneNumber,hours,minutes);
-        	return true;
+			Bundle bundle = ListDetailActivity.bundle;
+			storeId = bundle.getString("store_id");
+			listItem =  bundle.getString("list_items");
+			note =  bundle.getString("note");
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("store_id", storeId);
+			params.put("deliver_type", "3");
+			params.put("list_items", listItem);
+			params.put("deliver_to", etRoomNo.getText().toString());
+			params.put("time_zone", Util.getTimeZone(""));
+			if(cbASAP.isChecked()){
+				params.put("time_deliver", "ASAP");				
+			}else{
+				params.put("time_deliver", ""+etHours.getText().toString()+":"+etMinutes.getText().toString());
+			}
+
+			params.put("note", note);
+			params.put("token", WhyqApplication.Instance().getRSAToken());
+			
+			showDialog();
+			service.orderSend(params);
+			return true;
         }
     }
 
@@ -94,5 +127,15 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	private void showDialog() {
+		// dialog.show();
+		progressBar.setVisibility(View.VISIBLE);
+	}
+
+	private void hideDialog() {
+		// dialog.dismiss();
+		progressBar.setVisibility(View.GONE);
 	}
 }

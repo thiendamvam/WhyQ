@@ -51,7 +51,7 @@
         android:name="whyq.WhyqApplication"
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
-        
+
         <!-- Google maps -->
         <!-- Debug key store -->
         <meta-data
@@ -95,6 +95,10 @@
             android:theme="@style/Theme.Translucent" />
         <activity
             android:name="whyq.activity.WhyQHomeDeliveryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Translucent" />
+        <activity
+            android:name="whyq.activity.WhyQDineInActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Translucent" />
         <activity

@@ -14,13 +14,25 @@ import java.io.Writer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import whyq.WhyqApplication;
 import whyq.activity.LoginHome;
@@ -404,5 +416,70 @@ public class Util {
 			textSize--;
 		}
 	}
+	public static String getTimeZone(String value){
+		TimeZone tz = TimeZone.getDefault();
+		System.out.println("TimeZone   "+tz.getDisplayName(false, TimeZone.SHORT)+" Timezon id :: " +tz.getID());
+		return tz.getID();
+	}
+	public static HashMap<String, String> getLatLonFromAddress(String address){
+		JSONObject obj = getLocationInfo(address);
+		if(obj!=null){
+			return getLatLong(obj);
+		}else{
+			return null;
+		}
+	}
+	public static JSONObject getLocationInfo(String address) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
 
+        address = address.replaceAll(" ","%20");    
+
+        HttpPost httppost = new HttpPost("http://maps.google.com/maps/api/geocode/json?address=" + address + "&sensor=false");
+        HttpClient client = new DefaultHttpClient();
+        HttpResponse response;
+        stringBuilder = new StringBuilder();
+
+
+            response = client.execute(httppost);
+            HttpEntity entity = response.getEntity();
+            InputStream stream = entity.getContent();
+            int b;
+            while ((b = stream.read()) != -1) {
+                stringBuilder.append((char) b);
+            }
+        } catch (ClientProtocolException e) {
+        } catch (IOException e) {
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject = new JSONObject(stringBuilder.toString());
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return jsonObject;
+    }
+	public static HashMap<String, String> getLatLong(JSONObject jsonObject) {
+
+        try {
+        	HashMap<String, String> data = new HashMap<String, String>();
+            double longitute = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                .getJSONObject("geometry").getJSONObject("location")
+                .getDouble("lng");
+
+            double latitude = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                .getJSONObject("geometry").getJSONObject("location")
+                .getDouble("lat");
+            data.put("lat", ""+latitude);
+            data.put("lon", ""+longitute);
+            return data;
+        } catch (JSONException e) {
+        	e.printStackTrace();
+            return null;
+        }
+
+    }
 }

@@ -7,6 +7,7 @@ public class Bill {
 	private String price;
 	private String unit;
 	private String amount;
+	private String productId;
 	public String getId() {
 		return id;
 	}
@@ -49,4 +50,17 @@ public class Bill {
 	public void setThumb(String thumb) {
 		this.thumb = thumb;
 	}
+	/**
+	 * @return the productId
+	 */
+	public String getProductId() {
+		return productId;
+	}
+	/**
+	 * @param productId the productId to set
+	 */
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
+
 }

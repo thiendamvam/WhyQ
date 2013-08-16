@@ -757,7 +757,7 @@ public class Service implements Runnable {
 		request("/m/member/profile", params, true, false);
 	}
 	
-	public void searchOrderSend(HashMap<String, String> params) {
+	public void orderSend(HashMap<String, String> params) {
 		// TODO Auto-generated method stub
 //		store_id, deliver_type(1: tike away, 4: dinein), list_items,deliver_to(empty for typle=1 and 0 if type =4), time_zone,time_deliver(if not empty, oly for type =1),note(commend), token
 		_action = ServiceAction.ActionOrderSend;
