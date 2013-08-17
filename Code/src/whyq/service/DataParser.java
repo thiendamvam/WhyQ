@@ -1028,11 +1028,11 @@ public class DataParser {
 					Faq item = new Faq();
 					Element infoElement = (Element) nodeList.item(i);
 					item.setId(getValue(infoElement, "lat"));
-					item.setContentQuestion(getValue(infoElement, "lat"));
-					item.setAnswerQuestion(getValue(infoElement, "lat"));
-					item.setIsPublic(getValue(infoElement, "lat"));
-					item.setCreateDate(getValue(infoElement, "lat"));
-					item.setUpdateDate(getValue(infoElement, "lat"));
+					item.setContentQuestion(getValue(infoElement, "content_question"));
+					item.setAnswerQuestion(getValue(infoElement, "answer_question"));
+					item.setIsPublic(getValue(infoElement, "is_public"));
+					item.setCreateDate(getValue(infoElement, "createdate"));
+					item.setUpdateDate(getValue(infoElement, "updatedate"));
 					faqList.add(item);
 				}
 				

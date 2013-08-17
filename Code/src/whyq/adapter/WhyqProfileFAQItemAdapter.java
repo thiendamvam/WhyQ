@@ -7,6 +7,7 @@ import java.util.List;
 
 import whyq.activity.ListDetailActivity;
 import whyq.activity.WhyqProflleFAQActivity;
+import whyq.model.Faq;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -18,19 +19,19 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class WhyqProfileFAQItemAdapter extends ArrayAdapter<String> {
+public class WhyqProfileFAQItemAdapter extends ArrayAdapter<Faq> {
 
-	private final List<String> list;
+	private final List<Faq> list;
 	private Context context;
 	private HashMap<String, View> viewList = new HashMap<String, View>();
 	public static List<FAQViewHolder> listSectionView = new ArrayList<FAQViewHolder>();
 
-	public WhyqProfileFAQItemAdapter(Context context, List<String> menuList) {
-		super(context, R.layout.whyq_profile_faq_item, menuList);
+	public WhyqProfileFAQItemAdapter(Context context, List<Faq> list) {
+		super(context, R.layout.whyq_profile_faq_item, list);
 		this.context = context;
-		this.list = menuList;
+		this.list = list;
 	}
-	public List<String> getData(){
+	public List<Faq> getData(){
 		return list;
 	}
 	public static class FAQViewHolder implements Parcelable{
@@ -54,7 +55,7 @@ public class WhyqProfileFAQItemAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
 //		convertView = viewList.get(position);
-		String item = list.get(position);
+		Faq item = list.get(position);
 		if (convertView == null) {
 			LayoutInflater inflator = ((WhyqProflleFAQActivity) context)
 					.getLayoutInflater();
@@ -63,11 +64,11 @@ public class WhyqProfileFAQItemAdapter extends ArrayAdapter<String> {
 			viewHolder.tvName = (TextView) view.findViewById(R.id.tvItemName);
 			
 			if(item!=null){
-				viewHolder.tvName.setText(item);
+				viewHolder.tvName.setText(item.getContentQuestion());
 			}
-			view.setTag(viewHolder);
+			view.setTag(item);
 			
-			viewList.put(item, view);
+			viewList.put(item.getContentQuestion(), view);
 		} else {
 			view = convertView;
 

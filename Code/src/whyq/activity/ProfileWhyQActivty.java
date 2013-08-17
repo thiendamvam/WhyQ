@@ -1,5 +1,6 @@
 package whyq.activity;
 
+import whyq.utils.Constants;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -55,14 +56,17 @@ public class ProfileWhyQActivty extends Activity {
 	public void onRateClicked(View v) {
 		Intent i = new Intent(ProfileWhyQActivty.this,
 				WhyqProfileChildBasic.class);
-		i.putExtra("title", "WHY Q V2.1.1 Rate it");
+		i.putExtra("question", "WHY Q V2.1.1 Rate it");
+		i.putExtra("isWebview", "0");
 		startActivity(i);
 	}
 
 	public void onTeamsClicked(View v) {
 		Intent i = new Intent(ProfileWhyQActivty.this,
 				WhyqProfileChildBasic.class);
-		i.putExtra("title", "Terms and conditions");
+		i.putExtra("question", "Terms and conditions");
+		i.putExtra("isWebview", "1");
+		i.putExtra("url", Constants.TERMS_URL);
 		startActivity(i);
 	}
 

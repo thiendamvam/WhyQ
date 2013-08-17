@@ -17,7 +17,7 @@ public class WhyqProfileChildDotsMean extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_profile_child_dots_mean);
 		tvTitle = (TextView) findViewById(R.id.tvHeaderTitle);
-		title = getIntent().getStringExtra("title");
+		title = getIntent().getStringExtra("question");
 		if (title != null) {
 			tvTitle.setText(title);
 		} else {

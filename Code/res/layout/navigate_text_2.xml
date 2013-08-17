@@ -22,7 +22,7 @@
     <View
         android:layout_width="2dp"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/btn_back"
+        android:layout_toRightOf="@+id/ln_back"
         android:background="@drawable/header_divider" />
 
     <TextView
