@@ -417,6 +417,7 @@ public class LoginWhyqActivity extends Activity implements Login_delegate,
 			if(data.getStatus().equals("200")){
 				User user = (User)data.getData();
 					WhyqApplication.Instance().setToken(user);
+					WhyqApplication.Instance().savePassword(password.getText().toString());
 					ListActivity.isLogin = true;
 					ListActivity.loginType = 2;
 					Intent intent = new Intent(LoginWhyqActivity.this, WhyqMain.class);

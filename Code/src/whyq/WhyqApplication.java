@@ -163,4 +163,19 @@ public class WhyqApplication extends Application {
 	}
 	
 	*/
+
+	public void savePassword(String string) {
+		// TODO Auto-generated method stub
+
+		SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		Editor editor = pref.edit();
+		editor.putString("password", string);
+		editor.commit();
+	}
+	public String getPassword(){
+		SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		return pref.getString("password", null);
+	}
 }

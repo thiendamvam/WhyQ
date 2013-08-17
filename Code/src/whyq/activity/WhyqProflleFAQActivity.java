@@ -111,7 +111,7 @@ public class WhyqProflleFAQActivity extends Activity implements IServiceListener
 				if(data.getStatus().equals("200")){
 					ArrayList<Faq> fraqList = (ArrayList<Faq>)data.getData();
 					bindDatatoListview(fraqList);
-					Util.showDialog(context, data.getMessage());
+//					Util.showDialog(context, data.getMessage());
 				}else if(data.getStatus().equals("401")){
 					Util.loginAgain(context, data.getMessage());
 				}else{
