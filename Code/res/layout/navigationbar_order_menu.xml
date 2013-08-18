@@ -9,22 +9,35 @@
 
     <TextView
         android:id="@+id/tvHeaderTittle"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="17dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/btn_back"
-        android:gravity="center_vertical"
-        android:text="Dine in"
+        android:gravity="center_horizontal"
+        android:text="is this order:"
         android:textColor="#FFFFFF"
         android:textSize="@dimen/text_size_header"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/tvOpeningTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvHeaderTittle"
+        android:layout_marginTop="0dp"
+        android:layout_toRightOf="@+id/btn_back"
+        android:gravity="center_horizontal"
+        android:text="Home delivery time:"
+        android:textColor="#FFFFFF"
+        android:textSize="12dp"
         android:textStyle="normal" />
 
     <ProgressBar
         android:id="@+id/prgBar"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_marginRight="7dp"
         android:visibility="invisible" />
 

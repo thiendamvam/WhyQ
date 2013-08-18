@@ -25,7 +25,6 @@
             android:id="@+id/lnFindFromFb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="findFromFaccebookClicked"
             android:padding="8dp" >
 
             <CheckBox
@@ -56,7 +55,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/lnFindFromFb"
             android:gravity="center_vertical"
-            android:onClick="findFromTwitterClicked"
             android:padding="8dp" >
 
             <CheckBox
@@ -86,7 +84,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/lnFindFromFW"
             android:gravity="center_vertical"
-            android:onClick="searchByNameClicked"
             android:orientation="horizontal"
             android:padding="8dp" >
 

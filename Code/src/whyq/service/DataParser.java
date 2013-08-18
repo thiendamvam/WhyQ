@@ -28,6 +28,7 @@ import whyq.handler.PhotoHandler;
 import whyq.handler.UserHandler;
 import whyq.handler.UserProfileHandler;
 import whyq.model.BillItem;
+import whyq.model.Distance;
 import whyq.model.Faq;
 import whyq.model.Location;
 import whyq.model.Menu;
@@ -44,6 +45,7 @@ import whyq.model.User;
 import whyq.model.UserCheckBill;
 import whyq.model.UserProfile;
 import whyq.model.WhyqImage;
+import android.util.Log;
 
 public class DataParser {
 
@@ -1406,6 +1408,54 @@ public class DataParser {
 			return null;
 		}
 
+	
+	
+	}
+
+	public Object parserDistanceResultSend(String result) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("OK")){
+				data.setStatus("200");
+				NodeList elementes = doc.getElementsByTagName("element");
+				Distance dataResult = new Distance();
+				if(elementes!=null){
+					Element element = (Element)elementes.item(0);
+					dataResult.setStatus(getValue(element, "status"));
+					Log.d("parserDistanceResultSend",""+getValue(element, "status"));
+				}else{
+					Log.d("parserDistanceResultSend","null");
+					dataResult.setValue(null);
+				}
+				data.setData(dataResult);		
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	
+	
 	
 	
 	}

@@ -336,6 +336,9 @@ public class Service implements Runnable {
 		case ActionGetBillDetail:
 			resObj = parser.parserBillDetailResultSend(result);
 			break;
+		case ActionGetDistance:
+			resObj = parser.parserDistanceResultSend(result);
+			break;
 		case ActionLoginTwitter:
 			resObj = parser.parserLoginData(result);
 			break;
@@ -417,7 +420,9 @@ public class Service implements Runnable {
 				textSearch = textSearch.replace(" ", "+");
 				urlString = "http://ws.geonames.org/search?q=" + textSearch
 						+ "&style=full&maxRows=10";
-			} else
+			} else if(_action == ServiceAction.ActionGetDistance){
+				urlString = _actionURI;				
+			}else
 				urlString = _includeHost ? API.hostURL + _actionURI
 						: _actionURI;
 			HttpRequestBase request = null;
@@ -775,6 +780,13 @@ public class Service implements Runnable {
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/order/show", params, true, false);
+	}
+
+	public void getDistance(HashMap<String, String> params) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionGetDistance;
+		request(Constants.GET_DISTANCE_API, params, true, true);
+
 	}
 	
 

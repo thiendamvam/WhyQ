@@ -708,6 +708,10 @@ public class ListDetailActivity extends FragmentActivity implements
 		
 		bundle.putString("store_id", store.getId());
 		bundle.putString("list_items", getListItem());
+		bundle.putString("lat",""+store.getLatitude());
+		bundle.putString("lon", ""+store.getLongitude());
+		bundle.putString("start_time", ""+store.getStartTime());
+		bundle.putString("close_time", ""+store.getEndTime());
 		intent.putExtra("data", bundle);
 		startActivity(intent);
 	}

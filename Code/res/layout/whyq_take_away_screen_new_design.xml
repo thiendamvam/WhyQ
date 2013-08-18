@@ -1,0 +1,151 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_launcher"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:weightSum="10" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/ic_launcher"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <include layout="@layout/navigation_back_done" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:background="@color/bg_normal"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:weightSum="3" >
+
+        <TextView
+            style="@style/normail_blue_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="WHAT TIME DO YOU WANT TO COLLECT YOUR ORDER" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_normal"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:padding="0dp"
+            android:weightSum="3" >
+
+            <Button
+                android:id="@+id/btnCarTime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_car_active"
+                android:paddingLeft="15dp"
+                android:text="It takes" >
+            </Button>
+
+            <Button
+                android:id="@+id/btnBycicalTime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bicycle_normal"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp"
+                android:text="It takes" >
+            </Button>
+
+            <Button
+                android:id="@+id/btnWalkTime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_walking_normal"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp"
+                android:text="It takes" >
+            </Button>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="What time you will colect your order" />
+
+        <LinearLayout
+            android:id="@+id/lnTimeTogoField"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:weightSum="3" >
+
+            <EditText
+                android:id="@+id/etHours"
+                style="@style/small_back_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input"
+                android:hint="Hours"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/etMinutes"
+                style="@style/small_back_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input"
+                android:hint="Minutes"
+                android:singleLine="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="Or" />
+
+                <CheckBox
+                    android:id="@+id/cbLeaveNow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="I will leave now" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
