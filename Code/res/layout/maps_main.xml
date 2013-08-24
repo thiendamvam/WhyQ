@@ -5,7 +5,8 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <LinearLayout
+    <!--
+         <LinearLayout
         android:id="@+id/menuSection"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -55,12 +56,21 @@
             android:gravity="right|center" >
         </LinearLayout>
     </LinearLayout>
+    -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <include layout="@layout/navigation_back_done" />
+    </LinearLayout>
 
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7"
+        android:layout_weight="9"
         class="com.google.android.gms.maps.SupportMapFragment" />
 
 </LinearLayout>

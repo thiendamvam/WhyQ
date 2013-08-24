@@ -1,6 +1,7 @@
 package whyq;
 
 import whyq.activity.AudioPlayerActivity;
+import whyq.activity.FavouriteActivity;
 import whyq.activity.FavouritesActivityGroup;
 import whyq.activity.FriendActivityGroup;
 import whyq.activity.ImageActivityGroup;
@@ -48,20 +49,15 @@ public class WhyqMain extends TabActivity {
 
 		token = XMLParser.getToken(WhyqApplication.Instance()
 				.getApplicationContext());
-//		if (token == null || token.equals("")) {
-//			Intent intent = new Intent(WhyqMain.this, LoginHome.class);
-//			startActivity(intent);
-//		} else {
 			tabHost = getTabHost();
 			context = WhyqMain.this;
-//			tabHost.getTabWidget().setBackgroundResource(
-//					getResources().getColor(R.color.black));
 			tabHost.getTabWidget().setBackgroundColor(getResources().getColor(R.color.black));
 			// Tab for followers
 			TabSpec followers = tabHost.newTabSpec("List");
 			followers.setIndicator("List",
 					getResources().getDrawable(R.drawable.footer_icon1));
-			Intent followersIntent = new Intent(this, ListActivityGroup.class);
+//			Intent followersIntent = new Intent(this, ListActivityGroup.class);
+			Intent followersIntent = new Intent(this, ListActivity.class);
 			followers.setContent(followersIntent);
 			tabHost.addTab(followers);
 
@@ -70,18 +66,13 @@ public class WhyqMain extends TabActivity {
 			// setting Title and Icon for the Tab
 			explorer.setIndicator("Favourites",
 					getResources().getDrawable(R.drawable.footer_icon2));
+//			Intent explorerIntent = new Intent(this,
+//					FavouritesActivityGroup.class);
 			Intent explorerIntent = new Intent(this,
-					FavouritesActivityGroup.class);
+					FavouriteActivity.class);
 			explorer.setContent(explorerIntent);
 			tabHost.addTab(explorer);
 
-			// // Tab for Image
-			// TabSpec image = tabHost.newTabSpec("Friends");
-			// image.setIndicator("Images",
-			// getResources().getDrawable(R.drawable.icon_image_tab));
-			// Intent imageIntent = new Intent(this, ImageActivityGroup.class);
-			// image.setContent(imageIntent);
-			// tabHost.addTab( image );
 
 			TabSpec mydiary = tabHost.newTabSpec("Friends");
 			mydiary.setIndicator("Friends",
@@ -144,35 +135,19 @@ public class WhyqMain extends TabActivity {
 						@Override
 						public boolean onTouch(View v, MotionEvent event) {
 							// do whatever you need
-							FavouritesActivityGroup.group.clearHistory();
+//							FavouritesActivityGroup.group.clearHistory();
 							return false;
 
 						}
 					});
 
-			// // Set the event for Images tab
-			// tabHost.getTabWidget().getChildAt(2).setOnTouchListener(new
-			// View.OnTouchListener() {
-			//
-			// @Override
-			// public boolean onTouch(View v, MotionEvent event) {
-			// //do whatever you need
-			// ImageActivityGroup.group.clearHistory();
-			// return false;
-			//
-			// }
-			// });
-
-			// Set the event for MyDiary tab
-			// tabHost.getTabWidget().getChildAt(3).setOnTouchListener(new
-			// ValidateHandler());
 			tabHost.getTabWidget().getChildAt(2)
 					.setOnTouchListener(new View.OnTouchListener() {
 
 						@Override
 						public boolean onTouch(View v, MotionEvent event) {
 							// do whatever you need
-							FriendActivityGroup.group.clearHistory();
+//							FriendActivityGroup.group.clearHistory();
 							return false;
 
 						}
@@ -184,7 +159,7 @@ public class WhyqMain extends TabActivity {
 						@Override
 						public boolean onTouch(View v, MotionEvent event) {
 							// do whatever you need
-							ProfileActivityGroup.group.clearHistory();
+//							ProfileActivityGroup.group.clearHistory();
 							return false;
 
 						}
@@ -201,6 +176,17 @@ public class WhyqMain extends TabActivity {
 		}
 
 //	}
+	
+	public static void hideTabBar(){
+		for(int i =0; i < 4;i++){
+			tabHost.getTabWidget().getChildAt(i).setVisibility(View.GONE);
+		}
+	}
+	public static void showTabBar(){
+		for(int i =0; i < 4;i++){
+			tabHost.getTabWidget().getChildAt(i).setVisibility(View.VISIBLE);
+		}
+	}
 	private void initTabsAppearance(TabHost tabhost) {
 	    // Change background
 	    for(int i=0; i < tabhost.getTabWidget().getChildCount(); i++)
@@ -244,7 +230,7 @@ public class WhyqMain extends TabActivity {
 			} else {
 
 			}
-			ListActivityGroup.group.clearHistory();
+//			ListActivityGroup.group.clearHistory();
 			return false;
 		}
 	}

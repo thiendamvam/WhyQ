@@ -71,6 +71,9 @@ public class WhyqApplication extends Application {
 	public static WhyqApplication Instance() {
 		return _instance;
 	}
+	public float getDensity(){
+		return getApplicationContext().getResources().getDisplayMetrics().density;
+	}
 	/*
 	 * Current screen info
 	 */

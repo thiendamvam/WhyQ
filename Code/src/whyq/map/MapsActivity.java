@@ -66,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements
 	// Dialog elements
 	private Double lon, lat;
 	private String title_en, address_en, phone, fax, email_en;
+	private TextView tvHeader;
 
 	/** Demonstrates customizing the info window and/or its contents. */
 	class CustomInfoWindowAdapter implements InfoWindowAdapter {
@@ -377,23 +378,25 @@ public class MapsActivity extends FragmentActivity implements
 
 		// Loader image - will be shown before loading image
 		// ImageLoader class instance
+		tvHeader = (TextView)findViewById(R.id.tvHeaderTitle);
+		tvHeader.setText("Map");
 		ImageLoader imgLoader = new ImageLoader(WhyqApplication
 				.Instance().getApplicationContext());
 		int loader = R.drawable.ic_launcher;
-		ImageView icon_hotel = (ImageView) findViewById(R.id.icon_hotel);
-		
-		// Init Hashmap here
+//		ImageView icon_hotel = (ImageView) findViewById(R.id.icon_hotel);
+//		
+//		// Init Hashmap here
 		myMaker = new HashMap<String, String>();
 		Bundle bundle = getIntent().getBundleExtra(TAG_BUNDLEBRANCH);
-		if(bundle!=null){
-			if(bundle.getString(TAG_HOTELICON)!=null)
-			{
-				imgLoader.DisplayImage(
-						bundle.getString(TAG_HOTELICON), loader,
-						icon_hotel);
-				
-			}
-		}
+//		if(bundle!=null){
+//			if(bundle.getString(TAG_HOTELICON)!=null)
+//			{
+//				imgLoader.DisplayImage(
+//						bundle.getString(TAG_HOTELICON), loader,
+//						icon_hotel);
+//				
+//			}
+//		}
 		
 		if (bundle != null && bundle.getString(TAG_HOTELTITLE_EN) != null) {
 
@@ -611,4 +614,7 @@ public class MapsActivity extends FragmentActivity implements
 	public void onMarkerDrag(Marker marker) {
 	}
 
+	public void onBack(View v){
+		finish();
+	}
 }
