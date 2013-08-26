@@ -46,10 +46,13 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -61,7 +64,7 @@ import android.widget.Toast;
 
 import com.whyq.R;
 
-public class ListActivity extends FragmentActivity implements  OnClickListener,OnFocusChangeListener, IServiceListener{
+public class ListActivity extends FragmentActivity implements  OnClickListener,OnFocusChangeListener, IServiceListener, OnScrollListener{
 
 	
 	public static final String DOWNLOAD_COMPLETED = "DOWNLOAD_COMPLETED";
@@ -176,6 +179,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	private RelativeLayout rlLocationField;
 	private int storeType;
 	private Service service;
+	private LinearLayout lnNavigation;
+	private LinearLayout lnPageContent;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -190,7 +195,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(ListActivity.this.getIntent());
-		
+		whyqListView.setOnScrollListener(this);
     	showProgress();
 
 	}
@@ -235,6 +240,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	public void createUI() {
 		setContentView(R.layout.list_screen);//
 		
+		lnPageContent = (LinearLayout)findViewById(R.id.page_content);
+		lnNavigation = (LinearLayout)findViewById(R.id.lnNavigation);
 		whyqListView = (ListView) findViewById(R.id.lvWhyqList);
 		lnCutlery = (LinearLayout) findViewById(R.id.lnCutleryTab);
 		lnWine = (LinearLayout) findViewById(R.id.lnWineTab);
@@ -842,6 +849,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		}
 	};
 	private String currentStoreId;
+	private int mPosition;
+	private int mOffset;
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
 	    if(hasFocus){
@@ -995,7 +1004,15 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	public void onDistanceClicked(View v){
 		Store item = (Store)v.getTag();
 		Log.d("onDistanceClicked","id "+item.getStoreId());
+		Bundle bundle = new Bundle();
+		bundle.putString(MapsActivity.TAG_HOTELTITLE_EN, "");
+		bundle.putString(MapsActivity.TAG_HOTELADDRESS_EN,"");
+		bundle.putString(MapsActivity.TAG_HOTELPHONE, "");
+		bundle.putString(MapsActivity.TAG_HOTELFAX, "");
+		bundle.putString(MapsActivity.TAG_HOTELEMAIL_EN, "");
+		
 		Intent intent = new Intent(ListActivity.this, MapsActivity.class);
+		intent.putExtra(MapsActivity.TAG_BUNDLEBRANCH, bundle);
 		startActivity(intent);
 
 	}
@@ -1086,5 +1103,66 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 				whyqListView.getChildAt(i).requestLayout();
 			}
 		}
+	}
+
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        int position = whyqListView.getFirstVisiblePosition();
+        View v = whyqListView.getChildAt(0);
+        int offset = (v == null) ? 0 : v.getTop();
+
+        if (mPosition < position || (mPosition == position && mOffset < offset)) {
+             // Scrolled up
+        	Log.d("onScrollStateChanged","up");
+        	hideNavigationBar();
+        	hideTabbarInTabhost();
+        } else {
+             // Scrolled down
+        	showNavigationBar();
+        	showTabbarInTabhost();
+        }
+        mPosition = position;
+        mOffset = offset;
+    }
+
+
+
+
+	private void hideNavigationBar() {
+		// TODO Auto-generated method stub
+    	LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)lnNavigation.getLayoutParams();
+    	params.weight = 0;
+    	lnNavigation.setLayoutParams(params);
+	}
+
+
+	private void showNavigationBar() {
+		// TODO Auto-generated method stub
+    	Log.d("onScrollStateChanged","down");
+    	LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)lnNavigation.getLayoutParams();
+    	params.weight = 1;
+    	lnNavigation.setLayoutParams(params);
+	}
+
+	private void hideTabbarInTabhost() {
+		// TODO Auto-generated method stub
+		WhyqMain.hideTabBar();
+    	FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)lnPageContent.getLayoutParams();
+    	params.bottomMargin = 0;
+    	lnPageContent.setLayoutParams(params);
+	}
+
+
+	private void showTabbarInTabhost() {
+		// TODO Auto-generated method stub
+		WhyqMain.showTabBar();
+		FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)lnPageContent.getLayoutParams();
+    	params.bottomMargin = (int)(WhyqApplication.Instance().getDensity() * 74);
+    	lnPageContent.setLayoutParams(params);
 	}
 }

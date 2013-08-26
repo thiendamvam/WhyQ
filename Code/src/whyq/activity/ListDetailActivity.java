@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
 import whyq.WhyqApplication;
 import whyq.adapter.BasicImageListAdapter;
@@ -38,7 +36,12 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -49,12 +52,14 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.whyq.R;
 
 public class ListDetailActivity extends FragmentActivity implements
-		IServiceListener {
+		IServiceListener, OnScrollListener {
 
 	private Service service;
 	// ProgressDialog dialog;
@@ -98,6 +103,8 @@ public class ListDetailActivity extends FragmentActivity implements
 	private CustomViewPager vpPhotoList;
 	private Context context;
 	private BasicUserAdapter adapter;
+	private RelativeLayout rlPhotoList;
+	private ScrollView svContent;
 	public static Bundle bundle;
 	public static HashMap<String, Bill> billList;
 
@@ -110,6 +117,7 @@ public class ListDetailActivity extends FragmentActivity implements
 
 		service = new Service(this);
 		bundle = new Bundle();
+		svContent = (ScrollView) findViewById(R.id.svContent);
 		tvAddresss = (TextView) findViewById(R.id.tvAddress);
 		imgThumbnail = (ImageView) findViewById(R.id.imgThumbnail);
 		tvNumberFavourtie = (TextView) findViewById(R.id.tvNumberOfFavourite);
@@ -143,9 +151,12 @@ public class ListDetailActivity extends FragmentActivity implements
 		lvMenu = (ExpandableListView) findViewById(R.id.lvMenu);
 		billList = new HashMap<String, Bill>();
 		vpPhotoList = (CustomViewPager) findViewById(R.id.vpStorephoto);
+		rlPhotoList = (RelativeLayout) findViewById(R.id.rlPhotoList);
 		// showHeaderImage();
 		initTabbar();
 		getDetailData();
+//		hide photos list when scroll
+//		lvResult.setOnScrollListener(this);
 		edSearch.addTextChangedListener(mTextEditorWatcher);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -165,10 +176,49 @@ public class ListDetailActivity extends FragmentActivity implements
 				}
 			}
 		});
+		svContent.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+		        ViewTreeObserver observer = svContent.getViewTreeObserver();
+		        observer.addOnScrollChangedListener(onScrollChangedListener);
+		        switch(event.getAction()){
+		        	case MotionEvent.ACTION_SCROLL:
+		        	Log.d("onTouch","Action_scroll");
+		        	break;
+		        }
+		        return false;
+			}
+		});
 	}
+
+	final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new ViewTreeObserver.OnScrollChangedListener() {
+
+		@Override
+		public void onScrollChanged() {
+			// do stuff here
+			hidePhotoList();
+			Log.d("OnScrollChangedListener","action = ");
+		}
+	};
 
 	public void onDoneClicked(View v) {
 
+	}
+
+	public void hidePhotoList() {
+		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) rlPhotoList
+				.getLayoutParams();
+		params.height = 0;
+		rlPhotoList.setLayoutParams(params);
+	}
+
+	public void showPhotoList() {
+		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) rlPhotoList
+				.getLayoutParams();
+		params.height = (int)(WhyqApplication.Instance().getDensity()*180);
+		rlPhotoList.setLayoutParams(params);
 	}
 
 	protected void exeAboutFocus() {
@@ -196,16 +246,19 @@ public class ListDetailActivity extends FragmentActivity implements
 			lnMenuContent.setVisibility(View.GONE);
 			lnPromotionContent.setVisibility(View.GONE);
 			lvResult.setVisibility(View.VISIBLE);
+			showPhotoList();
 		} else if (i == 2) {
 			lnAboutContent.setVisibility(View.GONE);
 			lnMenuContent.setVisibility(View.VISIBLE);
 			lnPromotionContent.setVisibility(View.GONE);
 			lvResult.setVisibility(View.GONE);
+			hidePhotoList();
 		} else if (i == 3) {
 			lnAboutContent.setVisibility(View.GONE);
 			lnMenuContent.setVisibility(View.GONE);
 			lnPromotionContent.setVisibility(View.VISIBLE);
 			lvResult.setVisibility(View.GONE);
+			showPhotoList();
 		}
 	}
 
@@ -580,6 +633,8 @@ public class ListDetailActivity extends FragmentActivity implements
 			// imgBtnMenu.setBackgroundResource(R.drawable.icon_cat_coffee);
 			// imgBtnPromotion.setBackgroundResource(R.drawable.bg_tab_active);
 			cateId = "0";
+			Log.d("resetTabBarFocus", "imgBtnAbout");
+			showPhotoList();
 			break;
 		case 1:
 			imgBtnAbout.setBackgroundResource(R.drawable.bg_tab_active);
@@ -588,6 +643,8 @@ public class ListDetailActivity extends FragmentActivity implements
 			// imgBtnMenu.setBackgroundResource(R.drawable.icon_cat_coffee);
 			// imgBtnPromotion.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			cateId = "1";
+			Log.d("resetTabBarFocus", "imgBtnMenu");
+			hidePhotoList();
 			break;
 		case 2:
 			imgBtnMenu.setBackgroundResource(R.drawable.bg_tab_active);
@@ -596,6 +653,8 @@ public class ListDetailActivity extends FragmentActivity implements
 			// imgBtnAbout.setBackgroundResource(R.drawable.icon_cat_wine);
 			// imgBtnPromotion.setBackgroundResource(R.drawable.icon_cat_cutlery);
 			cateId = "2";
+			Log.d("resetTabBarFocus", "imgBtnPromotion");
+			showPhotoList();
 			break;
 
 		default:
@@ -705,13 +764,13 @@ public class ListDetailActivity extends FragmentActivity implements
 	public void onViewBillClicked(View v) {
 		Intent intent = new Intent(ListDetailActivity.this,
 				WhyQBillScreen.class);
-		
+
 		bundle.putString("store_id", store.getId());
 		bundle.putString("list_items", getListItem());
-		bundle.putString("lat",""+store.getLatitude());
-		bundle.putString("lon", ""+store.getLongitude());
-		bundle.putString("start_time", ""+store.getStartTime());
-		bundle.putString("close_time", ""+store.getEndTime());
+		bundle.putString("lat", "" + store.getLatitude());
+		bundle.putString("lon", "" + store.getLongitude());
+		bundle.putString("start_time", "" + store.getStartTime());
+		bundle.putString("close_time", "" + store.getEndTime());
 		intent.putExtra("data", bundle);
 		startActivity(intent);
 	}
@@ -720,20 +779,22 @@ public class ListDetailActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		String result = "";
 
-	    Iterator myVeryOwnIterator = billList.keySet().iterator();
-	    while(myVeryOwnIterator.hasNext()) {
-	        String key=(String)myVeryOwnIterator.next();
-	        Bill bill = billList.get(key);
-	        if(bill!=null){
-	        	if(result.equals("")){
-	        		result+=bill.getProductId()+":"+bill.getUnit()+":"+bill.getPrice();	
-	        	}else{
-	        		result+="|"+bill.getProductId()+":"+bill.getUnit()+":"+bill.getPrice();
-	        	}
-	            
-	        }
-	    }
-	    return result;
+		Iterator myVeryOwnIterator = billList.keySet().iterator();
+		while (myVeryOwnIterator.hasNext()) {
+			String key = (String) myVeryOwnIterator.next();
+			Bill bill = billList.get(key);
+			if (bill != null) {
+				if (result.equals("")) {
+					result += bill.getProductId() + ":" + bill.getUnit() + ":"
+							+ bill.getPrice();
+				} else {
+					result += "|" + bill.getProductId() + ":" + bill.getUnit()
+							+ ":" + bill.getPrice();
+				}
+
+			}
+		}
+		return result;
 	}
 
 	// private void updateCount(Menu item, boolean b) {
@@ -895,11 +956,42 @@ public class ListDetailActivity extends FragmentActivity implements
 			}
 		}
 	};
+	private int mPosition;
+	private int mOffset;
 
 	protected void exeSearchUserChecked(String text) {
 		// TODO Auto-generated method stub
 		service.getUserCheckedBills(WhyqApplication.Instance().getRSAToken(),
 				store.getId(), text);
 		showDialog();
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+
+		int position = lvResult.getFirstVisiblePosition();
+		View v = lvResult.getChildAt(0);
+		int offset = (v == null) ? 0 : v.getTop();
+
+		if (mPosition < position || (mPosition == position && mOffset < offset)) {
+			// Scrolled up
+			Log.d("onScrollStateChanged", "up");
+			hidePhotoList();
+		} else {
+			// Scrolled down
+			Log.d("onScrollStateChanged", "down");
+			showPhotoList();
+		}
+		mPosition = position;
+		mOffset = offset;
+
 	}
 }

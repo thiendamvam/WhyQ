@@ -29,13 +29,14 @@
         android:orientation="vertical" >
 
         <RelativeLayout
+            android:id="@+id/rlPhotoList"
             android:layout_width="match_parent"
             android:layout_height="180dp" >
 
             <whyq.view.CustomViewPager
                 android:id="@+id/vpStorephoto"
                 android:layout_width="match_parent"
-                android:layout_height="180dp" />
+                android:layout_height="180dip" />
 
             <include
                 android:layout_width="match_parent"
@@ -45,6 +46,7 @@
         </RelativeLayout>
 
         <ScrollView
+            android:id="@+id/svContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white" >

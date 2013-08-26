@@ -1,12 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/page_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="74dp"
+    android:layout_marginBottom="74dip"
     android:baselineAligned="false"
     android:orientation="vertical"
-    android:weightSum="10" >
+     >
 
     <LinearLayout
+        android:id="@+id/lnNavigation"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

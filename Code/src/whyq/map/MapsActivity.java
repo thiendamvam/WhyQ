@@ -53,19 +53,20 @@ public class MapsActivity extends FragmentActivity implements
 	private HashMap<String, String> myMaker;
 	private LatLng HOTEL_LOCAL = null;
 	// private static final LatLng MY_HOME = new LatLng(10.72277, 106.710235);
-	private static final String TAG_BUNDLEBRANCH = "branch_data";
-	private static final String TAG_HOTELLAT = "lat";
-	private static final String TAG_HOTELLON = "lon";
-	private static final String TAG_HOTELTITLE_EN = "title_en";
-	private static final String TAG_HOTELADDRESS_EN = "address_en";
-	private static final String TAG_HOTELPHONE = "phone";
-	private static final String TAG_HOTELFAX = "fax";
-	private static final String TAG_HOTELEMAIL_EN = "email_en";
-	private static final String TAG_HOTELICON = "thumbnail";
+	public static final String TAG_BUNDLEBRANCH = "branch_data";
+	public static final String TAG_HOTELLAT = "lat";
+	public static final String TAG_HOTELLON = "lon";
+	public static final String TAG_HOTELTITLE_EN = "title_en";
+	public static final String TAG_HOTELADDRESS_EN = "address_en";
+	public static final String TAG_HOTELPHONE = "phone";
+	public static final String TAG_HOTELFAX = "fax";
+	public static final String TAG_HOTELEMAIL_EN = "email_en";
+	public static final String TAG_HOTELICON = "thumbnail";
 
 	// Dialog elements
 	private Double lon, lat;
 	private String title_en, address_en, phone, fax, email_en;
+	private TextView tvHeader;
 
 	/** Demonstrates customizing the info window and/or its contents. */
 	class CustomInfoWindowAdapter implements InfoWindowAdapter {
@@ -377,23 +378,25 @@ public class MapsActivity extends FragmentActivity implements
 
 		// Loader image - will be shown before loading image
 		// ImageLoader class instance
+		tvHeader = (TextView)findViewById(R.id.tvHeaderTitle);
+		tvHeader.setText("Map");
 		ImageLoader imgLoader = new ImageLoader(WhyqApplication
 				.Instance().getApplicationContext());
 		int loader = R.drawable.ic_launcher;
-		ImageView icon_hotel = (ImageView) findViewById(R.id.icon_hotel);
-		
-		// Init Hashmap here
+//		ImageView icon_hotel = (ImageView) findViewById(R.id.icon_hotel);
+//		
+//		// Init Hashmap here
 		myMaker = new HashMap<String, String>();
 		Bundle bundle = getIntent().getBundleExtra(TAG_BUNDLEBRANCH);
-		if(bundle!=null){
-			if(bundle.getString(TAG_HOTELICON)!=null)
-			{
-				imgLoader.DisplayImage(
-						bundle.getString(TAG_HOTELICON), loader,
-						icon_hotel);
-				
-			}
-		}
+//		if(bundle!=null){
+//			if(bundle.getString(TAG_HOTELICON)!=null)
+//			{
+//				imgLoader.DisplayImage(
+//						bundle.getString(TAG_HOTELICON), loader,
+//						icon_hotel);
+//				
+//			}
+//		}
 		
 		if (bundle != null && bundle.getString(TAG_HOTELTITLE_EN) != null) {
 
@@ -611,4 +614,7 @@ public class MapsActivity extends FragmentActivity implements
 	public void onMarkerDrag(Marker marker) {
 	}
 
+	public void onBack(View v){
+		finish();
+	}
 }
