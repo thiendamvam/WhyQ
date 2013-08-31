@@ -55,7 +55,7 @@
         <!-- Debug key store -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAMCQJ3gFPQHuN0usSTd62ZdLBF4iiHWlE" />
+            android:value="AIzaSyApok7LTzajpbrjxUYrDdeBoxQmBaLg-5k" />
         <!-- End of Google maps -->
         <activity
             android:name="whyq.WhyqMain"

@@ -105,6 +105,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private BasicUserAdapter adapter;
 	private RelativeLayout rlPhotoList;
 	private ScrollView svContent;
+	private TextView tvCuisine;
 	public static Bundle bundle;
 	public static HashMap<String, Bill> billList;
 
@@ -119,6 +120,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		bundle = new Bundle();
 		svContent = (ScrollView) findViewById(R.id.svContent);
 		tvAddresss = (TextView) findViewById(R.id.tvAddress);
+		tvCuisine = (TextView)findViewById(R.id.tvCuisine);
 		imgThumbnail = (ImageView) findViewById(R.id.imgThumbnail);
 		tvNumberFavourtie = (TextView) findViewById(R.id.tvNumberOfFavourite);
 		imgFavourtieIcon = (ImageView) findViewById(R.id.imgFavourite);
@@ -291,6 +293,7 @@ public class ListDetailActivity extends FragmentActivity implements
 				UrlImageViewHelper
 						.setUrlDrawable(imgThumbnail, store.getLogo());
 			tvAddresss.setText(store.getAddress());
+			tvCuisine.setText(store.getNameCate());
 			tvNumberFavourtie.setText("" + store.getCountFavaouriteMember());
 
 			tvOpeningTime.setText(store.getStartTime() + " - "
