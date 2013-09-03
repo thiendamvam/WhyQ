@@ -1459,4 +1459,40 @@ public class DataParser {
 	
 	
 	}
+
+	public Object parserCheckBillResult(String result) {
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("OK")){
+				data.setStatus("200");
+				NodeList elementes = doc.getElementsByTagName("element");
+				Distance dataResult = new Distance();
+				if(elementes!=null){
+					Element element = (Element)elementes.item(0);
+					dataResult.setStatus(getValue(element, "status"));
+					Log.d("parserCheckBillResult",""+getValue(element, "status"));
+				}else{
+					Log.d("parserCheckBillResult","null");
+					dataResult.setValue(null);
+				}
+				data.setData(dataResult);		
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

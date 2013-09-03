@@ -12,6 +12,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
+import com.whyq.R;
+
 import twitter4j.http.AccessToken;
 import whyq.WhyqApplication;
 import whyq.activity.ListActivity;
@@ -40,8 +42,11 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -532,5 +537,57 @@ public class WhyqUtils {
 
 			}
 		}
+	}
+
+	public static void showViewFromBottonToTop(Context context,
+			final View etComment) {
+		// TODO Auto-generated method stub
+		Animation anim = AnimationUtils.loadAnimation(context, R.anim.issue_list_show);
+		anim.setAnimationListener(new Animation.AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation arg0) {
+				// TODO Auto-generated method stub
+				etComment.setVisibility(View.VISIBLE);
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+
+	public static void hideViewFromToptoBottm(Context context,
+			final View etComment) {
+		// TODO Auto-generated method stub
+		Animation anim = AnimationUtils.loadAnimation(context, R.anim.issue_list_hide);
+		anim.setAnimationListener(new Animation.AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation arg0) {
+				// TODO Auto-generated method stub
+				etComment.setVisibility(View.GONE);
+			}
+		});
 	}
 }

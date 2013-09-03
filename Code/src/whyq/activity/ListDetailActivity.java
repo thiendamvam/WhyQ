@@ -27,6 +27,7 @@ import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.UrlImageViewHelper;
 import whyq.utils.Util;
+import whyq.utils.WhyqUtils;
 import whyq.view.CustomViewPager;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
@@ -51,6 +53,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -106,6 +109,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private RelativeLayout rlPhotoList;
 	private ScrollView svContent;
 	private TextView tvCuisine;
+	private EditText etComment;
 	public static Bundle bundle;
 	public static HashMap<String, Bill> billList;
 
@@ -154,6 +158,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		billList = new HashMap<String, Bill>();
 		vpPhotoList = (CustomViewPager) findViewById(R.id.vpStorephoto);
 		rlPhotoList = (RelativeLayout) findViewById(R.id.rlPhotoList);
+		etComment = (EditText) findViewById(R.id.etComment);
 		// showHeaderImage();
 		initTabbar();
 		getDetailData();
@@ -204,6 +209,7 @@ public class ListDetailActivity extends FragmentActivity implements
 			Log.d("OnScrollChangedListener","action = ");
 		}
 	};
+	public static String commentContent;
 
 	public void onDoneClicked(View v) {
 
@@ -239,6 +245,23 @@ public class ListDetailActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		Log.d("exePromotionFocus", "exePromotionFocus");
 		setViewContent(3);
+		checkPromotionData();
+	}
+
+	private void checkPromotionData() {
+		// TODO Auto-generated method stub
+		boolean isHave =false;
+		if(store!=null){
+			if (store.getPromotionList() != null) {
+				if (store.getPromotionList().size() > 0) {
+					isHave = true;
+				}
+			}
+			if(!isHave){
+				lnPromotionContent.setVisibility(View.INVISIBLE);
+				Toast.makeText(context, "No promotion in store", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 
 	private void setViewContent(int i) {
@@ -765,6 +788,8 @@ public class ListDetailActivity extends FragmentActivity implements
 	}
 
 	public void onViewBillClicked(View v) {
+		
+		commentContent = etComment.getText().toString();
 		Intent intent = new Intent(ListDetailActivity.this,
 				WhyQBillScreen.class);
 
@@ -860,7 +885,22 @@ public class ListDetailActivity extends FragmentActivity implements
 		holder.tvCount.setText("" + value);
 		holder.tvCount.requestLayout();
 		btnTotalValue.setText("" + totalValue);
+		checkCommentView(totalValue);
 	}
+
+	private void checkCommentView(float totalValue) {
+		// TODO Auto-generated method stub
+		if(totalValue > 0){
+			if(etComment.getVisibility()!=View.VISIBLE)
+				WhyqUtils.showViewFromBottonToTop(context,etComment);
+		}else{
+			if(etComment.getVisibility()==View.VISIBLE)
+				WhyqUtils.hideViewFromToptoBottm(context, etComment);
+		}
+	}
+
+	
+	
 
 	private void updateCount(ViewHolderMitemInfo holder, boolean b) {
 		// TODO Auto-generated method stub

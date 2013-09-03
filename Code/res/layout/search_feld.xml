@@ -2,17 +2,15 @@
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_weight="8.5"
-    android:background="@drawable/white_container"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="5dp" >
 
     <EditText
-        style="@style/normail_black_text"
         android:id="@+id/etTextSearch"
+        style="@style/myEditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:gravity="center_vertical"
         android:hint="@string/hint_search"
         android:imeOptions="actionSearch"

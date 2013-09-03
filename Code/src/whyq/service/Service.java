@@ -31,6 +31,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
 import whyq.WhyqApplication;
+import whyq.activity.ListDetailActivity;
 import whyq.interfaces.IServiceListener;
 import whyq.model.SearchFriendCriteria;
 import whyq.utils.API;
@@ -368,6 +369,9 @@ public class Service implements Runnable {
 			break;
 		case ActionGetUserChecked:
 			resObj = parser.parseLUserCheckedResult(result);
+			break;
+		case ActionCheckbill:
+			resObj = parser.parserCheckBillResult(result);
 			break;
 		default:
 			resObj = result;
@@ -768,6 +772,9 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionOrderSend;
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		if(ListDetailActivity.commentContent!=null){
+			params.put("note", ListDetailActivity.commentContent);
+		}
 		request("/m/member/order/send", params, true, false);
 	}
 	
@@ -789,5 +796,16 @@ public class Service implements Runnable {
 
 	}
 	
+	public void checkBill(String billId, String message, String encryptedToken) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionCheckbill;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("bill_id", billId);
+		params.put("message", message);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/order/show", params, true, false);
+	}
 
 }
