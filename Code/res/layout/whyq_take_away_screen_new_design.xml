@@ -1,7 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_launcher"
     android:baselineAligned="false"
     android:orientation="vertical"
     android:weightSum="10" >
@@ -10,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@drawable/ic_launcher"
         android:baselineAligned="false"
         android:gravity="center"
         android:orientation="vertical" >
@@ -94,32 +92,30 @@
 
         <LinearLayout
             android:id="@+id/lnTimeTogoField"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="10dp"
+            android:layout_marginTop="10dp"
             android:weightSum="3" >
 
             <EditText
                 android:id="@+id/etHours"
-                style="@style/small_back_text"
+                style="@style/myEditText"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_input"
                 android:hint="Hours"
                 android:singleLine="true" />
 
             <EditText
                 android:id="@+id/etMinutes"
-                style="@style/small_back_text"
+                style="@style/myEditText"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_input"
                 android:hint="Minutes"
                 android:singleLine="true" />
 

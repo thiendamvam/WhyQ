@@ -34,17 +34,19 @@
         </TextView>
 
         <EditText
+            style="@style/myEditText"
             android:id="@+id/etHotelChargeCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="User Name" />
 
         <EditText
+            style="@style/myEditText"
             android:id="@+id/etRoomNo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tell Us your room No"
-            android:paddingTop="5dp" />
+             />
 
         <TextView
             android:layout_width="match_parent"
@@ -64,6 +66,7 @@
             android:weightSum="3" >
 
             <EditText
+                style="@style/myEditText"
                 android:id="@+id/etHours"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -73,6 +76,7 @@
                 android:singleLine="true" />
 
             <EditText
+                style="@style/myEditText"
                 android:id="@+id/etMinutes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

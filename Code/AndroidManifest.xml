@@ -204,7 +204,7 @@
             android:name="whyq.activity.ListDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name="whyq.activity.ProfileActivity"
             android:screenOrientation="portrait" />

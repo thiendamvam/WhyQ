@@ -81,7 +81,7 @@ public class WhyQBillScreen extends FragmentActivity{
 
 					  Bill item = (Bill)collectionItr.next();
 					  this.listBill.add(item);
-					  totalValue+= totalValue+Float.parseFloat(item.getPrice())*Float.parseFloat(item.getUnit());
+					  totalValue+= Float.parseFloat(item.getPrice())*Float.parseFloat(item.getUnit());
 				
 				} catch (Exception e) {
 					// TODO: handle exception

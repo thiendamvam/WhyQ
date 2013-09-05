@@ -11,6 +11,7 @@ import whyq.adapter.BasicUserAdapter;
 import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.adapter.WhyqMenuAdapter;
+import whyq.controller.SreenGestureControllerwithParams;
 import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
 import whyq.model.GroupMenu;
@@ -37,6 +38,8 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -124,7 +127,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		bundle = new Bundle();
 		svContent = (ScrollView) findViewById(R.id.svContent);
 		tvAddresss = (TextView) findViewById(R.id.tvAddress);
-		tvCuisine = (TextView)findViewById(R.id.tvCuisine);
+		tvCuisine = (TextView) findViewById(R.id.tvCuisine);
 		imgThumbnail = (ImageView) findViewById(R.id.imgThumbnail);
 		tvNumberFavourtie = (TextView) findViewById(R.id.tvNumberOfFavourite);
 		imgFavourtieIcon = (ImageView) findViewById(R.id.imgFavourite);
@@ -162,8 +165,19 @@ public class ListDetailActivity extends FragmentActivity implements
 		// showHeaderImage();
 		initTabbar();
 		getDetailData();
-//		hide photos list when scroll
-//		lvResult.setOnScrollListener(this);
+		// hide photos list when scroll
+		// lvResult.setOnScrollListener(this);
+		final GestureDetector gestureDetector = new GestureDetector(
+				simpleOnGestureListener);
+		svContent.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				return gestureDetector.onTouchEvent(event);
+			}
+		});
+
 		edSearch.addTextChangedListener(mTextEditorWatcher);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -188,25 +202,56 @@ public class ListDetailActivity extends FragmentActivity implements
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
-		        ViewTreeObserver observer = svContent.getViewTreeObserver();
-		        observer.addOnScrollChangedListener(onScrollChangedListener);
-		        switch(event.getAction()){
-		        	case MotionEvent.ACTION_SCROLL:
-		        	Log.d("onTouch","Action_scroll");
-		        	break;
-		        }
-		        return false;
+				ViewTreeObserver observer = svContent.getViewTreeObserver();
+				observer.addOnScrollChangedListener(onScrollChangedListener);
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_SCROLL:
+					Log.d("onTouch", "Action_scroll");
+					break;
+				}
+				return false;
 			}
 		});
 	}
 
+	SimpleOnGestureListener simpleOnGestureListener = new SimpleOnGestureListener() {
+
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+				float velocityY) {
+			String swipe = "";
+			float sensitvity = 50;
+
+			// TODO Auto-generated method stub
+			if ((e1.getX() - e2.getX()) > sensitvity) {
+				swipe += "Swipe Left\n";
+			} else if ((e2.getX() - e1.getX()) > sensitvity) {
+				swipe += "Swipe Right\n";
+			} else {
+				swipe += "\n";
+			}
+
+			if ((e1.getY() - e2.getY()) > sensitvity) {
+				swipe += "Swipe Up\n";
+			} else if ((e2.getY() - e1.getY()) > sensitvity) {
+				swipe += "Swipe Down\n";
+			} else {
+				swipe += "\n";
+			}
+
+			return super.onFling(e1, e2, velocityX, velocityY);
+		}
+	};
+
 	final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new ViewTreeObserver.OnScrollChangedListener() {
 
+	
+		
 		@Override
 		public void onScrollChanged() {
 			// do stuff here
 			hidePhotoList();
-			Log.d("OnScrollChangedListener","action = ");
+			Log.d("OnScrollChangedListener", "action = ");
 		}
 	};
 	public static String commentContent;
@@ -225,7 +270,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	public void showPhotoList() {
 		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) rlPhotoList
 				.getLayoutParams();
-		params.height = (int)(WhyqApplication.Instance().getDensity()*180);
+		params.height = (int) (WhyqApplication.Instance().getDensity() * 180);
 		rlPhotoList.setLayoutParams(params);
 	}
 
@@ -250,16 +295,17 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	private void checkPromotionData() {
 		// TODO Auto-generated method stub
-		boolean isHave =false;
-		if(store!=null){
+		boolean isHave = false;
+		if (store != null) {
 			if (store.getPromotionList() != null) {
 				if (store.getPromotionList().size() > 0) {
 					isHave = true;
 				}
 			}
-			if(!isHave){
+			if (!isHave) {
 				lnPromotionContent.setVisibility(View.INVISIBLE);
-				Toast.makeText(context, "No promotion in store", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "No promotion in store",
+						Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
@@ -788,7 +834,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	}
 
 	public void onViewBillClicked(View v) {
-		
+
 		commentContent = etComment.getText().toString();
 		Intent intent = new Intent(ListDetailActivity.this,
 				WhyQBillScreen.class);
@@ -890,17 +936,15 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	private void checkCommentView(float totalValue) {
 		// TODO Auto-generated method stub
-		if(totalValue > 0){
-			if(etComment.getVisibility()!=View.VISIBLE)
-				WhyqUtils.showViewFromBottonToTop(context,etComment);
-		}else{
-			if(etComment.getVisibility()==View.VISIBLE)
+		Log.d("checkCommentView", "totalValue: " + totalValue);
+		if (totalValue > 0) {
+			if (etComment.getVisibility() != View.VISIBLE)
+				WhyqUtils.showViewFromBottonToTop(context, etComment);
+		} else {
+			if (etComment.getVisibility() == View.VISIBLE)
 				WhyqUtils.hideViewFromToptoBottm(context, etComment);
 		}
 	}
-
-	
-	
 
 	private void updateCount(ViewHolderMitemInfo holder, boolean b) {
 		// TODO Auto-generated method stub

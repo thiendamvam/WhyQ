@@ -542,6 +542,7 @@ public class WhyqUtils {
 	public static void showViewFromBottonToTop(Context context,
 			final View etComment) {
 		// TODO Auto-generated method stub
+		
 		Animation anim = AnimationUtils.loadAnimation(context, R.anim.issue_list_show);
 		anim.setAnimationListener(new Animation.AnimationListener() {
 			
@@ -563,6 +564,7 @@ public class WhyqUtils {
 				
 			}
 		});
+		etComment.startAnimation(anim);
 	}
 
 	public static void hideViewFromToptoBottm(Context context,
@@ -589,5 +591,7 @@ public class WhyqUtils {
 				etComment.setVisibility(View.GONE);
 			}
 		});
+		etComment.startAnimation(anim);
 	}
+	
 }
