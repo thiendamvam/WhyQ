@@ -8,14 +8,16 @@
 
     <EditText
         android:id="@+id/etTextSearch"
-        style="@style/myEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:drawable/editbox_background_normal"
         android:gravity="center_vertical"
         android:hint="@string/hint_search"
         android:imeOptions="actionSearch"
         android:inputType="text"
+        android:paddingBottom="5dp"
         android:paddingLeft="25dp"
+        android:paddingTop="5dp"
         android:singleLine="true" >
     </EditText>
 

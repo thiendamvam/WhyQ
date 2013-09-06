@@ -63,7 +63,8 @@ public class WhyqOrderMenuActivity extends DialogFragment implements OnClickList
 		 v.setBackgroundResource(android.R.color.transparent);
 		getDialog().getWindow().setBackgroundDrawableResource(
 				android.R.color.transparent);
-		getDialog().getWindow().setLayout(100,300);//display.getWidth()/3, display.getHeight() / 4
+		float density = WhyqApplication.Instance().getDensity();
+		getDialog().getWindow().setLayout((int)(100*density),(int)(density*300));//display.getWidth()/3, display.getHeight() / 4
 		getDialog().setCanceledOnTouchOutside(true);
 		return v;
 	}
@@ -71,8 +72,8 @@ public class WhyqOrderMenuActivity extends DialogFragment implements OnClickList
 	{
 	    super.onResume();
 	    Window window = getDialog().getWindow();
-	    float desity = WhyqApplication.Instance().getDensity();
-	    window.setLayout((int(320*desity), int(density*440));
+	    float density = WhyqApplication.Instance().getDensity();
+	    window.setLayout((int)(density*320), (int)(density*440));
 	    window.setGravity(Gravity.CENTER);
 	    //TODO:
 	} 

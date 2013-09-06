@@ -40,6 +40,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 	private FriendsWhyqAdapter mFriendWhyqAdapter = null;
 	private String mAccessToken;
 	private ListView mListview;
+	private boolean isFacebook = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 
 		setContentView(R.layout.activity_facebook_friends);
 
+		getIntent().getBooleanExtra("is_facebook", true);
+		
 		showHeaderSearchField(true);
 		SearchField searchField = getSearchField();
 		searchField.getEditTextView().setHint(R.string.find_a_friend);
@@ -158,13 +161,17 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 	private void getFriends() {
 		Service service = getService();
 		setLoading(true);
-		if (mAccessToken == null || mAccessToken.length() == 0) {
-			mListview.setAdapter(mFriendWhyqAdapter);
-			service.getFriends(getEncryptedToken(),
-					XMLParser.getValue(this, XMLParser.STORE_USER_ID));
-		} else {
-			mListview.setAdapter(mFriendFacebookAdapter);
-			service.getFriendsFacebook(getEncryptedToken(), mAccessToken);
+		if(isFacebook){
+			if (mAccessToken == null || mAccessToken.length() == 0) {
+				mListview.setAdapter(mFriendWhyqAdapter);
+				service.getFriends(getEncryptedToken(),
+						XMLParser.getValue(this, XMLParser.STORE_USER_ID));
+			} else {
+				mListview.setAdapter(mFriendFacebookAdapter);
+				service.getFriendsFacebook(getEncryptedToken(), mAccessToken);
+			}
+		}else{
+			//Code for getting twitter friends.
 		}
 	}
 
