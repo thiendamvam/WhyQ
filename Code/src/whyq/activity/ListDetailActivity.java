@@ -474,7 +474,7 @@ public class ListDetailActivity extends FragmentActivity implements
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(context, data.getMessage());
 				} else {
-					Util.showDialog(context, data.getMessage());
+//					Util.showDialog(context, data.getMessage());
 				}
 			}
 
