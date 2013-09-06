@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/bgListView"
     android:orientation="horizontal"
+    android:padding="7dp"
     android:alpha="0.7" >
 
     <LinearLayout
@@ -66,7 +67,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@android:color/white"
-            android:background="@drawable/ic_launcher"
             android:text="get direction" />
     </LinearLayout>
 

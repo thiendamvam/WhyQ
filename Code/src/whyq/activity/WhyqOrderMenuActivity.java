@@ -71,7 +71,8 @@ public class WhyqOrderMenuActivity extends DialogFragment implements OnClickList
 	{
 	    super.onResume();
 	    Window window = getDialog().getWindow();
-	    window.setLayout(320, 440);
+	    float desity = WhyqApplication.Instance().getDensity();
+	    window.setLayout((int(320*desity), int(density*440));
 	    window.setGravity(Gravity.CENTER);
 	    //TODO:
 	} 

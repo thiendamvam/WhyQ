@@ -1112,22 +1112,25 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        int position = whyqListView.getFirstVisiblePosition();
-        View v = whyqListView.getChildAt(0);
-        int offset = (v == null) ? 0 : v.getTop();
 
-        if (mPosition < position || (mPosition == position && mOffset < offset)) {
-             // Scrolled up
-        	Log.d("onScrollStateChanged","up");
-        	hideNavigationBar();
-        	hideTabbarInTabhost();
-        } else {
-             // Scrolled down
-        	showNavigationBar();
-        	showTabbarInTabhost();
-        }
-        mPosition = position;
-        mOffset = offset;
+    	if(scrollState==0){
+            int position = whyqListView.getFirstVisiblePosition();
+            View v = whyqListView.getChildAt(0);
+            int offset = (v == null) ? 0 : v.getTop();
+
+            if (mPosition < position || (mPosition == position && mOffset < offset)) {
+                 // Scrolled up
+            	Log.d("onScrollStateChanged","up");
+            	hideNavigationBar();
+            	hideTabbarInTabhost();
+            } else {
+                 // Scrolled down
+            	showNavigationBar();
+            	showTabbarInTabhost();
+            }
+            mPosition = position;
+            mOffset = offset;
+    	}
     }
 
 
