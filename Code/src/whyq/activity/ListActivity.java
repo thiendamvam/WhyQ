@@ -152,7 +152,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 				if(store !=null){
 					storeId = store.id;
 					if(storeId !=null)
-						gotoStoreDetail(storeId);
+						gotoStoreDetail(storeId, store.tvItemName.getText().toString());
 				}
 				
 			} catch (Exception e) {
@@ -230,10 +230,11 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		// TODO Auto-generated method stub
 		
 	}
-	protected void gotoStoreDetail(String storeId) {
+	protected void gotoStoreDetail(String storeId, String storeName) {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(ListActivity.this, ListDetailActivity.class);
 		intent.putExtra("store_type", storeType);
+		intent.putExtra("store_name", storeName);
 		startActivity(intent);
 	}
 
@@ -335,36 +336,36 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(currentLocation !=null)
-			tvNearLocation.setText(currentLocation);
-		imgCoffe.requestFocus();
-		if(isLogin && WhyqMain.getCurrentTab() == 3){
-			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
-			if(user2 != null){
-				String id = user2.getId();
-				if(id != null)
-					WhyqMain.gotoDiaryTab(id);
-			}
-			isLogin = false;
-		}else if(WhyqMain.getCurrentTab() == 0 && isRefesh){
-			// Get the screen's size.
-			exeListActivity(false);
-		}else if(WhyqMain.getCurrentTab() == 1 || WhyqMain.getCurrentTab() == 4){
-			if(isRefesh)
-				exeListActivity(false);
-		}else if(WhyqMain.getCurrentTab() == 3) { 
-			isCalendar = true;
-			exeListActivity(false);
-		}else if(!isRefesh){
-			isRefesh = true;
-		}
+//		if(currentLocation !=null)
+//			tvNearLocation.setText(currentLocation);
+//		imgCoffe.requestFocus();
+//		if(isLogin && WhyqMain.getCurrentTab() == 3){
+//			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
+//			if(user2 != null){
+//				String id = user2.getId();
+//				if(id != null)
+//					WhyqMain.gotoDiaryTab(id);
+//			}
+//			isLogin = false;
+//		}else if(WhyqMain.getCurrentTab() == 0 && isRefesh){
+//			// Get the screen's size.
+//			exeListActivity(false);
+//		}else if(WhyqMain.getCurrentTab() == 1 || WhyqMain.getCurrentTab() == 4){
+//			if(isRefesh)
+//				exeListActivity(false);
+//		}else if(WhyqMain.getCurrentTab() == 3) { 
+//			isCalendar = true;
+//			exeListActivity(false);
+//		}else if(!isRefesh){
+//			isRefesh = true;
+//		}
 	}
 	
 	protected void onPause () {
     	super.onPause();
     	isFirst = true;
     	nextItem = -1;
-    	showProgress();
+//    	showProgress();
     	
     }
 
@@ -647,7 +648,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	{
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
-	        WhyqMain.back();
+//	        WhyqMain.back();
+	    	finish();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

@@ -1,9 +1,10 @@
 package whyq.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Store {
+public class Store implements Serializable{
 
 	private String id;
 	private String storeId;

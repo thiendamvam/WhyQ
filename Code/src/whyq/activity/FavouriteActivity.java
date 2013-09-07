@@ -229,26 +229,26 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(isLogin && WhyqMain.getCurrentTab() == 3){
-			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
-			if(user2 != null){
-				String id = user2.getId();
-				if(id != null)
-					WhyqMain.gotoDiaryTab(id);
-			}
-			isLogin = false;
-		}else if(WhyqMain.getCurrentTab() == 0 && isRefesh){
-			// Get the screen's size.
-			exeListActivity(false);
-		}else if(WhyqMain.getCurrentTab() == 1 || WhyqMain.getCurrentTab() == 4){
-			if(isRefesh)
-				exeListActivity(false);
-		}else if(WhyqMain.getCurrentTab() == 3) { 
-			isCalendar = true;
-			exeListActivity(false);
-		}else if(!isRefesh){
-			isRefesh = true;
-		}
+//		if(isLogin && WhyqMain.getCurrentTab() == 3){
+//			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
+//			if(user2 != null){
+//				String id = user2.getId();
+//				if(id != null)
+//					WhyqMain.gotoDiaryTab(id);
+//			}
+//			isLogin = false;
+//		}else if(WhyqMain.getCurrentTab() == 0 && isRefesh){
+//			// Get the screen's size.
+//			exeListActivity(false);
+//		}else if(WhyqMain.getCurrentTab() == 1 || WhyqMain.getCurrentTab() == 4){
+//			if(isRefesh)
+//				exeListActivity(false);
+//		}else if(WhyqMain.getCurrentTab() == 3) { 
+//			isCalendar = true;
+//			exeListActivity(false);
+//		}else if(!isRefesh){
+//			isRefesh = true;
+//		}
 	}
 	
 	protected void onPause () {
@@ -256,7 +256,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
     	isFavorite = false;
     	isFirst = true;
     	nextItem = -1;
-    	showProgress();
+//    	showProgress();
     	
     }
 

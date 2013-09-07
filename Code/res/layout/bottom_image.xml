@@ -33,6 +33,7 @@
 
         <TextView
             android:id="@+id/tvAddress"
+            style="@style/nomal_white_text"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -40,7 +41,6 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:text="Address"
-            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -51,21 +51,22 @@
 
             <TextView
                 android:id="@+id/tvCuisineTitle"
+                style="@style/small_white_text"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:textColor="@color/white"
                 android:text="Cuisine: "
                 android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/tvCuisine"
+                style="@style/small_white_text"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="left|center_vertical"
-                android:textColor="@color/white"
                 android:ellipsize="end"
+                android:gravity="left|center_vertical"
                 android:singleLine="true"
+                android:textColor="@color/white"
                 android:textStyle="italic" />
         </LinearLayout>
     </LinearLayout>
@@ -82,22 +83,24 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="top|right"
+            android:gravity="center_vertical|right"
             android:text="0"
             android:textColor="@color/white" />
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
             android:layout_weight="1" >
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/imgFavouriteIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/icon_fav_enable" />
+                android:background="@color/transparent"
+                android:onClick="onFavouriteClicked"
+                android:src="@drawable/icon_fav_disable" />
         </RelativeLayout>
     </LinearLayout>
 

@@ -10,9 +10,11 @@ import whyq.adapter.BasicImageListAdapter;
 import whyq.adapter.BasicUserAdapter;
 import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
+import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.adapter.WhyqMenuAdapter;
 import whyq.controller.SreenGestureControllerwithParams;
 import whyq.interfaces.IServiceListener;
+import whyq.map.MapsActivity;
 import whyq.model.Bill;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
@@ -50,6 +52,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -76,7 +79,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private ImageView imgThumbnail;
 	private TextView tvNumberFavourtie;
 	private TextView tvOpeningTime;
-	private ImageView imgFavourtieIcon;
+	private ImageButton imgFavourtieIcon;
 	private TextView tvTelephone;
 	private TextView tvStoreDes;
 	private TextView tvCommendRever;
@@ -113,6 +116,10 @@ public class ListDetailActivity extends FragmentActivity implements
 	private ScrollView svContent;
 	private TextView tvCuisine;
 	private EditText etComment;
+	private TextView tvCuisineTitle;
+	private TextView tvOpeningTimeTitle;
+	private TextView tvTelephoneTitle;
+	private String storeName;
 	public static Bundle bundle;
 	public static HashMap<String, Bill> billList;
 
@@ -128,9 +135,12 @@ public class ListDetailActivity extends FragmentActivity implements
 		svContent = (ScrollView) findViewById(R.id.svContent);
 		tvAddresss = (TextView) findViewById(R.id.tvAddress);
 		tvCuisine = (TextView) findViewById(R.id.tvCuisine);
+		tvCuisineTitle = (TextView)findViewById(R.id.tvCuisineTitle);
+		tvOpeningTimeTitle = (TextView)findViewById(R.id.tvOpeningTimeTitle);
+		tvTelephoneTitle = (TextView)findViewById(R.id.tvTelephoneTitle);
 		imgThumbnail = (ImageView) findViewById(R.id.imgThumbnail);
 		tvNumberFavourtie = (TextView) findViewById(R.id.tvNumberOfFavourite);
-		imgFavourtieIcon = (ImageView) findViewById(R.id.imgFavourite);
+		imgFavourtieIcon = (ImageButton) findViewById(R.id.imgFavouriteIcon);
 		tvOpeningTime = (TextView) findViewById(R.id.tvOpeningTime);
 		tvTelephone = (TextView) findViewById(R.id.tvTelephone);
 		tvStoreDes = (TextView) findViewById(R.id.tvStoreDes);
@@ -163,7 +173,9 @@ public class ListDetailActivity extends FragmentActivity implements
 		rlPhotoList = (RelativeLayout) findViewById(R.id.rlPhotoList);
 		etComment = (EditText) findViewById(R.id.etComment);
 		// showHeaderImage();
+		storeName = getIntent().getStringExtra("store_name");
 		initTabbar();
+
 		getDetailData();
 		// hide photos list when scroll
 		// lvResult.setOnScrollListener(this);
@@ -212,6 +224,23 @@ public class ListDetailActivity extends FragmentActivity implements
 				return false;
 			}
 		});
+		appyFont();
+	}
+
+	private void appyFont() {
+		// TODO Auto-generated method stub
+		Util.applyTypeface(tvAddresss, Util.sTypefaceBold);
+		Util.applyTypeface(tvCuisine, Util.sTypefaceItalic);
+		Util.applyTypeface(tvNumberFavourtie, Util.sTypefaceRegular);
+		Util.applyTypeface(tvOpeningTime, Util.sTypefaceRegular);
+		Util.applyTypeface(tvTelephone, Util.sTypefaceRegular);
+		Util.applyTypeface(tvDes, Util.sTypefaceRegular);
+		Util.applyTypeface(tvFromUsr, Util.sTypefaceRegular);
+		Util.applyTypeface(tvHeaderTitle, Util.sTypefaceRegular);
+		Util.applyTypeface(tvNumberDiscount, Util.sTypefaceRegular);
+		Util.applyTypeface(tvStoreDes, Util.sTypefaceRegular);
+		Util.applyTypeface(tvOpeningTimeTitle, Util.sTypefaceBold);
+		Util.applyTypeface(tvTelephoneTitle, Util.sTypefaceBold);
 	}
 
 	SimpleOnGestureListener simpleOnGestureListener = new SimpleOnGestureListener() {
@@ -245,8 +274,6 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new ViewTreeObserver.OnScrollChangedListener() {
 
-	
-		
 		@Override
 		public void onScrollChanged() {
 			// do stuff here
@@ -254,10 +281,15 @@ public class ListDetailActivity extends FragmentActivity implements
 			Log.d("OnScrollChangedListener", "action = ");
 		}
 	};
+	private String currentStoreId;
 	public static String commentContent;
 
 	public void onDoneClicked(View v) {
-
+		if (store != null) {
+			Intent i = new Intent(context, MapsActivity.class);
+			i.putExtra("store", store);
+			startActivity(i);
+		}
 	}
 
 	public void hidePhotoList() {
@@ -336,13 +368,13 @@ public class ListDetailActivity extends FragmentActivity implements
 	private void showHeaderImage() {
 		// TODO Auto-generated method stub
 		if (storeType == 1) {
-			imgHeader.setImageResource(R.drawable.icon_result_cutlery);
+			imgHeader.setImageResource(R.drawable.icon_tab_cutlery_active);
 		} else if (storeType == 2) {
-			imgHeader.setImageResource(R.drawable.icon_result_wine);
+			imgHeader.setImageResource(R.drawable.icon_tab_wine_active);
 		} else if (storeType == 3) {
-			imgHeader.setImageResource(R.drawable.icon_result_coffee);
+			imgHeader.setImageResource(R.drawable.icon_tab_coffee_active);
 		} else if (storeType == 4) {
-			imgHeader.setImageResource(R.drawable.icon_result_hotel);
+			imgHeader.setImageResource(R.drawable.icon_tab_hotel_active);
 		}
 	}
 
@@ -351,7 +383,10 @@ public class ListDetailActivity extends FragmentActivity implements
 		// imgBtnAbout.setImageResource(R.color.transparent);
 		// imgBtnMenu.setImageResource(R.color.transparent);
 		// imgBtnPromotion.setImageResource(R.color.transparent);
-		tvHeaderTitle.setText("");
+		if(storeName!=null)
+			tvHeaderTitle.setText(""+storeName);
+		else
+			tvHeaderTitle.setText("");
 	}
 
 	private void bindData() {
@@ -361,16 +396,32 @@ public class ListDetailActivity extends FragmentActivity implements
 			if (store.getLogo() != null)
 				UrlImageViewHelper
 						.setUrlDrawable(imgThumbnail, store.getLogo());
-			tvAddresss.setText(store.getAddress());
-			tvCuisine.setText(store.getNameCate());
+			tvAddresss.setText(""+store.getAddress());
+			tvCuisine.setText(""+store.getNameCate());
 			tvNumberFavourtie.setText("" + store.getCountFavaouriteMember());
 
 			tvOpeningTime.setText(store.getStartTime() + " - "
 					+ store.getEndTime());
-			tvTelephone.setText(store.getPhoneStore());
-			tvStoreDes.setText(store.getIntroStore());
-			tvHeaderTitle.setText(store.getNameStore());
-
+			tvTelephone.setText(""+store.getPhoneStore());
+			tvStoreDes.setText(""+store.getIntroStore());
+			tvHeaderTitle.setText(""+store.getNameStore());
+			if (store.getDistance() != null) {
+				if(!store.getDistance().equals(""))
+					btnDone.setText(Math.round(Float.parseFloat(store.getDistance()))
+						+ " Km");
+				else{
+					btnDone.setText(store.getDistance());
+				}
+				
+			} else {
+				btnDone.setText("nodata Km");
+			}
+			btnDone.setVisibility(View.VISIBLE);
+			if (store.getIsFavourite()) {
+				imgFavourtieIcon.setImageResource(R.drawable.icon_fav_enable);
+			} else {
+				imgFavourtieIcon.setImageResource(R.drawable.icon_fav_disable);
+			}
 			// UrlImageViewHelper.setUrlDrawable(imgView, store.getPhotos());
 			if (!store.getCountFavaouriteMember().equals("0")) {
 				tvCommendRever.setText(store.getCountFavaouriteMember()
@@ -474,11 +525,45 @@ public class ListDetailActivity extends FragmentActivity implements
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(context, data.getMessage());
 				} else {
-//					Util.showDialog(context, data.getMessage());
+					// Util.showDialog(context, data.getMessage());
 				}
 			}
 
+		} else if (result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionPostFavorite) {
+			// Toast.makeText(context, "Favourite successfully",
+			// Toast.LENGTH_SHORT).show();
+			ResponseData data = (ResponseData) result.getData();
+
+			if (data.getStatus().equals("200")) {
+				updateFavoriteWitId(currentStoreId, true);
+			} else if (data.getStatus().equals("401")) {
+				Util.loginAgain(getParent(), data.getMessage());
+			} else {
+				// Util.showDialog(getParent(), data.getMessage());
+			}
+			hideDialog();
+		} else if (result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionRemoveFavorite) {
+			// Toast.makeText(context, "Un favourite successfully",
+			// Toast.LENGTH_SHORT).show();
+			ResponseData data = (ResponseData) result.getData();
+			if (data.getStatus().equals("200")) {
+				updateFavoriteWitId(currentStoreId, false);
+			} else if (data.getStatus().equals("401")) {
+				Util.loginAgain(getParent(), data.getMessage());
+			} else {
+				// Util.showDialog(getParent(), data.getMessage());
+			}
+			hideDialog();
+		} else if (!result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionPostFavorite) {
+			hideDialog();
+		} else if (!result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionRemoveFavorite) {
+			hideDialog();
 		} else if (result.getAction() == ServiceAction.ActionGetUserChecked) {
+
 			ResponseData data = (ResponseData) result.getData();
 			if (data.getStatus().equals("200")) {
 				List<User> userList = (List<User>) data.getData();
@@ -490,9 +575,44 @@ public class ListDetailActivity extends FragmentActivity implements
 			} else if (data.getStatus().equals("401")) {
 				Util.loginAgain(context, data.getMessage());
 			} else {
-				Util.showDialog(context, data.getMessage());
+//				Util.showDialog(context, data.getMessage());
 			}
 
+		}
+
+	}
+
+	private void updateFavoriteWitId(String id, boolean b) {
+		// TODO Auto-generated method stub
+		int value;
+		if (b) {
+			value = Integer.parseInt(tvNumberFavourtie.getText().toString())
+					+ Integer.parseInt("1");
+			imgFavourtieIcon.setImageResource(R.drawable.icon_fav_enable);
+			store.setIsFavourite(true);
+		} else {
+			value = Integer.parseInt(tvNumberFavourtie.getText().toString())
+					- Integer.parseInt("1");
+			imgFavourtieIcon.setImageResource(R.drawable.icon_fav_disable);
+			store.setIsFavourite(false);
+		}
+		if (value < 0)
+			value = 0;
+		tvNumberFavourtie.setText("" + value);
+		tvFriendNumber.setTag(store);
+	}
+
+	public void onFavouriteClicked(View v) {
+
+		if (store != null) {
+			currentStoreId = store.getStoreId();
+			if (store.getIsFavourite()) {
+				showDialog();
+				service.removeFavorite(currentStoreId);
+			} else {
+				showDialog();
+				service.postFavorite(currentStoreId);
+			}
 		}
 	}
 

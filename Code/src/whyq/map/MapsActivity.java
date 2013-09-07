@@ -13,20 +13,35 @@ import java.util.List;
 import org.json.JSONObject;
 
 import whyq.WhyqApplication;
+import whyq.activity.FavouriteActivity;
+import whyq.activity.ListActivity;
+import whyq.activity.ListDetailActivity;
+import whyq.adapter.WhyqAdapter.ViewHolder;
+import whyq.model.Store;
+import whyq.model.UserCheckBill;
+import whyq.utils.UrlImageViewHelper;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.LinearLayout.LayoutParams;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -67,6 +82,8 @@ public class MapsActivity extends FragmentActivity implements
 	private Double lon, lat;
 	private String title_en, address_en, phone, fax, email_en;
 	private TextView tvHeader;
+	private Context context;
+	private Button btnDirection;
 
 	/** Demonstrates customizing the info window and/or its contents. */
 	class CustomInfoWindowAdapter implements InfoWindowAdapter {
@@ -435,9 +452,173 @@ public class MapsActivity extends FragmentActivity implements
 			HOTEL_LOCAL = new LatLng(10.72277, 106.710235);
 			Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show();
 		}
-
+		context = MapsActivity.this;
+		Store store = (Store)getIntent().getSerializableExtra("store");
+		btnDirection = (Button)findViewById(R.id.btnDone);
+		btnDirection.setText("Direction");
+		if(store!=null)
+			bindStoreInfo(store);
 	}
 
+	private void bindStoreInfo(final Store store) {
+		// TODO Auto-generated method stub
+		Store item = store;
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View rowView = inflater.inflate(R.layout.whyq_item_new, null);
+		LayoutParams PARAMS = (LinearLayout.LayoutParams)rowView.getLayoutParams();
+		ViewHolder viewHolder = new ViewHolder();
+		viewHolder.id = item.getStoreId();
+		viewHolder.imgThumb = (ImageView) rowView.findViewById(R.id.imgThumbnal2);
+		viewHolder.tvItemName = (TextView) rowView.findViewById(R.id.tvItemName);
+		viewHolder.tvItemAddress = (TextView)rowView.findViewById(R.id.tvItemAddress);
+		viewHolder.tvNumberFavourite = (TextView)rowView.findViewById(R.id.tvNumberFavourite);
+		viewHolder.tvVisited = (TextView)rowView.findViewById(R.id.tvVisited);
+		viewHolder.tvDiscoutNumber = (TextView)rowView.findViewById(R.id.tvNumberDiscount);
+		viewHolder.btnDistance = (Button)rowView.findViewById(R.id.btnDistance);
+		viewHolder.imgFavouriteThumb = (ImageView)rowView.findViewById(R.id.imgFavourite);
+		viewHolder.prgFavourite = (ProgressBar)rowView.findViewById(R.id.prgFavourite);
+		viewHolder.rlDiscount = (RelativeLayout)rowView.findViewById(R.id.rlDiscount);
+		viewHolder.tvItemName.setText(item.getNameStore().toUpperCase());
+		viewHolder.tvItemAddress.setText(item.getAddress());
+		viewHolder.tvNumberFavourite.setText(""+item.getCountFavaouriteMember());
+		if(item.getPromotionList().size() > 0){
+			viewHolder.tvDiscoutNumber.setVisibility(View.VISIBLE);
+//			promotion = item.getPromotionList().get(0);
+//			viewHolder.tvDiscoutNumber.setText(""+promotion.getValuePromotion()+promotion.getTypeValue()+ " for bill over $"+promotion.getConditionPromotion());
+		}else{
+			viewHolder.rlDiscount.setVisibility(View.GONE);
+			
+		}
+		
+		if(!item.getDistance().equals(""))
+			viewHolder.btnDistance.setText((int)Float.parseFloat(item.getDistance())+" km");
+		viewHolder.imgFriendThumb = (ImageView)rowView.findViewById(R.id.imgFriendThumb);
+		
+		UserCheckBill userCheckBill = item.getUserCheckBill();
+		if(userCheckBill !=null){
+			if(userCheckBill.getTotalMember()!=null && !userCheckBill.getTotalMember().equals("")){
+				if(userCheckBill.getAvatar()!=null && !userCheckBill.getAvatar().equals("")){
+					if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
+						viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" others visited");	
+					}else{
+						viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" other visited");
+					}
+					
+					viewHolder.imgFriendThumb.setVisibility(View.VISIBLE);
+					UrlImageViewHelper.setUrlDrawable(viewHolder.imgFriendThumb, userCheckBill.getAvatar());	
+				}else{
+					if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
+						viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" others visited");
+					}else{
+						viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" other visited");
+					}
+					
+				}
+
+			}
+		}
+
+		if(item.getIsFavourite()){
+			viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
+		}else{
+			viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_disable);
+		}
+		viewHolder.imgFavouriteThumb.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( FavouriteActivity.isFavorite)
+					((FavouriteActivity)context).onFavouriteClicked(v);
+				else
+					((ListActivity)context).onFavouriteClicked(v);
+			}
+		});
+		UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
+		rowView.setTag(viewHolder);
+		rowView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Log.d("fdsfsfsdfs","fdsfsdfsf");
+				Intent intent = new Intent(context, ListDetailActivity.class);
+				intent.putExtra("store_id", ListActivity.storeId);
+				intent.putExtra("id", store.getId());
+				context.startActivity(intent);
+			}
+		});
+		if (store != null) {
+			
+
+		}
+		viewHolder.imgFavouriteThumb.setTag(item);
+		viewHolder.btnDistance.setTag(item);
+		rowView.setEnabled(true);
+	}
+
+	public void onDoneClicked(View v){
+
+		// TODO Auto-generated method stub
+		markerPoints.clear();
+		mMap.clear();
+
+		// Adding new item to the ArrayList
+		LatLng myLocation = new LatLng(mMap.getMyLocation()
+				.getLatitude(), mMap.getMyLocation().getLongitude());
+		LatLng desLocation = HOTEL_LOCAL;
+
+		// add to marker array
+		for (int i = 0; i <= 1; i++) {
+			switch (i) {
+			case 0:
+				// Creating MarkerOptions
+				MarkerOptions options = new MarkerOptions();
+				markerPoints.add(myLocation);
+				// Setting the position of the marker
+				options.position(myLocation);
+				options.icon(BitmapDescriptorFactory
+						.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+				// Add new marker to the Google Map Android API V2
+				mMap.addMarker(options);
+				break;
+
+			case 1:
+				// Creating MarkerOptions
+				MarkerOptions options2 = new MarkerOptions();
+				markerPoints.add(desLocation);
+				// Setting the position of the marker
+				options2.position(desLocation);
+				options2.icon(BitmapDescriptorFactory
+						.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+				// Add new marker to the Google Map Android API V2
+				mMap.addMarker(options2);
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		// Checks, whether start and end locations are captured
+		if (markerPoints.size() >= 2) {
+			LatLng origin = markerPoints.get(0);
+			LatLng dest = markerPoints.get(1);
+
+			// Getting URL to the Google Directions API
+			String url = getDirectionsUrl(origin, dest);
+
+			DownloadTask downloadTask = new DownloadTask();
+
+			// Start downloading json data from Google Directions
+			// API
+			downloadTask.execute(url);
+		}
+	
+	}
+	
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
