@@ -131,17 +131,14 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 			viewHolder.tvPrice = (TextView) view.findViewById(R.id.tvPrice);
 			viewHolder.imgThumb = (ImageView) view.findViewById(R.id.imgThumbnail);
 			viewHolder.tvCount = (TextView)view.findViewById(R.id.totalForItem);
-//			viewHolder.storeId = item.getS;
 			viewHolder.tvType.setTypeface(Util.sTypefaceRegular);
 			viewHolder.tvPrice.setTypeface(Util.sTypefaceRegular);
 			viewHolder.tvType.setText(item.getNameProduct());
 			viewHolder.tvPrice.setText("$"+item.getValue());
 			viewHolder.storeId = item.getStoreId();
-//			viewHolder.tvCount.setText(item.getSort());
 			viewHolder.btnAdd = (Button)view.findViewById(R.id.btnAdd);
 			viewHolder.btnRemove = (Button) view.findViewById(R.id.btnRemove);
 			viewHolder.menuId = item.getId();
-//			viewHolder.btnAdd.setTag(item);
 			
 			viewHolder.btnRemove.setTag(viewHolder);
 			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getImageThumb());
@@ -199,17 +196,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 			groupHolder.img.setImageResource(R.drawable.group_up);
 		}
 
-//		LayoutParams params = (RelativeLayout.LayoutParams) groupHolder.title
-//				.getLayoutParams();
-//		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-//		params.addRule(RelativeLayout.LEFT_OF, R.id.tag_img);
-//		groupHolder.title.setLayoutParams(params);
 		groupHolder.title.setTypeface(Util.sTypefaceRegular);
 		groupHolder.title.setText(mGroupCollection.get(arg0).getName());
-//		groupHolder.title.setTextColor(Color.parseColor("#ffffff"));
-//		arg2.setBackgroundColor(Color.parseColor("#000000"));
-		// arg2.getBackground().setAlpha(40);
-
 		return arg2;
 	
 	}
