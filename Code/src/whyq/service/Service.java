@@ -550,7 +550,18 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/login/tw", params, true, false);
 	}
-
+	
+	public void inviteFriendsTwitter(String encryptedToken, String oauth_token, String oauth_token_secret,String twitter_id){
+		_action = ServiceAction.ActionInviteFriendsTwitter;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("oauth_token", oauth_token);
+		params.put("oauth_token_secret", oauth_token_secret);
+		params.put("twitter_id", twitter_id);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/friend/twitter/invite",params,true,false);
+	}
 	private void attachUriWithQuery(HttpRequestBase request, Uri uri,
 			Map<String, String> params) {
 		try {
