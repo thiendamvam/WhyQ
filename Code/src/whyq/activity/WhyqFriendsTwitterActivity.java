@@ -39,6 +39,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 	private FriendsTwitterAdapter mFriendsTwitterAdapter = null;
@@ -49,12 +50,14 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 	private View mInviteContainer;
 	private boolean isTwitter;
 	private static final Map<String, String> INVITED_LIST = new HashMap<String, String>();
+	private FriendTwitter twitter;
+	private Service service;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_facebook_friends);
-		getIntent().getBooleanExtra("is_facebook", false);
+//		getIntent().getBooleanExtra("is_facebook", false);
 		showHeaderSearchField(true);
 		SearchField searchField = getSearchField();
 		EditText tvSearch = searchField.getEditTextView();
@@ -62,16 +65,17 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 		tvSearch.setHint(R.string.find_a_friend);
 		tvSearch.setTextColor(getResources().getColor(R.color.white));
 		tvSearch.setBackgroundResource(R.drawable.textfield_search_default_holo_dark);
-
+		
+		service = new Service(WhyqFriendsTwitterActivity.this);
 		mListview = (AmazingListView) findViewById(R.id.listview);
-//		mListview.setPinnedHeaderView(findViewById(R.id.header));
+		mListview.setPinnedHeaderView(findViewById(R.id.header));
 		mListview.setOnItemClickListener(new OnItemClickListener() {			
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
 				final Object item = arg0.getItemAtPosition(arg2);
-				FriendTwitter twitter = (FriendTwitter)item;
+				twitter = (FriendTwitter)item;
 				if(twitter.getIs_join()){
 					startUserProfileActivity(twitter.getId(),twitter.getScreenName(),twitter.getAvatar());
 				}
@@ -132,7 +136,10 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 		super.onCompleted(service, result);
 		setLoading(false);
 		if (result != null) {
-			if (result.getAction() == ServiceAction.ActionInviteFriendsTwitter) {
+			if(result.isSuccess()&& result.getAction() == ServiceAction.ActionInviteFriendsTwitter) {
+//				DataParser parserInvite = new DataParser();
+//				ResponseData dataa = (ResponseData)parserInvite.parseInviteTwitterResult(result.getData());
+				Toast.makeText(WhyqFriendsTwitterActivity.this, "SUCCESS", Toast.LENGTH_LONG).show();
 				mInviteContainer.setVisibility(View.GONE);
 				INVITED_LIST.clear();
 				getFriends();
@@ -156,7 +163,7 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 			mFriendsTwitterAdapter = new FriendsTwitterAdapter(this,mImageWorker);
 		}
 		mListview.setAdapter(mFriendsTwitterAdapter);
-		Service service = getService();
+//		Service service = getService();
 		setLoading(true);
 		String oauth_token = mTwitterAccess.getToken();
 		String oauth_token_secret = mTwitterAccess.getTokenSecret();
@@ -165,7 +172,7 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 		}
 	}
 	private void getFriends() {
-		Service service = getService();
+//		Service service = getService();
 		setLoading(true);
 //		if(isTwitter){
 			String oauth_token = mTwitterAccess.getToken();
@@ -177,15 +184,15 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 //		}
 	}
 	void inviteFriends() {
-		Service service = getService();
+//		Service service = getService();
 		setLoading(true);
-		StringBuilder twitterIds = new StringBuilder();
+		StringBuilder userIds = new StringBuilder();
 		for (String id : INVITED_LIST.keySet()) {
-			twitterIds.append(id + ",");
+			userIds.append(id + ",");
 		}
 		String oauth_token = mTwitterAccess.getToken();
 		String oauth_token_secret = mTwitterAccess.getTokenSecret();
-		service.inviteFriendsTwitter(getEncryptedToken(), oauth_token, oauth_token_secret, twitterIds.toString());
+		service.inviteFriendsTwitter(getEncryptedToken(), oauth_token, oauth_token_secret, userIds.toString());
 	}
 	void removeInviteFriend(FriendTwitter friend) {
 		INVITED_LIST.remove(friend.getId());
@@ -196,7 +203,22 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 					.size() - 1]);
 		}
 	}
+	void removeInviteFriendNotJoin(FriendTwitter friend){
+		INVITED_LIST.remove(friend.getTwitterId());
+		if (INVITED_LIST.size() == 0) {
+			mInviteContainer.setVisibility(View.GONE);
+		} else {
+			displayInviteMessage(INVITED_LIST.keySet().toArray(new String[] {})[INVITED_LIST
+					.size() - 1]);
+		}
+	}
 	void addInviteFriend(FriendTwitter friend) {
+		INVITED_LIST.put(friend.getId(),
+				friend.getFirstName());
+		mInviteContainer.setVisibility(View.VISIBLE);
+		displayInviteMessage(friend.getId());
+	}
+	void addInviteFriendNotJoin(FriendTwitter friend){
 		INVITED_LIST.put(friend.getTwitterId(),
 				friend.getFirstName());
 		mInviteContainer.setVisibility(View.VISIBLE);
@@ -204,16 +226,23 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 	}
 	void displayInviteMessage(String userId) {
 		String key = INVITED_LIST.get(userId);
+//		Log.d("Invite list size", "INVITE_LIST size====>>>>>>"+ INVITED_LIST.size());
+//		Log.d("Invite list value", "INVITE_LIST value====>>>>>>"+ INVITED_LIST.get(userId));
+
 		if (INVITED_LIST.size() > 1) {
 			String message = "Invite " + key + " and "
 					+ (INVITED_LIST.size() - 1) + " other to join WHYQ?";
 			Spannable messageSpannable = SpannableUtils.stylistTextBold(
 					message, key, R.color.orange);
 			mInviteMessage.setText(messageSpannable);
+			Log.d("Invite message", "mInvite Message" + mInviteMessage.getText().toString());
 		} else {
 			String message = "Invite " + key + " to join WHYQ?";
 			mInviteMessage.setText(SpannableUtils.stylistTextBold(message, key,
 					R.color.orange));
+			Log.d("Invite message", "mInvite Message" + mInviteMessage.getText().toString());
+			mInviteMessage.setText(message);
+
 		}
 	}
 	
@@ -360,14 +389,20 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 							}
 							displayInviteButton(holder, item);
 						} else {
-							Bundle params = new Bundle();
-							params.putString("to", item.getTwitterId());
+//							Bundle params = new Bundle();
+//							params.putString("to", item.getTwitterId());
+							if(INVITED_LIST.containsKey(item.getTwitterId())){
+								mActivity.removeInviteFriendNotJoin(item);
+								Log.d("Invite Friend", "INVITED_LIST =>>>>>>>" +INVITED_LIST);
+							}else{
+								mActivity.addInviteFriendNotJoin(item);
+								Log.d("Invite Friend", "INVITED_LIST =>>>>>>>" +INVITED_LIST);
+								
+							}
+							displayInviteButtonNotJoin(holder, item);
 							//send request invite twitter 
 							//
-							//
-							//
-							//
-							//
+							
 							
 						}
 					}
@@ -384,7 +419,15 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 				holder.invite.setText(R.string.invite);
 			}
 		}
-		
+		private void displayInviteButtonNotJoin(ViewHolder holder, FriendTwitter item) {
+			if (INVITED_LIST.containsKey(item.getTwitterId())) {
+				holder.invite.setBackgroundResource(R.drawable.btn_accept);
+				holder.invite.setText("");
+			} else {
+				holder.invite.setBackgroundResource(R.drawable.btn_base);
+				holder.invite.setText(R.string.invite);
+			}
+		}
 		@Override
 		public void configurePinnedHeader(View header, int position, int alpha) {
 			// TODO Auto-generated method stub
