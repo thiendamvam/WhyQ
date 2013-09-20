@@ -23,6 +23,7 @@ import whyq.handler.ActivityHandler;
 import whyq.handler.BillHandler;
 import whyq.handler.CommentHandler;
 import whyq.handler.FriendFacebookHandler;
+import whyq.handler.FriendTwitterHandler;
 import whyq.handler.FriendWhyqHandler;
 import whyq.handler.PhotoHandler;
 import whyq.handler.UserHandler;
@@ -295,7 +296,43 @@ public class DataParser {
 		}
 		return null;
 	}
+	
+	public final Object parseFriendTwitter(
+			String inputString) {
+		try {
+			Document doc = XMLfromString(inputString);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+				
+				XMLReader xmlReader = initializeReader();
+				FriendTwitterHandler handler = new FriendTwitterHandler();
+				xmlReader.setContentHandler(handler);
+				xmlReader.parse(new InputSource(new StringReader(inputString)));
+				
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(handler);
+				data.setMessage(mes);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
 
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	public  final Object parseFriendWhyq(String inputString) {
 		try {
 			Document doc = XMLfromString(inputString);

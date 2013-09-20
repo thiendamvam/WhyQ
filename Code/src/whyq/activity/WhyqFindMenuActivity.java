@@ -1,5 +1,6 @@
 package whyq.activity;
 
+import twitter4j.http.AccessToken;
 import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
 import whyq.model.User;
@@ -7,6 +8,7 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.Constants;
+import whyq.utils.SharedPreferencesManager;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
 import whyq.utils.facebook.sdk.DialogError;
@@ -19,6 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.share.twitter.TwitterActivity;
 import com.whyq.R;
 
 public class WhyqFindMenuActivity extends Activity implements IServiceListener {
@@ -27,7 +30,29 @@ public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_find_menu);
 	}
+	public void findFromTwitterClicked(View v){
+		SharedPreferencesManager shareManager = new SharedPreferencesManager(
+				WhyqApplication.Instance().getApplicationContext());
+		AccessToken twitterAccess = shareManager.loadTwitterToken();
+//		mTwitterAccess = getTwitterAccess();
 
+
+//		String token_secret = mTwitterAccess.getTokenSecret();
+		Log.d("WhyqFindMenu", "Twitter Access ======>" + twitterAccess);
+		if(twitterAccess!=null){
+			
+//			String token = mTwitterAccess.getToken();
+//			String token_secret = mTwitterAccess.getTokenSecret();
+//			exeLoginTwitter(token, token_secret);
+			Intent iFriendsTwitter = new Intent(WhyqFindMenuActivity.this,WhyqFriendsTwitterActivity.class);
+			startActivity(iFriendsTwitter);
+		}else{
+			Intent iTwitter = new Intent(WhyqFindMenuActivity.this,TwitterActivity.class);
+			startActivity(iTwitter);
+//			startActivityForResult(iTwitter, LOGIN_TWITTER);	
+		}
+	}
+	
 	public void findFromFaccebookClicked(View v) {
 		if (getAccessToken() == null) {
 			Facebook mFacebook;
