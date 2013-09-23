@@ -49,7 +49,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 	private TextView mInviteMessage;
 	private Button mInviteButton;
 	private View mInviteContainer;
-	private boolean isFacebook;
+	private boolean isFacebook = true;
 	private static final Map<String, String> INVITED_LIST = new HashMap<String, String>();
 
 	@Override
@@ -58,7 +58,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 		setContentView(R.layout.activity_facebook_friends);
 
-		getIntent().getBooleanExtra("is_facebook", false);
+		isFacebook = getIntent().getBooleanExtra("is_facebook", true);
 		showHeaderSearchField(true);
 		SearchField searchField = getSearchField();
 		EditText tvSearch = searchField.getEditTextView();

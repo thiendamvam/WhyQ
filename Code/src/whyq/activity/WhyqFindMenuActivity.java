@@ -20,15 +20,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.share.twitter.TwitterActivity;
 import com.whyq.R;
 
 public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 
+	private TextView tvTitle;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_find_menu);
+		tvTitle = (TextView)findViewById(R.id.tvHeaderTitle);
+		tvTitle.setText("Find Friends");
 	}
 	public void findFromTwitterClicked(View v){
 		SharedPreferencesManager shareManager = new SharedPreferencesManager(
@@ -125,5 +130,9 @@ public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 	private String getAccessToken() {
 		final WhyqUtils mPermutils = new WhyqUtils();
 		return mPermutils.getFacebookToken(this);
+	}
+	
+	public void onBack(View v){
+		finish();
 	}
 }

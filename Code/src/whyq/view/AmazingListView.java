@@ -61,49 +61,53 @@ public class AmazingListView extends ListView implements HasMorePagesListener {
     }
 
     public void configureHeaderView(int position) {
-        if (mHeaderView == null) {
-            return;
-        }
+    	if(adapter!=null){
 
-        int state = adapter.getPinnedHeaderState(position);
-        switch (state) {
-            case AmazingAdapter.PINNED_HEADER_GONE: {
-                mHeaderViewVisible = false;
-                break;
+            if (mHeaderView == null) {
+                return;
             }
 
-            case AmazingAdapter.PINNED_HEADER_VISIBLE: {
-            	adapter.configurePinnedHeader(mHeaderView, position, 255);
-                if (mHeaderView.getTop() != 0) {
-                    mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
+            int state = adapter.getPinnedHeaderState(position);
+            switch (state) {
+                case AmazingAdapter.PINNED_HEADER_GONE: {
+                    mHeaderViewVisible = false;
+                    break;
                 }
-                mHeaderViewVisible = true;
-                break;
-            }
 
-            case AmazingAdapter.PINNED_HEADER_PUSHED_UP: {
-                View firstView = getChildAt(0);
-                if (firstView != null) {
-	                int bottom = firstView.getBottom();
-	                int headerHeight = mHeaderView.getHeight();
-	                int y;
-	                int alpha;
-	                if (bottom < headerHeight) {
-	                    y = (bottom - headerHeight);
-	                    alpha = 255 * (headerHeight + y) / headerHeight;
-	                } else {
-	                    y = 0;
-	                    alpha = 255;
-	                }
-	                adapter.configurePinnedHeader(mHeaderView, position, alpha);
-	                if (mHeaderView.getTop() != y) {
-	                    mHeaderView.layout(0, y, mHeaderViewWidth, mHeaderViewHeight + y);
-	                }
-	                mHeaderViewVisible = true;
+                case AmazingAdapter.PINNED_HEADER_VISIBLE: {
+                	adapter.configurePinnedHeader(mHeaderView, position, 255);
+                    if (mHeaderView.getTop() != 0) {
+                        mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
+                    }
+                    mHeaderViewVisible = true;
+                    break;
                 }
-                break;
+
+                case AmazingAdapter.PINNED_HEADER_PUSHED_UP: {
+                    View firstView = getChildAt(0);
+                    if (firstView != null) {
+    	                int bottom = firstView.getBottom();
+    	                int headerHeight = mHeaderView.getHeight();
+    	                int y;
+    	                int alpha;
+    	                if (bottom < headerHeight) {
+    	                    y = (bottom - headerHeight);
+    	                    alpha = 255 * (headerHeight + y) / headerHeight;
+    	                } else {
+    	                    y = 0;
+    	                    alpha = 255;
+    	                }
+    	                adapter.configurePinnedHeader(mHeaderView, position, alpha);
+    	                if (mHeaderView.getTop() != y) {
+    	                    mHeaderView.layout(0, y, mHeaderViewWidth, mHeaderViewHeight + y);
+    	                }
+    	                mHeaderViewVisible = true;
+                    }
+                    break;
+                }
             }
-        }
+        
+    	}
     }
     
     public AmazingListView(Context context) {

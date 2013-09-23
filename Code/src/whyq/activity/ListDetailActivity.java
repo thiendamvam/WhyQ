@@ -397,7 +397,7 @@ public class ListDetailActivity extends FragmentActivity implements
 				UrlImageViewHelper
 						.setUrlDrawable(imgThumbnail, store.getLogo());
 			tvAddresss.setText(""+store.getAddress());
-			tvCuisine.setText(""+store.getNameCate());
+			tvCuisine.setText(""+store.getStyle());
 			tvNumberFavourtie.setText("" + store.getCountFavaouriteMember());
 
 			tvOpeningTime.setText(store.getStartTime() + " - "

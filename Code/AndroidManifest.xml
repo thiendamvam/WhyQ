@@ -257,7 +257,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="whyq.activity.WhyqFindMenuActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
         <activity
             android:name="whyq.activity.WhyQNotificationActivity"
