@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_normal"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:weightSum="10" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <include layout="@layout/navigation_title_text" >
+        <include layout="@layout/navigate_text_2" >
         </include>
     </LinearLayout>
 
@@ -25,7 +26,7 @@
         <LinearLayout
             android:id="@+id/lnFindFromFb"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:background="@drawable/base_button"
             android:gravity="center_vertical"
             android:onClick="findFromFaccebookClicked"
@@ -47,7 +48,7 @@
         <LinearLayout
             android:id="@+id/lnFindFromFW"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_below="@+id/lnFindFromFb"
             android:layout_marginTop="10dp"
             android:background="@drawable/base_button"
@@ -70,7 +71,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_below="@+id/lnFindFromFW"
             android:layout_marginTop="10dp"
             android:background="@drawable/base_button"

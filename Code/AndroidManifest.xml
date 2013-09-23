@@ -204,7 +204,7 @@
             android:name="whyq.activity.ListDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="whyq.activity.ProfileActivity"
             android:screenOrientation="portrait" />
@@ -257,7 +257,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="whyq.activity.WhyqFindMenuActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
         <activity
             android:name="whyq.activity.WhyQNotificationActivity"
@@ -307,6 +308,10 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateVisible" >
         </activity>
+        <activity
+            android:name="whyq.activity.WhyqFriendsTwitterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="whyq.activity.WhyqFriendsFacebookActivity"
             android:screenOrientation="portrait"
