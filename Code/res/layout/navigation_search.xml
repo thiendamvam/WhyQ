@@ -11,10 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toLeftOf="@+id/rlSearchtool"
-        android:layout_weight="8.5"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="5dp" >
+        android:layout_margin="5dp" >
 
         <EditText
             android:id="@+id/etTextSearch"
@@ -23,12 +22,12 @@
             android:layout_toLeftOf="@+id/btnCancel"
             android:background="@drawable/bg_input"
             android:gravity="center_vertical"
-            android:textColor="@color/black"
             android:hint="@string/hint_search"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:paddingLeft="35dp"
-            android:singleLine="true" >
+            android:singleLine="true"
+            android:textColor="@color/black" >
         </EditText>
 
         <ImageView
@@ -40,12 +39,12 @@
 
         <Button
             android:id="@+id/btnCancel"
-            android:layout_width="60dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:layout_toLeftOf="@+id/rlSearchtool"
+          
             android:background="@drawable/btn_cancel"
             android:onClick="onCancelClicked"
             android:textColor="@color/profifle_blue"
@@ -81,13 +80,6 @@
                 android:background="@drawable/icon_filter"
                 android:onClick="onFilterClicked" />
 
-            <ProgressBar
-                android:id="@+id/prgBar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:visibility="invisible"
-                android:layout_centerInParent="true" />
-
             <ImageView
                 android:id="@+id/imgArrowDown"
                 android:layout_width="10dp"
@@ -99,5 +91,14 @@
                 android:visibility="invisible" />
         </RelativeLayout>
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/prgBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentRight="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>

@@ -10,11 +10,16 @@ import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
+import whyq.adapter.ExpandableStoreAdapter;
 import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
 import whyq.map.MapsActivity;
+import whyq.model.GroupMenu;
+import whyq.model.GroupStore;
+import whyq.model.Menu;
+import whyq.model.ProductTypeInfo;
 import whyq.model.ResponseData;
 import whyq.model.Store;
 import whyq.model.User;
@@ -52,6 +57,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -181,11 +187,17 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	private Service service;
 	private LinearLayout lnNavigation;
 	private LinearLayout lnPageContent;
+	private ExpandableListView expandbleStoreView;
+	protected boolean isExpandableSearch = false;
+	private RelativeLayout rlExpandableStoreContent;
+	private TextView tvNodata;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createUI();
+		isExpandableSearch = false;
+		showSearchExpandableList(false);
 		FavouriteActivity.isFavorite = false;
 		service = new Service(ListActivity.this);
 		resetTabBarFocus(1);
@@ -268,11 +280,14 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		rlSearchTools = (RelativeLayout)findViewById(R.id.rlSearchtool);
 		rlFilterGroup = (RelativeLayout)findViewById(R.id.rlFilter);
 		
-		
+		tvNodata = (TextView)findViewById(R.id.tvNodata);
+		rlExpandableStoreContent = (RelativeLayout)findViewById(R.id.expandable_view_content);
 		imgCutlery = (ImageView)findViewById(R.id.imgCutleryIcon);
 		imgWine = (ImageView)findViewById(R.id.imgWinIcon);
 		imgCoffe = (ImageView)findViewById(R.id.imgCoffeeIcon);
 		imgHotel = (ImageView)findViewById(R.id.imgHotelIcon);
+		
+		expandbleStoreView = (ExpandableListView) findViewById(R.id.expStoreList);
 		
 		context = ListActivity.this;
 		whyqListView.setOnItemClickListener(onStoreItemListener);
@@ -292,7 +307,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 						}else{
 							isSearch = true;
 						}
-						exeSearch(text);
+						isExpandableSearch  = true;
+						exeSearch(text,true);
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
@@ -314,14 +330,15 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	    	 if (requestCode == CHANGE_LOCATION_REQUEST ) {
 	    		 latgitude = data.getStringExtra("lat");
 	    		 longitude = data.getStringExtra("lng");
-	    		 exeSearch(etTextSearch.getText().toString());
+	    		 exeSearch(etTextSearch.getText().toString(), false);
 	    		 tvNearLocation.setText(data.getStringExtra("name"));
 	    	 }
 	    
 	    }
 	}
-	protected void exeSearch(String string) {
+	protected void exeSearch(String string, boolean isExpandable) {
 		// TODO Auto-generated method stub
+		isExpandableSearch = isExpandable;
 		searchKey = string;
 		isSearch = true;
 		exeListActivity(true);
@@ -332,6 +349,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		super.onDestroy();
 		isCalendar =false;
 		isRefesh = true;
+		isExpandableSearch = false;
 	}
 	@Override
 	protected void onResume() {
@@ -359,12 +377,14 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 //		}else if(!isRefesh){
 //			isRefesh = true;
 //		}
+		
 	}
 	
 	protected void onPause () {
     	super.onPause();
     	isFirst = true;
     	nextItem = -1;
+    	isExpandableSearch = false;
 //    	showProgress();
     	
     }
@@ -842,7 +862,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 					exeSearchFocus();
 					isSearch = true;
 					exeSearchFocus();
-					exeSearch(text);
+					exeSearch(text,false);
 				}
 			
 			} catch (Exception e) {
@@ -1037,15 +1057,29 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		if(result.isSuccess()&& result.getAction() == ServiceAction.ActionGetBusinessList){
 			ResponseData data = (ResponseData)result.getData();
 			if(data.getStatus().equals("200")){
-				permListMain = (ArrayList<Store>)data.getData();
-				loadPerms();
-				
-				WhyqListController.isLoading = false;
-				if(permListAdapter != null) {
-					permListAdapter.notifyDataSetChanged();
+				if(isExpandableSearch){
+					permListMain = (ArrayList<Store>)data.getData();
+					exeBindSearchExpandableStoreData(permListMain);
+					isExpandableSearch = false;
+				}else{
+					showSearchExpandableList(false);
+					permListMain = (ArrayList<Store>)data.getData();
+					loadPerms();
+					
+					WhyqListController.isLoading = false;
+					if(permListAdapter != null) {
+						permListAdapter.notifyDataSetChanged();
+					}
+					
 				}
 			}else if(data.getStatus().equals("401")){
 				Util.loginAgain(getParent(), data.getMessage());
+			}else if(data.getStatus().equals("204")){
+				if(isExpandableSearch){
+					permListMain = (ArrayList<Store>)data.getData();
+					exeBindSearchExpandableStoreData(permListMain);
+					isExpandableSearch = false;
+				}
 			}else{
 //				Util.showDialog(getParent(), data.getMessage());
 			}
@@ -1169,5 +1203,120 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)lnPageContent.getLayoutParams();
     	params.bottomMargin = (int)(WhyqApplication.Instance().getDensity() * 74);
     	lnPageContent.setLayoutParams(params);
+	}
+
+
+	private void exeBindSearchExpandableStoreData(ArrayList<Store> storeList){
+		boolean isNoData = true;
+		if(storeList!=null){
+			if(storeList.size()>0){
+				isNoData = false;
+				ArrayList<GroupStore> mGroupCollection = new ArrayList<GroupStore>();
+				ArrayList<String> idList = getStoreCateIdList(storeList);
+				int length = idList.size();
+				for (int i = 0; i < length; i++) {
+					try {
+
+						String id = idList.get(i);
+						GroupStore group = getGroupFromId(storeList, id);
+
+						if (group != null)
+							mGroupCollection.add(group);
+
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}
+				ExpandableStoreAdapter adapter = new ExpandableStoreAdapter(context, expandbleStoreView, mGroupCollection);
+				expandbleStoreView.setAdapter(adapter);
+				showSearchExpandableList(true);
+				for (int i = 0; i < mGroupCollection.size(); i++) {
+					expandbleStoreView.expandGroup(i);
+				}
+			}
+		}
+		showSearchExpandableList(true);
+	}
+
+	private GroupStore getGroupFromId(List<Store> storyList, String id) {
+		// TODO Auto-generated method stub
+		GroupStore ge = new GroupStore();
+		List<Store> storiesList = new ArrayList<Store>();
+		int storiesLength = storyList.size();
+		for (int j = 0; j < storiesLength; j++) {
+			try {
+
+				Store story = storyList.get(j);
+				if (story.getCateid().equals(id)) {
+					storiesList.add(story);
+				}
+			
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		if (storiesList.size() > 0) {
+			ge.setStoriesList(storiesList);
+			String name = storiesList.get(0).getNameCate();
+			if (name != null) {
+				ge.setName(name);
+			} else {
+				ge.setName("");
+			}
+			return ge;
+		} else {
+			return null;
+		}
+
+	}
+
+	// private String getNameStoreTypeById(List<Store> storyList, String id) {
+	// // TODO Auto-generated method stub
+	// for (Store menu : storyList) {
+	// try {
+	// ArrayList<ProductTypeInfo> productTypeInfoList = menu
+	// .getProductTypeInfoList();
+	// for (ProductTypeInfo productTypeInfo : productTypeInfoList) {
+	// try {
+	// if (productTypeInfo.getId().equals(id)) {
+	// return productTypeInfo.getNameProductType();
+	// }
+	//
+	// } catch (Exception e) {
+	// // TODO: handle exception
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// } catch (Exception e) {
+	// // TODO: handle exception
+	// e.printStackTrace();
+	// }
+	// }
+	// return null;
+	// }
+
+	private ArrayList<String> getStoreCateIdList(List<Store> menuList) {
+		// TODO Auto-generated method stub
+		ArrayList<String> listId = new ArrayList<String>();
+		int length = menuList.size();
+		for (int i = 0; i < length; i++) {
+			Store store = menuList.get(i);
+			if (!listId.contains(store.getCateid())) {
+				listId.add(store.getCateid());
+			}
+		}
+		return listId;
+	}
+
+	private void showSearchExpandableList(boolean isShow){
+		if(isShow){
+			rlExpandableStoreContent.setVisibility(View.VISIBLE);
+			
+		}else{
+			rlExpandableStoreContent.setVisibility(View.GONE);
+		}
 	}
 }

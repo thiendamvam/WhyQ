@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="74dip"
     android:baselineAligned="false"
-    android:orientation="vertical"
-     >
+    android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/lnNavigation"
@@ -43,26 +42,26 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_below="@+id/lnMenubar"
             android:id="@+id/rlLocationField"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:onClick="changeLocationClicked"
+            android:layout_below="@+id/lnMenubar"
             android:background="@color/white"
+            android:onClick="changeLocationClicked"
             android:visibility="gone" >
 
             <TextView
-                style="@style/normail_blue_text"
                 android:id="@+id/tvNearTitle"
+                style="@style/normail_blue_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:text="Near:" />
-			
+
             <TextView
-                style="@style/normail_black_text"
                 android:id="@+id/tvNearLocation"
+                style="@style/normail_black_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -87,8 +86,8 @@
             android:layout_weight="8.2"
             android:background="@color/bgListView"
             android:divider="@drawable/divider_store"
-            android:listSelector="@drawable/play_expand_seletor"
-            android:dividerHeight="3dp" >
+            android:dividerHeight="3dp"
+            android:listSelector="@drawable/play_expand_seletor" >
         </ListView>
 
         <LinearLayout
@@ -147,10 +146,10 @@
                     android:id="@+id/cktViewFavourite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/imgCbFavourite"
                     android:checkMark="@drawable/icon_cat_coffee"
                     android:paddingLeft="5dp"
-                    android:layout_centerVertical="true"
                     android:text="View Favourite" />
             </RelativeLayout>
 
@@ -173,13 +172,20 @@
                     android:id="@+id/cktViewVisited"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/imgCbVisited"
                     android:checkMark="@drawable/icon_cat_coffee"
-                    android:layout_centerVertical="true"
                     android:paddingLeft="5dp"
                     android:text="View Visited" />
             </RelativeLayout>
         </LinearLayout>
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/rlLocationField"
+            layout="@layout/expandable_store_view"
+            android:background="@color/transparent" />
     </RelativeLayout>
 
 </LinearLayout>

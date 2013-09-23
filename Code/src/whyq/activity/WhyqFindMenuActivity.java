@@ -1,14 +1,20 @@
 package whyq.activity;
 
+import java.util.ArrayList;
+
 import twitter4j.http.AccessToken;
 import whyq.WhyqApplication;
+import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
+import whyq.model.ResponseData;
+import whyq.model.Store;
 import whyq.model.User;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.Constants;
 import whyq.utils.SharedPreferencesManager;
+import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
 import whyq.utils.facebook.sdk.DialogError;
@@ -107,7 +113,8 @@ public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 	}
 
 	public void searchByNameClicked(View v) {
-		Intent intent = new Intent(WhyqFindMenuActivity.this, LoginHome.class);
+		Intent intent = new Intent(WhyqFindMenuActivity.this, WhyqFriendsActivity.class);
+		intent.putExtra("is_search_by_name", true);
 		startActivity(intent);
 	}
 
@@ -118,12 +125,22 @@ public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 			ListActivity.isLogin = true;
 			ListActivity.loginType = 1;
 			Log.d("LoginHome by Facebook", "result: " + result.getData());
-			User user = (User) result.getData();
-			XMLParser.storePermpingAccount(
-					WhyqApplication._instance.getApplicationContext(), user);
-			Intent intent = new Intent(this, WhyqFriendsFacebookActivity.class);
-			startActivity(intent);
-			finish();
+			
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				User user = (User) data.getData();
+				XMLParser.storePermpingAccount(
+						WhyqApplication._instance.getApplicationContext(), user);
+				Intent intent = new Intent(this, WhyqFriendsFacebookActivity.class);
+				startActivity(intent);
+				finish();
+			}else if(data.getStatus().equals("401")){
+				Util.loginAgain(getParent(), data.getMessage());
+			}else{
+//				Util.showDialog(getParent(), data.getMessage());
+			}
+			
+
 		}
 	}
 	

@@ -38,6 +38,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 
 	private FriendsWhyqAdapter mFriendWhyqAdapter = null;
 	private ListView mListview;
+	private boolean isSearchByName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 
 		setContentView(R.layout.activity_friends);
 
+		isSearchByName = getIntent().getBooleanExtra("is_search_by_name", false);
 		SearchField searchField = (SearchField) findViewById(R.id.searchField);
 		searchField.setQueryCallback(this);
 		searchField.getEditTextView().setHint(R.string.find_a_friend);
@@ -74,11 +76,15 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 		setTitle(R.string.friends);
 
 		// Set extra button.
-		ImageView imageView = new ImageView(this);
-		imageView.setImageResource(R.drawable.icon_add_friend);
-		setExtraView(imageView);
 
-		setBackButtonIcon(R.drawable.icon_friend_invite);
+		if(!isSearchByName){
+			ImageView imageView = new ImageView(this);
+			imageView.setImageResource(R.drawable.icon_add_friend);
+			setExtraView(imageView);
+			setBackButtonIcon(R.drawable.icon_friend_invite);
+		}else{
+			setTitle("Search by name");
+		}
 
 		getFriends();
 
