@@ -1,5 +1,6 @@
 package whyq.activity;
 
+import java.io.File;
 import java.util.HashMap;
 
 import whyq.WhyqApplication;
@@ -14,18 +15,24 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.whyq.R;
 
 public class WhyqProfileEditAccountActivity extends Activity implements IServiceListener{
 
+	private static final int GET_IMAGE = 0;
 	private EditText etFirstName;
 	private EditText etLastName;
 	private EditText etPass;
@@ -34,6 +41,9 @@ public class WhyqProfileEditAccountActivity extends Activity implements IService
 	private Context context;
 	private String oldPassword;
 	private ProgressBar progressBar;
+	private TextView tvTitle;
+	private String avatarPath;
+	private ImageView imgAvatar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +57,32 @@ public class WhyqProfileEditAccountActivity extends Activity implements IService
 		etPassVerify = (EditText) findViewById(R.id.etVerifyPass);
 		service = new Service(this);
 		progressBar = (ProgressBar)findViewById(R.id.prgBar);
+		tvTitle = (TextView)findViewById(R.id.tvHeaderTitle);
+		imgAvatar = (ImageView)findViewById(R.id.imgAvatar);
+		tvTitle.setText("Edit Profile");
 		context = this;
 	}
-
+	public void takeImageOnclicked(View v) {
+		Intent intent = new Intent(WhyqProfileEditAccountActivity.this, ImageActivity.class);
+		startActivityForResult(intent,GET_IMAGE);
+	}
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d("onActivityResult Join","");
+	    if (resultCode == RESULT_OK) {
+	        if (requestCode == GET_IMAGE ) {
+	        	avatarPath = data.getStringExtra("path");
+	        	Log.d("onActivityResult Join",""+avatarPath);
+	        	if(avatarPath!=null){
+	        		 File imgFile = new  File(avatarPath);
+	        		if(imgFile.exists()){
+	        			imgAvatar.setImageURI(Uri.fromFile(imgFile));
+	        		}
+	        	}
+	        }
+	    }
+	    
+	    ImageActivity.imagePath = "";
+	}
 	public boolean checkInputData() {
 		Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
 		if (etFirstName.getText().toString().length() == 0) {

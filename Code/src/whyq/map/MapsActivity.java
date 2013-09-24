@@ -137,7 +137,8 @@ public class MapsActivity extends FragmentActivity implements
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					markerPoints.clear();
+					markerPoints = new ArrayList<LatLng>();
+//					markerPoints.clear();
 					mMap.clear();
 
 					// Adding new item to the ArrayList
@@ -397,6 +398,8 @@ public class MapsActivity extends FragmentActivity implements
 		// ImageLoader class instance
 		tvHeader = (TextView)findViewById(R.id.tvHeaderTitle);
 		tvHeader.setText("Map");
+		
+		findViewById(R.id.btnDistance).setVisibility(View.INVISIBLE);
 		ImageLoader imgLoader = new ImageLoader(WhyqApplication
 				.Instance().getApplicationContext());
 		int loader = R.drawable.ic_launcher;
@@ -435,7 +438,7 @@ public class MapsActivity extends FragmentActivity implements
 					HOTEL_LOCAL = new LatLng(lat, lon);
 				} else {
 					HOTEL_LOCAL = new LatLng(10.72277, 106.710235);
-					Toast.makeText(this, "Cannot find location", Toast.LENGTH_SHORT).show();
+//					Toast.makeText(this, "Cannot find location", Toast.LENGTH_SHORT).show();
 				}
 
 			} catch (NumberFormatException e) {
@@ -446,11 +449,12 @@ public class MapsActivity extends FragmentActivity implements
 			setUpMapIfNeeded();
 
 		} else {
-
+			setUpMapIfNeeded();
 			// ERROR HANDLING - put lat lng of default location in case no data
 			// found
 			HOTEL_LOCAL = new LatLng(10.72277, 106.710235);
 			Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show();
+			
 		}
 		context = MapsActivity.this;
 		Store store = (Store)getIntent().getSerializableExtra("store");
@@ -561,60 +565,66 @@ public class MapsActivity extends FragmentActivity implements
 	public void onDoneClicked(View v){
 
 		// TODO Auto-generated method stub
-		markerPoints.clear();
+		markerPoints = new ArrayList<LatLng>();
 		mMap.clear();
 
 		// Adding new item to the ArrayList
-		LatLng myLocation = new LatLng(mMap.getMyLocation()
-				.getLatitude(), mMap.getMyLocation().getLongitude());
-		LatLng desLocation = HOTEL_LOCAL;
+		LatLng myLocation;
+		if(mMap.getMyLocation()!=null){
+			myLocation = new LatLng(mMap.getMyLocation()
+					.getLatitude(), mMap.getMyLocation().getLongitude());
+			LatLng desLocation = HOTEL_LOCAL;
 
-		// add to marker array
-		for (int i = 0; i <= 1; i++) {
-			switch (i) {
-			case 0:
-				// Creating MarkerOptions
-				MarkerOptions options = new MarkerOptions();
-				markerPoints.add(myLocation);
-				// Setting the position of the marker
-				options.position(myLocation);
-				options.icon(BitmapDescriptorFactory
-						.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-				// Add new marker to the Google Map Android API V2
-				mMap.addMarker(options);
-				break;
+			// add to marker array
+			for (int i = 0; i <= 1; i++) {
+				switch (i) {
+				case 0:
+					// Creating MarkerOptions
+					MarkerOptions options = new MarkerOptions();
+					markerPoints.add(myLocation);
+					// Setting the position of the marker
+					options.position(myLocation);
+					options.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+					// Add new marker to the Google Map Android API V2
+					mMap.addMarker(options);
+					break;
 
-			case 1:
-				// Creating MarkerOptions
-				MarkerOptions options2 = new MarkerOptions();
-				markerPoints.add(desLocation);
-				// Setting the position of the marker
-				options2.position(desLocation);
-				options2.icon(BitmapDescriptorFactory
-						.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-				// Add new marker to the Google Map Android API V2
-				mMap.addMarker(options2);
-				break;
+				case 1:
+					// Creating MarkerOptions
+					MarkerOptions options2 = new MarkerOptions();
+					markerPoints.add(desLocation);
+					// Setting the position of the marker
+					options2.position(desLocation);
+					options2.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+					// Add new marker to the Google Map Android API V2
+					mMap.addMarker(options2);
+					break;
 
-			default:
-				break;
+				default:
+					break;
+				}
 			}
+
+			// Checks, whether start and end locations are captured
+			if (markerPoints.size() >= 2) {
+				LatLng origin = markerPoints.get(0);
+				LatLng dest = markerPoints.get(1);
+
+				// Getting URL to the Google Directions API
+				String url = getDirectionsUrl(origin, dest);
+
+				DownloadTask downloadTask = new DownloadTask();
+
+				// Start downloading json data from Google Directions
+				// API
+				downloadTask.execute(url);
+			}
+		}else{
+			Toast.makeText(context, "Can not get your location for know\nTry again!", Toast.LENGTH_LONG).show();
 		}
 
-		// Checks, whether start and end locations are captured
-		if (markerPoints.size() >= 2) {
-			LatLng origin = markerPoints.get(0);
-			LatLng dest = markerPoints.get(1);
-
-			// Getting URL to the Google Directions API
-			String url = getDirectionsUrl(origin, dest);
-
-			DownloadTask downloadTask = new DownloadTask();
-
-			// Start downloading json data from Google Directions
-			// API
-			downloadTask.execute(url);
-		}
 	
 	}
 	

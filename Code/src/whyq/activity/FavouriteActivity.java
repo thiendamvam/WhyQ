@@ -8,6 +8,8 @@ import java.util.Map;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.whyq.R;
+
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.adapter.WhyqAdapter;
@@ -15,6 +17,7 @@ import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
 import whyq.interfaces.Login_delegate;
+import whyq.map.MapsActivity;
 import whyq.model.ResponseData;
 import whyq.model.Store;
 import whyq.model.User;
@@ -54,7 +57,6 @@ import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.whyq.R;
 
 public class FavouriteActivity extends FragmentActivity implements Login_delegate, OnClickListener, IServiceListener{
 
@@ -143,6 +145,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(FavouriteActivity.this.getIntent());
     	showProgress();
+    	exeListActivity(false);
 
 	}
 
@@ -510,7 +513,21 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
+	public void onDistanceClicked(View v){
+		Store item = (Store)v.getTag();
+		Log.d("onDistanceClicked","id "+item.getStoreId());
+		Bundle bundle = new Bundle();
+		bundle.putString(MapsActivity.TAG_HOTELTITLE_EN, "");
+		bundle.putString(MapsActivity.TAG_HOTELADDRESS_EN,"");
+		bundle.putString(MapsActivity.TAG_HOTELPHONE, "");
+		bundle.putString(MapsActivity.TAG_HOTELFAX, "");
+		bundle.putString(MapsActivity.TAG_HOTELEMAIL_EN, "");
+		
+		Intent intent = new Intent(FavouriteActivity.this, MapsActivity.class);
+		intent.putExtra(MapsActivity.TAG_BUNDLEBRANCH, bundle);
+		startActivity(intent);
 
+	}
 	@Override
 	public void on_success() {
 		// TODO Auto-generated method stub
@@ -680,11 +697,15 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 				}
 			}else if(data.getStatus().equals("401")){
 				Util.loginAgain(getParent(), data.getMessage());
+			}else if(data.getStatus().equals("204")){
+				
 			}else{
 				Util.showDialog(getParent(), data.getMessage());
 			}
 			hideProgress();
-		} else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
+		} else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionGetBusinessList){
+			hideProgress();
+		}else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionPostFavorite){
 //			Toast.makeText(context, "Favourite successfully", Toast.LENGTH_SHORT).show();
 			ResponseData data = (ResponseData)result.getData();
 			
