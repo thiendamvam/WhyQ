@@ -123,7 +123,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	private LinearLayout lnCoffe;
 	
 	
-	private String searchKey="";
+	public static String searchKey="";
 	public static String longitude="";
 	public static String latgitude="";
 	public static String currentLocation;
@@ -191,6 +191,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	protected boolean isExpandableSearch = false;
 	private RelativeLayout rlExpandableStoreContent;
 	private TextView tvNodata;
+	private TextView tvNumberResult;
+	private TextView tvTextSearch;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -288,6 +290,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		imgHotel = (ImageView)findViewById(R.id.imgHotelIcon);
 		
 		expandbleStoreView = (ExpandableListView) findViewById(R.id.expStoreList);
+		tvNumberResult = (TextView)findViewById(R.id.tvNumberResult);
+		tvTextSearch = (TextView)findViewById(R.id.tvTextSearch);
 		
 		context = ListActivity.this;
 		whyqListView.setOnItemClickListener(onStoreItemListener);
@@ -1228,6 +1232,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 						e.printStackTrace();
 					}
 				}
+				tvNumberResult.setText(""+storeList.size());
+				tvTextSearch.setText(""+searchKey);
 				ExpandableStoreAdapter adapter = new ExpandableStoreAdapter(context, expandbleStoreView, mGroupCollection);
 				expandbleStoreView.setAdapter(adapter);
 				showSearchExpandableList(true);

@@ -284,7 +284,7 @@ public class ExpandableStoreAdapter extends BaseExpandableListAdapter {
 //		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
 //		params.addRule(RelativeLayout.LEFT_OF, R.id.tag_img);
 //		groupHolder.title.setLayoutParams(params);
-		groupHolder.title.setText(mGroupCollection.get(arg0).getName());
+		groupHolder.title.setText(ListActivity.searchKey+" "+mGroupCollection.get(arg0).getName());
 		groupHolder.numberResult.setText(""+getChildrenCount(arg0));
 
 		return arg2;
