@@ -312,7 +312,8 @@ public class WhyqMain extends TabActivity {
 
 		int currentTab = tabHost.getCurrentTab();
 		if (currentTab == 0) {
-			ListActivityGroup.group.back();
+//			ListActivityGroup.group.back();
+			System.exit(0);
 		} else if (currentTab == 1) {
 			// View view =
 			// ProfileActivityGroup.group.getLocalActivityManager().startActivity(

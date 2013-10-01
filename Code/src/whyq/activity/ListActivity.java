@@ -673,7 +673,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	    if ((keyCode == KeyEvent.KEYCODE_BACK))
 	    {
 //	        WhyqMain.back();
-	    	finish();
+	           finish();
+//	            System.exit(0);
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

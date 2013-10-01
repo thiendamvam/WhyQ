@@ -421,7 +421,7 @@ public class LoginWhyqActivity extends Activity implements Login_delegate,
 					ListActivity.isLogin = true;
 					ListActivity.loginType = 2;
 					Intent intent = new Intent(LoginWhyqActivity.this, WhyqMain.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 					startActivity(intent);
 
 			}else if(data.getStatus().equals("401")){

@@ -229,7 +229,6 @@
         </activity>
         <activity
             android:name="whyq.activity.LoginWhyqActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustUnspecified" >
