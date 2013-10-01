@@ -95,7 +95,7 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 		setTitle("Friends from Twitter");
 		getFriends();
 		mInviteContainer = findViewById(R.id.inviteContainer);
-		mInviteMessage = (TextView) findViewById(R.id.message);
+		mInviteMessage = (TextView) findViewById(R.id.tvMessage);
 		mInviteButton = (Button) findViewById(R.id.invite);
 		mInviteButton.setOnClickListener(new View.OnClickListener() {
 
@@ -235,13 +235,15 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 			Spannable messageSpannable = SpannableUtils.stylistTextBold(
 					message, key, R.color.orange);
 			mInviteMessage.setText(messageSpannable);
+//			mInviteContainer.requestLayout();
 			Log.d("Invite message", "mInvite Message" + mInviteMessage.getText().toString());
 		} else {
 			String message = "Invite " + key + " to join WHYQ?";
 			mInviteMessage.setText(SpannableUtils.stylistTextBold(message, key,
 					R.color.orange));
 			Log.d("Invite message", "mInvite Message" + mInviteMessage.getText().toString());
-			mInviteMessage.setText(message);
+//			mInviteMessage.setText(message);
+//			mInviteContainer.requestLayout();
 
 		}
 	}
@@ -355,59 +357,66 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 			}
 			return holder;
 		}
+		HashMap<String, View> viewList = new HashMap<String, View>();
 		
 		@Override
 		public View getAmazingView(int position, View convertView,
 				ViewGroup parent) {
 			// TODO Auto-generated method stub
+			final FriendTwitter item = (FriendTwitter)getItem(position);
+			convertView = viewList.get(item.getTwitterId());
 			if (convertView == null) {
 				convertView = mActivity.getLayoutInflater().inflate(
 						R.layout.friend_list_item, parent, false);
 				Util.applyTypeface(convertView,
 						WhyqApplication.sTypefaceRegular);
-			}
-
-			final ViewHolder holder = getViewHolder(convertView);
-			final FriendTwitter item = (FriendTwitter)getItem(position);
-			holder.name.setText(item.getFirstName());
-			mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
-			if(item.getIsFriend()==0){
-				holder.invite.setBackgroundResource(R.drawable.btn_accept);
-				holder.invite.setText("");
-			}else{
+				final ViewHolder holder = getViewHolder(convertView);
 				
-				displayInviteButton(holder, item);
-				holder.invite.setOnClickListener(new View.OnClickListener() {
+				holder.name.setText(item.getFirstName());
+				mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
+				if(item.getIsFriend()==0){
+					holder.invite.setBackgroundResource(R.drawable.btn_accept);
+					holder.invite.setText("");
+				}else{
 					
-					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
-						if (item.getIs_join()) {
-							if (INVITED_LIST.containsKey(item.getId())) {
-								mActivity.removeInviteFriend(item);
+					displayInviteButton(holder, item);
+					holder.invite.setOnClickListener(new View.OnClickListener() {
+						
+						public void onClick(View arg0) {
+							// TODO Auto-generated method stub
+							if (item.getIs_join()) {
+								if (INVITED_LIST.containsKey(item.getId())) {
+									mActivity.removeInviteFriend(item);
+								} else {
+									mActivity.addInviteFriend(item);
+								}
+								displayInviteButton(holder, item);
 							} else {
-								mActivity.addInviteFriend(item);
-							}
-							displayInviteButton(holder, item);
-						} else {
-//							Bundle params = new Bundle();
-//							params.putString("to", item.getTwitterId());
-							if(INVITED_LIST.containsKey(item.getTwitterId())){
-								mActivity.removeInviteFriendNotJoin(item);
-								Log.d("Invite Friend", "INVITED_LIST =>>>>>>>" +INVITED_LIST);
-							}else{
-								mActivity.addInviteFriendNotJoin(item);
-								Log.d("Invite Friend", "INVITED_LIST =>>>>>>>" +INVITED_LIST);
+//								Bundle params = new Bundle();
+//								params.putString("to", item.getTwitterId());
+								if(INVITED_LIST.containsKey(item.getTwitterId())){
+									mActivity.removeInviteFriendNotJoin(item);
+									Log.d("Invite Friend", "INVITED_LIST =>>>>>>>" +INVITED_LIST);
+								}else{
+									mActivity.addInviteFriendNotJoin(item);
+									Log.d("Invite Friend", "INVITED_LIST =>>>>>>>" +INVITED_LIST);
+									
+								}
+								displayInviteButtonNotJoin(holder, item);
+								//send request invite twitter 
+								//
+								
 								
 							}
-							displayInviteButtonNotJoin(holder, item);
-							//send request invite twitter 
-							//
-							
-							
 						}
-					}
-				});
+					});
+				}
+				viewList.put(item.getTwitterId(), convertView);
+			}else{
+				
 			}
+
+
 			return convertView;
 		}
 		private void displayInviteButton(ViewHolder holder, FriendTwitter item) {

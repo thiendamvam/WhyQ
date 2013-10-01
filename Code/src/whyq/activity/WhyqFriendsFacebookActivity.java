@@ -94,7 +94,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		getFriends();
 
 		mInviteContainer = findViewById(R.id.inviteContainer);
-		mInviteMessage = (TextView) findViewById(R.id.message);
+		mInviteMessage = (TextView) findViewById(R.id.tvMessage);
 		mInviteButton = (Button) findViewById(R.id.invite);
 		mInviteButton.setOnClickListener(new View.OnClickListener() {
 
@@ -310,74 +310,80 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 			}
 
 		}
-
+		HashMap<String, View> viewList = new HashMap<String, View>();
 		@Override
 		public View getAmazingView(int position, View convertView,
 				ViewGroup parent) {
+			final FriendFacebook item = (FriendFacebook) getItem(position);
+			convertView = viewList.get(item.getFacebookId());
 			if (convertView == null) {
 				convertView = mActivity.getLayoutInflater().inflate(
 						R.layout.friend_list_item, parent, false);
 
 				Util.applyTypeface(convertView,
 						WhyqApplication.sTypefaceRegular);
-			}
+				final ViewHolder holder = getViewHolder(convertView);
 
-			final ViewHolder holder = getViewHolder(convertView);
-			final FriendFacebook item = (FriendFacebook) getItem(position);
 
-			holder.name.setText(item.getFirstName());
-			mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
-			if (item.getIsFriend() == 0) {
-				holder.invite.setBackgroundResource(R.drawable.btn_accept);
-				holder.invite.setText("");
-			} else {
-				displayInviteButtn(holder, item);
-				holder.invite.setOnClickListener(new View.OnClickListener() {
+				holder.name.setText(item.getFirstName());
+				mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
+				if (item.getIsFriend() == 0) {
+					holder.invite.setBackgroundResource(R.drawable.btn_accept);
+					holder.invite.setText("");
+				} else {
+					displayInviteButtn(holder, item);
+					holder.invite.setOnClickListener(new View.OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						if (item.getIs_join()) {
-							if (INVITED_LIST.containsKey(item.getId())) {
-								mActivity.removeIntiveFriend(item);
+						@Override
+						public void onClick(View v) {
+							if (item.getIs_join()) {
+								if (INVITED_LIST.containsKey(item.getId())) {
+									mActivity.removeIntiveFriend(item);
+								} else {
+									mActivity.addInviteFriend(item);
+								}
+								displayInviteButtn(holder, item);
 							} else {
-								mActivity.addInviteFriend(item);
+								Bundle params = new Bundle();
+								params.putString("to", item.getFacebookId());
+								facebookSdk.dialog(mActivity, "apprequests",
+										params, new DialogListener() {
+
+											@Override
+											public void onFacebookError(
+													FacebookError e) {
+												// TODO Auto-generated method stub
+
+											}
+
+											@Override
+											public void onError(DialogError e) {
+												// TODO Auto-generated method stub
+
+											}
+
+											@Override
+											public void onComplete(Bundle values) {
+												// TODO Auto-generated method stub
+
+											}
+
+											@Override
+											public void onCancel() {
+												// TODO Auto-generated method stub
+
+											}
+										});
 							}
-							displayInviteButtn(holder, item);
-						} else {
-							Bundle params = new Bundle();
-							params.putString("to", item.getFacebookId());
-							facebookSdk.dialog(mActivity, "apprequests",
-									params, new DialogListener() {
-
-										@Override
-										public void onFacebookError(
-												FacebookError e) {
-											// TODO Auto-generated method stub
-
-										}
-
-										@Override
-										public void onError(DialogError e) {
-											// TODO Auto-generated method stub
-
-										}
-
-										@Override
-										public void onComplete(Bundle values) {
-											// TODO Auto-generated method stub
-
-										}
-
-										@Override
-										public void onCancel() {
-											// TODO Auto-generated method stub
-
-										}
-									});
 						}
-					}
-				});
+					});
+				}
+				viewList.put(item.getFacebookId(), convertView);
+			}else{
+				
 			}
+
+
 
 			return convertView;
 		}
