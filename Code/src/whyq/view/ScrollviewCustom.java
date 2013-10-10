@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -44,5 +45,11 @@ public class ScrollviewCustom extends ScrollView {
 		}
 		getDeepChildOffset(parent.getParent(), parent, accumulatedOffset);
 	}
-
+	
+	
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+//        Log.e("onScrollChanged","IsUp "+ScreenGestureController.isUp);
+    }
 }

@@ -32,6 +32,8 @@ import whyq.utils.UrlImageViewHelper;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.view.CustomViewPager;
+import whyq.view.ScreenGestureController;
+import whyq.view.ScrollviewCustom;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,6 +44,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -113,7 +116,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private Context context;
 	private BasicUserAdapter adapter;
 	private RelativeLayout rlPhotoList;
-	private ScrollView svContent;
+	private ScrollviewCustom svContent;
 	private TextView tvCuisine;
 	private EditText etComment;
 	private TextView tvCuisineTitle;
@@ -132,7 +135,7 @@ public class ListDetailActivity extends FragmentActivity implements
 
 		service = new Service(this);
 		bundle = new Bundle();
-		svContent = (ScrollView) findViewById(R.id.svContent);
+		svContent = (ScrollviewCustom) findViewById(R.id.svContent);
 		tvAddresss = (TextView) findViewById(R.id.tvAddress);
 		tvCuisine = (TextView) findViewById(R.id.tvCuisine);
 		tvCuisineTitle = (TextView)findViewById(R.id.tvCuisineTitle);
@@ -179,16 +182,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		getDetailData();
 		// hide photos list when scroll
 		// lvResult.setOnScrollListener(this);
-		final GestureDetector gestureDetector = new GestureDetector(
-				simpleOnGestureListener);
-		svContent.setOnTouchListener(new View.OnTouchListener() {
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				return gestureDetector.onTouchEvent(event);
-			}
-		});
 
 		edSearch.addTextChangedListener(mTextEditorWatcher);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
@@ -209,23 +203,24 @@ public class ListDetailActivity extends FragmentActivity implements
 				}
 			}
 		});
-		svContent.setOnTouchListener(new OnTouchListener() {
+		final GestureDetector gestureDetector = new GestureDetector(
+				new ScreenGestureController(ListDetailActivity.this, 1));
+		svContent.setOnTouchListener(new View.OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
-				ViewTreeObserver observer = svContent.getViewTreeObserver();
-				observer.addOnScrollChangedListener(onScrollChangedListener);
-				switch (event.getAction()) {
-				case MotionEvent.ACTION_SCROLL:
-					Log.d("onTouch", "Action_scroll");
-					break;
-				}
-				return false;
+				gestureDetector.onTouchEvent(event);
+
+				return ScreenGestureController.isUp;
 			}
 		});
+
+		svContent.seton
 		appyFont();
 	}
+
+
 
 	private void appyFont() {
 		// TODO Auto-generated method stub
@@ -243,44 +238,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		Util.applyTypeface(tvTelephoneTitle, Util.sTypefaceBold);
 	}
 
-	SimpleOnGestureListener simpleOnGestureListener = new SimpleOnGestureListener() {
 
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-				float velocityY) {
-			String swipe = "";
-			float sensitvity = 50;
-
-			// TODO Auto-generated method stub
-			if ((e1.getX() - e2.getX()) > sensitvity) {
-				swipe += "Swipe Left\n";
-			} else if ((e2.getX() - e1.getX()) > sensitvity) {
-				swipe += "Swipe Right\n";
-			} else {
-				swipe += "\n";
-			}
-
-			if ((e1.getY() - e2.getY()) > sensitvity) {
-				swipe += "Swipe Up\n";
-			} else if ((e2.getY() - e1.getY()) > sensitvity) {
-				swipe += "Swipe Down\n";
-			} else {
-				swipe += "\n";
-			}
-
-			return super.onFling(e1, e2, velocityX, velocityY);
-		}
-	};
-
-	final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new ViewTreeObserver.OnScrollChangedListener() {
-
-		@Override
-		public void onScrollChanged() {
-			// do stuff here
-			hidePhotoList();
-			Log.d("OnScrollChangedListener", "action = ");
-		}
-	};
 	private String currentStoreId;
 	public static String commentContent;
 
@@ -1173,32 +1131,38 @@ public class ListDetailActivity extends FragmentActivity implements
 		showDialog();
 	}
 
+
+
+	public void refreshDataAfterScroll() {
+		// TODO Auto-generated method stub
+		if(ScreenGestureController.isUp){
+			hidePhotoList();
+		}else{
+			showPhotoList();
+		}
+		
+	}
+
+
+
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 		// TODO Auto-generated method stub
-
+		
 	}
+
+
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
-
-		int position = lvResult.getFirstVisiblePosition();
-		View v = lvResult.getChildAt(0);
-		int offset = (v == null) ? 0 : v.getTop();
-
-		if (mPosition < position || (mPosition == position && mOffset < offset)) {
-			// Scrolled up
-			Log.d("onScrollStateChanged", "up");
-			hidePhotoList();
-		} else {
-			// Scrolled down
-			Log.d("onScrollStateChanged", "down");
-			showPhotoList();
-		}
-		mPosition = position;
-		mOffset = offset;
-
+//		if(scrollState==0)
+		Log.d("onScrollStateChanged","onScrollStateChanged "+scrollState);
+			refreshDataAfterScroll();
 	}
+
+
+
+
 }
