@@ -216,7 +216,7 @@ public class ListDetailActivity extends FragmentActivity implements
 			}
 		});
 
-		svContent.seton
+	
 		appyFont();
 	}
 

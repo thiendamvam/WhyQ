@@ -45,7 +45,7 @@ public class WhyQBillAdapter extends ArrayAdapter<Bill> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
-		convertView = viewList.get(position);
+		convertView = viewList.get(""+position);
 		Bill item = list.get(position);
 		if (convertView == null) {
 			LayoutInflater inflator = ((WhyQBillScreen) context)

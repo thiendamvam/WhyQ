@@ -50,7 +50,7 @@ public class BasicUserAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
-		convertView = viewList.get(position);
+		convertView = viewList.get(""+position);
 		User item = list.get(position);
 		if (convertView == null) {
 			LayoutInflater inflator = ((ListDetailActivity) context)

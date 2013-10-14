@@ -113,7 +113,7 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 			ResponseData data =  (ResponseData) parser.parseFriendWhyq(String
 					.valueOf(result.getData()));
 			
-			if (data.equals("401")) {
+			if (data.getStatus().equals("401")) {
 				Util.loginAgain(this, data.getMessage());
 			} else {
 				List<FriendWhyq> friends = (List<FriendWhyq>) data.getData();;

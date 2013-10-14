@@ -1,6 +1,5 @@
 package whyq;
 
-import whyq.activity.AudioPlayerActivity;
 import whyq.activity.FavouriteActivity;
 import whyq.activity.FavouritesActivityGroup;
 import whyq.activity.FriendActivityGroup;
@@ -21,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -366,11 +364,11 @@ public class WhyqMain extends TabActivity {
 			tabHost.setCurrentTab(2);
 		} else if (tab == 6) {
 			String link = (String) data;
-			Intent playAudioIntent = new Intent(ListActivityGroup.context,
-					AudioPlayerActivity.class);
-			playAudioIntent.putExtra("url", link);
-			// Log.d("permAudio=",""+link);
-			ListActivityGroup.context.startActivity(playAudioIntent);
+//			Intent playAudioIntent = new Intent(ListActivityGroup.context,
+//					AudioPlayerActivity.class);
+//			playAudioIntent.putExtra("url", link);
+//			// Log.d("permAudio=",""+link);
+//			ListActivityGroup.context.startActivity(playAudioIntent);
 			// FollowerActivity.isRefesh = false;
 		}
 

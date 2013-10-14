@@ -561,7 +561,7 @@ public class NewWhyqActivity extends Activity implements OnClickListener {
 					parseXmlFile(readFile);
 				}
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 			// Toast.makeText(getApplicationContext(),"Please login first!",Toast.LENGTH_LONG).show();
 		}
