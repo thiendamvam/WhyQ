@@ -4,6 +4,7 @@ import whyq.WhyqApplication;
 import whyq.utils.Util;
 import whyq.view.SearchField;
 import whyq.view.SearchField.QueryCallback;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
@@ -59,7 +60,12 @@ public class NavigationActivity extends FragmentActivity implements
 		buttonBackContainer.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onBackPressed();
+				if ((Integer)mButtonBack.getTag() == R.drawable.icon_friend_invite) {
+					Intent intent = new Intent(WhyqApplication.Instance().getApplicationContext(), InvitationActivity.class	);
+					startActivity(intent);
+				} else {
+					onBackPressed();
+				}
 			}
 		});
 
@@ -71,7 +77,6 @@ public class NavigationActivity extends FragmentActivity implements
 						onExtraButtonPressed();
 					}
 				});
-		
 
 	}
 
@@ -91,14 +96,18 @@ public class NavigationActivity extends FragmentActivity implements
 
 	protected void setBackButtonIcon(int resId) {
 		mButtonBack.setImageResource(resId);
+		mButtonBack.setTag(resId);
 	}
-	
+
 	protected void showTab(boolean show) {
 		if (show) {
-			final int marginBottom = (int) getResources().getDimension(R.dimen.tab_height);
-			((FrameLayout.LayoutParams) mRootView.getLayoutParams()).setMargins(0, 0, 0, marginBottom);
+			final int marginBottom = (int) getResources().getDimension(
+					R.dimen.tab_height);
+			((FrameLayout.LayoutParams) mRootView.getLayoutParams())
+					.setMargins(0, 0, 0, marginBottom);
 		} else {
-			((FrameLayout.LayoutParams) mRootView.getLayoutParams()).setMargins(0, 0, 0, 0);
+			((FrameLayout.LayoutParams) mRootView.getLayoutParams())
+					.setMargins(0, 0, 0, 0);
 		}
 	}
 

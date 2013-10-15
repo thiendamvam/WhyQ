@@ -48,7 +48,9 @@ import whyq.model.WhyqBoard;
 import whyq.model.WhyqImage;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 
 public class XMLParser implements HttpAccess {
@@ -918,6 +920,21 @@ public class XMLParser implements HttpAccess {
 	public static String getToken(Context context) {
 		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 		return account.getString(STORE_USER_TOKEN, "");		
+	}
+	public static boolean clearToken(Context context) {
+
+		try {
+			SharedPreferences pref = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+
+			Editor editor = pref.edit();
+			editor.remove("STORE_USER_TOKEN");
+			return editor.commit();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 	public static long getLastTimeLogin(Context context) {
 		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);

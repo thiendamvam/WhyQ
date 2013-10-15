@@ -19,8 +19,11 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.whyq.R;
@@ -50,6 +53,7 @@ public class TwitterFragment extends DialogFragment {
 	}
 	
 	protected boolean flag = false;
+	private ImageButton btnClose;
 	@Override
 	public void onResume(){
 		super.onResume();
@@ -67,6 +71,15 @@ public class TwitterFragment extends DialogFragment {
 		getDialog().getWindow().setLayout(300,300);
 		getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 		twitterWebView.clearCache(true);
+		btnClose = (ImageButton)v.findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				end();
+			}
+		});
 		new OAuthRequestTokenTask(this.getActivity(), consumer, provider).doInBackground();
 		return v;
 	}

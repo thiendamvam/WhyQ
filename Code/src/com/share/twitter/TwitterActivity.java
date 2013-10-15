@@ -253,4 +253,8 @@ public class TwitterActivity extends Activity {
 //		}
 		
 	}
+	
+	public void onCloseClicked(View v){
+		finish();
+	}
 }

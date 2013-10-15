@@ -156,7 +156,7 @@ public class LoginHome extends Activity
 			}
 		});
 		
-		String token = WhyqApplication.Instance().getToken();
+		String token = WhyqApplication.Instance().getRSAToken();
 		if (token == null || token.equals("")) {
 
 		} else {

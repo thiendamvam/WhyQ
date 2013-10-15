@@ -89,24 +89,28 @@ public class WhyqApplication extends Application {
 			return null;
 		}
 	}
-	public String getToken() {
-		SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		long lastSaved = pref.getLong("token_save_at", 0);
-		int expireTime = pref.getInt(TOKEN_EXPIRED_TIME, 3600);
-		if ((System.currentTimeMillis() - lastSaved) / 1000 < expireTime) {
-			return pref.getString(ACCESS_TOKEN, null);
-		} else {
-			Editor editor = pref.edit();
-			editor.remove(ACCESS_TOKEN);
-			editor.remove(TOKEN_EXPIRED_TIME);
-			editor.remove("token_save_at");
-			editor.commit();
-			return null;
-		}
-	}
+//	public String getToken() {
+//		SharedPreferences pref = PreferenceManager
+//				.getDefaultSharedPreferences(getApplicationContext());
+//		long lastSaved = pref.getLong("token_save_at", 0);
+//		int expireTime = pref.getInt(TOKEN_EXPIRED_TIME, 3600);
+//		if ((System.currentTimeMillis() - lastSaved) / 1000 < expireTime) {
+//			return pref.getString(ACCESS_TOKEN, null);
+//		} else {
+//			Editor editor = pref.edit();
+//			editor.remove(ACCESS_TOKEN);
+//			editor.remove(TOKEN_EXPIRED_TIME);
+//			editor.remove("token_save_at");
+//			editor.commit();
+//			return null;
+//		}
+//	}
 	public void setToken(User user){
 		XMLParser.storePermpingAccount(getApplicationContext(), user);
+	}
+	
+	public void clearToken(){
+		XMLParser.clearToken(getApplicationContext());
 	}
 	private DisplayMetrics metrics;
 	

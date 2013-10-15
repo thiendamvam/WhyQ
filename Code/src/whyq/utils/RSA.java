@@ -45,22 +45,27 @@ public class RSA {
 			NoSuchPaddingException, InvalidKeyException,
 			IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
 		String result = null;
-		byte[] sigBytes2 = Base64.decode(PUBLIC_KEY, Base64.DEFAULT);
-		Log.d("WS", "new key is: " + PUBLIC_KEY);
-		try {
-			    byte[] encodedKey = sigBytes2;
-			    X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedKey);
-			    KeyFactory kf = KeyFactory.getInstance("RSA");
-			    PublicKey pkPublic = kf.generatePublic(publicKeySpec);
-			    // Encrypt
-			    Cipher pkCipher = Cipher.getInstance("RSA/ECB/PKCS1PADDING");
-			    pkCipher.init(Cipher.ENCRYPT_MODE, pkPublic);
-			    encryptedBytes = pkCipher.doFinal(pin.getBytes("UTF-8"));
-			    result = Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
-//			    RSADecrypt(result);
-			    result.replaceFirst(" ", "");
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		if(pin!=null){
+			if(!pin.equals("")){
+				byte[] sigBytes2 = Base64.decode(PUBLIC_KEY, Base64.DEFAULT);
+				Log.d("WS", "new key is: " + PUBLIC_KEY);
+				try {
+					    byte[] encodedKey = sigBytes2;
+					    X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedKey);
+					    KeyFactory kf = KeyFactory.getInstance("RSA");
+					    PublicKey pkPublic = kf.generatePublic(publicKeySpec);
+					    // Encrypt
+					    Cipher pkCipher = Cipher.getInstance("RSA/ECB/PKCS1PADDING");
+					    pkCipher.init(Cipher.ENCRYPT_MODE, pkPublic);
+					    encryptedBytes = pkCipher.doFinal(pin.getBytes("UTF-8"));
+					    result = Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
+//					    RSADecrypt(result);
+					    result.replaceFirst(" ", "");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return result;
 	}

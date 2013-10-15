@@ -49,6 +49,10 @@ public class TwitterActivity extends Activity {
 				Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
 		new OAuthRequestTokenTask(this, consumer, provider).doInBackground();
 	}
+	
+	public void onCloseClicked(View v){
+		finish();
+	}
 	protected boolean flag = false;
 	@Override
 	protected void onResume(){
@@ -163,4 +167,5 @@ public class TwitterActivity extends Activity {
 		}
 		
 	}
+
 }
