@@ -68,6 +68,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	protected String mUserId;
 	private int clockHeight;
 	private HorizontalListView mPhotos;
+	private TextView tvHeader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		Intent i = getIntent();
 		
 		clockHeight = (int) (getResources().getDisplayMetrics().density * 32);
-
+        tvHeader = (TextView)findViewById(R.id.tvHeaderTitle);
+        tvHeader.setText("Profile");
 		ExtendedListView lv = (ExtendedListView) findViewById(R.id.listview);
 		lv.setOnPositionChangedListener(this);
 		mActivitiesAdapter = new ActivitiesAdapter(this);

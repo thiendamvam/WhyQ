@@ -104,6 +104,7 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
 			}
 		}
 	};
+	private TextView tvHeader;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +125,8 @@ public class ProfileActivity extends Activity implements Get_Board_delegate{
         followings = (TextView) findViewById(R.id.followings);
         btnAccount = (Button) findViewById(R.id.btAccount);
         btnFollow = (Button) findViewById(R.id.btnFollow);
+        tvHeader = (TextView)findViewById(R.id.tvHeaderTitle);
+        tvHeader.setText("Profile");
 		IntentFilter intentFilter = new IntentFilter(ListActivity.DOWNLOAD_COMPLETED);
 		registerReceiver(receiver, intentFilter);
 		context = ProfileActivity.this;

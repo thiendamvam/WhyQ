@@ -8,15 +8,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.whyq.R;
 
 public class ProfileWhyQActivty extends Activity {
 
+	private TextView tvHeader;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_profile);
+        tvHeader = (TextView)findViewById(R.id.tvHeaderTitle);
+        tvHeader.setText("Profile");
 	}
 
 	public void onBack(View v) {

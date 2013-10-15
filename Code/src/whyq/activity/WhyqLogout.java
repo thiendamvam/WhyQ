@@ -30,7 +30,10 @@ public class WhyqLogout extends Activity implements IServiceListener{
 	}
 
 	public void onCancelClicked(View v){
+
 		finish();
+		overridePendingTransition(R.anim.issue_list_hide,
+				R.anim.issue_list_hide);
 	}
 
 	@Override
