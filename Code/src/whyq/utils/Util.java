@@ -350,8 +350,7 @@ public class Util {
 	}
 	public static boolean checkLocationSetting(Context context){
 		LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
-		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)|| locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
 //			Toast.makeText(context, "GPS is Enabled in your devide", Toast.LENGTH_SHORT).show();
 			return true;
 		}else{

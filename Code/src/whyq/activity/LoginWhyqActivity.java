@@ -412,6 +412,7 @@ public class LoginWhyqActivity extends Activity implements Login_delegate,
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
+		hideDialog();
 		if(result.isSuccess()&& result.getAction()==ServiceAction.ActionLoginWhyq){
 			ResponseData data = (ResponseData)result.getData();
 			if(data.getStatus().equals("200")){
@@ -425,6 +426,7 @@ public class LoginWhyqActivity extends Activity implements Login_delegate,
 					startActivity(intent);
 
 			}else if(data.getStatus().equals("401")){
+				
 				Util.loginAgain(context, data.getMessage());
 			}else{
 				Util.showDialog(context, data.getMessage());

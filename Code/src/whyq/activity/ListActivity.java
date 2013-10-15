@@ -358,6 +358,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	@Override
 	protected void onResume() {
 		super.onResume();
+
 //		if(currentLocation !=null)
 //			tvNearLocation.setText(currentLocation);
 //		imgCoffe.requestFocus();
@@ -1159,18 +1160,21 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
             View v = whyqListView.getChildAt(0);
             int offset = (v == null) ? 0 : v.getTop();
 
-            if (mPosition < position || (mPosition == position && mOffset < offset)) {
+            if (mPosition < position ) {//|| (mPosition == position && mOffset < offset)
                  // Scrolled up
             	Log.d("onScrollStateChanged","up");
-            	hideNavigationBar();
-            	hideTabbarInTabhost();
-            } else {
-                 // Scrolled down
             	showNavigationBar();
             	showTabbarInTabhost();
+            } else  if (mPosition > position ){
+                 // Scrolled down
+
+            	
+            	Log.d("onScrollStateChanged","down");
+            	hideNavigationBar();
+            	hideTabbarInTabhost();
             }
             mPosition = position;
-            mOffset = offset;
+//            mOffset = offset;
     	}
     }
 

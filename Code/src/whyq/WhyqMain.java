@@ -163,10 +163,20 @@ public class WhyqMain extends TabActivity {
 
 						}
 					});
-			LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-			LocationListener locationListener = new MyLocationListener();
-			locationManager.requestLocationUpdates(
-					LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
+
+			try {
+				LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+				LocationListener locationListener = new MyLocationListener();
+				if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+					locationManager.requestLocationUpdates(
+						LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
+				else
+					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, locationListener);
+			} catch (Exception e) {
+				// TODO: handle exception
+				
+				e.printStackTrace();
+			}
 
 			initTabsAppearance(tabHost);
 			tabHost.setCurrentTab(0);
