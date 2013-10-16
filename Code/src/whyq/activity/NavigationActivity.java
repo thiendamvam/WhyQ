@@ -50,19 +50,26 @@ public class NavigationActivity extends FragmentActivity implements
 
 		ViewGroup.LayoutParams progressBarLP = findViewById(R.id.progressBar)
 				.getLayoutParams();
-		progressBarLP.width = WhyqApplication.sBaseViewHeight * 3 / 5;
-		progressBarLP.height = WhyqApplication.sBaseViewHeight * 3 / 5;
+//		progressBarLP.width = WhyqApplication.sBaseViewHeight * 3 / 5;
+//		progressBarLP.height = WhyqApplication.sBaseViewHeight * 3 / 5;
 
 		mButtonBack = (ImageView) findViewById(R.id.buttonBack);
 		View buttonBackContainer = findViewById(R.id.buttonBackContainer);
-		buttonBackContainer.getLayoutParams().width = WhyqApplication.sBaseViewHeight;
-		buttonBackContainer.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
+//		buttonBackContainer.getLayoutParams().width = WhyqApplication.sBaseViewHeight;
+//		buttonBackContainer.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 		buttonBackContainer.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if ((Integer)mButtonBack.getTag() == R.drawable.icon_friend_invite) {
-					Intent intent = new Intent(WhyqApplication.Instance().getApplicationContext(), InvitationActivity.class	);
-					startActivity(intent);
+				if (mButtonBack.getTag() != null) {
+
+					if ((Integer) mButtonBack.getTag() == R.drawable.icon_friend_invite) {
+						Intent intent = new Intent(WhyqApplication.Instance()
+								.getApplicationContext(),
+								InvitationActivity.class);
+						startActivity(intent);
+					} else {
+						onBackPressed();
+					}
 				} else {
 					onBackPressed();
 				}
@@ -74,7 +81,12 @@ public class NavigationActivity extends FragmentActivity implements
 
 					@Override
 					public void onClick(View v) {
-						onExtraButtonPressed();
+						if(Boolean.getBoolean(""+v.getTag())){
+							exeInviteFriend();
+						}else{
+							onExtraButtonPressed();	
+						}
+						
 					}
 				});
 

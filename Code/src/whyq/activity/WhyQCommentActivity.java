@@ -47,4 +47,8 @@ public class WhyQCommentActivity extends Activity implements IServiceListener {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void onBackClicked(View v){
+		finish();
+	}
 }

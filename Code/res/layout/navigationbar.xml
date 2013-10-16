@@ -10,7 +10,7 @@
 
     <FrameLayout
         android:id="@+id/buttonBackContainer"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/base_padding"
         android:paddingRight="@dimen/base_padding" >

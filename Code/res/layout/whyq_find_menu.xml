@@ -32,10 +32,16 @@
             android:onClick="findFromFaccebookClicked"
             android:padding="4dp" >
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_facebook" />
+            <RelativeLayout
+                android:layout_width="40dp"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/icon_facebook" />
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -52,14 +58,20 @@
             android:layout_below="@+id/lnFindFromFb"
             android:layout_marginTop="10dp"
             android:background="@drawable/base_button"
-            android:onClick="findFromTwitterClicked"
             android:gravity="center_vertical"
+            android:onClick="findFromTwitterClicked"
             android:padding="4dp" >
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_twitter" />
+            <RelativeLayout
+                android:layout_width="40dp"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/icon_twitter" />
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -75,15 +87,21 @@
             android:layout_below="@+id/lnFindFromFW"
             android:layout_marginTop="10dp"
             android:background="@drawable/base_button"
-            android:onClick="searchByNameClicked"
             android:gravity="center_vertical"
+            android:onClick="searchByNameClicked"
             android:orientation="horizontal"
             android:padding="4dp" >
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_search" />
+            <RelativeLayout
+                android:layout_width="40dp"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/icon_search" />
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="match_parent"

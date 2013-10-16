@@ -69,6 +69,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	private int clockHeight;
 	private HorizontalListView mPhotos;
 	private TextView tvHeader;
+	private boolean isFriendProfile;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,8 +113,19 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			showTab(false);
 		}
 
+		isFriendProfile = getIntent().getBooleanExtra("is_friend", true);
+		
 		ImageView setting = new ImageView(this);
-		setting.setImageResource(R.drawable.icon_setting);
+		
+		if(isFriendProfile){
+			setting.setImageResource(R.drawable.icon_invite);
+			setting.setTag(true);
+		}else{
+			setting.setImageResource(R.drawable.icon_setting);
+			setting.setTag(false);
+		}
+		
+		
 		setExtraView(setting);
 
 		hideExtraButton();
@@ -125,7 +137,9 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 	}
 	
-	
+	public void exeInviteFriend(){
+		
+	}
 	private void bindData(UserProfile user) {
 
 		if(user!=null){

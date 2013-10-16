@@ -181,6 +181,8 @@ public class Util {
 	};
 
 	public static void loginAgain(final Context context, String mes) {
+		WhyqApplication.Instance().clearToken();
+		WhyqApplication.Instance().setToken(null);
 		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
 				context);
 		builder.setTitle(context.getString(R.string.app_name_title));
@@ -189,10 +191,12 @@ public class Util {
 		alertError.setButton("Login", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				
 				Intent intent = new Intent(context, LoginHome.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			
 				context.startActivity(intent);
 			}
 		});

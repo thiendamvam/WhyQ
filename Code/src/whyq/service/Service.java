@@ -79,6 +79,7 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/logout", params, true, false);
 	}
+
 	public void postFavorite(String storeId) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionPostFavorite;
@@ -89,6 +90,7 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/favourite/business", params, true, false);
 	}
+
 	public void removeFavorite(String storeId) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionRemoveFavorite;
@@ -99,6 +101,7 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/favourite/business", params, true, false);
 	}
+
 	public void getComments(String encryptedToken, String store_id, int page,
 			int count, boolean onlyFriend) {
 		_action = ServiceAction.ActionGetComment;
@@ -114,8 +117,8 @@ public class Service implements Runnable {
 	}
 
 	public void getFriends(String token, String user_id) {
-//		ÖNedd add page and key = if search
-		
+		// ÖNedd add page and key = if search
+
 		_action = ServiceAction.ActionGetFriends;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", token);
@@ -126,9 +129,10 @@ public class Service implements Runnable {
 		}
 		request("/m/member/friend", params, true, false);
 	}
+
 	public void getInvitation(String token, String listInvited) {
-//		ÖNedd add page and key = if search
-		
+		// ÖNedd add page and key = if search
+
 		_action = ServiceAction.ActionGetInvitations;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", token);
@@ -139,9 +143,10 @@ public class Service implements Runnable {
 		}
 		request("/m/member/friend", params, true, false);
 	}
+
 	public void getInvitationNotification(String token, String listInvited) {
-//		ÖNedd add page and key = if search
-		
+		// ÖNedd add page and key = if search
+
 		_action = ServiceAction.ActionGetInvitationsNotification;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", token);
@@ -151,6 +156,7 @@ public class Service implements Runnable {
 		params.put("get_total", "");
 		request("/m/member/friend", params, true, false);
 	}
+
 	public void getFriendsFacebook(String encryptedToken, String accessToken) {
 		_action = ServiceAction.ActionGetFriendsFacebook;
 		Map<String, String> params = new HashMap<String, String>();
@@ -320,10 +326,12 @@ public class Service implements Runnable {
 			resObj = parser.parserLoginData(result);
 			break;
 		case ActionGetInvitations:
-			resObj = parser.parseLUserCheckedResult(result);//Same structor data
+			resObj = parser.parseLUserCheckedResult(result);// Same structor
+															// data
 			break;
 		case ActionGetInvitationsNotification:
-			resObj = parser.parseInvitationNotification(result);//Same structor data
+			resObj = parser.parseInvitationNotification(result);// Same structor
+																// data
 			break;
 		case ActionSearchOnlyFriend:
 			resObj = parser.parserSearchOnlFriend(result);
@@ -408,7 +416,7 @@ public class Service implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		Log.d(_action.toString(), "=========== run ===========\n"+_actionURI);
+		Log.d(_action.toString(), "=========== run ===========\n" + _actionURI);
 		httpclient = new DefaultHttpClient();
 		// AndroidHttpClient httpclient = AndroidHttpClient
 		// .newInstance(_actionURI);
@@ -424,9 +432,9 @@ public class Service implements Runnable {
 				textSearch = textSearch.replace(" ", "+");
 				urlString = "http://ws.geonames.org/search?q=" + textSearch
 						+ "&style=full&maxRows=10";
-			} else if(_action == ServiceAction.ActionGetDistance){
-				urlString = _actionURI;				
-			}else
+			} else if (_action == ServiceAction.ActionGetDistance) {
+				urlString = _actionURI;
+			} else
 				urlString = _includeHost ? API.hostURL + _actionURI
 						: _actionURI;
 			HttpRequestBase request = null;
@@ -523,7 +531,7 @@ public class Service implements Runnable {
 		} else {
 			return "";
 		}
-	
+
 	}
 
 	public int getConnectionTimeout() {
@@ -541,7 +549,7 @@ public class Service implements Runnable {
 
 	public void loginTwitter(String oauthToken, String oauthTokenSecret) {
 		// TODO Auto-generated method stub
-		Log.d("loginTwitter","loginTwitter");
+		Log.d("loginTwitter", "loginTwitter");
 		_action = ServiceAction.ActionLoginTwitter;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("oauth_token", oauthToken);
@@ -550,8 +558,9 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/login/tw", params, true, false);
 	}
-	
-	public void inviteFriendsTwitter(String encryptedToken, String oauth_token, String oauth_token_secret,String twitter_id){
+
+	public void inviteFriendsTwitter(String encryptedToken, String oauth_token,
+			String oauth_token_secret, String twitter_id) {
 		_action = ServiceAction.ActionInviteFriendsTwitter;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
@@ -560,8 +569,19 @@ public class Service implements Runnable {
 		params.put("twitter_id", twitter_id);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
-		request("/m/member/friend/twitter/invite",params,true,false);
+		request("/m/member/friend/twitter/invite", params, true, false);
 	}
+
+	public void inviteFriendsWhyq(String encryptedToken, String userId) {
+		_action = ServiceAction.ActionInviteFriendsTwitter;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("user_id", userId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/friend/invite", params, true, false);
+	}
+
 	private void attachUriWithQuery(HttpRequestBase request, Uri uri,
 			Map<String, String> params) {
 		try {
@@ -605,10 +625,12 @@ public class Service implements Runnable {
 
 		return formList;
 	}
-	public void getBusinessList(Map<String, String> params, String url){
+
+	public void getBusinessList(Map<String, String> params, String url) {
 		_action = ServiceAction.ActionGetBusinessList;
 		request(url, params, true, false);
 	}
+
 	public void getBusinessDetail(String id) {
 		_action = ServiceAction.ActionGetBusinessDetail;
 		Map<String, String> params = new HashMap<String, String>();
@@ -618,7 +640,7 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/business/show", params, true, false);
 	}
-	
+
 	public void getFaqs(String id) {
 		_action = ServiceAction.ActionGetFaqs;
 		Map<String, String> params = new HashMap<String, String>();
@@ -635,21 +657,24 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/business/member/check_bill", params, true, false);
 	}
-	public void getUserCheckedBills(String encryptedToken, String store_id, String text) {
+
+	public void getUserCheckedBills(String encryptedToken, String store_id,
+			String text) {
 		_action = ServiceAction.ActionGetUserChecked;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("store_id", store_id);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
-		if(text!=null){
+		if (text != null) {
 			params.put("key", text);
 			request("/m/business/member/check_bill/search", params, true, false);
-		}else{
+		} else {
 			request("/m/business/member/check_bill", params, true, false);
 		}
-		
+
 	}
+
 	public void getOrder(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetOrder;
 		Map<String, String> params = new HashMap<String, String>();
@@ -707,7 +732,7 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("getlocation", params, true, false);
 	}
-	
+
 	public void getProfiles(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetProfiles;
 		Map<String, String> params = new HashMap<String, String>();
@@ -728,7 +753,6 @@ public class Service implements Runnable {
 		request("/m/forget_password", params, true, false);
 	}
 
-
 	public void loginWhyq(String email, String pass) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionLoginWhyq;
@@ -747,10 +771,10 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/register", params, true, false);
 	}
-	
+
 	public void editProfile(HashMap<String, String> params) {
 		// TODO Auto-generated method stub
-//		first_name, las_name,token,new_password,old_password
+		// first_name, las_name,token,new_password,old_password
 		_action = ServiceAction.ActionEditProfile;
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
@@ -759,7 +783,7 @@ public class Service implements Runnable {
 
 	public void searchOnlyFriend(HashMap<String, String> params) {
 		// TODO Auto-generated method stub
-//		search, only_friend = 1, key, page =1, token
+		// search, only_friend = 1, key, page =1, token
 		_action = ServiceAction.ActionSearchOnlyFriend;
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
@@ -776,19 +800,22 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/profile", params, true, false);
 	}
-	
+
 	public void orderSend(HashMap<String, String> params) {
 		// TODO Auto-generated method stub
-//		store_id, deliver_type(1: tike away, 4: dinein), list_items,deliver_to(empty for typle=1 and 0 if type =4), time_zone,time_deliver(if not empty, oly for type =1),note(commend), token
+		// store_id, deliver_type(1: tike away, 4: dinein),
+		// list_items,deliver_to(empty for typle=1 and 0 if type =4),
+		// time_zone,time_deliver(if not empty, oly for type =1),note(commend),
+		// token
 		_action = ServiceAction.ActionOrderSend;
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
-		if(ListDetailActivity.commentContent!=null){
+		if (ListDetailActivity.commentContent != null) {
 			params.put("note", ListDetailActivity.commentContent);
 		}
 		request("/m/member/order/send", params, true, false);
 	}
-	
+
 	public void getBillDetail(String billId, String encryptedToken) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionGetBillDetail;
@@ -806,7 +833,7 @@ public class Service implements Runnable {
 		request(Constants.GET_DISTANCE_API, params, true, true);
 
 	}
-	
+
 	public void checkBill(String billId, String message, String encryptedToken) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionCheckbill;

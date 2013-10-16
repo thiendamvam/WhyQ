@@ -30,8 +30,7 @@ public class InvitationActivity extends Activity implements IServiceListener{
 		btnHeader = (TextView) findViewById(R.id.permpingTitle);
 		btnHeader.setText("Invitations");
 		lvInvitation = (ListView)findViewById(R.id.lvInvitation);
-		String listId = getIntent().getStringExtra("id");
-		getInvitationData(listId);
+		getInvitationData("1");
 	}
 
 	private void getInvitationData(String listInvited) {
