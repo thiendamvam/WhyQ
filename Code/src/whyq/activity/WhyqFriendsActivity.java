@@ -18,6 +18,7 @@ import whyq.utils.XMLParser;
 import whyq.view.SearchField;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -129,6 +130,42 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 					mFriendWhyqAdapter.setItems(friends);
 				}
 			}
+		}else if(result.isSuccess()&& (result != null
+				&& result.getAction() == ServiceAction.ActionSearchFriendsFacebook)){
+
+			DataParser parser = new DataParser();
+			ResponseData data =  (ResponseData) parser.parseFriendWhyq(String
+					.valueOf(result.getData()));
+			
+			if (data.getStatus().equals("401")) {
+				Util.loginAgain(this, data.getMessage());
+			} else {
+				List<FriendWhyq> friends = (List<FriendWhyq>) data.getData();;
+				if (friends == null || friends.size() == 0) {
+					mFriendWhyqAdapter.setItems(friends);
+				} else {
+					mFriendWhyqAdapter.setItems(friends);
+				}
+			}
+		
+		}else if(result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionSearchOnlyFriend){
+
+			DataParser parser = new DataParser();
+			ResponseData data =  (ResponseData) parser.parseFriendWhyq(String
+					.valueOf(result.getData()));
+			
+			if (data.getStatus().equals("401")) {
+				Util.loginAgain(this, data.getMessage());
+			} else {
+				List<FriendWhyq> friends = (List<FriendWhyq>) data.getData();;
+				if (friends == null || friends.size() == 0) {
+					mFriendWhyqAdapter.setItems(friends);
+				} else {
+					mFriendWhyqAdapter.setItems(friends);
+				}
+			}
+		
 		}
 	}
 	
@@ -149,10 +186,17 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 	}
 
 	private void searchFriends(String queryString) {
+		Log.d("searchFriends","key: "+queryString);
 		Service service = getService();
 		setLoading(true);
-		service.searchFriends(SearchFriendCriteria.whyq, getEncryptedToken(),
-				queryString, null, null, null);
+		if(!isSearchByName){
+			service.searchFriends(SearchFriendCriteria.whyq, getEncryptedToken(),
+					queryString, null, null, null);
+		}else{
+			service.searchOnlyFriend(SearchFriendCriteria.whyq, getEncryptedToken(),
+					queryString, null, null, null);
+		}
+
 	}
 
 	private void getFriends() {
@@ -245,5 +289,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 		}
 
 	}
-
+	public void onBackClicked(View v){
+		finish();
+	}
 }

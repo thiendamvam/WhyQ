@@ -82,7 +82,7 @@ public class NavigationActivity extends FragmentActivity implements
 					@Override
 					public void onClick(View v) {
 						if(Boolean.getBoolean(""+v.getTag())){
-							exeInviteFriend();
+//							exeInviteFriend();
 						}else{
 							onExtraButtonPressed();	
 						}

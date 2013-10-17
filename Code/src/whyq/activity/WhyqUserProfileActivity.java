@@ -504,5 +504,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		}
 
 	}
-
+	public void onBackClicked(View v){
+		finish();
+	}
 }

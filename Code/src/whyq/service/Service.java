@@ -333,9 +333,7 @@ public class Service implements Runnable {
 			resObj = parser.parseInvitationNotification(result);// Same structor
 																// data
 			break;
-		case ActionSearchOnlyFriend:
-			resObj = parser.parserSearchOnlFriend(result);
-			break;
+
 		case ActionDeleteFriend:
 			resObj = parser.parserDeleteFriend(result);
 			break;
@@ -781,13 +779,17 @@ public class Service implements Runnable {
 		request("/m/member/profile/edit", params, true, false);
 	}
 
-	public void searchOnlyFriend(HashMap<String, String> params) {
-		// TODO Auto-generated method stub
-		// search, only_friend = 1, key, page =1, token
+	public void searchOnlyFriend(SearchFriendCriteria criteria,
+			String encryptedToken, String key, String accessToken,
+			String oauth_token, String oauth_token_secret) {
 		_action = ServiceAction.ActionSearchOnlyFriend;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", encryptedToken);
+		params.put("key", key);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
-		request("/m/member/search", params, true, false);
+		params.put("search", criteria.toString());
+		request("/m/member/search/friend", params, true, false);
 	}
 
 	public void deleteFriend(String userId, String encryptedToken) {

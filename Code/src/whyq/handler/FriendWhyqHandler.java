@@ -38,7 +38,7 @@ public class FriendWhyqHandler extends BaseHandler {
 
 	private List<FriendWhyq> friends;
 	private FriendWhyq currentFriend;
-	private StatusUser currentStatusUser;
+	private StatusUser currentStatusUser = new StatusUser();
 
 	public List<FriendWhyq> getFriends() {
 		return friends;
