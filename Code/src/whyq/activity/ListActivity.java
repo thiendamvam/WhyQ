@@ -1163,15 +1163,15 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
             if (mPosition < position ) {//|| (mPosition == position && mOffset < offset)
                  // Scrolled up
             	Log.d("onScrollStateChanged","up");
-            	showNavigationBar();
-            	showTabbarInTabhost();
+            	hideNavigationBar();
+            	hideTabbarInTabhost();
             } else  if (mPosition > position ){
                  // Scrolled down
 
-            	
+            	showNavigationBar();
+            	showTabbarInTabhost();
             	Log.d("onScrollStateChanged","down");
-            	hideNavigationBar();
-            	hideTabbarInTabhost();
+
             }
             mPosition = position;
 //            mOffset = offset;
