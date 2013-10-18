@@ -74,18 +74,21 @@ public class WhyQBillScreen extends FragmentActivity{
 		// TODO Auto-generated method stub
 		totalValue = 0;
 		totalafterDiscount = 0;
-		Collection<Bill> c = billList.values();
-		if(c!=null){
-			for (Iterator collectionItr = c.iterator(); collectionItr.hasNext(); ) {
-				try {
 
-					  Bill item = (Bill)collectionItr.next();
-					  this.listBill.add(item);
-					  totalValue+= Float.parseFloat(item.getPrice())*Float.parseFloat(item.getUnit());
-				
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
+		if(billList!=null){
+			Collection<Bill> c = billList.values();
+			if(c!=null){
+				for (Iterator collectionItr = c.iterator(); collectionItr.hasNext(); ) {
+					try {
+
+						  Bill item = (Bill)collectionItr.next();
+						  this.listBill.add(item);
+						  totalValue+= Float.parseFloat(item.getPrice())*Float.parseFloat(item.getUnit());
+					
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
 				}
 			}
 		}

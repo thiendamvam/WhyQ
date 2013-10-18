@@ -14,6 +14,7 @@ import whyq.service.ServiceResponse;
 import whyq.utils.ImageViewHelper;
 import whyq.utils.Util;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 
 		mBillAdapter = new BillAdapter(this, mImageWorker);
 		mPlaceAdapter = new PlaceAdapter(this, mImageWorker);
+	
 		
 		if (mode != null && mode.equals(SAVING)) {
 			setTitle(R.string.saving);
@@ -79,6 +81,19 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
+				
+				BillItem item = (BillItem)arg1.getTag();
+				Intent intent = new Intent(WhyqCheckedBillActivity.this, WhyQBillScreen.class);
+
+				Bundle bundle = new Bundle();
+				bundle.putString("store_id", item.getStore_id());
+//				bundle.putString("list_items", item.getBusiness_info());
+				bundle.putString("lat", "" + item.getBusiness_info().getLatitude());
+				bundle.putString("lon", "" + item.getBusiness_info().getLongitude());
+				bundle.putString("start_time", "" + item.getBusiness_info().getStart_time());
+				bundle.putString("close_time", "" + item.getBusiness_info().getEnd_time());
+				intent.putExtra("data", bundle);
+				startActivity(intent);
 			}
 		});
 
@@ -233,7 +248,7 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 
 			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
 					holder.photo);
-
+			convertView.setTag(item);
 			return convertView;
 		}
 
@@ -330,7 +345,8 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 			holder.name.setText(item.getStoreName());
 
 			mImageWorker.downloadImage(item.getStoreLogo(), holder.photo);
-
+			
+			convertView.setTag(item);
 			return convertView;
 		}
 

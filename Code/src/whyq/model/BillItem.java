@@ -1,6 +1,11 @@
 package whyq.model;
 
-public class BillItem {
+import java.io.Serializable;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class BillItem implements Parcelable {
 
 	private String id;
 	private String user_id;
@@ -149,6 +154,16 @@ public class BillItem {
 	}
 	public void setBusiness_info(BusinessInfo business_info) {
 		this.business_info = business_info;
+	}
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
