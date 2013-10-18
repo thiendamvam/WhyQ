@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.whyq.R;
 
@@ -17,6 +18,8 @@ public class WhyqProfileNotifyPersionalActivity  extends Activity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_notification_screen);
+		TextView tvHeader = (TextView)findViewById(R.id.tvHeaderTitle);
+		tvHeader.setText("Notification");
 		cbReceiveNotification = (CheckBox)findViewById(R.id.cbxReceiveNotification);
 		cbAllowUserToSee = (CheckBox)findViewById(R.id.cbxAllowUserToSeeFriends);
 		cbSoundsNotification = (CheckBox)findViewById(R.id.cbxSoundsNotification);

@@ -17,7 +17,8 @@ import android.widget.TextView;
 
 import com.whyq.R;
 
-public class WhyqOrderMenuActivity extends DialogFragment implements OnClickListener{
+public class WhyqOrderMenuActivity extends DialogFragment implements
+		OnClickListener {
 	private String storeId;
 	private Display display;
 	private Context context;
@@ -28,86 +29,130 @@ public class WhyqOrderMenuActivity extends DialogFragment implements OnClickList
 	private Button btnCancel;
 	private TextView btnTitle;
 	private TextView tvHomeDelivery;
-	public WhyqOrderMenuActivity(){
-		
+
+	public static int HOME_DELIVERY = 1;
+	public static int TAKE_AWAY = 2;
+	public static int HOTEL_ROOM_DELIVERY = 3;
+	public static int DINE_IN = 4;
+
+	public WhyqOrderMenuActivity() {
+
 	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.whyq_store_order_menu);
+		// setContentView(R.layout.whyq_store_order_menu);
 		display = getActivity().getWindowManager().getDefaultDisplay();
 	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		context = getActivity();
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		View v = LayoutInflater.from(WhyqApplication.Instance().getApplicationContext()).inflate(R.layout.whyq_store_order_menu, null);
-//		setContentView(v);
-//		context = this;
-		btnHomeDelivery =(Button)v.findViewById(R.id.btnHomeDelivery);
-		btnTakeAway = (Button)v.findViewById(R.id.btnHomeTakeAway);
-		btnHotelDelivery = (Button)v.findViewById(R.id.btnHotelRoomDelivery);
-		btnDinein = (Button)v.findViewById(R.id.btnDineIn);
-		btnCancel = (Button)v.findViewById(R.id.btnCancel);
-		btnTitle = (TextView)v.findViewById(R.id.tvHeaderTittle);
+		View v = LayoutInflater.from(
+				WhyqApplication.Instance().getApplicationContext()).inflate(
+				R.layout.whyq_store_order_menu, null);
+		// setContentView(v);
+		// context = this;
+		btnHomeDelivery = (Button) v.findViewById(R.id.btnHomeDelivery);
+		btnTakeAway = (Button) v.findViewById(R.id.btnHomeTakeAway);
+		btnHotelDelivery = (Button) v.findViewById(R.id.btnHotelRoomDelivery);
+		btnDinein = (Button) v.findViewById(R.id.btnDineIn);
+		btnCancel = (Button) v.findViewById(R.id.btnCancel);
+		btnTitle = (TextView) v.findViewById(R.id.tvHeaderTittle);
 		btnTitle.setText("in this order:");
-		tvHomeDelivery = (TextView)v.findViewById(R.id.tvOpeningTime);
-		tvHomeDelivery.setText("(Home delivery time "+ListDetailActivity.bundle.getString("start_time")+" - "+ListDetailActivity.bundle.getString("close_time")+")");
+		tvHomeDelivery = (TextView) v.findViewById(R.id.tvOpeningTime);
+		tvHomeDelivery.setText("(Home delivery time "
+				+ ListDetailActivity.bundle.getString("start_time") + " - "
+				+ ListDetailActivity.bundle.getString("close_time") + ")");
 		btnHomeDelivery.setOnClickListener(this);
 		btnTakeAway.setOnClickListener(this);
 		btnHotelDelivery.setOnClickListener(this);
 		btnDinein.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
-		 v.setBackgroundResource(android.R.color.transparent);
+
+		checkOrderMenu();
+
+		v.setBackgroundResource(android.R.color.transparent);
 		getDialog().getWindow().setBackgroundDrawableResource(
 				android.R.color.transparent);
 		float density = WhyqApplication.Instance().getDensity();
-		getDialog().getWindow().setLayout((int)(100*density),(int)(density*300));//display.getWidth()/3, display.getHeight() / 4
+		getDialog().getWindow().setLayout((int) (100 * density),
+				(int) (density * 300));// display.getWidth()/3,
+										// display.getHeight() / 4
 		getDialog().setCanceledOnTouchOutside(true);
 		return v;
 	}
-	public void onResume()
-	{
-	    super.onResume();
-	    Window window = getDialog().getWindow();
-	    float density = WhyqApplication.Instance().getDensity();
-	    window.setLayout((int)(density*320), (int)(density*440));
-	    window.setGravity(Gravity.CENTER);
-	    //TODO:
-	} 
+
+	private void checkOrderMenu() {
+		// TODO Auto-generated method stub
+		if (ListDetailActivity.store.isHomeDeliver()) {
+			btnHomeDelivery.setVisibility(View.VISIBLE);
+		}else{
+			btnHomeDelivery.setVisibility(View.GONE);
+		}
+		if (ListDetailActivity.store.isTakeAway()) {
+			btnTakeAway.setVisibility(View.VISIBLE);
+			
+		}else{
+			btnTakeAway.setVisibility(View.GONE);
+		}
+		if (ListDetailActivity.store.isHotelDeliver()) {
+			btnHotelDelivery.setVisibility(View.VISIBLE);
+		}else{
+			btnHotelDelivery.setVisibility(View.GONE);
+		}
+		if (ListDetailActivity.store.isAtPlace()) {
+			btnDinein.setVisibility(View.VISIBLE);
+		}else{
+			btnDinein.setVisibility(View.GONE);
+		}
+	}
+
+	public void onResume() {
+		super.onResume();
+		Window window = getDialog().getWindow();
+		float density = WhyqApplication.Instance().getDensity();
+		window.setLayout((int) (density * 320), (int) (density * 440));
+		window.setGravity(Gravity.CENTER);
+		// TODO:
+	}
+
 	public void homeDeliveryClicked() {
-		
-		Intent intent = new Intent(context,WhyQHomeDeliveryActivity.class );
+
+		Intent intent = new Intent(context, WhyQHomeDeliveryActivity.class);
 		intent.putExtra("store_id", storeId);
 		startActivity(intent);
 
 	}
 
 	public void homeTakeawayClicked() {
-		Intent intent = new Intent(context,WhyQTakeAwayActivity.class );
+		Intent intent = new Intent(context, WhyQTakeAwayActivity.class);
 		intent.putExtra("store_id", storeId);
 		startActivity(intent);
 	}
 
 	public void hotelRoomDeliveryClicked() {
-		Intent intent = new Intent(context,WhyQHotelRoomDelivery.class );
-		intent.putExtra("store_id", ""+storeId);
+		Intent intent = new Intent(context, WhyQHotelRoomDelivery.class);
+		intent.putExtra("store_id", "" + storeId);
 		startActivity(intent);
 	}
 
 	public void dineinClicked() {
-//		WhyQDineInFragment dineIn = new WhyQDineInFragment(storeId);
-//		 dineIn.show(getFragmentManager(), "orderMenuFrag");
+		// WhyQDineInFragment dineIn = new WhyQDineInFragment(storeId);
+		// dineIn.show(getFragmentManager(), "orderMenuFrag");
 		Intent i = new Intent(context, WhyQDineInActivity.class);
 		startActivity(i);
 	}
 
 	public void cancelClicked() {
 		dismiss();
-//		finish();
+		// finish();
 	}
+
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
@@ -131,6 +176,6 @@ public class WhyqOrderMenuActivity extends DialogFragment implements OnClickList
 		default:
 			break;
 		}
-		
+
 	}
 }
