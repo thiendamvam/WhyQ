@@ -346,6 +346,9 @@ public class Service implements Runnable {
 		case ActionGetDistance:
 			resObj = parser.parserDistanceResultSend(result);
 			break;
+		case ActionInviteFriendsWhyQ:
+			resObj = parser.parseFriendWhyq(result);
+			break;
 		case ActionLoginTwitter:
 			resObj = parser.parserLoginData(result);
 			break;

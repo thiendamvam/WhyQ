@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 import whyq.WhyqApplication;
+import whyq.controller.WhyqListController;
 import whyq.model.ActivityItem;
 import whyq.model.Photo;
 import whyq.model.ResponseData;
+import whyq.model.Store;
 import whyq.model.TotalCount;
 import whyq.model.UserProfile;
 import whyq.service.DataParser;
@@ -39,6 +41,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.devsmart.android.ui.HorizontalListView;
 import com.whyq.R;
@@ -138,6 +141,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	}
 	
 	public void exeInviteFriend(){
+		setLoading(true);
 		Service service  = new Service(WhyqUserProfileActivity.this);
 		service.inviteFriendsWhyq(WhyqApplication.Instance().getRSAToken(), mUserId);
 	}
@@ -276,7 +280,17 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			UserProfile user = DataParser.parseUerProfiles(String.valueOf(result.getData()));
 			bindData(user);
 		} else if (result.isSuccess() && (result.getAction() == ServiceAction.ActionInviteFriendsWhyQ)) {
-			
+			setLoading(false);
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				Toast.makeText(WhyqUserProfileActivity.this, "Invited", Toast.LENGTH_LONG).show();
+			}else if(data.getStatus().equals("401")){
+				Util.loginAgain(getParent(), data.getMessage());
+			}else if(data.getStatus().equals("204")){
+				
+			}else{
+				Util.showDialog(WhyqUserProfileActivity.this, data.getMessage());
+			}
 		}
 	}
 

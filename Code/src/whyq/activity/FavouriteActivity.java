@@ -46,8 +46,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -71,6 +73,9 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	 */
 	private ArrayList<Store> permListMain = new ArrayList<Store>();
 
+	private boolean isLoadMore = false;
+	private int page = 1;
+	
 	public static int screenWidth;
 	public static int screenHeight;
 	public static boolean isLogin = false;
@@ -208,8 +213,35 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 			}
 		});
 		etTextSearch.addTextChangedListener(mTextEditorWatcher);
+		
+		whyqListView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+				int currentItem = firstVisibleItem + visibleItemCount;
+				Log.d("onScroll","onScroll current "+currentItem+" and total "+totalItemCount);
+				if((currentItem >=  totalItemCount-1) && !isLoadMore){
+					isLoadMore = true;
+					page++;
+					loadPermList = new LoadPermList(isSearch);
+					loadPermList.execute();;
+				}
+			}
+		});
 
 	}
+
+	
+	
+	
 
 	private void hideFilterGroup() {
 		// TODO Auto-generated method stub
@@ -428,6 +460,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 //						nameValuePairs.add(new BasicNameValuePair("uid", WhyqMain.UID));
 //						isCalendar =false;
 						postParams.put("uid", WhyqMain.UID);
+						
 					}
 
 //					permList = whyqListController.getBusinessList(url, nameValuePairs);
@@ -444,6 +477,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 						Map<String, String> postParams = new HashMap<String, String>();
 //						nameValuePairs.add(new BasicNameValuePair("token",enToken));
 						postParams.put("token", enToken);
+						postParams.put("page", ""+page);
 						postParams.put("longitude", longitude);
 						postParams.put("latitude", latgitude);
 						Log.d("Favourite","Favourite is search"+isSearch);
@@ -685,6 +719,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	@Override
 	public void onCompleted(whyq.service.Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
+
 		if(result.isSuccess()&& result.getAction() == ServiceAction.ActionGetBusinessList){
 			ResponseData data = (ResponseData)result.getData();
 			if(data.getStatus().equals("200")){
@@ -733,5 +768,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){
 			Toast.makeText(context, "Can not un-favourite for now", Toast.LENGTH_SHORT).show();
 		}
+		if(isLoadMore)
+			isLoadMore = false;
 	}
 }
