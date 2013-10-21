@@ -113,7 +113,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			showTab(false);
 		}
 
-		isFriendProfile = getIntent().getBooleanExtra("is_friend", true);
+		isFriendProfile = getIntent().getBooleanExtra("is_friend", false);
 		
 		ImageView setting = new ImageView(this);
 		
@@ -138,7 +138,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	}
 	
 	public void exeInviteFriend(){
-		
+		Service service  = new Service(WhyqUserProfileActivity.this);
+		service.inviteFriendsWhyq(WhyqApplication.Instance().getRSAToken(), mUserId);
 	}
 	private void bindData(UserProfile user) {
 
@@ -190,9 +191,15 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	}
 
 	@Override
-	protected void onExtraButtonPressed() {
-		super.onExtraButtonPressed();
-		startActivity(new Intent(this, ProfileWhyQActivty.class));
+	protected void onExtraButtonPressed(View v) {
+		super.onExtraButtonPressed(v);
+		
+		if(isFriendProfile){
+			exeInviteFriend();
+		}else{
+			startActivity(new Intent(WhyqUserProfileActivity.this, ProfileWhyQActivty.class));		
+		}
+		
 	}
 
 	private String converServerTimeToDate(String serverTime) {
@@ -268,6 +275,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		} else if (result.getAction() == ServiceAction.ActionGetProfiles) {
 			UserProfile user = DataParser.parseUerProfiles(String.valueOf(result.getData()));
 			bindData(user);
+		} else if (result.isSuccess() && (result.getAction() == ServiceAction.ActionInviteFriendsWhyQ)) {
+			
 		}
 	}
 

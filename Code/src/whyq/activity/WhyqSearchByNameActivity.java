@@ -90,6 +90,7 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 			String avatar) {
 		Intent i = new Intent(this, WhyqUserProfileActivity.class);
 		i.putExtra(WhyqUserProfileActivity.ARG_USER_ID, userId);
+		i.putExtra("is_friend", true);
 		startActivity(i);
 	}
 
@@ -129,8 +130,8 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 	}
 	
 	@Override
-	protected void onExtraButtonPressed() {
-		super.onExtraButtonPressed();
+	protected void onExtraButtonPressed(View v) {
+		super.onExtraButtonPressed(v);
 		startActivity(new Intent(this, WhyqFindMenuActivity.class));
 	}
 

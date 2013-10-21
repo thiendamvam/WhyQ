@@ -115,6 +115,7 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 		// TODO Auto-generated method stub
 		Intent i = new Intent(WhyqFriendsTwitterActivity.this,WhyqUserProfileActivity.class);
 		i.putExtra(WhyqUserProfileActivity.ARG_USER_ID, userId);
+		i.putExtra("is_friend", true);
 		startActivity(i);
 		
 	}

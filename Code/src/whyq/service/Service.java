@@ -571,7 +571,7 @@ public class Service implements Runnable {
 	}
 
 	public void inviteFriendsWhyq(String encryptedToken, String userId) {
-		_action = ServiceAction.ActionInviteFriendsTwitter;
+		_action = ServiceAction.ActionInviteFriendsWhyQ;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);

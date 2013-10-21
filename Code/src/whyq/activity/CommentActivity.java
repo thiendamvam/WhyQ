@@ -80,8 +80,8 @@ public class CommentActivity extends ImageWorkerActivity {
 	}
 
 	@Override
-	protected void onExtraButtonPressed() {
-		super.onExtraButtonPressed();
+	protected void onExtraButtonPressed(View v) {
+		super.onExtraButtonPressed(v);
 		if (mFilterLayout.getVisibility() == View.VISIBLE) {
 			mFilterLayout.setVisibility(View.GONE);
 			findViewById(R.id.triAngle).setVisibility(View.GONE);

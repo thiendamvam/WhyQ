@@ -98,6 +98,7 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 			String avatar) {
 		Intent i = new Intent(this, WhyqUserProfileActivity.class);
 		i.putExtra(WhyqUserProfileActivity.ARG_USER_ID, userId);
+		i.putExtra("is_friend", true);
 		startActivity(i);
 	}
 
