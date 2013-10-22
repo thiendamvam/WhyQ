@@ -19,7 +19,8 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/icon_back" />
+            android:background="@drawable/icon_back"
+            android:onClick="onBack" />
     </RelativeLayout>
 
     <View

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whyq.WhyqApplication;
+import whyq.model.Bill;
 import whyq.model.BillItem;
 import whyq.model.BillPlaceItem;
 import whyq.model.ResponseData;
@@ -38,6 +39,8 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 	protected static final String ARG_MODE = "mode";
 
 	protected static final String SAVING = "saving";
+
+	public static ArrayList<Bill> listBill = new ArrayList<Bill>();
 
 	private BillAdapter mBillAdapter;
 	
@@ -88,6 +91,7 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 				Bundle bundle = new Bundle();
 				bundle.putString("store_id", item.getStore_id());
 //				bundle.putString("list_items", item.getBusiness_info());
+				bundle.putBoolean("ordered", true);
 				bundle.putString("lat", "" + item.getBusiness_info().getLatitude());
 				bundle.putString("lon", "" + item.getBusiness_info().getLongitude());
 				bundle.putString("start_time", "" + item.getBusiness_info().getStart_time());

@@ -12,6 +12,7 @@
         android:id="@+id/buttonBackContainer"
         android:layout_width="40dp"
         android:layout_height="match_parent"
+        android:onClick="onBackClicked"
         android:paddingLeft="@dimen/base_padding"
         android:paddingRight="@dimen/base_padding" >
 

@@ -45,7 +45,12 @@ public class WhyQBillScreen extends FragmentActivity{
 		tvTitle.setText("Bills");
 		lvBill = (ListView)findViewById(R.id.lvBill);
 		listBill = new ArrayList<Bill>();
-		listBill = getBillList(ListDetailActivity.billList);
+		boolean isOrdered = getIntent().getBooleanExtra("ordered", false);
+		if(!isOrdered){
+			listBill = getBillList(ListDetailActivity.billList);	
+		}else{
+			listBill = WhyqCheckedBillActivity.listBill;
+		}
 		tvTotal = (TextView)findViewById(R.id.tvTotal);
 		tvDiscount = (TextView)findViewById(R.id.tvDiscount);
 		tvTotalAfterDiscount = (TextView)findViewById(R.id.tvTotalafterDiscount);
