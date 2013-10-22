@@ -224,5 +224,7 @@ public class CommentActivity extends ImageWorkerActivity {
 		}
 
 	}
-
+	public void onBackClicked(View v){
+		finish();
+	}
 }

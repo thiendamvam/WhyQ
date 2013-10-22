@@ -382,4 +382,8 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 		}
 
 	}
+	
+	public void onBackClicked(View v){
+		finish();
+	}
 }
