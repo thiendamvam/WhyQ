@@ -81,8 +81,8 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				
-				BillItem item = (BillItem)arg1.getTag();
+				whyq.activity.WhyqCheckedBillActivity.BillAdapter.ViewHolder holder= (whyq.activity.WhyqCheckedBillActivity.BillAdapter.ViewHolder)arg1.getTag();
+				BillItem item = (BillItem)holder.data;
 				Intent intent = new Intent(WhyqCheckedBillActivity.this, WhyQBillScreen.class);
 
 				Bundle bundle = new Bundle();
@@ -245,10 +245,10 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 				holder.price.setText("$ " + item.getTotal_value());
 			}
 			holder.name.setText(item.getBusiness_info().getName_store());
-
+			holder.data = item;
 			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
 					holder.photo);
-			convertView.setTag(item);
+			convertView.setTag(holder);
 			return convertView;
 		}
 
@@ -262,6 +262,7 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 		}
 
 		class ViewHolder {
+			public BillItem data;
 			ImageView photo;
 			TextView name;
 			TextView unit;
@@ -343,10 +344,10 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 				holder.price.setText("$ " + item.getTotalValue());
 			}
 			holder.name.setText(item.getStoreName());
-
+			holder.data = item;
 			mImageWorker.downloadImage(item.getStoreLogo(), holder.photo);
 			
-			convertView.setTag(item);
+			convertView.setTag(holder);
 			return convertView;
 		}
 
@@ -360,6 +361,7 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 		}
 
 		class ViewHolder {
+			public BillPlaceItem data;
 			ImageView photo;
 			TextView name;
 			TextView unit;

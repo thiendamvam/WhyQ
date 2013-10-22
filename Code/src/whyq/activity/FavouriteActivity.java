@@ -249,6 +249,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	}
 	protected void exeSearch(String string) {
 		// TODO Auto-generated method stub
+		page = 1;
 		searchKey = string;
 		isSearch = true;
 		exeListActivity(true);
@@ -642,6 +643,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 					exeDisableSearchFocus();
 					isSearch = false;
 					exeDisableSearchFocus();
+					page = 0;
 					exeListActivity(false);
 					
 				}else{
@@ -733,6 +735,8 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 			}else if(data.getStatus().equals("401")){
 				Util.loginAgain(getParent(), data.getMessage());
 			}else if(data.getStatus().equals("204")){
+				if(isLoadMore)
+					page--;
 				
 			}else{
 				Util.showDialog(getParent(), data.getMessage());
