@@ -74,7 +74,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	private ArrayList<Store> permListMain = new ArrayList<Store>();
 
 	private boolean isLoadMore = false;
-	private int page = 1;
+	private int page = 0;
 	
 	public static int screenWidth;
 	public static int screenHeight;
