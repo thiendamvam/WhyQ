@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -34,6 +35,8 @@ public class WhyQBillScreen extends FragmentActivity{
 	private float totalafterDiscount = 0;
 	private Button btnDone;
 	private Bundle bundle;
+	private String pushNotificationData;
+	private boolean isFromPushNotification = false;
 	public static int LOGIN_REQUEST = 1;
 	
 	@Override
@@ -41,6 +44,11 @@ public class WhyQBillScreen extends FragmentActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_bill_screen);
 		bundle = getIntent().getBundleExtra("data");
+		pushNotificationData =  getIntent().getExtras().getString( "com.parse.Data" );
+		if(pushNotificationData!=null){
+			isFromPushNotification  = true;
+			Log.d("pushNotificationData","data:"+pushNotificationData);
+		}
 		tvTitle = (TextView)findViewById(R.id.tvHeaderTitle);
 		tvTitle.setText("Bills");
 		lvBill = (ListView)findViewById(R.id.lvBill);

@@ -1,6 +1,7 @@
 package whyq.service.pushnotification;
 
 import whyq.WhyqMain;
+import whyq.activity.WhyQBillScreen;
 import whyq.adapter.WhyqMenuAdapter;
 
 import com.parse.Parse;
@@ -12,13 +13,13 @@ import com.parse.ParseUser;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 public class ParseApplication {
 
 	
 	private static final String APPLICATION_ID = "b6Aq0s7gZq2XK79XJJMxCJu2GAi8FAarj2X3QRXS";
 	private static final String CLIENT_KEY = "nbVoZs1qjWcOCMk4ztIQP0pZzIXPamBk4gfuT0bH";
-
 	public static void registerPushNotification(Context context) {
 
 		// Add your initialization code here
@@ -36,7 +37,21 @@ public class ParseApplication {
 	
 	public static void exePushNotification(Context context){
         // inform the Parse Cloud that it is ready for notifications
-        PushService.setDefaultPushCallback(context, WhyqMain.class);
-        ParseInstallation.getCurrentInstallation().saveInBackground();
+		try {
+	        PushService.setDefaultPushCallback(context, WhyQBillScreen.class);
+	        ParseInstallation.getCurrentInstallation().saveInBackground();
+	        ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
+	        if(parseInstallation!=null){
+		        String installationId = parseInstallation.getInstallationId();
+		        String objectId = parseInstallation.getObjectId();
+		        Log.d("exePushNotification","INSTALLATION_ID "+installationId);
+		        
+	        	
+	        }
+	        
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 }
