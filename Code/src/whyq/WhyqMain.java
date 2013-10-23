@@ -11,6 +11,7 @@ import whyq.activity.ProfileActivityGroup;
 import whyq.activity.WhyqFriendsActivity;
 import whyq.activity.WhyqUserProfileActivity;
 import whyq.model.User;
+import whyq.service.pushnotification.ParseApplication;
 import whyq.utils.MyLocationListener;
 import whyq.utils.RSA;
 import whyq.utils.WhyqUtils;
@@ -29,6 +30,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 
+import com.parse.ParseAnalytics;
 import com.whyq.R;
 
 public class WhyqMain extends TabActivity {
@@ -182,6 +184,13 @@ public class WhyqMain extends TabActivity {
 			tabHost.setCurrentTab(0);
 			// rsa = new RSA();
 			// getListData();
+			
+			/***
+			 * Register pushnotification
+			 */
+			ParseAnalytics.trackAppOpened(getIntent());
+			ParseApplication.registerPushNotification(context);
+			ParseApplication.exePushNotification(context);
 		}
 
 //	}

@@ -781,7 +781,17 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/profile/edit", params, true, false);
 	}
-
+	public void pushNotification(String isReceiveNotify, String isShowFriend) {
+		// TODO Auto-generated method stub
+		// value is 0  or 1 for isReceivedNotify and isShowFriend
+		HashMap<String, String> params = new HashMap<String, String>();
+		_action = ServiceAction.ActionEditProfile;
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		params.put("is_receive_notification", isReceiveNotify);
+		params.put("is_show_friend", isReceiveNotify);
+		request("/m/member/setting/edit", params, true, false);
+	}
 	public void searchOnlyFriend(SearchFriendCriteria criteria,
 			String encryptedToken, String key, String accessToken,
 			String oauth_token, String oauth_token_secret) {

@@ -116,20 +116,26 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 		if (result != null
 				&& result.getAction() == ServiceAction.ActionGetFriends) {
 			DataParser parser = new DataParser();
-			ResponseData data =  (ResponseData) parser.parseFriendWhyq(String
-					.valueOf(result.getData()));
-			
-			if (data.getStatus().equals("401")) {
-				Util.loginAgain(this, data.getMessage());
-			} else {
-				List<FriendWhyq> friends = (List<FriendWhyq>) data.getData();;
-				if (friends == null || friends.size() == 0) {
-					AlertFindFriendDialog dialog = new AlertFindFriendDialog();
-					dialog.setOnDialogButtonClickListern(this);
-					dialog.show(getSupportFragmentManager(), "Dialog");
+
+			try {
+				ResponseData data =  (ResponseData) parser.parseFriendWhyq(String
+						.valueOf(result.getData()));
+				
+				if (data.getStatus().equals("401")) {
+					Util.loginAgain(this, data.getMessage());
 				} else {
-					mFriendWhyqAdapter.setItems(friends);
+					List<FriendWhyq> friends = (List<FriendWhyq>) data.getData();;
+					if (friends == null || friends.size() == 0) {
+						AlertFindFriendDialog dialog = new AlertFindFriendDialog();
+						dialog.setOnDialogButtonClickListern(this);
+						dialog.show(getSupportFragmentManager(), "Dialog");
+					} else {
+						mFriendWhyqAdapter.setItems(friends);
+					}
 				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}else if(result.isSuccess()&& (result != null
 				&& result.getAction() == ServiceAction.ActionSearchFriendsFacebook)){
