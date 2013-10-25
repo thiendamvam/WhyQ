@@ -9,6 +9,7 @@ import whyq.adapter.WhyQBillAdapter;
 import whyq.model.Bill;
 import whyq.paypal.LoginPaypalActivity;
 import whyq.paypal.helper.AccessHelperConnect;
+import whyq.service.paypal.PayPalUI;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class WhyQBillScreen extends FragmentActivity{
 	private Bundle bundle;
 	private String pushNotificationData;
 	private boolean isFromPushNotification = false;
+	private boolean isOrdered;
 	public static int LOGIN_REQUEST = 1;
 	
 	@Override
@@ -53,17 +55,20 @@ public class WhyQBillScreen extends FragmentActivity{
 		tvTitle.setText("Bills");
 		lvBill = (ListView)findViewById(R.id.lvBill);
 		listBill = new ArrayList<Bill>();
-		boolean isOrdered = getIntent().getBooleanExtra("ordered", false);
+		isOrdered = bundle.getBoolean("is_ordered", false);
+		btnDone = (Button)findViewById(R.id.btnDone);
 		if(!isOrdered){
-			listBill = getBillList(ListDetailActivity.billList);	
+			listBill = getBillList(ListDetailActivity.billList);
+			btnDone.setText("Order");
 		}else{
 			listBill = WhyqCheckedBillActivity.listBill;
+			btnDone.setText("Paypal");
 		}
 		tvTotal = (TextView)findViewById(R.id.tvTotal);
 		tvDiscount = (TextView)findViewById(R.id.tvDiscount);
 		tvTotalAfterDiscount = (TextView)findViewById(R.id.tvTotalafterDiscount);
-		btnDone = (Button)findViewById(R.id.btnDone);
-		btnDone.setText("Order");
+		
+		
 		bindDatatoListview();
 		bindBillValue();
 	}
@@ -114,8 +119,15 @@ public class WhyQBillScreen extends FragmentActivity{
 	public void onDoneClicked(View v){
 //		final Intent loginIntent = new Intent(this, LoginPaypalActivity.class);
 //		startActivityForResult(loginIntent, LOGIN_REQUEST);
-		WhyqOrderMenuActivity frag = new WhyqOrderMenuActivity();	
-		frag.show(getFragmentManager(), "WhyqOrderMenuActivity");
+
+		if(isOrdered){
+			PayPalUI paypalUI = new PayPalUI();
+			getSupportFragmentManager().beginTransaction().add(paypalUI, "").commit();
+			
+		}else{
+			WhyqOrderMenuActivity frag = new WhyqOrderMenuActivity();	
+			frag.show(getFragmentManager(), "WhyqOrderMenuActivity");
+		}
 //		Intent intent = new Intent(WhyQBillScreen.this, WhyqOrderMenuActivity.class	);
 //		intent.putExtra("data", bundle);
 //		startActivity(intent);

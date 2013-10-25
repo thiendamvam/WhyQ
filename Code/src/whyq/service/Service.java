@@ -881,13 +881,13 @@ public class Service implements Runnable {
 	}
 
 	public void getPaypalURI(String token, String billId ) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generat ed method stub
 		_action = ServiceAction.ActionGetPaypalURI;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", token);
 		params.put("bill_id", billId);
 		params.put("drt", "true");
-		params.put("currentcycode", "AUD");
+		params.put("currencyCode", "AUD");
 		if(Constants.isSaxbox)
 			params.put("env", Constants.isSaxbox?"dev":"live");
 		params.put("app", Constants.APP);

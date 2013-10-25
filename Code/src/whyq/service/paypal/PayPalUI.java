@@ -45,7 +45,7 @@ public class PayPalUI extends DialogFragment implements IServiceListener{
 		setStyle(DialogFragment.STYLE_NO_TITLE, STYLE_NO_TITLE);
 		setStyle(DialogFragment.STYLE_NO_FRAME, DialogFragment.STYLE_NORMAL);
 		String rsaToken = WhyqApplication.Instance().getRSAToken();
-		String billId = "";
+		String billId = "12";
 		service = new Service(this);
 		service.getPaypalURI(rsaToken, billId);
 	}

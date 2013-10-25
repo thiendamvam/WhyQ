@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import whyq.WhyqApplication;
+import whyq.activity.WhyqHistoryActivity.BillAdapter.ViewHolder;
 import whyq.model.BillItem;
 import whyq.model.BusinessInfo;
 import whyq.model.ResponseData;
@@ -14,6 +15,7 @@ import whyq.service.ServiceResponse;
 import whyq.utils.ImageViewHelper;
 import whyq.utils.Util;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +54,21 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
+				ViewHolder holder = (ViewHolder)arg1.getTag();
+				Intent intent = new Intent(WhyqHistoryActivity.this, WhyQBillScreen.class);
+				
+				BillItem item = holder.data;
+				
+				Bundle bundle = new Bundle();
+				bundle.putString("store_id", item.getStore_id());
+//				bundle.putString("list_items", item.getBusiness_info());
+				bundle.putBoolean("is_ordered", true);
+				bundle.putString("lat", "" + item.getBusiness_info().getLatitude());
+				bundle.putString("lon", "" + item.getBusiness_info().getLongitude());
+				bundle.putString("start_time", "" + item.getBusiness_info().getStart_time());
+				bundle.putString("close_time", "" + item.getBusiness_info().getEnd_time());
+				intent.putExtra("data", bundle);
+				startActivity(intent);
 			}
 		});
 
@@ -122,9 +139,9 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 				Util.applyTypeface(convertView,
 						WhyqApplication.sTypefaceRegular);
 			}
-
-			ViewHolder holder = getViewHolder(convertView);
 			BillItem item = mItems.get(position);
+			ViewHolder holder = getViewHolder(convertView, item);
+			
 			if (item.getStatus_bill() > 0 && item.getStatus_bill() <= 6) {
 				holder.circleIcon.setImageResource(STATUS_MAP[item.getStatus_bill() - 1]);
 			} else {
@@ -142,10 +159,10 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 			return convertView;
 		}
 
-		private ViewHolder getViewHolder(View view) {
+		private ViewHolder getViewHolder(View view, BillItem item) {
 			ViewHolder holder = (ViewHolder) view.getTag();
 			if (holder == null) {
-				holder = new ViewHolder(view);
+				holder = new ViewHolder(view, item);
 				view.setTag(holder);
 			}
 			return holder;
@@ -157,8 +174,9 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 			TextView name;
 			TextView unit;
 			Button price;
+			private BillItem data;
 
-			public ViewHolder(View view) {
+			public ViewHolder(View view, BillItem item) {
 				circleIcon = (ImageView) view.findViewById(R.id.circle);
 				photo = (ImageView) view.findViewById(R.id.photo);
 				photo.getLayoutParams().width = PHOTO_SIZE;
@@ -166,6 +184,7 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 				name = (TextView) view.findViewById(R.id.name);
 				unit = (TextView) view.findViewById(R.id.unit);
 				price = (Button) view.findViewById(R.id.price);
+				data = item;
 			}
 		}
 
