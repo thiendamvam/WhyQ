@@ -15,6 +15,7 @@ public class Constants {
 	//public static final String CONSUMER_KEY = "uMtOaN3CLE7dvvVSR1giLA";
 	//public static final String CONSUMER_SECRET= "erVQyuoDUu3cwOG48cgUm5V14puqN3JbjSP4v4NE";
 	
+	public static final boolean isSaxbox = true;
 	public static final String CONSUMER_KEY = "mpaQ9GA3ICVbnZTZH2FEdg";//"mpaQ9GA3ICVbnZTZH2FEdg";
 	public static final String CONSUMER_SECRET= "BH37EUqAHc1vAnxvdS2X4fJsxxuZRCJlT6VtT4avQNI";//"BH37EUqAHc1vAnxvdS2X4fJsxxuZRCJlT6VtT4avQNI";
 	
