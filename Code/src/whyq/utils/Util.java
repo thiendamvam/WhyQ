@@ -291,7 +291,24 @@ public class Util {
 
 		// Maybe save this: deviceUuid.toString()); to the preferences.
 	}
-
+	public static void getDeviceInfo(){
+		String debug2 = System.getProperty("os.version");
+        String debug3 = android.os.Build.VERSION.RELEASE;
+        String debug4 = android.os.Build.DEVICE; 
+        String debug5 = android.os.Build.MODEL; 
+        String debug6 = android.os.Build.PRODUCT; 
+        String debug7 = android.os.Build.BRAND; 
+        String debug8 = android.os.Build.DISPLAY; 
+        String debug9 = android.os.Build.CPU_ABI; 
+        String debug10 = android.os.Build.CPU_ABI2; 
+        String debug11 = android.os.Build.UNKNOWN; 
+        String debug12 = android.os.Build.HARDWARE;
+        String debug13 = android.os.Build.ID; 
+        String debug14 = android.os.Build.MANUFACTURER; 
+        String debug15 = android.os.Build.SERIAL; 
+        String debug16 = android.os.Build.USER; 
+        String debug17 = android.os.Build.HOST; 
+	}
 	public static String encryptToken(String token) throws InvalidKeyException,
 			NoSuchAlgorithmException, NoSuchPaddingException,
 			IllegalBlockSizeException, BadPaddingException,

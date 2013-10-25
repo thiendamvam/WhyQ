@@ -1,8 +1,11 @@
 package whyq.service.pushnotification;
 
 import whyq.WhyqMain;
+import whyq.activity.HomeActivity;
+import whyq.activity.ListActivity;
 import whyq.activity.WhyQBillScreen;
 import whyq.adapter.WhyqMenuAdapter;
+import whyq.service.Service;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
@@ -45,7 +48,11 @@ public class ParseApplication {
 		        String installationId = parseInstallation.getInstallationId();
 		        String objectId = parseInstallation.getObjectId();
 		        Log.d("exePushNotification","INSTALLATION_ID "+installationId);
-		        
+		        String appName = "Whyq";
+				String appVerions = "1";
+				String deviceName = android.os.Build.DEVICE;
+				String deviceModel = android.os.Build.MODEL;
+				((WhyqMain)context).sendDeviceInfoToPushNotificationServer(appName, appVerions, deviceName, deviceModel, installationId, objectId);
 	        	
 	        }
 	        

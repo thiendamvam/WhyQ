@@ -799,15 +799,17 @@ public class Service implements Runnable {
 		// value is 0  or 1 for isReceivedNotify and isShowFriend
 		HashMap<String, String> params = new HashMap<String, String>();
 		_action = ServiceAction.ActionEditProfile;
+		params.put("token", ""+WhyqApplication.Instance().getRSAToken());
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		params.put("appname", appName);
+		params.put("development", "pro");
 		params.put("appversion", appVersion);
 		params.put("devicename", deviceName);
 		params.put("devicemodel", deviceModel);
 		params.put("installationId", installationId);
 		params.put("objectId", objectId);
-		request("/m/member/setting/edit", params, true, false);
+		request("/m/member/device/register", params, true, false);
 	}
 	public void searchOnlyFriend(SearchFriendCriteria criteria,
 			String encryptedToken, String key, String accessToken,

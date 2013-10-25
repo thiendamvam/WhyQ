@@ -10,7 +10,10 @@ import whyq.activity.LoginHome;
 import whyq.activity.ProfileActivityGroup;
 import whyq.activity.WhyqFriendsActivity;
 import whyq.activity.WhyqUserProfileActivity;
+import whyq.interfaces.IServiceListener;
 import whyq.model.User;
+import whyq.service.Service;
+import whyq.service.ServiceResponse;
 import whyq.service.pushnotification.ParseApplication;
 import whyq.utils.MyLocationListener;
 import whyq.utils.RSA;
@@ -33,7 +36,7 @@ import android.widget.TabHost.TabSpec;
 import com.parse.ParseAnalytics;
 import com.whyq.R;
 
-public class WhyqMain extends TabActivity {
+public class WhyqMain extends TabActivity implements IServiceListener {
 	/** Called when the activity is first created. */
 	public static String UID = "121";
 	private static TabHost tabHost;
@@ -434,5 +437,18 @@ public class WhyqMain extends TabActivity {
 		} else {
 			return super.onKeyDown(keyCode, event);
 		}
+	}
+
+	public void sendDeviceInfoToPushNotificationServer(String appName, String appVersion, String deviceName, String deviceModel, String installationId, String objectId) {
+		// TODO Auto-generated method stub
+		Service service = new Service(WhyqMain.this);
+		service.registerDeviceToPushNotificationServer(appName, appVersion, deviceName, deviceModel, installationId, objectId);
+			
+	}
+
+	@Override
+	public void onCompleted(Service service, ServiceResponse result) {
+		// TODO Auto-generated method stub
+		
 	}
 }
