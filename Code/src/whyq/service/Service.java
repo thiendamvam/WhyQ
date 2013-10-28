@@ -325,6 +325,12 @@ public class Service implements Runnable {
 		case ActionEditProfile:
 			resObj = parser.parserLoginData(result);
 			break;
+		case ActionPushNotification:
+			resObj = parser.parserLoginData(result); // same struct to login api
+			break;
+		case ActionRegisterDeviceToPushServer:
+			resObj = parser.parserLoginData(result); // same struct to login api
+			break;
 		case ActionGetInvitations:
 			resObj = parser.parseLUserCheckedResult(result);// Same structor
 															// data
@@ -785,7 +791,8 @@ public class Service implements Runnable {
 		// TODO Auto-generated method stub
 		// value is 0  or 1 for isReceivedNotify and isShowFriend
 		HashMap<String, String> params = new HashMap<String, String>();
-		_action = ServiceAction.ActionEditProfile;
+		_action = ServiceAction.ActionPushNotification;
+		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		params.put("is_receive_notification", isReceiveNotify);
@@ -798,7 +805,7 @@ public class Service implements Runnable {
 		// TODO Auto-generated method stub
 		// value is 0  or 1 for isReceivedNotify and isShowFriend
 		HashMap<String, String> params = new HashMap<String, String>();
-		_action = ServiceAction.ActionEditProfile;
+		_action = ServiceAction.ActionRegisterDeviceToPushServer;
 		params.put("token", ""+WhyqApplication.Instance().getRSAToken());
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);

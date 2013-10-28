@@ -31,8 +31,11 @@ public class ConsumeServiceActivity extends NavigationActivity implements IServi
 		try {
 			String token = XMLParser.getToken(WhyqApplication._instance
 					.getApplicationContext());
-			token = Util.encryptToken(token);
-			Log.d("token", token);
+			if(token!=null)
+				token = Util.encryptToken(token);
+			else 
+				return null;
+			Log.d("token",""+ token);
 			return token;
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();

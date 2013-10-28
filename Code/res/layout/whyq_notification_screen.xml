@@ -85,7 +85,8 @@
             android:layout_below="@+id/lnFindFromFW"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="8dp" >
+            android:padding="8dp"
+            android:visibility="invisible" >
 
             <CheckBox
                 android:id="@+id/cbxSoundsNotification"
@@ -107,7 +108,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/normal_delivery_color" />
+            android:background="@color/normal_delivery_color"
+            android:visibility="invisible" />
     </LinearLayout>
 
 </LinearLayout>
