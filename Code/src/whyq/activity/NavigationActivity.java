@@ -27,6 +27,7 @@ public class NavigationActivity extends FragmentActivity implements
 	private FrameLayout mTitleContainer;
 	private ImageView mButtonBack;
 	private LinearLayout mRootView;
+	private View buttonBackContainer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class NavigationActivity extends FragmentActivity implements
 //		progressBarLP.height = WhyqApplication.sBaseViewHeight * 3 / 5;
 
 		mButtonBack = (ImageView) findViewById(R.id.buttonBack);
-		View buttonBackContainer = findViewById(R.id.buttonBackContainer);
+		buttonBackContainer = findViewById(R.id.buttonBackContainer);
 //		buttonBackContainer.getLayoutParams().width = WhyqApplication.sBaseViewHeight;
 //		buttonBackContainer.getLayoutParams().height = WhyqApplication.sBaseViewHeight;
 		buttonBackContainer.setOnClickListener(new OnClickListener() {
@@ -202,4 +203,11 @@ public class NavigationActivity extends FragmentActivity implements
 				.inflate(R.layout.navigation_title_text, null);
 	}
 
+	public void setBackButtonFieldShowing(boolean isShow){
+		if(isShow){
+			buttonBackContainer.setVisibility(View.VISIBLE);
+		}else{
+			buttonBackContainer.setVisibility(View.GONE);
+		}
+	}
 }

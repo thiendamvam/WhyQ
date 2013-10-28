@@ -46,6 +46,8 @@ public class WhyQBillScreen extends FragmentActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_bill_screen);
 		bundle = getIntent().getBundleExtra("data");
+		if(bundle==null)
+			bundle = getIntent().getExtras();
 		pushNotificationData =  getIntent().getExtras().getString( "com.parse.Data" );
 		if(pushNotificationData!=null){
 			isFromPushNotification  = true;

@@ -123,9 +123,11 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		if(isFriendProfile){
 			setting.setImageResource(R.drawable.icon_invite);
 			setting.setTag(true);
+			setBackButtonFieldShowing(true);
 		}else{
 			setting.setImageResource(R.drawable.icon_setting);
 			setting.setTag(false);
+			setBackButtonFieldShowing(false);
 		}
 		
 		
