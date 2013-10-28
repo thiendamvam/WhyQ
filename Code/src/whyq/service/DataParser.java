@@ -1400,10 +1400,17 @@ public class DataParser {
 						item.setId(getValue(element, "id"));
 						item.setPrice(getValue(element, "item_price"));
 						item.setProductId(getValue(element, "product_id"));
-						item.setProductName(getValue(element, "id"));
-						item.setThumb(getValue(element, "id"));
-						item.setUnit(getValue(element, "id"));
-						item.setAmount(getValue(element, "id"));
+						item.setUnit(getValue(element, "quantity"));
+						
+						NodeList productes = element.getElementsByTagName("product");
+						for(int j =0 ; j<productes.getLength();j++){
+							Element elementChild = (Element)productes.item(j);
+							item.setProductName(getValue(element, "name_product"));
+							item.setThumb(getValue(element, "image_thumb"));
+							
+//							item.setAmount(getValue(element, "id"));
+						}
+
 						listBill.add(item);
 						
 					} catch (Exception e) {
