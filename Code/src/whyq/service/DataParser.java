@@ -28,6 +28,7 @@ import whyq.handler.FriendWhyqHandler;
 import whyq.handler.PhotoHandler;
 import whyq.handler.UserHandler;
 import whyq.handler.UserProfileHandler;
+import whyq.model.Bill;
 import whyq.model.BillItem;
 import whyq.model.Distance;
 import whyq.model.Faq;
@@ -1388,47 +1389,29 @@ public class DataParser {
 				data.setStatus(statusResponse);
 //				data.setData(userHandler.getUser());
 				data.setMessage(mes);
-				NodeList permNodeList =  doc.getElementsByTagName("obj");
+				ArrayList<Bill> listBill = new ArrayList<Bill>();
+				NodeList permNodeList =  doc.getElementsByTagName("detail");
 				int size  = permNodeList.getLength();
 				for( int i = 0; i< size; i++ ){
-//					try {
-//
+					try {
+
 						Element element = (Element ) permNodeList.item(i);
-						BillItem item = new BillItem();
-//						item.setItd(getValue(element, "id"));
-//						item.setUser_id(getValue(element, "id"));
-//						item.setStore_id(getValue(element, "id"));
-//						item.setTotal_value(getValue(element, "id"));
-//						item.setTotal_real_value(getValue(element, "id"));
-//						item.setDiscount_value(getValue(element, "id"));
-//						item.setDeliver_fee_value(getValue(element, "id"));
-//						item.setProfitValue(getValue(element, "id")	);
-//						item.setTransaction_id(getValue(element, "id"));
-//						item.setPromotionId(getValue(element, "id"));
-//						item.setCode_bill(getValue(element, "id"));
-//						item.setNameOrder(getValue(element, "id"));
-//						item.setNote(getValue(element, "id"));
-//						item.setDeliver_to(getValue(element, "id"));
-//						item.setDeliver_type(getValue(element, "id"));
-//						item.setTime_deliver_cv(getValue(element, "id"));
-//						item.setPhoneDeliver(getValue(element, "id"));
-//						item.setStatus_bill(getValue(element, "id"));
-//						item.setParent_bill_id(getValue(element, "id"));
-//						item.setHotelChargeCode(getValue(element, "id"));
-//						item.setOrFrom(getValue(element, "id"));
-//						item.setInnscorafrica(getValue(element, "id"));
-//						item.setCreatedate(getValue(element, "id"));
-//						item.setUpdatedate(getValue(element, "id"));
-//						item.setStatus_bill_old(getValue(element, "id"));
-//						item.setText_status_bill(getValue(element, "id"));
-//						item.setCreatedate_cv(getValue(element, "id"));
-//						item.setTime_deliver_cv(getValue(element, "id"));
-//						
-//					} catch (Exception e) {
-//						// TODO: handle exception
-//						e.printStackTrace();
-//					}
+						Bill item = new Bill();
+						item.setId(getValue(element, "id"));
+						item.setPrice(getValue(element, "item_price"));
+						item.setProductId(getValue(element, "product_id"));
+						item.setProductName(getValue(element, "id"));
+						item.setThumb(getValue(element, "id"));
+						item.setUnit(getValue(element, "id"));
+						item.setAmount(getValue(element, "id"));
+						listBill.add(item);
+						
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
 				}		
+				data.setData(listBill);
 				return data;
 			}else{
 				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();

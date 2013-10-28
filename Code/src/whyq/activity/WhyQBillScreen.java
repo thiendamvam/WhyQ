@@ -5,12 +5,19 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import whyq.WhyqApplication;
 import whyq.adapter.WhyQBillAdapter;
+import whyq.controller.WhyqListController;
+import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
-import whyq.paypal.LoginPaypalActivity;
-import whyq.paypal.helper.AccessHelperConnect;
+import whyq.model.ResponseData;
+import whyq.model.Store;
+import whyq.service.Service;
+import whyq.service.ServiceAction;
+import whyq.service.ServiceResponse;
 import whyq.service.paypal.PayPalUI;
-import android.app.Activity;
+import whyq.utils.Util;
+import whyq.view.Whyq;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -23,7 +30,7 @@ import android.widget.Toast;
 
 import com.whyq.R;
 
-public class WhyQBillScreen extends FragmentActivity{
+public class WhyQBillScreen extends FragmentActivity implements IServiceListener{
 	
 	private TextView tvTitle;
 	private ListView lvBill;
@@ -65,6 +72,8 @@ public class WhyQBillScreen extends FragmentActivity{
 		}else{
 			listBill = WhyqCheckedBillActivity.listBill;
 			btnDone.setText("Paypal");
+			String billId = bundle.getString("bill_id");
+			exeGetBillDetail(billId);
 		}
 		tvTotal = (TextView)findViewById(R.id.tvTotal);
 		tvDiscount = (TextView)findViewById(R.id.tvDiscount);
@@ -73,6 +82,12 @@ public class WhyQBillScreen extends FragmentActivity{
 		
 		bindDatatoListview();
 		bindBillValue();
+	}
+	private void exeGetBillDetail(String billId) {
+		// TODO Auto-generated method stub
+		Service service = new Service(WhyQBillScreen.this);
+		service.getBillDetail(billId, WhyqApplication.Instance().getRSAToken());
+		
 	}
 	private void bindBillValue() {
 		// TODO Auto-generated method stub
@@ -119,9 +134,6 @@ public class WhyQBillScreen extends FragmentActivity{
 		finish();
 	}
 	public void onDoneClicked(View v){
-//		final Intent loginIntent = new Intent(this, LoginPaypalActivity.class);
-//		startActivityForResult(loginIntent, LOGIN_REQUEST);
-
 		if(isOrdered){
 			PayPalUI paypalUI = new PayPalUI();
 			getSupportFragmentManager().beginTransaction().add(paypalUI, "").commit();
@@ -130,10 +142,6 @@ public class WhyQBillScreen extends FragmentActivity{
 			WhyqOrderMenuActivity frag = new WhyqOrderMenuActivity();	
 			frag.show(getFragmentManager(), "WhyqOrderMenuActivity");
 		}
-//		Intent intent = new Intent(WhyQBillScreen.this, WhyqOrderMenuActivity.class	);
-//		intent.putExtra("data", bundle);
-//		startActivity(intent);
-		
 	}
 	
 	@Override
@@ -149,5 +157,24 @@ public class WhyQBillScreen extends FragmentActivity{
 			Toast.makeText(getApplicationContext(),
 					R.string.toast_login_failed, Toast.LENGTH_LONG).show();
 		}
+	}
+	@Override
+	public void onCompleted(Service service, ServiceResponse result) {
+		// TODO Auto-generated method stub
+		if(result.isSuccess()&& result.getAction() == ServiceAction.ActionGetBillDetail){
+			ResponseData data = (ResponseData)result.getData();
+			if(data.getStatus().equals("200")){
+				listBill = (ArrayList<Bill>)data.getData();
+				if(listBill!=null){
+					
+					bindDatatoListview();
+					bindBillValue();
+				}
+			}else if(data.getStatus().equals("401")){
+				Util.loginAgain(getParent(), data.getMessage());
+			}else if(data.getStatus().equals("204")){
+			}else{
+			}
+		} 
 	}
 }
