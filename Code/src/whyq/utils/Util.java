@@ -49,11 +49,13 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextPaint;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -67,9 +69,10 @@ import com.whyq.R;
 public class Util {
 	public static final int TIME_OUT = 30000;
 
-	public Util(){
-		
+	public Util() {
+
 	}
+
 	public static Typeface sTypefaceRegular = Typeface.createFromAsset(
 			WhyqApplication.Instance().getApplicationContext().getAssets(),
 			"Roboto-Regular.ttf");;
@@ -191,12 +194,12 @@ public class Util {
 		alertError.setButton("Login", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				
+
 				Intent intent = new Intent(context, LoginHome.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			
+
 				context.startActivity(intent);
 			}
 		});
@@ -291,24 +294,26 @@ public class Util {
 
 		// Maybe save this: deviceUuid.toString()); to the preferences.
 	}
-	public static void getDeviceInfo(){
+
+	public static void getDeviceInfo() {
 		String debug2 = System.getProperty("os.version");
-        String debug3 = android.os.Build.VERSION.RELEASE;
-        String debug4 = android.os.Build.DEVICE; 
-        String debug5 = android.os.Build.MODEL; 
-        String debug6 = android.os.Build.PRODUCT; 
-        String debug7 = android.os.Build.BRAND; 
-        String debug8 = android.os.Build.DISPLAY; 
-        String debug9 = android.os.Build.CPU_ABI; 
-        String debug10 = android.os.Build.CPU_ABI2; 
-        String debug11 = android.os.Build.UNKNOWN; 
-        String debug12 = android.os.Build.HARDWARE;
-        String debug13 = android.os.Build.ID; 
-        String debug14 = android.os.Build.MANUFACTURER; 
-        String debug15 = android.os.Build.SERIAL; 
-        String debug16 = android.os.Build.USER; 
-        String debug17 = android.os.Build.HOST; 
+		String debug3 = android.os.Build.VERSION.RELEASE;
+		String debug4 = android.os.Build.DEVICE;
+		String debug5 = android.os.Build.MODEL;
+		String debug6 = android.os.Build.PRODUCT;
+		String debug7 = android.os.Build.BRAND;
+		String debug8 = android.os.Build.DISPLAY;
+		String debug9 = android.os.Build.CPU_ABI;
+		String debug10 = android.os.Build.CPU_ABI2;
+		String debug11 = android.os.Build.UNKNOWN;
+		String debug12 = android.os.Build.HARDWARE;
+		String debug13 = android.os.Build.ID;
+		String debug14 = android.os.Build.MANUFACTURER;
+		String debug15 = android.os.Build.SERIAL;
+		String debug16 = android.os.Build.USER;
+		String debug17 = android.os.Build.HOST;
 	}
+
 	public static String encryptToken(String token) throws InvalidKeyException,
 			NoSuchAlgorithmException, NoSuchPaddingException,
 			IllegalBlockSizeException, BadPaddingException,
@@ -351,7 +356,7 @@ public class Util {
 		Location location = lm.getLastKnownLocation(bestProvider);
 
 		if (location == null) {
-//			 Toast.makeText(activity,"Location Not found",Toast.LENGTH_LONG).show();
+			// Toast.makeText(activity,"Location Not found",Toast.LENGTH_LONG).show();
 		} else {
 			geocoder = new Geocoder(activity);
 			try {
@@ -369,18 +374,24 @@ public class Util {
 		}
 		return bundle;
 	}
-	public static boolean checkLocationSetting(Context context){
-		LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){//|| locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-//			Toast.makeText(context, "GPS is Enabled in your devide", Toast.LENGTH_SHORT).show();
+
+	public static boolean checkLocationSetting(Context context) {
+		LocationManager locationManager = (LocationManager) context
+				.getSystemService(Context.LOCATION_SERVICE);
+		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {// ||
+																				// locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+		// Toast.makeText(context, "GPS is Enabled in your devide",
+		// Toast.LENGTH_SHORT).show();
 			return true;
-		}else{
+		} else {
 			showGPSDisabledAlertToUser(context);
 			return false;
 		}
 	}
+
 	private static void showGPSDisabledAlertToUser(final Context context) {
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+				context);
 		alertDialogBuilder
 				.setMessage(
 						"GPS is disabled in your device. Would you like to enable it?")
@@ -436,70 +447,111 @@ public class Util {
 			textSize--;
 		}
 	}
-	public static String getTimeZone(String value){
+
+	public static String getTimeZone(String value) {
 		TimeZone tz = TimeZone.getDefault();
-		System.out.println("TimeZone   "+tz.getDisplayName(false, TimeZone.SHORT)+" Timezon id :: " +tz.getID());
+		System.out.println("TimeZone   "
+				+ tz.getDisplayName(false, TimeZone.SHORT) + " Timezon id :: "
+				+ tz.getID());
 		return tz.getID();
 	}
-	public static HashMap<String, String> getLatLonFromAddress(String address){
+
+	public static HashMap<String, String> getLatLonFromAddress(String address) {
 		JSONObject obj = getLocationInfo(address);
-		if(obj!=null){
+		if (obj != null) {
 			return getLatLong(obj);
-		}else{
+		} else {
 			return null;
 		}
 	}
+
 	public static JSONObject getLocationInfo(String address) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
+		StringBuilder stringBuilder = new StringBuilder();
+		try {
 
-        address = address.replaceAll(" ","%20");    
+			address = address.replaceAll(" ", "%20");
 
-        HttpPost httppost = new HttpPost("http://maps.google.com/maps/api/geocode/json?address=" + address + "&sensor=false");
-        HttpClient client = new DefaultHttpClient();
-        HttpResponse response;
-        stringBuilder = new StringBuilder();
+			HttpPost httppost = new HttpPost(
+					"http://maps.google.com/maps/api/geocode/json?address="
+							+ address + "&sensor=false");
+			HttpClient client = new DefaultHttpClient();
+			HttpResponse response;
+			stringBuilder = new StringBuilder();
 
+			response = client.execute(httppost);
+			HttpEntity entity = response.getEntity();
+			InputStream stream = entity.getContent();
+			int b;
+			while ((b = stream.read()) != -1) {
+				stringBuilder.append((char) b);
+			}
+		} catch (ClientProtocolException e) {
+		} catch (IOException e) {
+		}
 
-            response = client.execute(httppost);
-            HttpEntity entity = response.getEntity();
-            InputStream stream = entity.getContent();
-            int b;
-            while ((b = stream.read()) != -1) {
-                stringBuilder.append((char) b);
-            }
-        } catch (ClientProtocolException e) {
-        } catch (IOException e) {
-        }
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject = new JSONObject(stringBuilder.toString());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject = new JSONObject(stringBuilder.toString());
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+		return jsonObject;
+	}
 
-        return jsonObject;
-    }
 	public static HashMap<String, String> getLatLong(JSONObject jsonObject) {
 
-        try {
-        	HashMap<String, String> data = new HashMap<String, String>();
-            double longitute = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-                .getJSONObject("geometry").getJSONObject("location")
-                .getDouble("lng");
+		try {
+			HashMap<String, String> data = new HashMap<String, String>();
+			double longitute = ((JSONArray) jsonObject.get("results"))
+					.getJSONObject(0).getJSONObject("geometry")
+					.getJSONObject("location").getDouble("lng");
 
-            double latitude = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-                .getJSONObject("geometry").getJSONObject("location")
-                .getDouble("lat");
-            data.put("lat", ""+latitude);
-            data.put("lon", ""+longitute);
-            return data;
-        } catch (JSONException e) {
-        	e.printStackTrace();
-            return null;
-        }
+			double latitude = ((JSONArray) jsonObject.get("results"))
+					.getJSONObject(0).getJSONObject("geometry")
+					.getJSONObject("location").getDouble("lat");
+			data.put("lat", "" + latitude);
+			data.put("lon", "" + longitute);
+			return data;
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
 
-    }
+	}
+
+	public void turnGPSOn() {
+
+		Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+		intent.putExtra("enabled", true);
+		WhyqApplication.Instance().sendBroadcast(intent);
+
+		String provider = Settings.Secure.getString(WhyqApplication.Instance()
+				.getContentResolver(),
+				Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		if (!provider.contains("gps")) { // if gps is disabled
+			final Intent poke = new Intent();
+			poke.setClassName("com.android.settings",
+					"com.android.settings.widget.SettingsAppWidgetProvider");
+			poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+			poke.setData(Uri.parse("3"));
+			WhyqApplication.Instance().sendBroadcast(poke);
+
+		}
+	}
+
+	public void turnGPSOff() {
+		String provider = Settings.Secure.getString(WhyqApplication.Instance()
+				.getContentResolver(),
+				Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		if (provider.contains("gps")) { // if gps is enabled
+			final Intent poke = new Intent();
+			poke.setClassName("com.android.settings",
+					"com.android.settings.widget.SettingsAppWidgetProvider");
+			poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+			poke.setData(Uri.parse("3"));
+			WhyqApplication.Instance().sendBroadcast(poke);
+		}
+	}
 }
