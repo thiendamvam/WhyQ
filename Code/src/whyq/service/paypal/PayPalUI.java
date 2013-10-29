@@ -11,6 +11,7 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.view.Whyq;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -31,7 +32,9 @@ public class PayPalUI extends DialogFragment implements IServiceListener{
 	private Service service;
 	private WebView wv;
 	private ProgressBar progressBar;
-	private IPaypalListener listener;	
+	private IPaypalListener listener;
+	private String billId;
+	private Context context;	
 	
 	public PayPalUI() {
 	}
@@ -46,7 +49,8 @@ public class PayPalUI extends DialogFragment implements IServiceListener{
 		setStyle(DialogFragment.STYLE_NO_TITLE, STYLE_NO_TITLE);
 		setStyle(DialogFragment.STYLE_NO_FRAME, DialogFragment.STYLE_NORMAL);
 		String rsaToken = WhyqApplication.Instance().getRSAToken();
-		String billId = "827";
+		context = WhyqApplication.Instance().getApplicationContext();
+		billId = getArguments().getString("bill_id");
 		service = new Service(this);
 		service.getPaypalURI(rsaToken, billId);
 	}

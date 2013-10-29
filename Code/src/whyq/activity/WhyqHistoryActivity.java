@@ -77,6 +77,10 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 		String userId = getIntent().getStringExtra(ARG_USER_ID);
 		getService().getHistories(getEncryptedToken(), userId);
 	}
+	
+	public void onBackClicked(View v){
+		finish();
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

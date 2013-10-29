@@ -46,6 +46,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 	private String pushNotificationData;
 	private boolean isFromPushNotification = false;
 	private boolean isOrdered;
+	private String billId;
 	public static int LOGIN_REQUEST = 1;
 	
 	@Override
@@ -72,7 +73,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		}else{
 			listBill = WhyqCheckedBillActivity.listBill;
 			btnDone.setText("Paypal");
-			String billId = bundle.getString("bill_id");
+			billId = bundle.getString("bill_id");
 			exeGetBillDetail(billId);
 		}
 		tvTotal = (TextView)findViewById(R.id.tvTotal);
@@ -135,9 +136,16 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 	}
 	public void onDoneClicked(View v){
 		if(isOrdered){
-			PayPalUI paypalUI = new PayPalUI();
-			getSupportFragmentManager().beginTransaction().add(paypalUI, "").commit();
+			if(billId!=null){
+
+				PayPalUI paypalUI = new PayPalUI();
+				Bundle bundle = new Bundle();
+				bundle.putString("bill_id", billId);
+				paypalUI.setArguments(bundle);
+				getSupportFragmentManager().beginTransaction().add(paypalUI, "").commit();
+				
 			
+			}
 		}else{
 			WhyqOrderMenuActivity frag = new WhyqOrderMenuActivity();	
 			frag.show(getFragmentManager(), "WhyqOrderMenuActivity");
