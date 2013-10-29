@@ -384,6 +384,7 @@ public class Util {
 		// Toast.LENGTH_SHORT).show();
 			return true;
 		} else {
+//			turnGPSOn();
 			showGPSDisabledAlertToUser(context);
 			return false;
 		}
