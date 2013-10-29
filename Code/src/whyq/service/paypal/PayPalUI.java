@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.whyq.R;
@@ -60,6 +61,15 @@ public class PayPalUI extends DialogFragment implements IServiceListener{
 		getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 		wv.getSettings().setJavaScriptEnabled(true);
 		wv.setWebViewClient(wvClient);
+		ImageButton imgButtonClose = (ImageButton)v.findViewById(R.id.imgBtnClose);
+		imgButtonClose.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				onCloseClicked();
+			}
+		});
 		loadURI();
 		return v;
 	}
@@ -125,5 +135,8 @@ public class PayPalUI extends DialogFragment implements IServiceListener{
 		}
 	}
 	
+	public void onCloseClicked(){
+		dismiss();
+	}
 }
 
