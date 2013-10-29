@@ -520,7 +520,7 @@ public class Util {
 		}
 
 	}
-
+//
 	public void turnGPSOn() {
 
 		Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
