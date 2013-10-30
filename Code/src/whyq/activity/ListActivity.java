@@ -354,6 +354,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		isCalendar =false;
 		isRefesh = true;
 		isExpandableSearch = false;
+		Util.turnGPSOff();
 	}
 	@Override
 	protected void onResume() {
