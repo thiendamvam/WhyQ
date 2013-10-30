@@ -96,6 +96,8 @@ public class UserProfileHandler extends BaseHandler {
 				user.setFacebook_id(getString());
 			} else if (localName.equals(TAG_FIRST_NAME)) {
 				user.setFirst_name(getString());
+			} else if (localName.equals(TAG_LAST_NAME)) {
+				user.setLast_name(getString());
 			} else if (localName.equals(TAG_GENDER)) {
 				user.setGender(getString());
 			} else if (localName.equals(TAG_ID)) {

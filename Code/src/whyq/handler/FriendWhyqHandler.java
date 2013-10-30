@@ -60,7 +60,9 @@ public class FriendWhyqHandler extends BaseHandler {
 				currentFriend.setFacebook_id(getString());
 			} else if (localName.equalsIgnoreCase(TAG_FIRST_NAME)) {
 				currentFriend.setFirst_name(getString());
-			} else if (localName.equalsIgnoreCase(TAG_GENDER)) {
+			}else if (localName.equalsIgnoreCase(TAG_LAST_NAME)) {
+				currentFriend.setLast_name(getString());
+			}  else if (localName.equalsIgnoreCase(TAG_GENDER)) {
 				currentFriend.setGender(getString());
 			} else if (localName.equalsIgnoreCase(TAG_ID)) {
 				currentFriend.setId(getString());
