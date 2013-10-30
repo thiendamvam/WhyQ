@@ -77,7 +77,7 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 				final Object item = arg0.getItemAtPosition(arg2);
 				twitter = (FriendTwitter)item;
 				if(twitter.getIs_join()){
-					startUserProfileActivity(twitter.getId(),twitter.getScreenName(),twitter.getAvatar());
+					startUserProfileActivity(twitter.getId(),twitter.getScreenName(),twitter.getAvatar(), twitter.getIsFriend());
 				}
 				
 			}
@@ -111,7 +111,7 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 	}
 	
 	private void startUserProfileActivity(String userId, String userName,
-			String avatar) {
+			String avatar, int isFriend) {
 		// TODO Auto-generated method stub
 		Intent i = new Intent(WhyqFriendsTwitterActivity.this,WhyqUserProfileActivity.class);
 		i.putExtra(WhyqUserProfileActivity.ARG_USER_ID, userId);
@@ -490,6 +490,9 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 			}
 		}
 		
+	}
+	public void onBackClicked(View v){
+		finish();
 	}
 	
 }

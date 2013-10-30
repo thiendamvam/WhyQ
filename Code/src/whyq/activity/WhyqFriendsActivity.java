@@ -96,6 +96,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 		Intent i = new Intent(this, WhyqUserProfileActivity.class);
 		i.putExtra(WhyqUserProfileActivity.ARG_USER_ID, userId);
 		i.putExtra("is_friend", true);
+		i.putExtra("is_friended", true);
 		startActivity(i);
 	}
 

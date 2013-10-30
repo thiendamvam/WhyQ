@@ -97,6 +97,8 @@ public class FriendWhyqHandler extends BaseHandler {
 				currentFriend.setTwitter_id(getString());
 			} else if (localName.equalsIgnoreCase(TAG_UPDATEDATE)) {
 				currentFriend.setUpdatedate(getString());
+			} else if (localName.equalsIgnoreCase(TAG_IS_FRIEND)) {
+				currentFriend.setIsFriend(getInt());
 			} else if (localName.equalsIgnoreCase(ITEM)) {
 				friends.add(currentFriend);
 			} 

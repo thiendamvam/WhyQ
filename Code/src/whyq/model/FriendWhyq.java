@@ -24,6 +24,7 @@ public class FriendWhyq {
 	private String gender;
 	private String avatar;
 	private StatusUser status_user;
+	private int isFriend;
 	public String getId() {
 		return id;
 	}
@@ -155,6 +156,18 @@ public class FriendWhyq {
 	}
 	public void setStatus_user(StatusUser status_user) {
 		this.status_user = status_user;
+	}
+	/**
+	 * @return the isFriend
+	 */
+	public int getIsFriend() {
+		return isFriend;
+	}
+	/**
+	 * @param isFriend the isFriend to set
+	 */
+	public void setIsFriend(int isFriend) {
+		this.isFriend = isFriend;
 	}
 
 }

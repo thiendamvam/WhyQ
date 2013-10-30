@@ -64,11 +64,11 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 				if (item instanceof FriendFacebook) {
 					FriendFacebook facebook = (FriendFacebook) item;
 					startUserProfileActivity(facebook.getId(),
-							facebook.getFirstName(), facebook.getAvatar());
+							facebook.getFirstName(), facebook.getAvatar(), facebook.getIsFriend());
 				} else if (item instanceof FriendWhyq) {
 					FriendWhyq whyq = (FriendWhyq) item;
 					startUserProfileActivity(whyq.getId(),
-							whyq.getFirst_name(), whyq.getAvatar());
+							whyq.getFirst_name(), whyq.getAvatar(), whyq.getIsFriend());
 				}
 			}
 		});
@@ -95,10 +95,11 @@ public class FriendsFacebookActivity extends ImageWorkerActivity {
 	}
 
 	private void startUserProfileActivity(String userId, String userName,
-			String avatar) {
+			String avatar, int isFriended) {
 		Intent i = new Intent(this, WhyqUserProfileActivity.class);
 		i.putExtra(WhyqUserProfileActivity.ARG_USER_ID, userId);
 		i.putExtra("is_friend", true);
+		i.putExtra("is_friended", (isFriended==1?true:false));
 		startActivity(i);
 	}
 

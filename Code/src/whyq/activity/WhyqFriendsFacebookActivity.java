@@ -481,5 +481,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		}
 
 	}
-
+	public void onBackClicked(View v){
+		finish();
+	}
 }

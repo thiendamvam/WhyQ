@@ -73,6 +73,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	private HorizontalListView mPhotos;
 	private TextView tvHeader;
 	private boolean isFriendProfile;
+	private boolean isFriended;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +122,15 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		ImageView setting = new ImageView(this);
 		
 		if(isFriendProfile){
-			setting.setImageResource(R.drawable.icon_invite);
+			isFriended = getIntent().getBooleanExtra("is_friended",false);
+			if(isFriended){
+				setting.setImageResource(R.drawable.icon_friended);	
+				setting.setClickable(false);
+				setting.setFocusable(false);
+			}else{
+				setting.setImageResource(R.drawable.icon_friend_invite);
+			}
+			
 			setting.setTag(true);
 		}else{
 			setting.setImageResource(R.drawable.icon_setting);
@@ -141,9 +150,12 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	}
 	
 	public void exeInviteFriend(){
-		setLoading(true);
-		Service service  = new Service(WhyqUserProfileActivity.this);
-		service.inviteFriendsWhyq(WhyqApplication.Instance().getRSAToken(), mUserId);
+		
+		if(!isFriended){
+			setLoading(true);
+			Service service  = new Service(WhyqUserProfileActivity.this);
+			service.inviteFriendsWhyq(WhyqApplication.Instance().getRSAToken(), mUserId);
+		}
 	}
 	private void bindData(UserProfile user) {
 
