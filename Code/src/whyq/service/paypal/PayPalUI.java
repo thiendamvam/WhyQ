@@ -11,6 +11,7 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.view.Whyq;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.whyq.R;
@@ -30,7 +32,9 @@ public class PayPalUI extends DialogFragment implements IServiceListener{
 	private Service service;
 	private WebView wv;
 	private ProgressBar progressBar;
-	private IPaypalListener listener;	
+	private IPaypalListener listener;
+	private String billId;
+	private Context context;	
 	
 	public PayPalUI() {
 	}
@@ -45,7 +49,8 @@ public class PayPalUI extends DialogFragment implements IServiceListener{
 		setStyle(DialogFragment.STYLE_NO_TITLE, STYLE_NO_TITLE);
 		setStyle(DialogFragment.STYLE_NO_FRAME, DialogFragment.STYLE_NORMAL);
 		String rsaToken = WhyqApplication.Instance().getRSAToken();
-		String billId = "12";
+		context = WhyqApplication.Instance().getApplicationContext();
+		billId = getArguments().getString("bill_id");
 		service = new Service(this);
 		service.getPaypalURI(rsaToken, billId);
 	}
@@ -60,11 +65,21 @@ public class PayPalUI extends DialogFragment implements IServiceListener{
 		getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 		wv.getSettings().setJavaScriptEnabled(true);
 		wv.setWebViewClient(wvClient);
+		ImageButton imgButtonClose = (ImageButton)v.findViewById(R.id.imgBtnClose);
+		imgButtonClose.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				onCloseClicked();
+			}
+		});
 		loadURI();
 		return v;
 	}
 	
 	private void loadURI(){
+		wv.getSettings().setJavaScriptEnabled(true);
 		if (authorizeUri != null)
 			wv.loadUrl(authorizeUri);
 		Log.d(TAG, "loadURI : " + authorizeUri);
@@ -124,5 +139,8 @@ public class PayPalUI extends DialogFragment implements IServiceListener{
 		}
 	}
 	
+	public void onCloseClicked(){
+		dismiss();
+	}
 }
 

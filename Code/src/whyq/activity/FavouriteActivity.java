@@ -265,6 +265,8 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	@Override
 	protected void onResume() {
 		super.onResume();
+		getLocation();
+		exeListActivity(false);
 //		if(isLogin && WhyqMain.getCurrentTab() == 3){
 //			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
 //			if(user2 != null){
@@ -287,6 +289,17 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 //		}
 	}
 	
+	private void getLocation() {
+		// TODO Auto-generated method stub
+		Util.checkLocationSetting(getParent());
+		Bundle bundle = Util.getLocation(getParent());
+		if(bundle!=null){
+			longitude = bundle.getString("lon");
+			latgitude = bundle.getString("lat");
+		}
+	}
+
+
 	protected void onPause () {
     	super.onPause();
     	isFavorite = false;

@@ -84,20 +84,21 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				whyq.activity.WhyqCheckedBillActivity.BillAdapter.ViewHolder holder= (whyq.activity.WhyqCheckedBillActivity.BillAdapter.ViewHolder)arg1.getTag();
-				BillItem item = (BillItem)holder.data;
-				Intent intent = new Intent(WhyqCheckedBillActivity.this, WhyQBillScreen.class);
-
-				Bundle bundle = new Bundle();
-				bundle.putString("store_id", item.getStore_id());
-//				bundle.putString("list_items", item.getBusiness_info());
-				bundle.putBoolean("ordered", true);
-				bundle.putString("lat", "" + item.getBusiness_info().getLatitude());
-				bundle.putString("lon", "" + item.getBusiness_info().getLongitude());
-				bundle.putString("start_time", "" + item.getBusiness_info().getStart_time());
-				bundle.putString("close_time", "" + item.getBusiness_info().getEnd_time());
-				intent.putExtra("data", bundle);
-				startActivity(intent);
+//				No need for now
+//				whyq.activity.WhyqCheckedBillActivity.BillAdapter.ViewHolder holder= (whyq.activity.WhyqCheckedBillActivity.BillAdapter.ViewHolder)arg1.getTag();
+//				BillItem item = (BillItem)holder.data;
+//				Intent intent = new Intent(WhyqCheckedBillActivity.this, WhyQBillScreen.class);
+//
+//				Bundle bundle = new Bundle();
+//				bundle.putString("store_id", item.getStore_id());
+////				bundle.putString("list_items", item.getBusiness_info());
+//				bundle.putBoolean("ordered", true);
+//				bundle.putString("lat", "" + item.getBusiness_info().getLatitude());
+//				bundle.putString("lon", "" + item.getBusiness_info().getLongitude());
+//				bundle.putString("start_time", "" + item.getBusiness_info().getStart_time());
+//				bundle.putString("close_time", "" + item.getBusiness_info().getEnd_time());
+//				intent.putExtra("data", bundle);
+//				startActivity(intent);
 			}
 		});
 

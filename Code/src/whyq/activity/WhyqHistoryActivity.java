@@ -61,6 +61,7 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 				
 				Bundle bundle = new Bundle();
 				bundle.putString("store_id", item.getStore_id());
+				bundle.putString("bill_id", item.getId());
 //				bundle.putString("list_items", item.getBusiness_info());
 				bundle.putBoolean("is_ordered", true);
 				bundle.putString("lat", "" + item.getBusiness_info().getLatitude());
@@ -75,6 +76,10 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 		setLoading(true);
 		String userId = getIntent().getStringExtra(ARG_USER_ID);
 		getService().getHistories(getEncryptedToken(), userId);
+	}
+	
+	public void onBackClicked(View v){
+		finish();
 	}
 
 	@SuppressWarnings("unchecked")

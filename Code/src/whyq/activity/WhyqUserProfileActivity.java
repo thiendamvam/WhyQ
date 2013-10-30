@@ -132,9 +132,11 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			}
 			
 			setting.setTag(true);
+			setBackButtonFieldShowing(true);
 		}else{
 			setting.setImageResource(R.drawable.icon_setting);
 			setting.setTag(false);
+			setBackButtonFieldShowing(false);
 		}
 		
 		
@@ -161,7 +163,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 		if(user!=null){
 
-			String userName = user.getFirst_name();
+			String userName = user.getFirst_name()+" "+user.getLast_name();
 			if (userName != null) {
 				setTitle(userName);
 			}

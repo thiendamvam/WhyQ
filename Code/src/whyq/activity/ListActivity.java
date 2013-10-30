@@ -358,7 +358,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		getLocation();
+		exeListActivity(false);
 //		if(currentLocation !=null)
 //			tvNearLocation.setText(currentLocation);
 //		imgCoffe.requestFocus();

@@ -67,7 +67,7 @@ public class SearchFriendsActivity extends ImageWorkerActivity {
 				} else if (item instanceof FriendWhyq) {
 					FriendWhyq whyq = (FriendWhyq) item;
 					startUserProfileActivity(whyq.getId(),
-							whyq.getFirst_name(), whyq.getAvatar());
+							whyq.getFirst_name()+" "+whyq.getLast_name(), whyq.getAvatar());
 				}
 			}
 		});
@@ -408,7 +408,7 @@ public class SearchFriendsActivity extends ImageWorkerActivity {
 			final ViewHolder holder = getViewHolder(convertView);
 
 			final FriendWhyq item = listWhyq.get(position);
-			holder.name.setText(item.getFirst_name());
+			holder.name.setText(item.getFirst_name()+" "+item.getLast_name());
 			mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
 			return convertView;
 		}

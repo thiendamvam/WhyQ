@@ -13,6 +13,7 @@ import android.util.Log;
 public class BillHandler extends BaseHandler {
 
 	private static final String TAG_ID = "id";
+	private static final String BILL_ID = "bill_id";
 	private static final String TAG_USER_ID = "user_id";
 	private static final String TAG_STORE_ID = "store_id";
 	private static final String TAG_TOTAL_VALUE = "total_value";
@@ -175,7 +176,7 @@ public class BillHandler extends BaseHandler {
 				currentBill.setDeliver_to(getString());
 			} else if (localName.equalsIgnoreCase(TAG_DELIVER_TYPE)) {
 				currentBill.setDeliver_type(getString());
-			} else if (localName.equalsIgnoreCase(TAG_ID)) {
+			} else if (localName.equalsIgnoreCase(BILL_ID)) {
 				currentBill.setId(getString());
 			} else if (localName.equalsIgnoreCase(TAG_DISCOUNT_VALUE)) {
 				currentBill.setDiscount_value(getFloat());
