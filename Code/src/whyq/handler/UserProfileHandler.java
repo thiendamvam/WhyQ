@@ -58,7 +58,7 @@ public class UserProfileHandler extends BaseHandler {
 			throws SAXException {
 
 		if (totalCount != null) {
-			if (localName.equals(TAG_TOTAL_MONEY)) {
+			if (localName.equals(TAG_TOTAL_CHECK_BILL)) {
 				totalCount.setTotal_check_bill(getInt());
 			} else if (localName.equals(TAG_TOTAL_COMMENT)) {
 				totalCount.setTotal_comment(getInt());
@@ -70,7 +70,7 @@ public class UserProfileHandler extends BaseHandler {
 				totalCount.setTotal_friend(getInt());
 			} else if (localName.equals(TAG_TOTAL_MONEY)) {
 				totalCount.setTotal_money(getString());
-			} else if (localName.equals(TAG_TOTAL_COMMENT)) {
+			} else if (localName.equals(TAG_TOTAL_PLACE_CHECK_BILL)) {
 				totalCount.setTotal_place_check_bill(getInt());
 			} else if (localName.equals(TAG_TOTAL_SAVING_MONEY)) {
 				totalCount.setTotal_saving_money(getString());

@@ -27,6 +27,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.whyq.R;
@@ -40,6 +41,9 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 	private FriendsWhyqAdapter mFriendWhyqAdapter = null;
 	private ListView mListview;
 	private boolean isSearchByName;
+	private boolean isFriend;
+	private String friendId;
+	private RelativeLayout rlContent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,10 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 
 		setContentView(R.layout.activity_friends);
 
+		rlContent = (RelativeLayout)findViewById(R.id.rlContent);
 		isSearchByName = getIntent().getBooleanExtra("is_search_by_name", false);
+		isFriend = getIntent().getBooleanExtra("is_friend", false);
+		friendId = getIntent().getStringExtra("friend_id");
 		SearchField searchField = (SearchField) findViewById(R.id.searchField);
 		searchField.setQueryCallback(this);
 		searchField.getEditTextView().setHint(R.string.find_a_friend);
@@ -78,13 +85,18 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 
 		// Set extra button.
 
-		if(!isSearchByName){
+		if(isFriend){
+			setTitle("Friends");
+			setBackButtonIcon(R.drawable.icon_back);
+			rlContent.setBackgroundColor(getResources().getColor(R.color.white));
+		}else if(!isSearchByName){
 			ImageView imageView = new ImageView(this);
 			imageView.setImageResource(R.drawable.icon_add_friend);
 			setExtraView(imageView);
 			setBackButtonIcon(R.drawable.icon_friend_invite);
-		}else{
+		}else {
 			setTitle("Search by name");
+			rlContent.setBackgroundColor(getResources().getColor(R.color.white));
 		}
 
 		getFriends();
@@ -127,7 +139,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 				} else {
 					List<FriendWhyq> friends = (List<FriendWhyq>) data.getData();;
 					if (friends == null || friends.size() == 0) {
-						if(!isSearchByName){
+						if(!isSearchByName&& !isFriend){
 							AlertFindFriendDialog dialog = new AlertFindFriendDialog();
 							dialog.setOnDialogButtonClickListern(this);
 							dialog.show(getSupportFragmentManager(), "Dialog");
@@ -211,10 +223,18 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 	}
 
 	private void getFriends() {
-		Service service = getService();
-		setLoading(true);
-		service.getFriends(getEncryptedToken(),
-				XMLParser.getValue(this, XMLParser.STORE_USER_ID));
+
+		if(isFriend){
+			Service service = getService();
+			setLoading(true);
+			service.getFriends(getEncryptedToken(),
+					XMLParser.getValue(this, friendId));
+		}else{
+			Service service = getService();
+			setLoading(true);
+			service.getFriends(getEncryptedToken(),
+					XMLParser.getValue(this, XMLParser.STORE_USER_ID));
+		}
 	}
 
 	static class FriendsWhyqAdapter extends BaseAdapter {

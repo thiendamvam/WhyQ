@@ -313,7 +313,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		if (total == null) {
 			return;
 		}
-		final int totalCheckBill = total.getTotal_check_bill();
+		final int totalCheckBill = total.getTotal_place_check_bill();
 		bindCategory(R.id.check_bill, R.drawable.btn_blue_place,
 				totalCheckBill + " places", "checked bills",
 				new OnClickListener() {
@@ -326,16 +326,25 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 						startActivity(i);
 					}
 				});
-		final int totalHistory = total.getTotal_place_check_bill();
-		bindCategory(R.id.history, R.drawable.btn_blue_history, totalHistory + "",
-				"History", new OnClickListener() {
+		final int totalHistory = total.getTotal_check_bill();
+		bindCategory(R.id.history, R.drawable.btn_blue_history, isFriendProfile==true?""+total.getTotal_friend():totalHistory + "",
+				isFriendProfile==true?"Friends":"History", new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
-						Intent i = new Intent(WhyqUserProfileActivity.this,
-								WhyqHistoryActivity.class);
-						i.putExtra(WhyqHistoryActivity.ARG_USER_ID, mUserId);
-						startActivity(i);
+						
+						if(isFriendProfile){
+							Intent i = new Intent(WhyqUserProfileActivity.this,
+									WhyqFriendsActivity.class);
+							i.putExtra("is_friend", true);
+							i.putExtra("friend_id", mUserId);
+							startActivity(i);
+						}else{
+							Intent i = new Intent(WhyqUserProfileActivity.this,
+									WhyqHistoryActivity.class);
+							i.putExtra(WhyqHistoryActivity.ARG_USER_ID, mUserId);
+							startActivity(i);
+						}
 					}
 				});
 
@@ -355,7 +364,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 		final int totalComment = total.getTotal_comment();
 		bindCategory(R.id.comment, R.drawable.btn_blue_tips,
-				totalComment + "", "Tips",
+				totalComment + "", "Comments",
 				new OnClickListener() {
 
 					@Override
