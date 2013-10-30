@@ -339,7 +339,14 @@ public class Service implements Runnable {
 			resObj = parser.parseInvitationNotification(result);// Same structor
 																// data
 			break;
-
+		case ActionAcceptInvitation:
+			resObj = parser.parseInvitationNotification(result);// Same structor
+																// data
+			break;
+		case ActionDeclineInvitation:
+			resObj = parser.parseInvitationNotification(result);// Same structor
+																// data
+			break;
 		case ActionDeleteFriend:
 			resObj = parser.parserDeleteFriend(result);
 			break;
@@ -903,4 +910,24 @@ public class Service implements Runnable {
 		request("/m/expressCheckout/set", params, true, false);
 	}
 
+	
+	public void acceptInvitation(String token, String userId){
+		_action = ServiceAction.ActionAcceptInvitation;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", token);
+		params.put("user_id", userId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/friend/accept", params, true, false);
+	}
+	public void declineInvitation(String token, String userId){
+		_action = ServiceAction.ActionDeclineInvitation;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", token);
+		params.put("user_id", userId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/friend/decline", params, true, false);
+	}
+	
 }
