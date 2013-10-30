@@ -385,6 +385,7 @@ public class Util {
 			return true;
 		} else {
 //			turnGPSOn();
+			turnGPSOff();
 			showGPSDisabledAlertToUser(context);
 			return false;
 		}
@@ -522,7 +523,7 @@ public class Util {
 
 	}
 //
-	public void turnGPSOn() {
+	public static void turnGPSOn() {
 
 		Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
 		intent.putExtra("enabled", true);
@@ -542,7 +543,7 @@ public class Util {
 		}
 	}
 
-	public void turnGPSOff() {
+	public static void turnGPSOff() {
 		String provider = Settings.Secure.getString(WhyqApplication.Instance()
 				.getContentResolver(),
 				Settings.Secure.LOCATION_PROVIDERS_ALLOWED);

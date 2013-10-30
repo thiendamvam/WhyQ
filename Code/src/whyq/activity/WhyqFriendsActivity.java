@@ -298,6 +298,6 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 
 	}
 	public void onBackClicked(View v){
-		finish();
+//		finish();
 	}
 }
