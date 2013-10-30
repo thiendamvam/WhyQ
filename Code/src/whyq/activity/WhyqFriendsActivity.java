@@ -127,9 +127,12 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 				} else {
 					List<FriendWhyq> friends = (List<FriendWhyq>) data.getData();;
 					if (friends == null || friends.size() == 0) {
-						AlertFindFriendDialog dialog = new AlertFindFriendDialog();
-						dialog.setOnDialogButtonClickListern(this);
-						dialog.show(getSupportFragmentManager(), "Dialog");
+						if(!isSearchByName){
+							AlertFindFriendDialog dialog = new AlertFindFriendDialog();
+							dialog.setOnDialogButtonClickListern(this);
+							dialog.show(getSupportFragmentManager(), "Dialog");
+
+						}
 					} else {
 						mFriendWhyqAdapter.setItems(friends);
 					}

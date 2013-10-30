@@ -33,6 +33,7 @@ public class FriendWhyqHandler extends BaseHandler {
 	private static final String TAG_AVATAR = "avatar";
 	private static final String TAG_STATUS_USER = "status_user";
 	private static final String ITEM = "obj";
+	private static final String ITEM_SEARCH = "data";
 	private static final String TAG_IS_FRIEND = "is_friend";
 	private static final String TAG_WERE_FRIEND = "were_friend";
 
@@ -99,6 +100,8 @@ public class FriendWhyqHandler extends BaseHandler {
 				currentFriend.setUpdatedate(getString());
 			} else if (localName.equalsIgnoreCase(TAG_IS_FRIEND)) {
 				currentFriend.setIsFriend(getInt());
+			} else if (localName.equalsIgnoreCase(ITEM_SEARCH)) {
+				friends.add(currentFriend);
 			} else if (localName.equalsIgnoreCase(ITEM)) {
 				friends.add(currentFriend);
 			} 
@@ -116,7 +119,7 @@ public class FriendWhyqHandler extends BaseHandler {
 	public void startElement(String uri, String localName, String name,
 			Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, name, attributes);
-		if (localName.equalsIgnoreCase(ITEM)) {
+		if (localName.equalsIgnoreCase(ITEM)||localName.equalsIgnoreCase(ITEM_SEARCH)) {
 			this.currentFriend = new FriendWhyq();
 		} else if (localName.equalsIgnoreCase(TAG_STATUS_USER)) {
 			this.currentStatusUser = new StatusUser();
