@@ -9,6 +9,7 @@ import whyq.activity.WhyQBillScreen;
 import whyq.model.Bill;
 import whyq.utils.UrlImageViewHelper;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,7 @@ public class WhyQBillAdapter extends ArrayAdapter<Bill> {
 			viewHolder.tvAmount.setText(""+value);
 //			viewHolder.tvCount.setText(item.getSort());
 //			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getThumb());
-			viewHolder.tvName.setText(item.getProductName());
+			viewHolder.tvName.setText(Html.fromHtml(item.getProductName()));
 			
 			view.setTag(viewHolder);
 			

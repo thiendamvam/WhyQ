@@ -6,6 +6,7 @@ public class Bill {
 	private String productName;
 	private String price;
 	private String unit;
+	private String discount;
 	private String amount;
 	private String productId;
 	public String getId() {
@@ -61,6 +62,18 @@ public class Bill {
 	 */
 	public void setProductId(String productId) {
 		this.productId = productId;
+	}
+	/**
+	 * @return the discount
+	 */
+	public String getDiscount() {
+		return discount;
+	}
+	/**
+	 * @param discount the discount to set
+	 */
+	public void setDiscount(String discount) {
+		this.discount = discount;
 	}
 
 }

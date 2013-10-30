@@ -72,7 +72,15 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 			btnDone.setText("Order");
 		}else{
 			listBill = WhyqCheckedBillActivity.listBill;
-			btnDone.setText("Paypal");
+			String billStatus = bundle.getString("bill_status");
+			if(billStatus!=null){
+				if(billStatus.equalsIgnoreCase("1")){
+					btnDone.setText("Paypal");		
+				}else{
+					btnDone.setVisibility(View.INVISIBLE);
+				}
+			}
+			
 			billId = bundle.getString("bill_id");
 			exeGetBillDetail(billId);
 		}
@@ -92,6 +100,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 	}
 	private void bindBillValue() {
 		// TODO Auto-generated method stub
+		
 		tvTotal.setText("$"+totalValue);
 		if(valueDiscount!=0)
 			tvDiscount.setText("%"+ valueDiscount*100);
@@ -100,6 +109,26 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		else
 			totalafterDiscount = totalValue;
 		tvTotalAfterDiscount.setText("$"+totalafterDiscount);
+	}
+	private void getValue(ArrayList<Bill> listBill2) {
+		// TODO Auto-generated method stub
+		totalafterDiscount = 0;
+		totalValue = 0;
+		for(Bill item: listBill2){
+			try {
+				float unit = item.getUnit()!=null?Float.parseFloat(item.getUnit()):0;
+				float price = item.getPrice()!=null?Float.parseFloat(item.getPrice()):0;
+				float discount = item.getDiscount()!=null?Float.parseFloat(item.getDiscount()):0;
+				totalValue += price*unit;
+				valueDiscount = 0;
+				valueDiscount = discount*price*unit;
+				totalafterDiscount=totalValue - valueDiscount;
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	private void bindDatatoListview() {
 		// TODO Auto-generated method stub
@@ -176,6 +205,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 				if(listBill!=null){
 					
 					bindDatatoListview();
+					getValue(listBill);
 					bindBillValue();
 				}
 			}else if(data.getStatus().equals("401")){

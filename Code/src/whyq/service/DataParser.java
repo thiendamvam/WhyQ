@@ -1389,6 +1389,17 @@ public class DataParser {
 				data.setStatus(statusResponse);
 //				data.setData(userHandler.getUser());
 				data.setMessage(mes);
+				
+				String discount = "0";
+				NodeList objNodeList =  doc.getElementsByTagName("obj");
+				int sizeObj = objNodeList.getLength();
+				for(int ii=0;ii < sizeObj;ii++){
+					Element element1 = (Element)objNodeList.item(ii);
+					
+					 discount = getValue(element1, "discount_value");
+					break;
+				}
+				
 				ArrayList<Bill> listBill = new ArrayList<Bill>();
 				NodeList permNodeList =  doc.getElementsByTagName("detail");
 				int size  = permNodeList.getLength();
@@ -1401,13 +1412,12 @@ public class DataParser {
 						item.setPrice(getValue(element, "item_price"));
 						item.setProductId(getValue(element, "product_id"));
 						item.setUnit(getValue(element, "quantity"));
-						
+						item.setDiscount(discount);
 						NodeList productes = element.getElementsByTagName("product");
 						for(int j =0 ; j<productes.getLength();j++){
 							Element elementChild = (Element)productes.item(j);
 							item.setProductName(getValue(element, "name_product"));
 							item.setThumb(getValue(element, "image_thumb"));
-							
 //							item.setAmount(getValue(element, "id"));
 						}
 

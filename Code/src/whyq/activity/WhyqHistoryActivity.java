@@ -64,6 +64,7 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 				bundle.putString("bill_id", item.getId());
 //				bundle.putString("list_items", item.getBusiness_info());
 				bundle.putBoolean("is_ordered", true);
+				bundle.putString("bill_status", item.getStatus_bill()> 0?"1":"0");
 				bundle.putString("lat", "" + item.getBusiness_info().getLatitude());
 				bundle.putString("lon", "" + item.getBusiness_info().getLongitude());
 				bundle.putString("start_time", "" + item.getBusiness_info().getStart_time());

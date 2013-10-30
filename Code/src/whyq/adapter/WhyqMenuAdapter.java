@@ -9,6 +9,7 @@ import whyq.activity.ListDetailActivity;
 import whyq.model.Menu;
 import whyq.utils.UrlImageViewHelper;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,7 @@ public class WhyqMenuAdapter extends ArrayAdapter<Menu> {
 			viewHolder.imgThumb = (ImageView) view.findViewById(R.id.imgThumbnail);
 			viewHolder.tvCount = (TextView)view.findViewById(R.id.totalForItem);
 //			viewHolder.storeId = item.getS;
-			viewHolder.tvType.setText(item.getNameProduct());
+			viewHolder.tvType.setText(Html.fromHtml(item.getNameProduct()));
 			viewHolder.tvPrice.setText("$"+item.getValue());
 			viewHolder.storeId = item.getStoreId();
 //			viewHolder.tvCount.setText(item.getSort());

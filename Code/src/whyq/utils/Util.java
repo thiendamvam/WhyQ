@@ -372,6 +372,7 @@ public class Util {
 				e.printStackTrace();
 			}
 		}
+		turnGPSOff();
 		return bundle;
 	}
 
