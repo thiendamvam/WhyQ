@@ -82,6 +82,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 		});
 
 		mFriendWhyqAdapter = new FriendsWhyqAdapter(this, mImageWorker);
+		mFriendWhyqAdapter.notifyDataSetChanged();
 		mListview.setAdapter(mFriendWhyqAdapter);
 
 		setTitle(R.string.friends);
@@ -118,6 +119,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 
+				setLoading(true);
 				Service service = new Service(WhyqFriendsActivity.this);
 				service.unFriend(WhyqApplication.Instance().getRSAToken(),item.getId());
 			}
@@ -217,6 +219,20 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 				}
 			}
 		
+		} else if (result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionUnFriend) {
+			setLoading(false);
+			ResponseData data = (ResponseData) result.getData();
+			if (data.getStatus().equals("200")) {
+//				showToast(data.getMessage());
+				Util.showDialog(context, data.getMessage());
+				getFriends();
+			} else if (data.getStatus().equals("401")) {
+				Util.loginAgain(getParent(), data.getMessage());
+			} else if (data.getStatus().equals("204")) {
+
+			} else {
+			}
 		}
 	}
 	
@@ -316,7 +332,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 
 			final FriendWhyq item = listWhyq.get(position);
 			holder.name.setText(item.getFirst_name()+" "+item.getLast_name());
-			if(item.getIsFriend()!=1){
+			if(item.getIsFriend()==1){
 				holder.invite.setBackgroundResource(R.drawable.icon_friended);
 				holder.invite.setVisibility(View.VISIBLE);
 				holder.invite.setText("");
