@@ -16,6 +16,8 @@ import whyq.utils.ImageViewHelper;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
 import whyq.view.SearchField;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,13 +46,14 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 	private boolean isFriend;
 	private String friendId;
 	private RelativeLayout rlContent;
+	private Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_friends);
-
+		context = this;
 		rlContent = (RelativeLayout)findViewById(R.id.rlContent);
 		isSearchByName = getIntent().getBooleanExtra("is_search_by_name", false);
 		isFriend = getIntent().getBooleanExtra("is_friend", false);
@@ -103,6 +106,31 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 
 	}
 
+	
+	public void onInviteClicked(View v){
+		final FriendWhyq item = (FriendWhyq)v.getTag();		
+		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+				context);
+		builder.setTitle(context.getString(R.string.app_name_title));
+		builder.setMessage("Are you sure to unfriend "+item.getFirst_name()+" "+item.getLast_name()+" on WHY Q?");
+		final android.app.AlertDialog alertError = builder.create();
+		alertError.setButton("Ok", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+				Service service = new Service(WhyqFriendsActivity.this);
+				service.unFriend(WhyqApplication.Instance().getRSAToken(),item.getId());
+			}
+		});
+		alertError.setButton2("Cancel", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				alertError.dismiss();
+			}
+		});
+		alertError.show();
+	}
+	
 	private void startUserProfileActivity(String userId, String userName,
 			String avatar) {
 		Intent i = new Intent(this, WhyqUserProfileActivity.class);
@@ -288,6 +316,14 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 
 			final FriendWhyq item = listWhyq.get(position);
 			holder.name.setText(item.getFirst_name()+" "+item.getLast_name());
+			if(item.getIsFriend()!=1){
+				holder.invite.setBackgroundResource(R.drawable.icon_friended);
+				holder.invite.setVisibility(View.VISIBLE);
+				holder.invite.setText("");
+				holder.invite.setTag(item);
+			}else{
+				holder.invite.setVisibility(View.GONE);
+			}
 			mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
 			return convertView;
 		}
@@ -315,7 +351,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 				}
 				name = (TextView) view.findViewById(R.id.name);
 				invite = (Button) view.findViewById(R.id.invite);
-				invite.setVisibility(View.GONE);
+//				invite.setVisibility(View.GONE);
 			}
 		}
 

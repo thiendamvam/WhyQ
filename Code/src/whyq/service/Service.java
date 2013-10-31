@@ -347,6 +347,10 @@ public class Service implements Runnable {
 			resObj = parser.parseAcceptInvitation(result);// Same structor
 																// data
 			break;
+		case ActionUnFriend:
+			resObj = parser.parseAcceptInvitation(result);// Same structor
+																// data
+			break;
 		case ActionDeleteFriend:
 			resObj = parser.parserDeleteFriend(result);
 			break;
@@ -928,6 +932,17 @@ public class Service implements Runnable {
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/friend/decline", params, true, false);
+	}
+
+	public void unFriend(String rsaToken, String id) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionUnFriend;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", rsaToken);
+		params.put("user_id", id);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/friend/delete", params, true, false);
 	}
 	
 }

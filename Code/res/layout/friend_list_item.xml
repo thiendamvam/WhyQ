@@ -47,6 +47,7 @@
             android:layout_height="32dp"
             android:background="@drawable/btn_base"
             android:gravity="center"
+            android:onClick="onInviteClicked"
             android:text="@string/invite" />
     </LinearLayout>
 
