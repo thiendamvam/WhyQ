@@ -122,8 +122,10 @@ public class FriendWhyqHandler extends BaseHandler {
 			Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, name, attributes);
 		if (localName.equalsIgnoreCase(ITEM)||localName.equalsIgnoreCase(ITEM_SEARCH)) {
+			builder.setLength(0);
 			this.currentFriend = new FriendWhyq();
 		} else if (localName.equalsIgnoreCase(TAG_STATUS_USER)) {
+			builder.setLength(0);
 			this.currentStatusUser = new StatusUser();
 		}
 	}
