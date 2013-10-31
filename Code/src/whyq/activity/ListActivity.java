@@ -205,7 +205,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		service = new Service(ListActivity.this);
 		resetTabBarFocus(1);
 //		checkLocationAccess();
-		getLocation();
+//		getLocation();
 		regisReceiver();
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils= new WhyqUtils();
