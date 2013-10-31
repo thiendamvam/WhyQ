@@ -230,8 +230,14 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 //			longitude = bundle.getString("lon");
 //			latgitude = bundle.getString("lat");
 //		}
-		Intent i = new Intent(context, LocationActivity.class);
-		context.startActivity(i);
+		if(LocationActivity.currentLocation!=null){
+			longitude = ""+LocationActivity.currentLocation.getLongitude();
+			latgitude = ""+LocationActivity.currentLocation.getLatitude();
+		}else{
+			Intent i = new Intent(context, LocationActivity.class);
+			context.startActivity(i);
+		}
+		
 	}
 
 

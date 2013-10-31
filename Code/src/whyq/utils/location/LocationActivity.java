@@ -102,6 +102,8 @@ public class LocationActivity extends FragmentActivity implements
 
 	private LocationActivity context;
 
+	public static Location currentLocation;
+
     /*
      * Initialize the Activity
      */
@@ -194,6 +196,7 @@ public class LocationActivity extends FragmentActivity implements
 
         super.onStop();
     }
+    
     /*
      * Called when the Activity is going into the background.
      * Parts of the UI may be visible, but the Activity is inactive.
@@ -220,13 +223,8 @@ public class LocationActivity extends FragmentActivity implements
          * Connect the client. Don't re-start any requests here;
          * instead, wait for onResume()
          */
-        mLocationClient.connect();
-        if(Util.checkLocationSetting(context)){
-        	getLocation();
-        }else{
-        	showGPSDisabledAlertToUser(context);
-        }
 
+        mLocationClient.connect();
     }
     /*
      * Called when the system detects that this Activity is now visible.
@@ -290,7 +288,7 @@ public class LocationActivity extends FragmentActivity implements
             case ENABLE_GPS:
             	switch (resultCode) {
 				case RESULT_OK:
-					getLocation();
+					getLocation(null);
 					break;
 
 				default:
@@ -344,15 +342,18 @@ public class LocationActivity extends FragmentActivity implements
      *
      * @param v The view object associated with this method, in this case a Button.
      */
-    public void getLocation() {
+    public void getLocation(View v) {
 
         // If Google Play Services is available
         if (servicesConnected()) {
 
-        	 mLocationClient.connect();
             // Get the current location
-            Location currentLocation = mLocationClient.getLastLocation();
-            Log("getLocation","getLocation");
+        	   Log.d("getLocation","getLocation");
+            currentLocation = mLocationClient.getLastLocation();
+            if(currentLocation!=null){
+            	Log.d("getLocation","getLocation"+currentLocation.getAltitude()+" and "+currentLocation.getLongitude());
+            	finish();
+            }
 //            // Display the current location in the UI
 //            mLatLng.setText(LocationUtils.getLatLng(this, currentLocation));
         }
@@ -431,9 +432,16 @@ public class LocationActivity extends FragmentActivity implements
     @Override
     public void onConnected(Bundle bundle) {
 //        mConnectionStatus.setText(R.string.connected);
-
+    	
         if (mUpdatesRequested) {
             startPeriodicUpdates();
+            
+        }
+       
+        if(Util.checkLocationSetting(context)){
+        	getLocation(null);
+        }else{
+        	showGPSDisabledAlertToUser(context);
         }
     }
 
@@ -482,6 +490,7 @@ public class LocationActivity extends FragmentActivity implements
             // If no resolution is available, display a dialog to the user with the error.
             showErrorDialog(connectionResult.getErrorCode());
         }
+        finish();
     }
 
     /**
