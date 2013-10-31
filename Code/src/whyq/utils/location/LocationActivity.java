@@ -290,8 +290,9 @@ public class LocationActivity extends FragmentActivity implements
 				case RESULT_OK:
 					getLocation(null);
 					break;
-
+					
 				default:
+					finish();
 					break;
 				}
             // If any other request code was received
@@ -352,6 +353,7 @@ public class LocationActivity extends FragmentActivity implements
             currentLocation = mLocationClient.getLastLocation();
             if(currentLocation!=null){
             	Log.d("getLocation","getLocation"+currentLocation.getAltitude()+" and "+currentLocation.getLongitude());
+            	stopUpdates(null);
             	finish();
             }
 //            // Display the current location in the UI

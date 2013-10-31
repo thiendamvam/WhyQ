@@ -989,7 +989,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		}
 		
 		hideFilterView();
-		exeGetBusiness(etTextSearch.getText().toString());
+//		exeGetBusiness(etTextSearch.getText().toString());
 	}
 	private void initCheckAll() {
 		// TODO Auto-generated method stub

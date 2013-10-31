@@ -151,7 +151,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		WhyqUtils utils= new WhyqUtils();
 		utils.writeLogFile(FavouriteActivity.this.getIntent());
     	showProgress();
-    	exeListActivity(false);
+//    	exeListActivity(false);
 
 	}
 
