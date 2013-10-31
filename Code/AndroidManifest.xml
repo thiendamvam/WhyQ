@@ -22,7 +22,6 @@
     <!-- My Location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- Maps API needs OpenGL ES 2.0. -->
@@ -102,6 +101,12 @@
         <activity
             android:name="whyq.activity.ListActivityGroup"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="whyq.utils.location.LocationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
         <activity
             android:name="whyq.activity.StoreDetailAdsctivity"
             android:screenOrientation="portrait"
