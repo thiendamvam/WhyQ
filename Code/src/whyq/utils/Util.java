@@ -386,13 +386,13 @@ public class Util {
 			return true;
 		} else {
 //			turnGPSOn();
-			turnGPSOff();
-			showGPSDisabledAlertToUser(context);
+//			turnGPSOff();
+//			showGPSDisabledAlertToUser(context);
 			return false;
 		}
 	}
 
-	private static void showGPSDisabledAlertToUser(final Context context) {
+	public static void showGPSDisabledAlertToUser(final Context context) {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 				context);
 		alertDialogBuilder

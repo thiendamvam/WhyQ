@@ -34,8 +34,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
@@ -49,6 +51,8 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import whyq.utils.Util;
 
 /**
  * This the app's main Activity. It provides buttons for requesting the various features of the
@@ -68,7 +72,9 @@ public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
 
-    // A request to connect to Location Services
+    protected static final int ENABLE_GPS = 0;
+
+	// A request to connect to Location Services
     private LocationRequest mLocationRequest;
 
     // Stores the current instantiation of the location client in this object
@@ -93,6 +99,8 @@ public class LocationActivity extends FragmentActivity implements
      *
      */
     boolean mUpdatesRequested = false;
+
+	private LocationActivity context;
 
     /*
      * Initialize the Activity
@@ -137,9 +145,37 @@ public class LocationActivity extends FragmentActivity implements
          * Create a new location client, using the enclosing class to
          * handle callbacks.
          */
+        context = this;
         mLocationClient = new LocationClient(this, this, this);
-        getLocation(null);
+
+        
     }
+	public void showGPSDisabledAlertToUser(final Context context) {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+				context);
+		alertDialogBuilder
+				.setMessage(
+						"GPS is disabled in your device. Would you like to enable it?")
+				.setCancelable(false)
+				.setPositiveButton("Goto Settings Page To Enable GPS",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								Intent callGPSSettingIntent = new Intent(
+										android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+								startActivityForResult(callGPSSettingIntent, ENABLE_GPS);
+								dialog.cancel();
+							}
+						});
+		alertDialogBuilder.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+		AlertDialog alert = alertDialogBuilder.create();
+		alert.show();
+	}
+	
 
     /*
      * Called when the Activity is no longer visible at all.
@@ -185,6 +221,11 @@ public class LocationActivity extends FragmentActivity implements
          * instead, wait for onResume()
          */
         mLocationClient.connect();
+        if(Util.checkLocationSetting(context)){
+        	getLocation();
+        }else{
+        	showGPSDisabledAlertToUser(context);
+        }
 
     }
     /*
@@ -217,6 +258,7 @@ public class LocationActivity extends FragmentActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
         // Choose what to do based on the request code
+    	Log.d("onActivityResult","onActivityResult"+resultCode);
         switch (requestCode) {
 
             // If the request code matches the code sent in onConnectionFailed
@@ -245,7 +287,15 @@ public class LocationActivity extends FragmentActivity implements
 
                     break;
                 }
+            case ENABLE_GPS:
+            	switch (resultCode) {
+				case RESULT_OK:
+					getLocation();
+					break;
 
+				default:
+					break;
+				}
             // If any other request code was received
             default:
                // Report that this Activity received an unknown requestCode
@@ -294,11 +344,12 @@ public class LocationActivity extends FragmentActivity implements
      *
      * @param v The view object associated with this method, in this case a Button.
      */
-    public void getLocation(View v) {
+    public void getLocation() {
 
         // If Google Play Services is available
         if (servicesConnected()) {
 
+        	 mLocationClient.connect();
             // Get the current location
             Location currentLocation = mLocationClient.getLastLocation();
             Log("getLocation","getLocation");

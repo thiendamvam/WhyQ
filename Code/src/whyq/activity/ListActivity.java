@@ -32,6 +32,7 @@ import whyq.utils.UrlImageViewHelper;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
+import whyq.utils.location.LocationActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -223,12 +224,14 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 
 	private void getLocation() {
 		// TODO Auto-generated method stub
-		Util.checkLocationSetting(getParent());
-		Bundle bundle = Util.getLocation(getParent());
-		if(bundle!=null){
-			longitude = bundle.getString("lon");
-			latgitude = bundle.getString("lat");
-		}
+//		Util.checkLocationSetting(getParent());
+//		Bundle bundle = Util.getLocation(getParent());
+//		if(bundle!=null){
+//			longitude = bundle.getString("lon");
+//			latgitude = bundle.getString("lat");
+//		}
+		Intent i = new Intent(context, LocationActivity.class);
+		context.startActivity(i);
 	}
 
 
