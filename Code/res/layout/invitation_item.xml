@@ -10,8 +10,8 @@
         android:id="@+id/imgAvatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:background="@drawable/logo_whyq" />
+        android:layout_marginLeft="5dp"
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/tvName"
@@ -31,7 +31,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:background="@drawable/btn_cancel" />
+        android:background="@drawable/btn_cancel"
+        android:layout_marginRight="5dp"
+        android:onClick="onDeleteClicked" />
 
     <Button
         android:id="@+id/btnAccept"
@@ -39,15 +41,15 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/btnDelete"
-        android:background="@drawable/btn_cancel" />
+        android:background="@drawable/btn_accept"
+        android:onClick="onAcceptClicked" />
 
     <ImageView
-        android:id="@+id/imgWhyq"
+        android:id="@+id/imgTypeAccount"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@+id/btnAccept"
-        android:background="@drawable/logo_whyq" />
+        android:layout_toLeftOf="@+id/btnAccept" />
 
 </RelativeLayout>

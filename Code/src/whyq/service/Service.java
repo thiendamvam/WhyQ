@@ -340,11 +340,11 @@ public class Service implements Runnable {
 																// data
 			break;
 		case ActionAcceptInvitation:
-			resObj = parser.parseInvitationNotification(result);// Same structor
+			resObj = parser.parseAcceptInvitation(result);// Same structor
 																// data
 			break;
 		case ActionDeclineInvitation:
-			resObj = parser.parseInvitationNotification(result);// Same structor
+			resObj = parser.parseAcceptInvitation(result);// Same structor
 																// data
 			break;
 		case ActionDeleteFriend:

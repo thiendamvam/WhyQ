@@ -1146,7 +1146,8 @@ public class DataParser {
 						user.setCity(getValue(element, "address"));
 						user.setPhoneNumber(getValue(element, "phone_number"));
 						user.setPaypalEmail(getValue(element, "paypal_email"));
-						
+						user.setFacebookId(getValue(element, "facebook_id"));
+						user.setTwitterId(getValue(element, "twitter_id"));
 						/*
 						 * Get isFriend
 						 */
@@ -1531,5 +1532,40 @@ public class DataParser {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public Object parseAcceptInvitation(String result) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("200")){
+
+				
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setMessage(mes);
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	
+	
 	}
 }

@@ -42,6 +42,25 @@ public class User implements Serializable {
 	private String phoneNumber;
 	private String paypalEmail;
 	private boolean isFriend;
+	private String facebookId;
+	private String twitterId;
+	
+	public String getFacebookId() {
+		return facebookId;
+	}
+
+	public void setFacebookId(String facebookId) {
+		this.facebookId = facebookId;
+	}
+
+	public String getTwitterId() {
+		return twitterId;
+	}
+
+	public void setTwitterId(String twitterId) {
+		this.twitterId = twitterId;
+	}
+
 	public String getCity() {
 		return city;
 	}
@@ -140,7 +159,7 @@ public class User implements Serializable {
 	}
 
 	public String getName() {
-		return name;
+		return name!=null?name:"";
 	}
 
 
@@ -441,7 +460,7 @@ public class User implements Serializable {
 	 * @return the firstName
 	 */
 	public String getFirstName() {
-		return firstName;
+		return firstName==null?"":firstName;
 	}
 
 	/**
@@ -455,7 +474,7 @@ public class User implements Serializable {
 	 * @return the lastName
 	 */
 	public String getLastName() {
-		return lastName;
+		return lastName==null?"":lastName;
 	}
 
 	/**
