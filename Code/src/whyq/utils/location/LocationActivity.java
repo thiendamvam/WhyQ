@@ -374,7 +374,7 @@ public class LocationActivity extends FragmentActivity implements
     public void finishActivity(){
     	Intent i = getIntent();
     	i.putExtra("have_location", true);
-    	setResult(RESULT_OK);
+    	setResult(RESULT_OK,i);
     	finish();
     }
 	/**
