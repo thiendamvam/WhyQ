@@ -66,6 +66,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	
 	public static final String DOWNLOAD_COMPLETED = "DOWNLOAD_COMPLETED";
 	public static final String COFFE = "";
+	private static final int GET_LOCATION = 1;
 	public String url = "";
 	public Boolean header = true;
 
@@ -266,8 +267,10 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	@Override
 	protected void onResume() {
 		super.onResume();
-		getLocation();
-		exeListActivity(false);
+		if(!isFirst){
+			isFirst = true;
+			exeListActivity(false);	
+		}
 //		if(isLogin && WhyqMain.getCurrentTab() == 3){
 //			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
 //			if(user2 != null){
@@ -303,15 +306,26 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 			latgitude = ""+LocationActivity.currentLocation.getLatitude();
 		}else{
 			Intent i = new Intent(context, LocationActivity.class);
-			context.startActivity(i);
+			startActivityForResult(i, GET_LOCATION);
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent arg2) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, arg2);
+		if(resultCode== RESULT_OK){
+			if(requestCode == GET_LOCATION){
+				exeListActivity(false);
+				isFirst = true;
+			}
+		}
+	}
 
 	protected void onPause () {
     	super.onPause();
     	isFavorite = false;
-    	isFirst = true;
+    	isFirst = false;
     	nextItem = -1;
 //    	showProgress();
     	
@@ -366,7 +380,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		}
 		clearData();
 		showProgress();
-
+		getLocation();
 		loadPermList = new LoadPermList(isSearch);
 		loadPermList.execute();
 	}

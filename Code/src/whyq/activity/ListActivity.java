@@ -78,6 +78,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	public static final String COFFE = "";
 	private static final int CHANGE_LOCATION_REQUEST = 0;
 	protected static final String CHANGE_LOCATION = "CHANGE_LOCATION";
+	private static final int GET_LOCATION = 1;
 	public String url = "";
 	public Boolean header = true;
 
@@ -140,7 +141,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		public void onReceive(Context context, Intent intent) {
 
 			if (intent.getAction().equals(DOWNLOAD_COMPLETED)) {
-				exeListActivity(false);
+//				exeListActivity(false);
 			} else if(intent.getAction().equals(CHANGE_LOCATION)){
 				updateLocation(intent);
 			}
@@ -235,7 +236,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			latgitude = ""+LocationActivity.currentLocation.getLatitude();
 		}else{
 			Intent i = new Intent(context, LocationActivity.class);
-			context.startActivity(i);
+			startActivityForResult(i, GET_LOCATION);
 		}
 		
 	}
@@ -337,6 +338,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		imgCoffe.requestFocus();
 		params = (RelativeLayout.LayoutParams)rlSearchTools.getLayoutParams();
 	}
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d("onActivityResult changelocation","");
 	    if (resultCode == RESULT_OK) {
@@ -345,6 +347,11 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	    		 longitude = data.getStringExtra("lng");
 	    		 exeSearch(etTextSearch.getText().toString(), false);
 	    		 tvNearLocation.setText(data.getStringExtra("name"));
+	    	 }else if(requestCode == GET_LOCATION){
+	    		 if(data.getBooleanExtra("have_location", false)){
+	    			 exeGetBusinessList();
+	    			 isFirst = true;
+	    		 }
 	    	 }
 	    
 	    }
@@ -368,8 +375,11 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	@Override
 	protected void onResume() {
 		super.onResume();
-		getLocation();
-		exeListActivity(false);
+		if(!isFirst){
+			isFirst = true;
+			exeListActivity(false);
+			
+		}
 //		if(currentLocation !=null)
 //			tvNearLocation.setText(currentLocation);
 //		imgCoffe.requestFocus();
@@ -398,7 +408,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	
 	protected void onPause () {
     	super.onPause();
-    	isFirst = true;
+    	isFirst = false;
     	nextItem = -1;
     	isExpandableSearch = false;
 //    	showProgress();
@@ -414,7 +424,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 //	    	clearData();
 	    	if(permListMain !=null)
 	    		permListMain.clear();
-	    	isFirst = false;
+//	    	isFirst = false;
 		}
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -472,6 +482,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	}
 	public void loadPreviousItems() {
 		if(nextItem > -1) {
+			Log.d("loadNextItems","loadNextItems");
 			nextItem = nextItem - 1;
 			clearData();
 			showProgress();
@@ -482,7 +493,9 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	}
 
 	public void loadNextItems() {
+		
 		if(permListAdapter != null) {
+			Log.d("loadNextItems","loadNextItems");
 			nextItem = permListAdapter.getNextItems();
 			showProgress();
 			exeGetBusinessList();
@@ -876,7 +889,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 					exeListActivity(false);
 					
 				}else{
-					exeSearchFocus();
+//					exeSearchFocus();
 					isSearch = true;
 					exeSearchFocus();
 					exeSearch(text,false);

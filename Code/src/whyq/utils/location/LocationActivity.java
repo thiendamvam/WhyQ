@@ -223,7 +223,7 @@ public class LocationActivity extends FragmentActivity implements
          * Connect the client. Don't re-start any requests here;
          * instead, wait for onResume()
          */
-
+        Log.d("onStart","Start LoginActivity");
         mLocationClient.connect();
     }
     /*
@@ -292,7 +292,7 @@ public class LocationActivity extends FragmentActivity implements
 					break;
 					
 				default:
-					finish();
+					finishActivity();
 					break;
 				}
             // If any other request code was received
@@ -354,10 +354,15 @@ public class LocationActivity extends FragmentActivity implements
             if(currentLocation!=null){
             	Log.d("getLocation","getLocation"+currentLocation.getAltitude()+" and "+currentLocation.getLongitude());
             	stopUpdates(null);
-            	finish();
+            	finishActivity();
+            	
+            }else{
+            	finishActivity();
             }
+            
 //            // Display the current location in the UI
 //            mLatLng.setText(LocationUtils.getLatLng(this, currentLocation));
+        }else{
         }
     }
 
@@ -366,6 +371,12 @@ public class LocationActivity extends FragmentActivity implements
 		
 	}
 
+    public void finishActivity(){
+    	Intent i = getIntent();
+    	i.putExtra("have_location", true);
+    	setResult(RESULT_OK);
+    	finish();
+    }
 	/**
      * Invoked by the "Get Address" button.
      * Get the address of the current location, using reverse geocoding. This only works if
@@ -434,7 +445,7 @@ public class LocationActivity extends FragmentActivity implements
     @Override
     public void onConnected(Bundle bundle) {
 //        mConnectionStatus.setText(R.string.connected);
-    	
+    	Log.d("onConnected","onConnected");
         if (mUpdatesRequested) {
             startPeriodicUpdates();
             
@@ -454,6 +465,8 @@ public class LocationActivity extends FragmentActivity implements
     @Override
     public void onDisconnected() {
 //        mConnectionStatus.setText(R.string.disconnected);
+    	Log.d("onConnected","onConnected");
+    	finishActivity();
     }
 
     /*
@@ -469,6 +482,7 @@ public class LocationActivity extends FragmentActivity implements
          * start a Google Play services activity that can resolve
          * error.
          */
+    	Log.d("onConnected","onConnected");
         if (connectionResult.hasResolution()) {
             try {
 
@@ -492,7 +506,7 @@ public class LocationActivity extends FragmentActivity implements
             // If no resolution is available, display a dialog to the user with the error.
             showErrorDialog(connectionResult.getErrorCode());
         }
-        finish();
+        finishActivity();
     }
 
     /**
