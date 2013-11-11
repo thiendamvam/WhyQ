@@ -10,8 +10,10 @@ import whyq.adapter.WhyQBillAdapter;
 import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
+import whyq.model.BillPushNotification;
 import whyq.model.ResponseData;
 import whyq.model.Store;
+import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
@@ -65,7 +67,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		tvTitle.setText("Bills");
 		lvBill = (ListView)findViewById(R.id.lvBill);
 		listBill = new ArrayList<Bill>();
-		isOrdered = bundle.getBoolean("is_ordered", false);
+		isOrdered = bundle.getBoolean("is_ordered", true);
 		btnDone = (Button)findViewById(R.id.btnDone);
 		if(!isOrdered){
 			listBill = getBillList(ListDetailActivity.billList);
@@ -80,9 +82,16 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 					btnDone.setVisibility(View.INVISIBLE);
 				}
 			}
-			
-			billId = bundle.getString("bill_id");
-			exeGetBillDetail(billId);
+			if(pushNotificationData!=null){
+				DataParser parser = new DataParser();
+				BillPushNotification data = parser.parserJsonPushnotification(pushNotificationData);
+				billId = data.getBillId();
+				btnDone.setText("Paypal");
+				Toast.makeText(WhyQBillScreen.this, data.getAlert(), Toast.LENGTH_LONG).show();
+			}else{
+				billId = bundle.getString("bill_id");
+			}
+				exeGetBillDetail(billId);
 		}
 		tvTotal = (TextView)findViewById(R.id.tvTotal);
 		tvDiscount = (TextView)findViewById(R.id.tvDiscount);

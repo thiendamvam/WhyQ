@@ -923,6 +923,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		bundle.putString("lon", "" + store.getLongitude());
 		bundle.putString("start_time", "" + store.getStartTime());
 		bundle.putString("close_time", "" + store.getEndTime());
+		bundle.putBoolean("is_ordered", false);
 		intent.putExtra("data", bundle);
 		startActivity(intent);
 	}

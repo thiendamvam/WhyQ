@@ -351,6 +351,9 @@ public class Service implements Runnable {
 			resObj = parser.parseAcceptInvitation(result);// Same structor
 																// data
 			break;
+		case ActionOrderCheck:
+			resObj = parser.parseOrderCheck(result);
+			break;
 		case ActionDeleteFriend:
 			resObj = parser.parserDeleteFriend(result);
 			break;
@@ -945,4 +948,18 @@ public class Service implements Runnable {
 		request("/m/member/friend/delete", params, true, false);
 	}
 	
+	public void pushOrderCheck(String rsaToken, String billId,String facebookId,String message,String image) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionOrderCheck;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("token", rsaToken);
+		params.put("bill_id", billId);
+		if(facebookId!=null)
+			params.put("facebook_id ", facebookId);
+		params.put("message", message);
+		params.put("image", image);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("m/member/order/check", params, true, false);
+	}
 }

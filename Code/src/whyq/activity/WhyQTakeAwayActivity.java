@@ -155,9 +155,7 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 			params.put("time_zone", Util.getTimeZone(""));
 			if (cbLeaveNow.isChecked()) {
 				params.put("time_deliver", "ASAP");
-			} else {
-				params.put("time_deliver", "" + getTimeInpu());
-			}
+			} else { }
 
 			params.put("note", note);
 			params.put("token", WhyqApplication.Instance().getRSAToken());

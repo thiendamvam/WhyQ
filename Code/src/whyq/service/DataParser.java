@@ -11,6 +11,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,6 +32,7 @@ import whyq.handler.UserHandler;
 import whyq.handler.UserProfileHandler;
 import whyq.model.Bill;
 import whyq.model.BillItem;
+import whyq.model.BillPushNotification;
 import whyq.model.Distance;
 import whyq.model.Faq;
 import whyq.model.Location;
@@ -1568,4 +1571,68 @@ public class DataParser {
 	
 	
 	}
+	
+	/*
+	 * Parse Json Pushnotification data
+	 */
+	public BillPushNotification parserJsonPushnotification(String input){
+		try {
+			JSONObject json = new JSONObject(input);
+			BillPushNotification data = new BillPushNotification();
+			data.setAlert(json.optString("alert"));
+			data.setPushHash(json.optString("push_hash"));
+			JSONObject objData = json.optJSONObject("customData");
+			data.setStoryId(objData.optString("store_id"));
+			data.setDeliverType(objData.optString("deliver_type"));
+			data.setType(objData.optString("type"));
+			data.setBillId(objData.optString("bill_id"));
+			data.setTimeDeliver(objData.optString("time_deliver"));
+			data.setNameStore(objData.optString("name_store"));
+			return data;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+
+	public Object parseOrderCheck(String result) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("status").item(0).getFirstChild().getNodeValue();
+			if(statusResponse.equals("OK")){
+				data.setStatus("200");
+				NodeList elementes = doc.getElementsByTagName("element");
+//				String  dataResult = "";
+//				if(elementes!=null){
+//					Element element = (Element)elementes.item(0);
+//					dataResult.setStatus(getValue(element, "image"));
+//					Log.d("parserCheckBillResult",""+getValue(element, "status"));
+//				}else{
+//					Log.d("parserCheckBillResult","null");
+//					dataResult.setValue(null);
+//				}
+//				data.setData(dataResult);		
+				return data;
+			}else{
+				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+				
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	
+	} 
 }
