@@ -40,9 +40,8 @@ import android.os.Bundle;
  * @see RequestListener
  *        The callback interface.
  *
- * @author  Jim Brusstar (jimbru@fb.com),
- *          Yariv Sadan (yariv@fb.com),
- *          Luke Shepard (lshepard@fb.com)
+ * @author ssoneff@facebook.com
+ *
  */
 public class AsyncFacebookRunner {
 
@@ -69,37 +68,27 @@ public class AsyncFacebookRunner {
      * @param listener
      *            Callback interface to notify the application when the request
      *            has completed.
-     * @param state
-     *            An arbitrary object used to identify the request when it
-     *            returns to the callback. This has no effect on the request
-     *            itself.
      */
-    public void logout(final Context context,
-                       final RequestListener listener,
-                       final Object state) {
+    public void logout(final Context context, final RequestListener listener) {
         new Thread() {
             @Override public void run() {
                 try {
                     String response = fb.logout(context);
                     if (response.length() == 0 || response.equals("false")){
                         listener.onFacebookError(new FacebookError(
-                                "auth.expireSession failed"), state);
+                                "auth.expireSession failed"));
                         return;
                     }
-                    listener.onComplete(response, state);
+                    listener.onComplete(response);
                 } catch (FileNotFoundException e) {
-                    listener.onFileNotFoundException(e, state);
+                    listener.onFileNotFoundException(e);
                 } catch (MalformedURLException e) {
-                    listener.onMalformedURLException(e, state);
+                    listener.onMalformedURLException(e);
                 } catch (IOException e) {
-                    listener.onIOException(e, state);
+                    listener.onIOException(e);
                 }
             }
         }.start();
-    }
-
-    public void logout(final Context context, final RequestListener listener) {
-        logout(context, listener, /* state */ null);
     }
 
     /**
@@ -126,19 +115,10 @@ public class AsyncFacebookRunner {
      * @param listener
      *            Callback interface to notify the application when the request
      *            has completed.
-     * @param state
-     *            An arbitrary object used to identify the request when it
-     *            returns to the callback. This has no effect on the request
-     *            itself.
      */
     public void request(Bundle parameters,
-                        RequestListener listener,
-                        final Object state) {
-        request(null, parameters, "GET", listener, state);
-    }
-
-    public void request(Bundle parameters, RequestListener listener) {
-        request(null, parameters, "GET", listener, /* state */ null);
+                        RequestListener listener) {
+        request(null, parameters, "GET", listener);
     }
 
     /**
@@ -157,19 +137,10 @@ public class AsyncFacebookRunner {
      * @param listener
      *            Callback interface to notify the application when the request
      *            has completed.
-     * @param state
-     *            An arbitrary object used to identify the request when it
-     *            returns to the callback. This has no effect on the request
-     *            itself.
      */
     public void request(String graphPath,
-                        RequestListener listener,
-                        final Object state) {
-        request(graphPath, new Bundle(), "GET", listener, state);
-    }
-
-    public void request(String graphPath, RequestListener listener) {
-        request(graphPath, new Bundle(), "GET", listener, /* state */ null);
+                        RequestListener listener) {
+        request(graphPath, new Bundle(), "GET", listener);
     }
 
     /**
@@ -194,22 +165,11 @@ public class AsyncFacebookRunner {
      * @param listener
      *            Callback interface to notify the application when the request
      *            has completed.
-     * @param state
-     *            An arbitrary object used to identify the request when it
-     *            returns to the callback. This has no effect on the request
-     *            itself.
      */
     public void request(String graphPath,
                         Bundle parameters,
-                        RequestListener listener,
-                        final Object state) {
-        request(graphPath, parameters, "GET", listener, state);
-    }
-
-    public void request(String graphPath,
-                        Bundle parameters,
                         RequestListener listener) {
-        request(graphPath, parameters, "GET", listener, /* state */ null);
+        request(graphPath, parameters, "GET", listener);
     }
 
     /**
@@ -237,27 +197,22 @@ public class AsyncFacebookRunner {
      * @param listener
      *            Callback interface to notify the application when the request
      *            has completed.
-     * @param state
-     *            An arbitrary object used to identify the request when it
-     *            returns to the callback. This has no effect on the request
-     *            itself.
      */
     public void request(final String graphPath,
                         final Bundle parameters,
                         final String httpMethod,
-                        final RequestListener listener,
-                        final Object state) {
+                        final RequestListener listener) {
         new Thread() {
             @Override public void run() {
                 try {
                     String resp = fb.request(graphPath, parameters, httpMethod);
-                    listener.onComplete(resp, state);
+                    listener.onComplete(resp);
                 } catch (FileNotFoundException e) {
-                    listener.onFileNotFoundException(e, state);
+                    listener.onFileNotFoundException(e);
                 } catch (MalformedURLException e) {
-                    listener.onMalformedURLException(e, state);
+                    listener.onMalformedURLException(e);
                 } catch (IOException e) {
-                    listener.onIOException(e, state);
+                    listener.onIOException(e);
                 }
             }
         }.start();
@@ -265,10 +220,6 @@ public class AsyncFacebookRunner {
 
     /**
      * Callback interface for API requests.
-     *
-     * Each method includes a 'state' parameter that identifies the calling
-     * request. It will be set to the value passed when originally calling the
-     * request method, or null if none was passed.
      */
     public static interface RequestListener {
 
@@ -277,14 +228,14 @@ public class AsyncFacebookRunner {
          *
          * Executed by a background thread: do not update the UI in this method.
          */
-        public void onComplete(String response, Object state);
+        public void onComplete(String response);
 
         /**
          * Called when a request has a network or request error.
          *
          * Executed by a background thread: do not update the UI in this method.
          */
-        public void onIOException(IOException e, Object state);
+        public void onIOException(IOException e);
 
         /**
          * Called when a request fails because the requested resource is
@@ -292,8 +243,7 @@ public class AsyncFacebookRunner {
          *
          * Executed by a background thread: do not update the UI in this method.
          */
-        public void onFileNotFoundException(FileNotFoundException e,
-                                            Object state);
+        public void onFileNotFoundException(FileNotFoundException e);
 
         /**
          * Called if an invalid graph path is provided (which may result in a
@@ -301,15 +251,14 @@ public class AsyncFacebookRunner {
          *
          * Executed by a background thread: do not update the UI in this method.
          */
-        public void onMalformedURLException(MalformedURLException e,
-                                            Object state);
+        public void onMalformedURLException(MalformedURLException e);
 
         /**
          * Called when the server-side Facebook method fails.
          *
          * Executed by a background thread: do not update the UI in this method.
          */
-        public void onFacebookError(FacebookError e, Object state);
+        public void onFacebookError(FacebookError e);
 
     }
 

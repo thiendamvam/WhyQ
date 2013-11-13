@@ -1,23 +1,21 @@
 package whyq.utils.share;
 
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import whyq.WhyqApplication;
 import whyq.utils.Constants;
 import whyq.utils.SharedPreferencesManager;
 import whyq.utils.facebook.BaseRequestListener;
 import whyq.utils.facebook.sdk.AsyncFacebookRunner;
 import whyq.utils.facebook.sdk.Facebook;
+import whyq.utils.facebook.sdk.FacebookError;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -55,20 +53,20 @@ public class ShareHandler implements ShareListener {
 
 	}
 
-//	public static Handler handlePostTwitter = new Handler() {
-//		@Override
-//		public void handleMessage(Message msg) {
-//			if (msg.what == 1) {
-//				Toast.makeText(
-//						WhyqApplication.Instance().getApplicationContext(),
-//						"Share successful", Toast.LENGTH_SHORT).show();
-//			} else {
-//				Toast.makeText(
-//						WhyqApplication.Instance().getApplicationContext(),
-//						(String) msg.obj, Toast.LENGTH_SHORT).show();
-//			}
-//		}
-//	};
+	// public static Handler handlePostTwitter = new Handler() {
+	// @Override
+	// public void handleMessage(Message msg) {
+	// if (msg.what == 1) {
+	// Toast.makeText(
+	// WhyqApplication.Instance().getApplicationContext(),
+	// "Share successful", Toast.LENGTH_SHORT).show();
+	// } else {
+	// Toast.makeText(
+	// WhyqApplication.Instance().getApplicationContext(),
+	// (String) msg.obj, Toast.LENGTH_SHORT).show();
+	// }
+	// }
+	// };
 
 	// public boolean postTwitter(Context context, String message, String
 	// storyID) {
@@ -94,38 +92,36 @@ public class ShareHandler implements ShareListener {
 	// }
 	// }
 
-	public boolean postFacebook(String message) {
-		{
-			// message = IssueAdapter.currentDesription;
+	public boolean postFacebook(String accessToken, String message) {
+		// message = IssueAdapter.currentDesription;
 
-			Facebook facebook = new Facebook(Constants.FACEBOOK_APP_ID);
-			if (facebook != null) {
-				String namePost = "";// = IssueAdapter.currentDesription;
+		Facebook facebook = new Facebook(Constants.FACEBOOK_APP_ID);
+		facebook.setAccessToken(accessToken);
+		if (facebook != null) {
+			String namePost = "";// = IssueAdapter.currentDesription;
 
-				String msg = limitContent(message, " " + linkshareFacebook);
-				// FacebookController.updateMessage(facebook, msg);
-				AsyncFacebookRunner mAsyncFbRunner = new AsyncFacebookRunner(
-						facebook);
-				Bundle params = new Bundle();
-				params.putString("message", msg);
-				params.putString("name", namePost);
-				params.putString("caption",
-						Constants.LINK_SHARE_FACEBOOK_GLOBAL);
-				String disription="";
-				String thumb = "";
-				// params.putString("link", Config.LINK_SHARE_FACEBOOK_GLOBAL);
-				params.putString("description", disription);
-				
-				Log.d("WallPostListener", "thumb is:" + thumb);
-				if (thumb != null && !thumb.equals("") && !thumb.equals("null"))
-					params.putString("picture", thumb);
-				// else
-				// params.putString("picture",
-				// "http://blogs.news.com.au/images/uploads/black.jpg");
-				mAsyncFbRunner.request("me/feed", params,
-						new WallPostListener());
-				return true;
-			}
+			String msg = limitContent(message, " " + linkshareFacebook);
+			// FacebookController.updateMessage(facebook, msg);
+			AsyncFacebookRunner mAsyncFbRunner = new AsyncFacebookRunner(
+					facebook);
+			Bundle params = new Bundle();
+			params.putString("message", msg);
+			params.putString("name", namePost);
+			params.putString("caption", Constants.LINK_SHARE_FACEBOOK_GLOBAL);
+			String disription = "";
+			String thumb = "";
+			// params.putString("link", Config.LINK_SHARE_FACEBOOK_GLOBAL);
+			params.putString("description", disription);
+
+			Log.d("WallPostListener", "thumb is:" + thumb);
+			if (thumb != null && !thumb.equals("") && !thumb.equals("null"))
+				params.putString("picture", thumb);
+			// else
+			// params.putString("picture",
+			// "http://blogs.news.com.au/images/uploads/black.jpg");
+			mAsyncFbRunner.request("me/feed", params, "POST",
+					new WallPostListener());
+			return true;
 		}
 		return false;
 	}
@@ -134,8 +130,10 @@ public class ShareHandler implements ShareListener {
 
 	private final class WallPostListener extends BaseRequestListener {
 
+
 		@Override
-		public void onComplete(final String response, Object state) {
+		public void onComplete(final String response) {
+
 			// TODO Auto-generated method stub
 
 			mRunOnUi.post(new Runnable() {
@@ -147,6 +145,31 @@ public class ShareHandler implements ShareListener {
 				}
 			});
 
+		
+		}
+
+		@Override
+		public void onIOException(IOException e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onFileNotFoundException(FileNotFoundException e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onMalformedURLException(MalformedURLException e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onFacebookError(FacebookError e) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 

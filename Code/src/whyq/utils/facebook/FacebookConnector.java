@@ -3,7 +3,9 @@
  */
 package whyq.utils.facebook;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import whyq.utils.facebook.SessionEvents.AuthListener;
 import whyq.utils.facebook.SessionEvents.LogoutListener;
@@ -93,15 +95,43 @@ public class FacebookConnector {
     }
 
 	public class LogoutRequestListener extends BaseRequestListener {
-        public void onComplete(String response, final Object state) {
-            // callback should be run in the original thread, 
+
+		@Override
+		public void onComplete(String response) {
+			// TODO Auto-generated method stub
+
             // not the background thread
             handler.post(new Runnable() {
                 public void run() {
                     SessionEvents.onLogoutFinish();
                 }
             });
-        }
+        
+		}
+
+		@Override
+		public void onIOException(IOException e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onFileNotFoundException(FileNotFoundException e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onMalformedURLException(MalformedURLException e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onFacebookError(FacebookError e) {
+			// TODO Auto-generated method stub
+			
+		}
     }
 	
 	private class SessionListener implements AuthListener, LogoutListener {

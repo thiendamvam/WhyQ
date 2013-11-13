@@ -87,17 +87,17 @@ public class SharedPreferencesManager {
 		editor.commit();
 	}
 
-//	public Facebook loadFacebook() {
-//		SharedPreferences savedSession = _context.getSharedPreferences(
-//				"FACEBOOK", Context.MODE_PRIVATE);
-//		Facebook facebook = new Facebook(FacebookActivity.APP_ID);
-//		facebook.setAccessToken(savedSession.getString("facebook_token", null));
-//		facebook.setAccessExpires(savedSession.getLong("expires", 0));
-//		if (facebook.isSessionValid())
-//			return facebook;
-//		else
-//			return null;
-//	}
+	public Facebook loadFacebook() {
+		SharedPreferences savedSession = _context.getSharedPreferences(
+				"FACEBOOK", Context.MODE_PRIVATE);
+		Facebook facebook = new Facebook(Constants.FACEBOOK_APP_ID);
+		facebook.setAccessToken(savedSession.getString("facebook_token", null));
+		facebook.setAccessExpires(savedSession.getLong("expires", 0));
+		if (facebook.isSessionValid())
+			return facebook;
+		else
+			return null;
+	}
 
 	
 

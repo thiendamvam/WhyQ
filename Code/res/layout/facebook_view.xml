@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="540dp"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/relative_layout_header"
-        android:layout_width="540dp"
+        android:layout_width="match_parent"
         android:layout_height="44dp"
         android:paddingLeft="5dip"
         android:paddingRight="5dip" >
@@ -16,9 +17,9 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
             android:onClick="onCancelClicked"
             android:text="Cancel" >
         </Button>
@@ -28,8 +29,7 @@
             android:layout_width="60dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-             />
+            android:layout_marginLeft="10dp" />
 
         <TextView
             android:id="@+id/facebook_usename"
@@ -65,11 +65,9 @@
             android:visibility="invisible" />
     </RelativeLayout>
 
-
-
     <EditText
         android:id="@+id/facebook_message"
-        android:layout_width="520dp"
+        android:layout_width="match_parent"
         android:layout_height="130dp"
         android:layout_margin="10dp"
         android:clickable="true"
@@ -81,7 +79,7 @@
 
     <RelativeLayout
         android:id="@+id/LinearLayout01"
-        android:layout_width="520dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="@android:color/transparent"
@@ -143,10 +141,10 @@
             android:id="@+id/facebook_buttonSend"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:text="Send" >
-        </Button>
+            android:layout_alignTop="@+id/tvUserLoggedin"
+            android:layout_toRightOf="@+id/facebook_numchar"
+            android:text="Send" />
+
     </RelativeLayout>
 
 </LinearLayout>
