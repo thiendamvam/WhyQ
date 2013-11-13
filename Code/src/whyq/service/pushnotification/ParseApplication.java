@@ -41,7 +41,7 @@ public class ParseApplication {
 	public static void exePushNotification(Context context){
         // inform the Parse Cloud that it is ready for notifications
 		try {
-	        PushService.setDefaultPushCallback(context, WhyQBillScreen.class);
+	        PushService.setDefaultPushCallback(context, PushNotificationActivity.class);
 	        ParseInstallation.getCurrentInstallation().saveInBackground();
 	        ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
 	        if(parseInstallation!=null){

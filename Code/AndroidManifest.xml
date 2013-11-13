@@ -94,6 +94,16 @@
             android:theme="@android:style/Theme.Black.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name="whyq.activity.WhyqShareActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="whyq.service.pushnotification.PushNotificationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name="whyq.activity.WhyqForgotPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"

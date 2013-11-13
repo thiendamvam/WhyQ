@@ -1,5 +1,6 @@
 package whyq.activity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,8 +46,6 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 	private float totalafterDiscount = 0;
 	private Button btnDone;
 	private Bundle bundle;
-	private String pushNotificationData;
-	private boolean isFromPushNotification = false;
 	private boolean isOrdered;
 	private String billId;
 	public static int LOGIN_REQUEST = 1;
@@ -58,11 +57,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		bundle = getIntent().getBundleExtra("data");
 		if(bundle==null)
 			bundle = getIntent().getExtras();
-		pushNotificationData =  getIntent().getExtras().getString( "com.parse.Data" );
-		if(pushNotificationData!=null){
-			isFromPushNotification  = true;
-			Log.d("pushNotificationData","data:"+pushNotificationData);
-		}
+		BillPushNotification pushNotificationData = (BillPushNotification)bundle.getSerializable("push_data");
 		tvTitle = (TextView)findViewById(R.id.tvHeaderTitle);
 		tvTitle.setText("Bills");
 		lvBill = (ListView)findViewById(R.id.lvBill);
@@ -83,11 +78,10 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 				}
 			}
 			if(pushNotificationData!=null){
-				DataParser parser = new DataParser();
-				BillPushNotification data = parser.parserJsonPushnotification(pushNotificationData);
-				billId = data.getBillId();
+				billId = pushNotificationData.getBillId();
 				btnDone.setText("Paypal");
-				Toast.makeText(WhyQBillScreen.this, data.getAlert(), Toast.LENGTH_LONG).show();
+				Toast.makeText(WhyQBillScreen.this, pushNotificationData.getAlert(), Toast.LENGTH_LONG).show();
+
 			}else{
 				billId = bundle.getString("bill_id");
 			}

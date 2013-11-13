@@ -1,6 +1,8 @@
 package whyq.model;
 
-public class BillPushNotification {
+import java.io.Serializable;
+
+public class BillPushNotification implements Serializable{
 	private String storyId;
 	private String deliverType;
 	private String type;

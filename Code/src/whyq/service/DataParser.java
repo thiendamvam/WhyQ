@@ -1581,6 +1581,7 @@ public class DataParser {
 			BillPushNotification data = new BillPushNotification();
 			data.setAlert(json.optString("alert"));
 			data.setPushHash(json.optString("push_hash"));
+			
 			JSONObject objData = json.optJSONObject("customData");
 			data.setStoryId(objData.optString("store_id"));
 			data.setDeliverType(objData.optString("deliver_type"));
