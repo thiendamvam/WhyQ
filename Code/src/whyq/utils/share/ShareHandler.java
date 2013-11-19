@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
+import whyq.model.ShareData;
 import whyq.utils.Constants;
 import whyq.utils.SharedPreferencesManager;
 import whyq.utils.facebook.BaseRequestListener;
@@ -92,7 +93,7 @@ public class ShareHandler implements ShareListener {
 	// }
 	// }
 
-	public boolean postFacebook(String accessToken, String message) {
+	public boolean postFacebook(String accessToken, ShareData data) {
 		// message = IssueAdapter.currentDesription;
 
 		Facebook facebook = new Facebook(Constants.FACEBOOK_APP_ID);
@@ -100,22 +101,22 @@ public class ShareHandler implements ShareListener {
 		if (facebook != null) {
 			String namePost = "";// = IssueAdapter.currentDesription;
 
-			String msg = limitContent(message, " " + linkshareFacebook);
+			String msg = limitContent(data.getMessage(), " " + linkshareFacebook);
 			// FacebookController.updateMessage(facebook, msg);
 			AsyncFacebookRunner mAsyncFbRunner = new AsyncFacebookRunner(
 					facebook);
 			Bundle params = new Bundle();
 			params.putString("message", msg);
-			params.putString("name", namePost);
-			params.putString("caption", Constants.LINK_SHARE_FACEBOOK_GLOBAL);
-			String disription = "";
-			String thumb = "";
+			params.putString("name", data.getName());
+			params.putString("caption", data.getLink());
+			String disription = data.getDescription();
+			String picture = data.getPicture();
 			// params.putString("link", Config.LINK_SHARE_FACEBOOK_GLOBAL);
-			params.putString("description", disription);
+			params.putString("description", data.getDescription());
 
-			Log.d("WallPostListener", "thumb is:" + thumb);
-			if (thumb != null && !thumb.equals("") && !thumb.equals("null"))
-				params.putString("picture", thumb);
+			Log.d("WallPostListener", "picture is:" + picture);
+			if (picture != null && !picture.equals("") && !picture.equals("null"))
+				params.putString("picture", picture);
 			// else
 			// params.putString("picture",
 			// "http://blogs.news.com.au/images/uploads/black.jpg");

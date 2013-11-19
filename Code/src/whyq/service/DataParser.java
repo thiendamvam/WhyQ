@@ -37,6 +37,7 @@ import whyq.model.Distance;
 import whyq.model.Faq;
 import whyq.model.Location;
 import whyq.model.Menu;
+import whyq.model.OrderCheckData;
 import whyq.model.OrderSendResult;
 import whyq.model.Photo;
 import whyq.model.ProductTypeInfo;
@@ -1608,7 +1609,13 @@ public class DataParser {
 			String statusResponse = doc.getElementsByTagName("status").item(0).getFirstChild().getNodeValue();
 			if(statusResponse.equals("OK")){
 				data.setStatus("200");
-				NodeList elementes = doc.getElementsByTagName("element");
+				final String img = doc.getElementsByTagName("image").item(0).getFirstChild().getNodeValue();
+				final String link = doc.getElementsByTagName("link").item(0).getFirstChild().getNodeValue();
+				OrderCheckData data2 = new OrderCheckData();
+				data2.setImage(img);
+				data2.setLink(link);
+				data.setData(data2);
+//				NodeList elementes = doc.getElementsByTagName("element");
 //				String  dataResult = "";
 //				if(elementes!=null){
 //					Element element = (Element)elementes.item(0);
