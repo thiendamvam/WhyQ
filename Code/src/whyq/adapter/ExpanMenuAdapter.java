@@ -13,6 +13,7 @@ import whyq.utils.UrlImageViewHelper;
 import whyq.utils.Util;
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,8 +134,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 			viewHolder.tvCount = (TextView)view.findViewById(R.id.totalForItem);
 			viewHolder.tvType.setTypeface(Util.sTypefaceRegular);
 			viewHolder.tvPrice.setTypeface(Util.sTypefaceRegular);
-			viewHolder.tvType.setText(item.getNameProduct());
-			viewHolder.tvPrice.setText("$"+item.getValue());
+			viewHolder.tvType.setText(Html.fromHtml(item.getNameProduct()));
+			viewHolder.tvPrice.setText("$"+Html.fromHtml(item.getValue()));
 			viewHolder.storeId = item.getStoreId();
 			viewHolder.btnAdd = (Button)view.findViewById(R.id.btnAdd);
 			viewHolder.btnRemove = (Button) view.findViewById(R.id.btnRemove);
@@ -197,7 +198,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 		}
 
 		groupHolder.title.setTypeface(Util.sTypefaceRegular);
-		groupHolder.title.setText(mGroupCollection.get(arg0).getName());
+		groupHolder.title.setText(Html.fromHtml(mGroupCollection.get(arg0).getName()));
 		return arg2;
 	
 	}
