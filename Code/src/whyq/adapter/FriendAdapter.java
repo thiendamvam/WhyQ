@@ -2,7 +2,6 @@ package whyq.adapter;
 
 import java.util.List;
 
-import whyq.activity.WhyqTagFriendsDialog;
 import whyq.model.FriendFacebook;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,13 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.whyq.R;
 
-public class FriendAdapter extends BaseAdapter implements OnCheckedChangeListener{
+public class FriendAdapter extends BaseAdapter {
 
 	private List<FriendFacebook> list;
 	private Context context;
@@ -59,7 +56,6 @@ public class FriendAdapter extends BaseAdapter implements OnCheckedChangeListene
 			holder.tvName = (TextView) v.findViewById(R.id.tvName);
 			holder.cbxTag = (CheckBox) v.findViewById(R.id.cbxTag);
 			holder.fbId = item.getId();
-			holder.cbxTag.setOnCheckedChangeListener(this);
 
 			holder.tvName.setText(item.getFirstName());
 			holder.cbxTag.setTag(item);
@@ -74,11 +70,5 @@ public class FriendAdapter extends BaseAdapter implements OnCheckedChangeListene
 		private TextView tvName;
 		private CheckBox cbxTag;
 		private String fbId;
-	}
-
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		// TODO Auto-generated method stub
-		((WhyqTagFriendsDialog)context.getp).onChecked(buttonView);
 	}
 }

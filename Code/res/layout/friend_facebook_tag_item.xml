@@ -14,6 +14,7 @@
     <CheckBox
         android:id="@+id/cbxTag"
         android:layout_width="40dp"
+        android:onClick="onChecked"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true" />
 

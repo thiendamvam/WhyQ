@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import whyq.adapter.FriendAdapter;
 import whyq.interfaces.FragmentDialogListener;
 import whyq.model.FriendFacebook;
+import whyq.model.TransferData;
 import whyq.utils.Constants;
 import whyq.utils.WhyqUtils;
 import whyq.utils.facebook.BaseRequestListener;
@@ -20,22 +21,19 @@ import whyq.utils.facebook.sdk.AsyncFacebookRunner;
 import whyq.utils.facebook.sdk.Facebook;
 import whyq.utils.facebook.sdk.FacebookError;
 import whyq.utils.facebook.sdk.Util;
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.internal.ch;
 import com.whyq.R;
 
-public class WhyqTagFriendsDialog extends DialogFragment {
+public class WhyqTagFriendsDialog extends FragmentActivity {
 
 	private ListView lvFriends;
 	private Context context;
@@ -47,27 +45,33 @@ public class WhyqTagFriendsDialog extends DialogFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setStyle(DialogFragment.STYLE_NO_TITLE, 1);
+		setContentView(R.layout.tags_friend_screen);
+		context = this;
+		lvFriends = (ListView) findViewById(R.id.lvFriends);
 
 		friendList = new ArrayList<FriendFacebook>();
 		friendTagList = new ArrayList<FriendFacebook>();
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		View v = inflater
-				.inflate(R.layout.tags_friend_screen, container, false);
-		context = getActivity();
-		lvFriends = (ListView) v.findViewById(R.id.lvFriends);
-		Bundle bundle = getArguments();
+		Bundle bundle = getIntent().getExtras();
 		if (bundle.containsKey("accessToken")) {
 			String accessToken = bundle.getString("accessToken");
 			exeGetData(accessToken);
 		}
-		return v;
 	}
+
+//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//			Bundle savedInstanceState) {
+//		// TODO Auto-generated method stub
+//		View v = inflater
+//				.inflate(R.layout.tags_friend_screen, container, false);
+//		context = getActivity();
+//		lvFriends = (ListView) v.findViewById(R.id.lvFriends);
+//		Bundle bundle = getArguments();
+//		if (bundle.containsKey("accessToken")) {
+//			String accessToken = bundle.getString("accessToken");
+//			exeGetData(accessToken);
+//		}
+//		return v;
+//	}
 
 	private String getAccessToken() {
 		final WhyqUtils mPermutils = new WhyqUtils();
@@ -99,7 +103,7 @@ public class WhyqTagFriendsDialog extends DialogFragment {
 				JSONObject json = Util.parseJson(response);
 				final JSONArray friends = json.getJSONArray("data");
 				
-				getActivity().runOnUiThread(new Runnable() {
+				runOnUiThread(new Runnable() {
 					public void run() {
 						// Do stuff here with your friends array,
 						// which is an array of JSONObjects.
@@ -115,7 +119,7 @@ public class WhyqTagFriendsDialog extends DialogFragment {
 			}
 
 			if (_error != null) {
-				getActivity().runOnUiThread(new Runnable() {
+				runOnUiThread(new Runnable() {
 					public void run() {
 						Toast.makeText(context, "Error occurred:  " + _error,
 								Toast.LENGTH_LONG).show();
@@ -166,18 +170,19 @@ public class WhyqTagFriendsDialog extends DialogFragment {
 		}
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		// TODO Auto-generated method stub
-		super.onAttach(activity);
-		listener = (FragmentDialogListener) activity;
-	}
+//	@Override
+//	public void onAttach(Activity activity) {
+//		// TODO Auto-generated method stub
+//		super.onAttach(activity);
+//		listener = (FragmentDialogListener) activity;
+//	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		listener.onCompleted(friendTagList);
+
+//		listener.onCompleted(friendTagList);
 	}
 
 	private List<FriendFacebook> getFriends() {
@@ -201,5 +206,18 @@ public class WhyqTagFriendsDialog extends DialogFragment {
 		if(cbx.isChecked()){
 			friendTagList.add((FriendFacebook)v.getTag());
 		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		Intent i = getIntent();
+		Bundle b = new Bundle();
+		TransferData data = new TransferData();
+		data.setData(friendTagList);
+		b.putSerializable("data", data);
+		i.putExtras(b);
+		setResult(RESULT_OK, i);
 	}
 }

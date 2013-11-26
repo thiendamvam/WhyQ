@@ -11,6 +11,7 @@ import whyq.model.FriendFacebook;
 import whyq.model.OrderCheckData;
 import whyq.model.ResponseData;
 import whyq.model.ShareData;
+import whyq.model.TransferData;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
@@ -43,6 +44,7 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 
 	private static final int GET_IMAGE = 0;
 	private static final int FACEBOOK = 1;
+	private static final int TAG_FRIENDS = 4;
 	private TextView tvTitle;
 	private EditText etMessage;
 	private String avatarPath;
@@ -100,8 +102,11 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 		WhyqTagFriendsDialog fragment = new WhyqTagFriendsDialog();
 		Bundle bundle = new Bundle();
 		bundle.putString("accessToken", fbId);
-		fragment.setArguments(bundle);
-		getFragmentManager().beginTransaction().add(fragment, "add_tag").commit();
+//		fragment.setArguments(bundle);
+//		getFragmentManager().beginTransaction().add(fragment, "add_tag").commit();
+		Intent i = new Intent(context, WhyqTagFriendsDialog.class);
+		i.putExtras(bundle);
+		startActivityForResult(i, TAG_FRIENDS);
 	}
 	public void onInviteClicked(View v){
 		
@@ -214,6 +219,10 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 	        			btnCaptureImage.setImageURI(Uri.fromFile(imgFile));
 	        		}
 	        	}
+	        }else if(requestCode==TAG_FRIENDS){
+	        	Bundle b = data.getExtras();
+	        	TransferData tfdata = (TransferData) b.getSerializable("data");
+	        	facebookIdTag = convertData(tfdata.getData());
 	        }
 	    }
 	    
