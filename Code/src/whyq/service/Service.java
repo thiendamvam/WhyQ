@@ -960,6 +960,6 @@ public class Service implements Runnable {
 		params.put("image", image);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
-		request("m/member/order/check", params, true, false);
+		request("/m/member/order/check", params, true, false);
 	}
 }

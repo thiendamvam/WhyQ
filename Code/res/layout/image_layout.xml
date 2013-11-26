@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="60dp"
+    android:layout_marginBottom="0dp"
     android:orientation="vertical"
+    android:background="@color/translucent_dark"
     android:weightSum="10" >
 
     <include
