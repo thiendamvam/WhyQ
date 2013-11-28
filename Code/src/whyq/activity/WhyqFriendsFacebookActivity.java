@@ -337,7 +337,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 						@Override
 						public void onClick(View v) {
-							if (item.getIs_join()) {
+							if (!item.getIs_join()) {
 								if (INVITED_LIST.containsKey(item.getId())) {
 									mActivity.removeIntiveFriend(item);
 								} else {
@@ -346,6 +346,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 								displayInviteButtn(holder, item);
 							} else {
 								Bundle params = new Bundle();
+								params.putString("title", "invite friends");
 								params.putString("to", item.getFacebookId());
 								facebookSdk.dialog(mActivity, "apprequests",
 										params, new DialogListener() {
@@ -354,25 +355,25 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 											public void onFacebookError(
 													FacebookError e) {
 												// TODO Auto-generated method stub
-
+												Log.d("DialogListener", "onFacebookError"+e.getMessage());
 											}
 
 											@Override
 											public void onError(DialogError e) {
 												// TODO Auto-generated method stub
-
+												Log.d("DialogListener", "onError"+e.getMessage());
 											}
 
 											@Override
 											public void onComplete(Bundle values) {
 												// TODO Auto-generated method stub
-
+												Log.d("DialogListener", "onComplete");
 											}
 
 											@Override
 											public void onCancel() {
 												// TODO Auto-generated method stub
-
+												Log.d("DialogListener", "onCancel");
 											}
 										});
 							}
