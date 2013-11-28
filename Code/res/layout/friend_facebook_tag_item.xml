@@ -5,17 +5,20 @@
 
     <TextView
         android:id="@+id/tvName"
+        style="@style/normail_black_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
         android:layout_toLeftOf="@+id/cbxTag"
         android:maxLines="2" />
 
     <CheckBox
         android:id="@+id/cbxTag"
         android:layout_width="40dp"
-        android:onClick="onChecked"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:checked="false"
+        android:onClick="onChecked" />
 
 </RelativeLayout>

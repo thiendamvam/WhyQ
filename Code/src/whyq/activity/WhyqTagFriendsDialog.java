@@ -2,6 +2,7 @@ package whyq.activity;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whyq.R;
@@ -40,6 +43,8 @@ public class WhyqTagFriendsDialog extends FragmentActivity {
 	private List<FriendFacebook> friendList;
 	private FragmentDialogListener listener;
 	private List<FriendFacebook> friendTagList;
+	private TextView tvHeader;
+	private ProgressBar prBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,11 +52,14 @@ public class WhyqTagFriendsDialog extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tags_friend_screen);
 		context = this;
+		prBar = (ProgressBar) findViewById(R.id.prgBar);
 		lvFriends = (ListView) findViewById(R.id.lvFriends);
-
+		tvHeader = (TextView)findViewById(R.id.tvHeaderTitle);
+		tvHeader.setText("Tag Friends");
 		friendList = new ArrayList<FriendFacebook>();
 		friendTagList = new ArrayList<FriendFacebook>();
 		Bundle bundle = getIntent().getExtras();
+		
 		if (bundle.containsKey("accessToken")) {
 			String accessToken = bundle.getString("accessToken");
 			exeGetData(accessToken);
@@ -78,9 +86,28 @@ public class WhyqTagFriendsDialog extends FragmentActivity {
 		return mPermutils.getFacebookToken(context);
 	}
 
+	public void onDoneClicked(View v){
+
+		// TODO Auto-generated method stub
+		Intent i = new Intent();
+		Bundle b = new Bundle();
+		TransferData data = new TransferData();
+		data.setData(friendTagList);
+		b.putSerializable("data", data);
+		i.putExtras(b);
+		setResult(RESULT_OK, i);
+		finish();
+	
+	}
+	
+	public void onBack(View v){
+		finish();
+	}
+	
+	
 	private void exeGetData(String accessToken) {
 		// TODO Auto-generated method stub
-
+		setProgressBarShowing(true);
 		if (accessToken != null) {
 			Facebook mfacebook = new Facebook(Constants.FACEBOOK_APP_ID);
 			mfacebook.setAccessToken(accessToken);
@@ -92,12 +119,18 @@ public class WhyqTagFriendsDialog extends FragmentActivity {
 
 	}
 
+	private void setProgressBarShowing(boolean b) {
+		// TODO Auto-generated method stub
+		prBar.setVisibility(b?View.VISIBLE:View.INVISIBLE);
+	}
+
 	public class FriendListRequestListener extends BaseRequestListener {
 
 		private Object _error;
 
 		public void onComplete(final String response) {
 			_error = null;
+			
 			Log.d("friends",""+response.toString());
 			try {
 				JSONObject json = Util.parseJson(response);
@@ -107,6 +140,7 @@ public class WhyqTagFriendsDialog extends FragmentActivity {
 					public void run() {
 						// Do stuff here with your friends array,
 						// which is an array of JSONObjects.
+						setProgressBarShowing(false);
 						friendList = getFrindsFromJson(friends);
 						bindFriends(friendList);
 					}
@@ -132,6 +166,7 @@ public class WhyqTagFriendsDialog extends FragmentActivity {
 		protected List<FriendFacebook> getFrindsFromJson(JSONArray friends) {
 			// TODO Auto-generated method stub
 			int length = friends.length();
+			friendList.clear();
 			for(int i=0;i<length;i++){
 				FriendFacebook item = new FriendFacebook();
 				JSONObject obj = friends.optJSONObject(i);
@@ -199,25 +234,27 @@ public class WhyqTagFriendsDialog extends FragmentActivity {
 		// TODO Auto-generated method stub
 		FriendAdapter adapter = new FriendAdapter(context, friendList);
 		lvFriends.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
 	}
 	
 	public void onChecked(View v){
 		CheckBox cbx = (CheckBox)v;
+		Log.d("onChecked","onChecked"+cbx.isChecked());
 		if(cbx.isChecked()){
 			friendTagList.add((FriendFacebook)v.getTag());
 		}
 	}
 	
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		Intent i = getIntent();
-		Bundle b = new Bundle();
-		TransferData data = new TransferData();
-		data.setData(friendTagList);
-		b.putSerializable("data", data);
-		i.putExtras(b);
-		setResult(RESULT_OK, i);
-	}
+//	@Override
+//	public void onBackPressed() {
+//		// TODO Auto-generated method stub
+//		super.onBackPressed();
+//		Intent i = getIntent();
+//		Bundle b = new Bundle();
+//		TransferData data = new TransferData();
+//		data.setData(friendTagList);
+//		b.putSerializable("data", data);
+//		i.putExtras(b);
+//		setResult(RESULT_OK, i);
+//	}
 }

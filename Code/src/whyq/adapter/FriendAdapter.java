@@ -1,9 +1,12 @@
 package whyq.adapter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import whyq.model.FriendFacebook;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,28 +45,44 @@ public class FriendAdapter extends BaseAdapter {
 		return 0;
 	}
 
+	private Map<String, View> viewList = new HashMap<String, View>();
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 
 		FriendFacebook item = list.get(position);
 		Holder holder = null;
-		if(convertView!=null)holder = (Holder) convertView.getTag();
-		if (holder == null){
-			View v = LayoutInflater.from(context).inflate(
+		convertView = viewList.get(item.getFacebookId());
+		if (convertView == null){
+			Log.d("getView","new");
+			convertView = LayoutInflater.from(context).inflate(
 					R.layout.friend_facebook_tag_item, parent, false);
 			holder = new Holder();
-			holder.tvName = (TextView) v.findViewById(R.id.tvName);
-			holder.cbxTag = (CheckBox) v.findViewById(R.id.cbxTag);
+			holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
+			holder.cbxTag = (CheckBox) convertView.findViewById(R.id.cbxTag);
 			holder.fbId = item.getId();
-
+			holder.cbxTag.setChecked(false);
 			holder.tvName.setText(item.getFirstName());
+			
 			holder.cbxTag.setTag(item);
-			v.setTag(holder);
-			return v;
+			convertView.setTag(holder);
+			viewList.put(item.getFacebookId(), convertView);
+			return convertView;
+			
+		}else{
+			Log.d("getView","old");
+//			holder = (Holder) convertView.getTag();
+			return convertView;
+//			if(holder==null){
+//				holder = new Holder();
+//				holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
+//				holder.cbxTag = (CheckBox) convertView.findViewById(R.id.cbxTag);
+//				holder.fbId = item.getId();
+//			}
 		}
-		
-		return convertView;
+
+
+
 	}
 
 	public class Holder {

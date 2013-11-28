@@ -208,25 +208,33 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 		startActivityForResult(intent,GET_IMAGE);
 	}
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.d("onActivityResult Join","");
-	    if (resultCode == RESULT_OK) {
-	        if (requestCode == GET_IMAGE ) {
-	        	avatarPath = data.getStringExtra("path");
-	        	Log.d("onActivityResult Join",""+avatarPath);
-	        	if(avatarPath!=null){
-	        		 File imgFile = new  File(avatarPath);
-	        		if(imgFile.exists()){
-	        			btnCaptureImage.setImageURI(Uri.fromFile(imgFile));
-	        		}
-	        	}
-	        }else if(requestCode==TAG_FRIENDS){
-	        	Bundle b = data.getExtras();
-	        	TransferData tfdata = (TransferData) b.getSerializable("data");
-	        	facebookIdTag = convertData(tfdata.getData());
-	        }
-	    }
-	    
-	    ImageActivity.imagePath = "";
+		try {
+
+			Log.d("onActivityResult Join","onActivityResult "+requestCode);
+		    if (resultCode == RESULT_OK) {
+		        if (requestCode == GET_IMAGE ) {
+		        	avatarPath = data.getStringExtra("path");
+		        	Log.d("onActivityResult Join",""+avatarPath);
+		        	if(avatarPath!=null){
+		        		 File imgFile = new  File(avatarPath);
+		        		if(imgFile.exists()){
+		        			btnCaptureImage.setImageURI(Uri.fromFile(imgFile));
+		        		}
+		        	}
+		        }else if(requestCode==TAG_FRIENDS){
+		        		TransferData tfdata = (TransferData) data.getSerializableExtra("data");
+			        	if(tfdata!=null)
+			        		facebookIdTag = convertData(tfdata.getData());	
+		        	
+		        }
+		    }
+		    
+		    ImageActivity.imagePath = "";
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 
 	@Override

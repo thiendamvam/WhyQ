@@ -1606,7 +1606,7 @@ public class DataParser {
 		try {
 			Document doc = XMLfromString(result);
 			ResponseData data = new ResponseData();
-			String statusResponse = doc.getElementsByTagName("status").item(0).getFirstChild().getNodeValue();
+			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
 			if(statusResponse.equals("OK")){
 				data.setStatus("200");
 				final String img = doc.getElementsByTagName("image").item(0).getFirstChild().getNodeValue();

@@ -1,7 +1,13 @@
 package whyq.model;
 
-public class FriendFacebook {
+import java.io.Serializable;
 
+public class FriendFacebook implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String facebookId;
 	private String ituneUrl;
 	private String firstName;

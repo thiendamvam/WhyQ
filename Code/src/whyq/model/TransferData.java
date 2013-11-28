@@ -2,8 +2,12 @@ package whyq.model;
 
 import java.io.Serializable;
 
-public class TransferData implements Serializable{
+public class TransferData implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Object data;
 
 	/**
@@ -14,9 +18,11 @@ public class TransferData implements Serializable{
 	}
 
 	/**
-	 * @param data the data to set
+	 * @param data
+	 *            the data to set
 	 */
 	public void setData(Object data) {
 		this.data = data;
-	} 
+	}
+
 }
