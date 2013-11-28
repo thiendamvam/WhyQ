@@ -337,7 +337,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 						@Override
 						public void onClick(View v) {
-							if (!item.getIs_join()) {
+							if (item.getIs_join()) {
 								if (INVITED_LIST.containsKey(item.getId())) {
 									mActivity.removeIntiveFriend(item);
 								} else {
