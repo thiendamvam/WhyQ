@@ -213,7 +213,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		utils.writeLogFile(ListActivity.this.getIntent());
 		whyqListView.setOnScrollListener(this);
     	showProgress();
-
+    	Util.generateKeyHash(this);
 	}
 
 

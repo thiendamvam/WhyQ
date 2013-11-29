@@ -12,6 +12,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,6 +41,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.location.Address;
@@ -58,11 +63,11 @@ import android.os.Message;
 import android.provider.Settings;
 import android.text.TextPaint;
 import android.text.format.DateUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.whyq.R;
 
@@ -556,5 +561,23 @@ public class Util {
 			poke.setData(Uri.parse("3"));
 			WhyqApplication.Instance().sendBroadcast(poke);
 		}
+	}
+
+	public static void generateKeyHash(Context context) {
+		// TODO Auto-generated method stub
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(
+                    "com.whyq", 
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                }
+        } catch (NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
 	}
 }
