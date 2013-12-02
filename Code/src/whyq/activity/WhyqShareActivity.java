@@ -57,6 +57,7 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 	private ProgressBar prgBar;
 	private String facebookIdTag;
 	private Context context;
+	private boolean isComment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_share);
 		context = this;
+		isComment = getIntent().getBooleanExtra("is_comment", false);
 		BillPushNotification pushNotificationData = null;
 		if(getIntent().getExtras()!=null)
 			pushNotificationData = (BillPushNotification)getIntent().getExtras().getSerializable("push_data");
@@ -72,6 +74,9 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 		btnCaptureImage = (ImageButton)findViewById(R.id.btnCaptureImage);
 		tglShareWhyq = (ToggleButton) findViewById(R.id.tglShareWhyq);
 		tgleShareFb = (ToggleButton) findViewById(R.id.tglShareFB);
+		
+		if(isComment)
+			tgleShareFb.setVisibility(View.GONE);
 		findViewById(R.id.btnDone).setVisibility(View.INVISIBLE);
 		tvTitle.setText("Share");
 		prgBar = (ProgressBar)findViewById(R.id.prgBar);

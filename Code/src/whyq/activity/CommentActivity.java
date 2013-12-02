@@ -224,6 +224,12 @@ public class CommentActivity extends ImageWorkerActivity {
 		}
 
 	}
+	public void onCommentHereClicked(View v){
+		Intent i = new Intent(CommentActivity.this, WhyqShareActivity.class);
+		i.putExtra("is_comment", true);
+		startActivity(i);
+	}
+	
 	public void onBackClicked(View v){
 		finish();
 	}
