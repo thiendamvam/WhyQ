@@ -1,6 +1,8 @@
 package whyq.model;
 
-public class StoreInfo {
+import java.io.Serializable;
+
+public class StoreInfo implements Serializable{
 	private String id;
 	private String cateid;
 	private String userId;

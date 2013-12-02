@@ -1,6 +1,8 @@
 package whyq.model;
 
-public class ProductTypeInfo {
+import java.io.Serializable;
+
+public class ProductTypeInfo implements Serializable {
 	private String id;
 	private String nameProductType;
 	private String createDate;

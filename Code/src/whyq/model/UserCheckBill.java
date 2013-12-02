@@ -1,6 +1,8 @@
 package whyq.model;
 
-public class UserCheckBill {
+import java.io.Serializable;
+
+public class UserCheckBill implements Serializable{
 	private String totalFriend;
 	private String totalMember;
 	private String id;

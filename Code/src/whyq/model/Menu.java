@@ -1,8 +1,9 @@
 package whyq.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Menu {
+public class Menu implements Serializable{
 	String id;
 	String storeId;
 	private String nameProduct;

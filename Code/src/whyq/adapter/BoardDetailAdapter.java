@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import whyq.activity.GoogleMapActivity;
 import whyq.activity.NewWhyqActivity;
 import whyq.activity.ProfileActivityGroup;
 import whyq.model.Store;
@@ -143,16 +142,16 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent googleMap = new Intent(context,
-						GoogleMapActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putFloat("lat", Float.parseFloat(store.getLatitude()));
-				bundle.putFloat("lon", Float.parseFloat(store.getLongitude()));
-				bundle.putString("thumbnail", store.getLogo());
-				googleMap.putExtra("locationData", bundle);
-				//Log.d("AA+++++============","========="+perm.getImage().getUrl());
-				View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "PrGoogleMapActivity"+store.getId(), googleMap).getDecorView();
-				ProfileActivityGroup.group.replaceView(view);	
+//				Intent googleMap = new Intent(context,
+//						GoogleMapActivity.class);
+//				Bundle bundle = new Bundle();
+//				bundle.putFloat("lat", Float.parseFloat(store.getLatitude()));
+//				bundle.putFloat("lon", Float.parseFloat(store.getLongitude()));
+//				bundle.putString("thumbnail", store.getLogo());
+//				googleMap.putExtra("locationData", bundle);
+//				//Log.d("AA+++++============","========="+perm.getImage().getUrl());
+//				View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "PrGoogleMapActivity"+store.getId(), googleMap).getDecorView();
+//				ProfileActivityGroup.group.replaceView(view);	
 			}
 		});
 //		if(whyq.getLon() ==0 && whyq.getLat() == 0){

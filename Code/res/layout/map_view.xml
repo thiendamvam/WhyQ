@@ -6,11 +6,5 @@
     android:layout_marginBottom="59dp">
 
 
-    <com.google.android.maps.MapView
-        android:id="@+id/mapview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:apiKey="0gUJw9EshczDTbPFs3UkjIN1WZxpBe5qAWr9oWw"
-        android:clickable="true" />
-
+<fragment android:name="whyq.map.MapFragment"/>
 </LinearLayout>

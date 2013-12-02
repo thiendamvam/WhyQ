@@ -1,6 +1,8 @@
 package whyq.model;
 
-public class Promotion {
+import java.io.Serializable;
+
+public class Promotion implements Serializable{
 	
 	private String id;
 	private String storeId;

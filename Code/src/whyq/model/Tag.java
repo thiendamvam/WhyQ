@@ -1,6 +1,8 @@
 package whyq.model;
 
-public class Tag {
+import java.io.Serializable;
+
+public class Tag implements Serializable{
 	private String id;
 	private String nameTag;
 	private int countUsed;

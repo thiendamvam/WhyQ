@@ -10,7 +10,6 @@ import org.apache.http.message.BasicNameValuePair;
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.activity.FavouriteActivity;
-import whyq.activity.GoogleMapActivity;
 import whyq.activity.ListActivity;
 import whyq.activity.ListActivityGroup;
 import whyq.activity.ListDetailActivity;
