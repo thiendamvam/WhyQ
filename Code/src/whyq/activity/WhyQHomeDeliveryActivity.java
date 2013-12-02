@@ -79,43 +79,50 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements IServi
 	}
     public boolean checkInputData()
     {
-        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-        
-		String otherAddress = etOtherAddress.getText().toString();
-		String phoneNumber = etPhoneNumber.getText().toString();
-		String hours = etHours.getText().toString();
-		String minutes = etMinutes.getText().toString();
-        if (otherAddress.length() == 0)
-        {
-        	etOtherAddress.setFocusable(true);
-        	etOtherAddress.startAnimation(shake);
-        	etOtherAddress.requestFocus();
-        	return false;
-        } else if (phoneNumber.length() == 0)
-        {
-        	etPhoneNumber.setFocusable(true);
-        	etPhoneNumber.startAnimation(shake);
-        	etPhoneNumber.requestFocus();
-        	return false;
-        }else if (hours.length() == 0)
-        {
-        	etHours.setFocusable(true);
-        	etHours.startAnimation(shake);
-        	etHours.requestFocus();
-        	return false;
-        }else if (minutes.length() == 0)
-        {
-        	etMinutes.setFocusable(true);
-        	etMinutes.startAnimation(shake);
-        	etMinutes.requestFocus();
-        	return false;
-        } 
-        else
-        {
-        	showDialog();
+    	if(cbASAP.isChecked()){
+    		showDialog();
         	new asyncExeOrderSend().execute();
         	return true;
-        }
+    	}else{
+    	       Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+    	        
+    			String otherAddress = etOtherAddress.getText().toString();
+    			String phoneNumber = etPhoneNumber.getText().toString();
+    			String hours = etHours.getText().toString();
+    			String minutes = etMinutes.getText().toString();
+    	        if (otherAddress.length() == 0)
+    	        {
+    	        	etOtherAddress.setFocusable(true);
+    	        	etOtherAddress.startAnimation(shake);
+    	        	etOtherAddress.requestFocus();
+    	        	return false;
+    	        } else if (phoneNumber.length() == 0)
+    	        {
+    	        	etPhoneNumber.setFocusable(true);
+    	        	etPhoneNumber.startAnimation(shake);
+    	        	etPhoneNumber.requestFocus();
+    	        	return false;
+    	        }else if (hours.length() == 0)
+    	        {
+    	        	etHours.setFocusable(true);
+    	        	etHours.startAnimation(shake);
+    	        	etHours.requestFocus();
+    	        	return false;
+    	        }else if (minutes.length() == 0)
+    	        {
+    	        	etMinutes.setFocusable(true);
+    	        	etMinutes.startAnimation(shake);
+    	        	etMinutes.requestFocus();
+    	        	return false;
+    	        } 
+    	        else
+    	        {
+    	        	showDialog();
+    	        	new asyncExeOrderSend().execute();
+    	        	return true;
+    	        }
+    	}
+ 
     }
     class asyncExeOrderSend extends AsyncTask<HashMap<String, String>, Void, HashMap<String, String>> {
     	public asyncExeOrderSend() {
