@@ -69,7 +69,7 @@ public class Facebook {
 
     // Facebook server endpoints: may be modified in a subclass for testing
     protected static String DIALOG_BASE_URL =
-        "https://m.facebook.com/dialog/";
+        "https://facebook.com/dialog/";
     protected static String GRAPH_BASE_URL =
         "https://graph.facebook.com/";
     protected static String RESTSERVER_URL =

@@ -11,6 +11,7 @@ import whyq.model.FriendFacebook;
 import whyq.model.OrderCheckData;
 import whyq.model.ResponseData;
 import whyq.model.ShareData;
+import whyq.model.Store;
 import whyq.model.TransferData;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
@@ -33,7 +34,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -58,6 +61,12 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 	private String facebookIdTag;
 	private Context context;
 	private boolean isComment;
+	private RelativeLayout rlTags;
+	private RelativeLayout rlShareWhyq;
+	private TextView tvIntro;
+	private String storeId;
+	private Store store;
+	private ImageView imgTitle;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,17 +75,28 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 		setContentView(R.layout.whyq_share);
 		context = this;
 		isComment = getIntent().getBooleanExtra("is_comment", false);
+		storeId = getIntent().getStringExtra("store_id");
 		BillPushNotification pushNotificationData = null;
 		if(getIntent().getExtras()!=null)
 			pushNotificationData = (BillPushNotification)getIntent().getExtras().getSerializable("push_data");
 		tvTitle = (TextView)findViewById(R.id.tvHeaderTitle);
+		imgTitle = (ImageView)findViewById(R.id.imgHeader);
 		etMessage = (EditText)findViewById(R.id.etMessage);
 		btnCaptureImage = (ImageButton)findViewById(R.id.btnCaptureImage);
 		tglShareWhyq = (ToggleButton) findViewById(R.id.tglShareWhyq);
 		tgleShareFb = (ToggleButton) findViewById(R.id.tglShareFB);
+		rlShareWhyq = (RelativeLayout)findViewById(R.id.rlShareWhyq);
+		rlTags = (RelativeLayout)findViewById(R.id.rlTags);
+		tvIntro = (TextView)findViewById(R.id.tvShareIntro);
 		
-		if(isComment)
-			tgleShareFb.setVisibility(View.GONE);
+		if(isComment){
+			rlShareWhyq.setVisibility(View.GONE);
+			rlTags.setVisibility(View.GONE);
+			tvIntro.setVisibility(View.GONE);
+			tvIntro.setVisibility(View.VISIBLE);
+		}else{
+			
+		}
 		findViewById(R.id.btnDone).setVisibility(View.INVISIBLE);
 		tvTitle.setText("Share");
 		prgBar = (ProgressBar)findViewById(R.id.prgBar);
@@ -90,6 +110,16 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 		}else{
 			
 		}
+		if(storeId!=null)
+			getStoreInfo();
+	}
+
+
+	private void getStoreInfo() {
+		// TODO Auto-generated method stub
+		setProgressBar(true);
+		Service service = new Service(this);
+		service.getBusinessDetail(storeId);
 	}
 
 
@@ -186,7 +216,11 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 		if(!tgleShareFb.isChecked())
 			facebookId = null;
 		Service service  = new Service(WhyqShareActivity.this);
-		service.pushOrderCheck(WhyqApplication.Instance().getRSAToken(), billId, facebookIdTag, etMessage.getText().toString()	,avatarPath );
+		if(isComment){
+			service.postComment(WhyqApplication.Instance().getRSAToken(),storeId, etMessage.getText().toString(), avatarPath);
+		}else{
+			service.pushOrderCheck(WhyqApplication.Instance().getRSAToken(), billId, facebookIdTag, etMessage.getText().toString()	,avatarPath );
+		}
 		setProgressBar(true);
 	}
 	
@@ -251,7 +285,8 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 				ResponseData data = (ResponseData)result.getData();
 				if(data.getStatus().equals("200")){
 					OrderCheckData responseData = (OrderCheckData)data.getData();
-					exePostFacebook(accessToken, responseData);
+					if(tgleShareFb.isChecked())
+						exePostFacebook(accessToken, responseData);
 				}else if(data.getStatus().equals("401")){
 					Util.loginAgain(getParent(), data.getMessage());
 				}else if(data.getStatus().equals("204")){
@@ -261,9 +296,63 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 				
 				
 			}
-		}else{
-			
+		}else if(result.isSuccess()&&result.getAction()==ServiceAction.ActionGetBusinessDetail){
+
+			ResponseData data = (ResponseData) result.getData();
+			if (data != null) {
+				if (data.getStatus().equals("200")) {
+					store = (Store) data.getData();
+					if (store != null) {
+						bindHeaderData();
+					}
+				} else if (data.getStatus().equals("401")) {
+					Util.loginAgain(context, data.getMessage());
+				} else {
+					// Util.showDialog(context, data.getMessage());
+				}
+			}
+
+		
+		}else if(result.isSuccess()&&result.getAction()==ServiceAction.ActionPostComment){
+			ResponseData data = (ResponseData) result.getData();
+			if (data != null) {
+				if (data.getStatus().equals("200")) {
+					Toast.makeText(context, "Posted comment", Toast.LENGTH_LONG).show();
+					OrderCheckData responseData = (OrderCheckData)data.getData();
+					if(tgleShareFb.isChecked())
+						exePostFacebook(accessToken, responseData);
+				} else if (data.getStatus().equals("401")) {
+					Util.loginAgain(context, data.getMessage());
+				} else {
+					// Util.showDialog(context, data.getMessage());
+				}
+			}
+		}else if(!result.isSuccess()&&result.getAction()==ServiceAction.ActionPostComment){
+			Toast.makeText(context, "Fail", Toast.LENGTH_LONG).show();
 		}
+	}
+
+
+	private void bindHeaderData() {
+		// TODO Auto-generated method stub
+		try {
+			tvTitle.setText(""+store.getNameStore());
+			String cateId = store.getCateid();
+			if(cateId.equals("1")){
+				imgTitle.setImageResource(R.drawable.icon_cat_cutlery);
+			}else if(cateId.equals("1")){
+				imgTitle.setImageResource(R.drawable.icon_cat_wine);
+			}else if(cateId.equals("1")){
+				imgTitle.setImageResource(R.drawable.icon_cat_coffee);
+			}else{
+				imgTitle.setImageResource(R.drawable.icon_cat_hotel);
+			}
+			Log.d("bindHeaderData","cate id "+cateId);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 
 

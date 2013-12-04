@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import twitter4j.http.AccessToken;
 import whyq.WhyqApplication;
 import whyq.controller.WhyqListController;
+import whyq.interfaces.IFacebookLister;
 import whyq.interfaces.IServiceListener;
 import whyq.model.ResponseData;
 import whyq.model.Store;
@@ -17,6 +18,7 @@ import whyq.utils.SharedPreferencesManager;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
+import whyq.utils.facebook.SessionLoginFragment;
 import whyq.utils.facebook.sdk.DialogError;
 import whyq.utils.facebook.sdk.Facebook;
 import whyq.utils.facebook.sdk.Facebook.DialogListener;
@@ -24,14 +26,16 @@ import whyq.utils.facebook.sdk.FacebookError;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.Session;
 import com.share.twitter.TwitterActivity;
 import com.whyq.R;
 
-public class WhyqFindMenuActivity extends Activity implements IServiceListener {
+public class WhyqFindMenuActivity extends FragmentActivity implements IServiceListener, IFacebookLister {
 
 	private TextView tvTitle;
 
@@ -65,43 +69,65 @@ public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 	}
 	
 	public void findFromFaccebookClicked(View v) {
-		if (getAccessToken() == null) {
-			Facebook mFacebook;
-			mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
-			final Activity activity = this;
-			mFacebook.authorize(activity, new String[] { "email", "status_update",
-					"user_birthday" }, new DialogListener() {
-				@Override
-				public void onComplete(Bundle values) {
-					WhyqUtils permutils = new WhyqUtils();
-					String accessToken = values.getString(Facebook.TOKEN);
-					permutils.saveFacebookToken("oauth_token", accessToken,
-							getApplication());
-					exeLoginFacebook(accessToken);
-				}
-
-				@Override
-				public void onFacebookError(FacebookError error) {
-
-				}
-
-				@Override
-				public void onError(DialogError e) {
-
-				}
-
-				@Override
-				public void onCancel() {
-					// cancel press or back press
-				}
-			});
-		} else {
-			Intent intent = new Intent(this, WhyqFriendsFacebookActivity.class);
-			startActivity(intent);
-			finish();
+//		if (getAccessToken() == null) {
+//			Facebook mFacebook;
+//			mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
+//			final Activity activity = this;
+//			mFacebook.authorize(activity, new String[] { "email", "status_update",
+//					"user_birthday" }, new DialogListener() {
+//				@Override
+//				public void onComplete(Bundle values) {
+//					WhyqUtils permutils = new WhyqUtils();
+//					String accessToken = values.getString(Facebook.TOKEN);
+//					permutils.saveFacebookToken("oauth_token", accessToken,
+//							getApplication());
+//					exeLoginFacebook(accessToken);
+//				}
+//
+//				@Override
+//				public void onFacebookError(FacebookError error) {
+//
+//				}
+//
+//				@Override
+//				public void onError(DialogError e) {
+//
+//				}
+//
+//				@Override
+//				public void onCancel() {
+//					// cancel press or back press
+//				}
+//			});
+//		} else {
+//			Intent intent = new Intent(this, WhyqFriendsFacebookActivity.class);
+//			startActivity(intent);
+//			finish();
+//		}
+		Session session = Session.getActiveSession();
+		
+		if(session!=null){
+			if(session.isOpened()){
+				showFacebookLogin();
+			}else{
+				gotoFacebookFriend();
+			}
+		}else{
+			showFacebookLogin();
 		}
 	}
 
+	private void gotoFacebookFriend() {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent(this, WhyqFriendsFacebookActivity.class);
+		startActivity(intent);
+		finish();
+	}
+	private void showFacebookLogin() {
+		// TODO Auto-generated method stub
+		SessionLoginFragment fragment = new SessionLoginFragment();
+		getSupportFragmentManager().beginTransaction().add(fragment, "facebook_login").commit();
+	}
 	public void exeLoginFacebook(String accessToken) {
 		Service service = new Service(this);
 		service.loginFacebook(accessToken);
@@ -151,5 +177,12 @@ public class WhyqFindMenuActivity extends Activity implements IServiceListener {
 	
 	public void onBack(View v){
 		finish();
+	}
+	@Override
+	public void onCompled(boolean b) {
+		// TODO Auto-generated method stub
+		if(b){
+			gotoFacebookFriend();
+		}
 	}
 }

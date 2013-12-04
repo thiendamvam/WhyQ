@@ -12,6 +12,7 @@ import twitter4j.http.AccessToken;
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.controller.WhyqListController;
+import whyq.interfaces.IFacebookLister;
 import whyq.interfaces.IServiceListener;
 import whyq.interfaces.LoginTWDelegate;
 import whyq.model.ResponseData;
@@ -25,6 +26,7 @@ import whyq.utils.SharedPreferencesManager;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.facebook.FacebookConnector;
+import whyq.utils.facebook.SessionLoginFragment;
 import whyq.utils.facebook.sdk.DialogError;
 import whyq.utils.facebook.sdk.Facebook;
 import whyq.utils.facebook.sdk.Facebook.DialogListener;
@@ -39,6 +41,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -46,6 +49,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.facebook.Session;
 import com.share.twitter.TwitterActivity;
 import com.whyq.R;
 
@@ -54,8 +58,8 @@ import com.whyq.R;
  *         user-name and password. Also, it can communicate to FB and Twitter to
  *         do authentication as well
  */
-public class LoginHome extends Activity
-		implements IServiceListener,LoginTWDelegate {
+public class LoginHome extends FragmentActivity
+		implements IServiceListener,LoginTWDelegate , IFacebookLister{
 
 	static final int LOGIN_TWITTER = 1;
 	private Button facebookLogin;
@@ -96,46 +100,57 @@ public class LoginHome extends Activity
 				// TODO Auto-generated method stub
 
 
-				Facebook mFacebook;
-				String token = null;
-				mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
-				final Activity activity = LoginHome.this;
-				mFacebook.authorize(activity, new String[] { "email",
-						"status_update", "user_birthday" },
-						new DialogListener() {
-							@Override
-							public void onComplete(Bundle values) {
-								// Log.d("", "=====>"+values.toString());
-								WhyqUtils permutils = new WhyqUtils();
-								String accessToken = values
-										.getString(Facebook.TOKEN);
-								permutils.saveFacebookToken("oauth_token",
-										accessToken, getApplication());
-								// // Check on server
-								HashMap<String, String> params = new HashMap<String, String>();
-								params.put("access_token", accessToken);
-								exeLoginFacebook(accessToken);
-//								exeSendMessage(true, params);
-							}
-
-							@Override
-							public void onFacebookError(FacebookError error) {
-
-							}
-
-							@Override
-							public void onError(DialogError e) {
-
-							}
-
-							@Override
-							public void onCancel() {
-								// cancel press or back press
-							}
-						});
+//				Facebook mFacebook;
+//				String token = null;
+//				mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
+//				final Activity activity = LoginHome.this;
+//				mFacebook.authorize(activity, new String[] { "email",
+//						"status_update", "user_birthday" },
+//						new DialogListener() {
+//							@Override
+//							public void onComplete(Bundle values) {
+//								// Log.d("", "=====>"+values.toString());
+//								WhyqUtils permutils = new WhyqUtils();
+//								String accessToken = values
+//										.getString(Facebook.TOKEN);
+//								permutils.saveFacebookToken("oauth_token",
+//										accessToken, getApplication());
+//								// // Check on server
+//								HashMap<String, String> params = new HashMap<String, String>();
+//								params.put("access_token", accessToken);
+//								exeLoginFacebook(accessToken);
+////								exeSendMessage(true, params);
+//							}
+//
+//							@Override
+//							public void onFacebookError(FacebookError error) {
+//
+//							}
+//
+//							@Override
+//							public void onError(DialogError e) {
+//
+//							}
+//
+//							@Override
+//							public void onCancel() {
+//								// cancel press or back press
+//							}
+//						});
+				Session session = Session.getActiveSession();
+				
+				if(session!=null){
+					if(session.isOpened()){
+						showFacebookLogin();
+					}else{
+						exeLoginFacebook(session.getAccessToken());
+					}
+				}else{
+					showFacebookLogin();
+				}
 			}
 		});
-
+		
 		// Twitter Login button
 		twitterLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -193,6 +208,12 @@ public class LoginHome extends Activity
 //		}
 //	}
 //	
+	
+	private void showFacebookLogin() {
+		// TODO Auto-generated method stub
+		SessionLoginFragment fragment = new SessionLoginFragment();
+		getSupportFragmentManager().beginTransaction().add(fragment, "facebook_login").commit();
+	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    // Check which request we're responding to
@@ -354,5 +375,14 @@ public class LoginHome extends Activity
 	public void onLoginTWError() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void onCompled(boolean b) {
+		// TODO Auto-generated method stub
+		if(b){
+			Session session = Session.getActiveSession();
+			exeLoginFacebook(session.getAccessToken());
+		}
 	}
 }

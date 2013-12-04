@@ -22,7 +22,17 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp" >
 
+        <TextView
+            android:id="@+id/tvShareIntro"
+            style="@style/normal_grey_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="7dp"
+            android:text="@string/comment_intro"
+            android:visibility="gone" />
+
         <RelativeLayout
+            android:id="@+id/rlShareWhyq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -63,6 +73,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rlTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onTag"
@@ -92,8 +103,8 @@
             android:padding="4dp" >
 
             <EditText
-                style="@style/normail_black_text"
                 android:id="@+id/etMessage"
+                style="@style/normail_black_text"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_centerVertical="true"
@@ -110,8 +121,8 @@
                 android:layout_toLeftOf="@+id/btnSend"
                 android:background="@drawable/btn_register_avatar"
                 android:onClick="onCaptureImage"
-                android:scaleType="fitXY"
-                android:padding="3dp" />
+                android:padding="3dp"
+                android:scaleType="fitXY" />
 
             <Button
                 android:id="@+id/btnSend"

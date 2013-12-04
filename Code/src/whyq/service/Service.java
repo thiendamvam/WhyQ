@@ -211,11 +211,12 @@ public class Service implements Runnable {
 		request("/m/member/recent/activity", params, true, false);
 	}
 
-	public void postComment(String encryptedToken, String content,
+	public void postComment(String encryptedToken,String storeId, String content,
 			String photoFile) {
 		_action = ServiceAction.ActionPostComment;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("token", encryptedToken);
+		params.put("store_id", storeId);
 		params.put("content", content);
 		params.put("photo", photoFile);
 		params.put("app", Constants.APP);
@@ -339,6 +340,11 @@ public class Service implements Runnable {
 			resObj = parser.parseInvitationNotification(result);// Same structor
 																// data
 			break;
+		case ActionPostComment:
+			resObj = parser.parseOrderCheck(result);// Same structor
+																// data
+			break;
+			
 		case ActionAcceptInvitation:
 			resObj = parser.parseAcceptInvitation(result);// Same structor
 																// data

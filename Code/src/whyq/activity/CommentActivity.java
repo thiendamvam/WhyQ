@@ -226,6 +226,7 @@ public class CommentActivity extends ImageWorkerActivity {
 	}
 	public void onCommentHereClicked(View v){
 		Intent i = new Intent(CommentActivity.this, WhyqShareActivity.class);
+		i.putExtra("store_id", mStoreId);
 		i.putExtra("is_comment", true);
 		startActivity(i);
 	}

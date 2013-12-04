@@ -17,7 +17,7 @@ public class ShareData implements Serializable {
 	}
 
 	public String getMessage() {
-		return message;
+		return message!=null?message:"";
 	}
 
 	public void setMessage(String message) {
@@ -41,7 +41,7 @@ public class ShareData implements Serializable {
 	}
 
 	public String getDescription() {
-		return description;
+		return description!=null?description:"";
 	}
 
 	public void setDescription(String description) {

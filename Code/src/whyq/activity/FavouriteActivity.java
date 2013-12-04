@@ -806,6 +806,9 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 			Toast.makeText(context, "Can not favourite for now", Toast.LENGTH_SHORT).show();
 		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){
 			Toast.makeText(context, "Can not un-favourite for now", Toast.LENGTH_SHORT).show();
+		}else{
+			Toast.makeText(context, "Can get data for now", Toast.LENGTH_SHORT).show();
+			hideProgress();
 		}
 		if(isLoadMore)
 			isLoadMore = false;

@@ -7,6 +7,7 @@ import java.util.Map;
 import whyq.WhyqApplication;
 import whyq.adapter.AmazingAdapter;
 import whyq.interfaces.FriendFacebookController;
+import whyq.interfaces.IFacebookLister;
 import whyq.model.FriendFacebook;
 import whyq.model.ResponseData;
 import whyq.model.SearchFriendCriteria;
@@ -19,12 +20,15 @@ import whyq.utils.ImageViewHelper;
 import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
+import whyq.utils.facebook.LoginUsingCustomFragmentActivity;
+import whyq.utils.facebook.SessionLoginFragment;
 import whyq.utils.facebook.sdk.DialogError;
 import whyq.utils.facebook.sdk.Facebook;
 import whyq.utils.facebook.sdk.Facebook.DialogListener;
 import whyq.utils.facebook.sdk.FacebookError;
 import whyq.view.AmazingListView;
 import whyq.view.SearchField;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -37,11 +41,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.FacebookException;
+import com.facebook.FacebookOperationCanceledException;
+import com.facebook.Session;
+import com.facebook.widget.WebDialog;
+import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.whyq.BuildConfig;
 import com.whyq.R;
 
-public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
+public class WhyqFriendsFacebookActivity extends ImageWorkerActivity implements IFacebookLister {
 
 	private FriendsFacebookAdapter mFriendFacebookAdapter = null;
 	private String mAccessToken;
@@ -50,6 +60,8 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 	private Button mInviteButton;
 	private View mInviteContainer;
 	private boolean isFacebook = true;
+	private Context mActivity;
+	private FriendFacebook focusItem;
 	private static final Map<String, String> INVITED_LIST = new HashMap<String, String>();
 
 	@Override
@@ -62,7 +74,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		showHeaderSearchField(true);
 		SearchField searchField = getSearchField();
 		EditText tvSearch = searchField.getEditTextView();
-
+		mActivity = this;
 		tvSearch.setHint(R.string.find_a_friend);
 		tvSearch.setTextColor(getResources().getColor(R.color.white));
 		tvSearch.setBackgroundResource(R.drawable.textfield_search_default_holo_dark);
@@ -84,7 +96,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		});
 
 		mFriendFacebookAdapter = new FriendsFacebookAdapter(this, mImageWorker);
-		mAccessToken = getAccessToken();
+		mAccessToken = Session.getActiveSession().getAccessToken();
 		if (BuildConfig.DEBUG) {
 			Log.d("WhyqFriendsFacebookActivity", "access token: "
 					+ mAccessToken);
@@ -109,6 +121,91 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 	}
 
+	
+	public void onInviteItemClicked(View v){
+		whyq.activity.WhyqFriendsFacebookActivity.FriendsFacebookAdapter.ViewHolder holder =(whyq.activity.WhyqFriendsFacebookActivity.FriendsFacebookAdapter.ViewHolder) v.getTag();
+		FriendFacebook item = (FriendFacebook)holder.data;
+		if(item!=null){
+			setLoading(true);
+			focusItem = item;
+			if (item.getIs_join()) {
+				if (INVITED_LIST.containsKey(item.getId())) {
+					removeIntiveFriend(item);
+				} else {
+					addInviteFriend(item);
+				}
+				displayInviteButtn(holder, item);
+			} else {
+				Session session = Session.getActiveSession();
+				if(session==null){
+					SessionLoginFragment fragment = new SessionLoginFragment();
+					getSupportFragmentManager().beginTransaction().add(fragment, "").commit();
+					
+				}else{
+					if(!session.isOpened()){
+						SessionLoginFragment fragment = new SessionLoginFragment();
+						getSupportFragmentManager().beginTransaction().add(fragment, "").commit();
+					}else{
+						sendRequestDialog(item) ;	
+					}
+					
+
+				}
+			}
+			setLoading(false);
+		}
+	}
+	
+	private void displayInviteButtn(whyq.activity.WhyqFriendsFacebookActivity.FriendsFacebookAdapter.ViewHolder holder, FriendFacebook item) {
+		if (INVITED_LIST.containsKey(item.getId())) {
+			holder.invite.setBackgroundResource(R.drawable.btn_accept);
+			holder.invite.setText("");
+		} else {
+			holder.invite.setBackgroundResource(R.drawable.btn_base);
+			holder.invite.setText(R.string.invite);
+		}
+	}
+	private void sendRequestDialog(FriendFacebook item) {
+	    Bundle params = new Bundle();
+	    params.putString("message", "Learn how to make your Android apps social");
+	    params.putString("to", item.getFacebookId());
+	    WebDialog requestsDialog = (
+	        new WebDialog.RequestsDialogBuilder(mActivity,
+	            Session.getActiveSession(),
+	            params))
+	            .setOnCompleteListener(new OnCompleteListener() {
+
+	                @Override
+	                public void onComplete(Bundle values,
+	                    FacebookException error) {
+	                    if (error != null) {
+	                        if (error instanceof FacebookOperationCanceledException) {
+	                            Toast.makeText(mActivity.getApplicationContext(), 
+	                                "Request cancelled", 
+	                                Toast.LENGTH_SHORT).show();
+	                        } else {
+	                            Toast.makeText(mActivity.getApplicationContext(), 
+	                                "Network Error", 
+	                                Toast.LENGTH_SHORT).show();
+	                        }
+	                    } else {
+	                        final String requestId = values.getString("request");
+	                        if (requestId != null) {
+	                            Toast.makeText(mActivity.getApplicationContext(), 
+	                                "Request sent",  
+	                                Toast.LENGTH_SHORT).show();
+	                        } else {
+	                            Toast.makeText(mActivity.getApplicationContext(), 
+	                                "Request cancelled", 
+	                                Toast.LENGTH_SHORT).show();
+	                        }
+	                    }   
+	                }
+
+	            })
+	            .build();
+	    requestsDialog.show();
+	}
 	private void startUserProfileActivity(String userId, String userName,
 			String avatar) {
 		Intent i = new Intent(this, WhyqUserProfileActivity.class);
@@ -325,7 +422,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 						WhyqApplication.sTypefaceRegular);
 				final ViewHolder holder = getViewHolder(convertView);
 
-
+				holder.data = item;
 				holder.name.setText(item.getFirstName());
 				mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
 				if (item.getIsFriend() == 0) {
@@ -333,52 +430,74 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 					holder.invite.setText("");
 				} else {
 					displayInviteButtn(holder, item);
-					holder.invite.setOnClickListener(new View.OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							if (item.getIs_join()) {
-								if (INVITED_LIST.containsKey(item.getId())) {
-									mActivity.removeIntiveFriend(item);
-								} else {
-									mActivity.addInviteFriend(item);
-								}
-								displayInviteButtn(holder, item);
-							} else {
-								Bundle params = new Bundle();
-								params.putString("title", "invite friends");
-								params.putString("to", item.getFacebookId());
-								facebookSdk.dialog(mActivity, "apprequests",
-										params, new DialogListener() {
-
-											@Override
-											public void onFacebookError(
-													FacebookError e) {
-												// TODO Auto-generated method stub
-												Log.d("DialogListener", "onFacebookError"+e.getMessage());
-											}
-
-											@Override
-											public void onError(DialogError e) {
-												// TODO Auto-generated method stub
-												Log.d("DialogListener", "onError"+e.getMessage());
-											}
-
-											@Override
-											public void onComplete(Bundle values) {
-												// TODO Auto-generated method stub
-												Log.d("DialogListener", "onComplete");
-											}
-
-											@Override
-											public void onCancel() {
-												// TODO Auto-generated method stub
-												Log.d("DialogListener", "onCancel");
-											}
-										});
-							}
-						}
-					});
+					holder.invite.setTag(holder);
+//					holder.invite.setOnClickListener(new View.OnClickListener() {
+//
+//						@Override
+//						public void onClick(View v) {
+////							if (item.getIs_join()) {
+////								if (INVITED_LIST.containsKey(item.getId())) {
+////									mActivity.removeIntiveFriend(item);
+////								} else {
+////									mActivity.addInviteFriend(item);
+////								}
+////								displayInviteButtn(holder, item);
+////							} else {
+////
+////								if(Session.getActiveSession()==null){
+////									
+////									Intent i = new Intent(mActivity, LoginUsingCustomFragmentActivity.class);
+////									mActivity.startActivity(i);
+////									
+//////									LoginUsingCustomFragmentActivity fragment = new LoginUsingCustomFragmentActivity();
+//////									mActivity.getFragmentManager().beginTransaction().add(fragment,"LoginFacebook" ).commit();
+////								}else{
+//////									Bundle params = new Bundle();
+//////									params.putString("title", "invite friends");
+//////									params.putString("to", item.getFacebookId());
+//////									WebDialog requestsDialog = (
+//////									        new WebDialog.RequestsDialogBuilder(mActivity,
+//////									            Session.getActiveSession(),
+//////									            params))
+//////									            .build();
+//////									    requestsDialog.show();
+////								sendRequestDialog(item) ;
+////
+////								}
+//////								Bundle params = new Bundle();
+//////								params.putString("title", "invite friends");
+//////								params.putString("to", item.getFacebookId());
+//////								facebookSdk.dialog(mActivity, "apprequests",
+//////										params, new DialogListener() {
+//////
+//////											@Override
+//////											public void onFacebookError(
+//////													FacebookError e) {
+//////												// TODO Auto-generated method stub
+//////												Log.d("DialogListener", "onFacebookError"+e.getMessage());
+//////											}
+//////
+//////											@Override
+//////											public void onError(DialogError e) {
+//////												// TODO Auto-generated method stub
+//////												Log.d("DialogListener", "onError"+e.getMessage());
+//////											}
+//////
+//////											@Override
+//////											public void onComplete(Bundle values) {
+//////												// TODO Auto-generated method stub
+//////												Log.d("DialogListener", "onComplete");
+//////											}
+//////
+//////											@Override
+//////											public void onCancel() {
+//////												// TODO Auto-generated method stub
+//////												Log.d("DialogListener", "onCancel");
+//////											}
+//////										});
+////							}
+//						}
+//					});
 				}
 				viewList.put(item.getFacebookId(), convertView);
 			}else{
@@ -389,7 +508,47 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 
 			return convertView;
 		}
+		private void sendRequestDialog(FriendFacebook item) {
+		    Bundle params = new Bundle();
+		    params.putString("message", "Learn how to make your Android apps social");
+		    params.putString("to", item.getFacebookId());
+		    WebDialog requestsDialog = (
+		        new WebDialog.RequestsDialogBuilder(mActivity,
+		            Session.getActiveSession(),
+		            params))
+		            .setOnCompleteListener(new OnCompleteListener() {
 
+		                @Override
+		                public void onComplete(Bundle values,
+		                    FacebookException error) {
+		                    if (error != null) {
+		                        if (error instanceof FacebookOperationCanceledException) {
+		                            Toast.makeText(mActivity.getApplicationContext(), 
+		                                "Request cancelled", 
+		                                Toast.LENGTH_SHORT).show();
+		                        } else {
+		                            Toast.makeText(mActivity.getApplicationContext(), 
+		                                "Network Error", 
+		                                Toast.LENGTH_SHORT).show();
+		                        }
+		                    } else {
+		                        final String requestId = values.getString("request");
+		                        if (requestId != null) {
+		                            Toast.makeText(mActivity.getApplicationContext(), 
+		                                "Request sent",  
+		                                Toast.LENGTH_SHORT).show();
+		                        } else {
+		                            Toast.makeText(mActivity.getApplicationContext(), 
+		                                "Request cancelled", 
+		                                Toast.LENGTH_SHORT).show();
+		                        }
+		                    }   
+		                }
+
+		            })
+		            .build();
+		    requestsDialog.show();
+		}
 		private void displayInviteButtn(ViewHolder holder, FriendFacebook item) {
 			if (INVITED_LIST.containsKey(item.getId())) {
 				holder.invite.setBackgroundResource(R.drawable.btn_accept);
@@ -460,12 +619,13 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 		}
 
 		private class ViewHolder {
-			ImageView avatar;
-			TextView name;
-			Button invite;
-			View header;
-			TextView headerMessage;
-			Button headerFriendAll;
+			public ImageView avatar;
+			public TextView name;
+			public Button invite;
+			public View header;
+			public TextView headerMessage;
+			public Button headerFriendAll;
+			public FriendFacebook data;
 
 			public ViewHolder(View view) {
 				avatar = (ImageView) view.findViewById(R.id.avatar);
@@ -484,5 +644,13 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity {
 	}
 	public void onBackClicked(View v){
 		finish();
+	}
+
+
+	@Override
+	public void onCompled(boolean b) {
+		// TODO Auto-generated method stub
+		if(b)
+			sendRequestDialog(focusItem) ;	
 	}
 }

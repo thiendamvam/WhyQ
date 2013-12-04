@@ -1607,13 +1607,30 @@ public class DataParser {
 			Document doc = XMLfromString(result);
 			ResponseData data = new ResponseData();
 			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
-			if(statusResponse.equals("OK")){
+			if(statusResponse.equals("200")){
 				data.setStatus("200");
-				final String img = doc.getElementsByTagName("image").item(0).getFirstChild().getNodeValue();
-				final String link = doc.getElementsByTagName("link").item(0).getFirstChild().getNodeValue();
 				OrderCheckData data2 = new OrderCheckData();
-				data2.setImage(img);
-				data2.setLink(link);
+				try {
+					final String img = doc.getElementsByTagName("Image").item(0).getFirstChild().getNodeValue();
+					data2.setImage(img);
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				
+				try {
+					final String link = doc.getElementsByTagName("Link").item(0).getFirstChild().getNodeValue();
+					data2.setLink(link);
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				
+				
+				
+				
+				
+				
 				data.setData(data2);
 //				NodeList elementes = doc.getElementsByTagName("element");
 //				String  dataResult = "";

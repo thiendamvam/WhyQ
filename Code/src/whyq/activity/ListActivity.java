@@ -1084,6 +1084,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
 //		Store store = (Store)result.getData();
+	
 		if(result.isSuccess()&& result.getAction() == ServiceAction.ActionGetBusinessList){
 			ResponseData data = (ResponseData)result.getData();
 			if(data.getStatus().equals("200")){
@@ -1141,6 +1142,9 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			Toast.makeText(context, "Can not favourite for now", Toast.LENGTH_SHORT).show();
 		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionRemoveFavorite){
 			Toast.makeText(context, "Can not un-favourite for now", Toast.LENGTH_SHORT).show();
+		}else{
+			Toast.makeText(context, "Can get data for now", Toast.LENGTH_SHORT).show();
+			hideProgress();
 		}
 	}
 	private void updateFavoriteWitId(String id, boolean b) {

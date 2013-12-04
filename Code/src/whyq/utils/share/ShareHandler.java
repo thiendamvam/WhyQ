@@ -108,14 +108,16 @@ public class ShareHandler implements ShareListener {
 			Bundle params = new Bundle();
 			params.putString("message", msg);
 			params.putString("name", data.getName());
-			params.putString("caption", data.getLink());
+			if( data.getLink()!=null)
+				params.putString("caption", data.getLink());
 			String disription = data.getDescription();
 			String picture = data.getPicture();
-			// params.putString("link", Config.LINK_SHARE_FACEBOOK_GLOBAL);
+//			if(data.getLink()!=null)
+//				params.putString("link", data.getLink());
 			params.putString("description", data.getDescription());
 
 			Log.d("WallPostListener", "picture is:" + picture);
-			if (picture != null && !picture.equals("") && !picture.equals("null"))
+			if (picture != null)
 				params.putString("picture", picture);
 			// else
 			// params.putString("picture",

@@ -65,7 +65,10 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_margin="0dp"
-            android:background="@drawable/bg_input"
+            android:background="@drawable/white_container"
+            android:gravity="left|center_vertical"
+            android:onClick="onCommentHereClicked"
+            android:paddingLeft="7dp"
             android:text="Comment here" />
     </RelativeLayout>
 
