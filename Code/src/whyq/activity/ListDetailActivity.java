@@ -1082,7 +1082,7 @@ public class ListDetailActivity extends FragmentActivity implements
 
 			} else {
 				Intent intent = new Intent(ListDetailActivity.this,
-						WhyQCommentActivity.class);
+						WhyqShareActivity.class);
 				intent.putExtra("store_id", store.getId());
 				startActivity(intent);
 			}

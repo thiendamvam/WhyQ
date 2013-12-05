@@ -1,8 +1,11 @@
 package whyq.utils;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +48,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.location.Address;
@@ -579,5 +585,29 @@ public class Util {
         } catch (NoSuchAlgorithmException e) {
 
         }
+	}
+
+	public static Bitmap getBitmapFromFile( String photoFile) {
+		// TODO Auto-generated method stub
+		File file = new File(photoFile);
+		InputStream in;
+		try {
+			if(file.exists()){
+				in = new FileInputStream(file);
+				BufferedInputStream bfInputStream = new BufferedInputStream(in);
+				Options options = new Options();
+				options.inSampleSize= 4;
+				options.inScaled = true;
+				Rect rect = new Rect(0, 0, 0, 0);
+				Bitmap bm = BitmapFactory.decodeStream(bfInputStream,rect,options);
+				return bm;
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		return null;
 	}
 }

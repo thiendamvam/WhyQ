@@ -272,9 +272,9 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 			}
 
 			service.register(params);
-//			XMLParser parser = new XMLParser(XMLParser.JOIN_WHYQ,
-//					JoinWhyqActivity.this, API.createAccountURL,
-//					nameValuePairs);
+			XMLParser parser = new XMLParser(XMLParser.JOIN_WHYQ,
+					JoinWhyqActivity.this, API.createAccountURL,
+					nameValuePairs);
 //			User user = parser.getUser();
 //			hideDialog();
 		}

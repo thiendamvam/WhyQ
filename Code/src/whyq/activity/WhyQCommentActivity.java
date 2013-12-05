@@ -29,6 +29,13 @@ public class WhyQCommentActivity extends Activity implements IServiceListener {
 		tvMesssage = (TextView) findViewById(R.id.tvMessage);
 		tglShareFace = (ToggleButton) findViewById(R.id.tglShareFacebook);
 		service = new Service(this);
+//		exeComment();
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
 		exeComment();
 	}
 

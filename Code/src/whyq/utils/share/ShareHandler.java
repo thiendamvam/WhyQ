@@ -3,6 +3,10 @@ package whyq.utils.share;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
@@ -19,6 +23,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.facebook.FacebookRequestError;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.RequestAsyncTask;
+import com.facebook.Response;
+import com.facebook.Session;
 
 public class ShareHandler implements ShareListener {
 	private String shareMessage;
@@ -96,39 +107,95 @@ public class ShareHandler implements ShareListener {
 	public boolean postFacebook(String accessToken, ShareData data) {
 		// message = IssueAdapter.currentDesription;
 
-		Facebook facebook = new Facebook(Constants.FACEBOOK_APP_ID);
-		facebook.setAccessToken(accessToken);
-		if (facebook != null) {
-			String namePost = "";// = IssueAdapter.currentDesription;
-
-			String msg = limitContent(data.getMessage(), " " + linkshareFacebook);
-			// FacebookController.updateMessage(facebook, msg);
-			AsyncFacebookRunner mAsyncFbRunner = new AsyncFacebookRunner(
-					facebook);
-			Bundle params = new Bundle();
-			params.putString("message", msg);
-			params.putString("name", data.getName());
-			if( data.getLink()!=null)
-				params.putString("caption", data.getLink());
-			String disription = data.getDescription();
-			String picture = data.getPicture();
+//		Facebook facebook = new Facebook(Constants.FACEBOOK_APP_ID);
+//		facebook.setAccessToken(accessToken);
+//		if (facebook != null) {
+//			String namePost = "";// = IssueAdapter.currentDesription;
+//
+//			String msg = limitContent(data.getMessage(), " " + linkshareFacebook);
+//			// FacebookController.updateMessage(facebook, msg);
+//			AsyncFacebookRunner mAsyncFbRunner = new AsyncFacebookRunner(
+//					facebook);
+//			Bundle params = new Bundle();
+//			params.putString("message", msg);
+//			params.putString("name", data.getName());
+//			if( data.getLink()!=null)
+//				params.putString("caption", data.getLink());
+//			String disription = data.getDescription();
+//			String picture = data.getPicture();
 //			if(data.getLink()!=null)
-//				params.putString("link", data.getLink());
-			params.putString("description", data.getDescription());
-
-			Log.d("WallPostListener", "picture is:" + picture);
-			if (picture != null)
-				params.putString("picture", picture);
-			// else
-			// params.putString("picture",
-			// "http://blogs.news.com.au/images/uploads/black.jpg");
-			mAsyncFbRunner.request("me/feed", params, "POST",
-					new WallPostListener());
-			return true;
-		}
+//				params.putString("link", "https://developers.facebook.com/android");//data.getLink()
+//			params.putString("description", data.getDescription());
+//
+//			Log.d("WallPostListener", "picture is:" + picture);
+////			if (picture != null)
+//				params.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
+//			// else
+//			// params.putString("picture",
+//			// "http://blogs.news.com.au/images/uploads/black.jpg");
+//			mAsyncFbRunner.request("me/feed", params, "POST",
+//					new WallPostListener());
+//			return true;
+//		}
+		publishStory();
 		return false;
 	}
+	private void publishStory() {
+	    Session session = Session.getActiveSession();
 
+	    if (session != null){
+
+//	        // Check for publish permissions    
+//	        List<String> permissions = session.getPermissions();
+//	        if (!isSubsetOf(PERMISSIONS, permissions)) {
+//	            pendingPublishReauthorization = true;
+//	            Session.NewPermissionsRequest newPermissionsRequest = new Session
+//	                    .NewPermissionsRequest(this, PERMISSIONS);
+//	        session.requestNewPublishPermissions(newPermissionsRequest);
+//	            return;
+//	        }
+
+	        Bundle postParams = new Bundle();
+	        postParams.putString("name", "Facebook SDK for Android");
+	        postParams.putString("caption", "Build great social apps and get more installs.");
+	        postParams.putString("description", "The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
+	        postParams.putString("link", "https://developers.facebook.com/android");
+	        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
+
+	        Request.Callback callback= new Request.Callback() {
+	            public void onCompleted(Response response) {
+	                JSONObject graphResponse = response
+	                                           .getGraphObject()
+	                                           .getInnerJSONObject();
+	                String postId = null;
+	                try {
+	                    postId = graphResponse.getString("id");
+	                } catch (JSONException e) {
+	                    e.printStackTrace();
+	                }
+	                FacebookRequestError error = response.getError();
+	                if (error != null) {
+	                    Toast.makeText(context
+	                         .getApplicationContext(),
+	                         error.getErrorMessage(),
+	                         Toast.LENGTH_SHORT).show();
+	                    } else {
+	                        Toast.makeText(context
+	                             .getApplicationContext(), 
+	                             postId,
+	                             Toast.LENGTH_LONG).show();
+	                }
+	            }
+	        };
+
+	        Request request = new Request(session, "me/feed", postParams, 
+	                              HttpMethod.POST, callback);
+
+	        RequestAsyncTask task = new RequestAsyncTask(request);
+	        task.execute();
+	    }
+
+	}
 	private Handler mRunOnUi = new Handler();
 
 	private final class WallPostListener extends BaseRequestListener {

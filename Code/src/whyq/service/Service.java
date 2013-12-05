@@ -2,6 +2,7 @@ package whyq.service;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,24 +12,30 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
 
 import whyq.WhyqApplication;
 import whyq.activity.ListDetailActivity;
@@ -37,7 +44,6 @@ import whyq.model.SearchFriendCriteria;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.Logger;
-import whyq.utils.Util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -54,7 +60,7 @@ public class Service implements Runnable {
 	private boolean _connecting;
 	private Thread _thread;
 	private String _actionURI;
-	private Map<String, String> _params;
+	private Map<String, Object> _params;
 	private boolean _includeHost;
 	private boolean _isGet;
 	private Service _service;
@@ -63,7 +69,7 @@ public class Service implements Runnable {
 
 	public void getProductList() {
 		_action = ServiceAction.ActionGetRetaurentList;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("deviceType", "kindle-fire");
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
@@ -73,7 +79,7 @@ public class Service implements Runnable {
 	public void logout() {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionLogout;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
@@ -83,7 +89,7 @@ public class Service implements Runnable {
 	public void postFavorite(String storeId) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionPostFavorite;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", storeId);
 		params.put("app", Constants.APP);
@@ -94,7 +100,7 @@ public class Service implements Runnable {
 	public void removeFavorite(String storeId) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionRemoveFavorite;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", storeId);
 		params.put("app", Constants.APP);
@@ -105,7 +111,7 @@ public class Service implements Runnable {
 	public void getComments(String encryptedToken, String store_id, int page,
 			int count, boolean onlyFriend) {
 		_action = ServiceAction.ActionGetComment;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("store_id", store_id);
 		params.put("page", String.valueOf(page));
@@ -120,7 +126,7 @@ public class Service implements Runnable {
 		// ÖNedd add page and key = if search
 
 		_action = ServiceAction.ActionGetFriends;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", token);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
@@ -134,7 +140,7 @@ public class Service implements Runnable {
 		// ÖNedd add page and key = if search
 
 		_action = ServiceAction.ActionGetInvitations;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", token);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
@@ -148,7 +154,7 @@ public class Service implements Runnable {
 		// ÖNedd add page and key = if search
 
 		_action = ServiceAction.ActionGetInvitationsNotification;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", token);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
@@ -159,7 +165,7 @@ public class Service implements Runnable {
 
 	public void getFriendsFacebook(String encryptedToken, String accessToken) {
 		_action = ServiceAction.ActionGetFriendsFacebook;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("access_token", accessToken);
 		params.put("app", Constants.APP);
@@ -171,7 +177,7 @@ public class Service implements Runnable {
 			String encryptedToken, String key, String accessToken,
 			String oauth_token, String oauth_token_secret) {
 		_action = ServiceAction.ActionSearchFriendsFacebook;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("key", key);
 		params.put("app", Constants.APP);
@@ -192,7 +198,7 @@ public class Service implements Runnable {
 	public void inviteFriendsFacebook(String encryptedToken, String userId,
 			String accessToken) {
 		_action = ServiceAction.ActionInviteFriendsFacebook;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("access_token", accessToken);
@@ -203,7 +209,7 @@ public class Service implements Runnable {
 
 	public void getUserActivities(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetUserActivities;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
@@ -214,11 +220,30 @@ public class Service implements Runnable {
 	public void postComment(String encryptedToken,String storeId, String content,
 			String photoFile) {
 		_action = ServiceAction.ActionPostComment;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("store_id", storeId);
 		params.put("content", content);
-		params.put("photo", photoFile);
+		File file = new File(photoFile);
+		try {
+			if(file.exists()){
+				FileBody encFile = new FileBody(file,"image/png");	
+				params.put("photo", encFile);
+			}
+		    
+//			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//			Bitmap bm = Util.getBitmapFromFile(photoFile);
+//			if(bm!=null){
+//				bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+//				byte[] data = bos.toByteArray();
+//				String fileName = new File(photoFile).getName();
+//				ByteArrayBody bab = new ByteArrayBody(data, fileName);
+//				params.put("photo", bab.toString());
+//			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/comment/post", params, true, false);
@@ -264,14 +289,14 @@ public class Service implements Runnable {
 		_connecting = false;
 	}
 
-	private boolean request(String uri, Map<String, String> params,
+	private boolean request(String uri, Map<String, Object> params,
 			boolean includeHost, boolean isGet) {
 		_isGet = isGet;
 		request(uri, params, includeHost);
 		return true;
 	}
 
-	private boolean request(String uri, Map<String, String> params,
+	private boolean request(String uri, Map<String, Object> params,
 			boolean includeHost) {
 		if (_connecting)
 			return false;
@@ -455,7 +480,7 @@ public class Service implements Runnable {
 		try {
 			final String urlString;
 			if (_action == ServiceAction.ActionGetLocation) {
-				String textSearch = _params.get("text-search");
+				String textSearch = (String)_params.get("text-search");
 				textSearch = textSearch.replace(" ", "+");
 				urlString = "http://ws.geonames.org/search?q=" + textSearch
 						+ "&style=full&maxRows=10";
@@ -474,9 +499,11 @@ public class Service implements Runnable {
 			} else {
 				request = new HttpPost(urlString);
 				if (_params != null) {
-					UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(
-							paramsToList(_params), HTTP.UTF_8);
-					((HttpPost) request).setEntity(formEntity);
+					MultipartEntity reqEntity = paramsToList2(_params);  
+					   
+//					UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(
+//							paramsToList(_params), HTTP.UTF_8);
+					((HttpPost) request).setEntity(reqEntity);
 				}
 			}
 
@@ -567,7 +594,7 @@ public class Service implements Runnable {
 
 	public void loginFacebook(String accessToken) {
 		_action = ServiceAction.ActionLoginFacebook;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("access_token", accessToken);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
@@ -578,7 +605,7 @@ public class Service implements Runnable {
 		// TODO Auto-generated method stub
 		Log.d("loginTwitter", "loginTwitter");
 		_action = ServiceAction.ActionLoginTwitter;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("oauth_token", oauthToken);
 		params.put("oauth_token_secret", oauthTokenSecret);
 		params.put("app", Constants.APP);
@@ -589,7 +616,7 @@ public class Service implements Runnable {
 	public void inviteFriendsTwitter(String encryptedToken, String oauth_token,
 			String oauth_token_secret, String twitter_id) {
 		_action = ServiceAction.ActionInviteFriendsTwitter;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("oauth_token", oauth_token);
 		params.put("oauth_token_secret", oauth_token_secret);
@@ -601,7 +628,7 @@ public class Service implements Runnable {
 
 	public void inviteFriendsWhyq(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionInviteFriendsWhyQ;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
@@ -610,7 +637,7 @@ public class Service implements Runnable {
 	}
 
 	private void attachUriWithQuery(HttpRequestBase request, Uri uri,
-			Map<String, String> params) {
+			Map<String, Object> params) {
 		try {
 			if (params == null) {
 				// No params were given or they have already been
@@ -634,33 +661,49 @@ public class Service implements Runnable {
 	}
 
 	private static List<BasicNameValuePair> paramsToList(
-			Map<String, String> params) {
+			Map<String, Object> params) {
 		ArrayList<BasicNameValuePair> formList = new ArrayList<BasicNameValuePair>(
 				params.size());
 
 		for (String key : params.keySet()) {
 			Object value = params.get(key);
 
-			// We can only put Strings in a form entity, so we call the
-			// toString()
-			// method to enforce. We also probably don't need to check for null
-			// here
-			// but we do anyway because Bundle.get() can return null.
-			if (value != null)
-				formList.add(new BasicNameValuePair(key, value.toString()));
-		}
+				if (value != null)
+					formList.add(new BasicNameValuePair(key, value.toString()));
+			}
 
 		return formList;
 	}
+	public static MultipartEntity paramsToList2(
+			Map<String, Object> params) {
+		MultipartEntity reqEntity = new MultipartEntity();
+		for (String key : params.keySet()) {
+			try {
 
-	public void getBusinessList(Map<String, String> params, String url) {
+				Object value = params.get(key);
+				if(key.toUpperCase().equals("PHOTO")){
+					reqEntity.addPart(key, (ContentBody) value);
+				}else{
+					Charset chars = Charset.forName("UTF-8");
+					reqEntity.addPart(key, new StringBody(value.toString(), chars));
+				}
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+
+		return reqEntity;
+	}
+	public void getBusinessList(HashMap<String, String> params, String url) {
 		_action = ServiceAction.ActionGetBusinessList;
-		request(url, params, true, false);
+		request(url, convert(params), true, false);
 	}
 
 	public void getBusinessDetail(String id) {
 		_action = ServiceAction.ActionGetBusinessDetail;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", id);
 		params.put("app", Constants.APP);
@@ -670,14 +713,14 @@ public class Service implements Runnable {
 
 	public void getFaqs(String id) {
 		_action = ServiceAction.ActionGetFaqs;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		request("/m/faqs", params, true, false);
 	}
 
 	public void getCheckedBills(String encryptedToken, String store_id) {
 		_action = ServiceAction.ActionGetBills;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("store_id", store_id);
 		params.put("app", Constants.APP);
@@ -688,7 +731,7 @@ public class Service implements Runnable {
 	public void getUserCheckedBills(String encryptedToken, String store_id,
 			String text) {
 		_action = ServiceAction.ActionGetUserChecked;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("store_id", store_id);
 		params.put("app", Constants.APP);
@@ -704,7 +747,7 @@ public class Service implements Runnable {
 
 	public void getOrder(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetOrder;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
@@ -714,7 +757,7 @@ public class Service implements Runnable {
 
 	public void getHistories(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetHistories;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
@@ -725,7 +768,7 @@ public class Service implements Runnable {
 	public void exeComment(String string, String storeId) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionComment;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("store_id", storeId);
 		params.put("app", Constants.APP);
@@ -742,7 +785,7 @@ public class Service implements Runnable {
 
 	public void getPhotos(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetPhotos;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
@@ -753,7 +796,7 @@ public class Service implements Runnable {
 	public void setLocation(String string) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionGetLocation;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("text-search", string);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
@@ -762,7 +805,7 @@ public class Service implements Runnable {
 
 	public void getProfiles(String encryptedToken, String userId) {
 		_action = ServiceAction.ActionGetProfiles;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
@@ -773,7 +816,7 @@ public class Service implements Runnable {
 	public void exeResetPass(String string) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionForgotPassword;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("email", string);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
@@ -783,7 +826,7 @@ public class Service implements Runnable {
 	public void loginWhyq(String email, String pass) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionLoginWhyq;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/login", params, true, false);
@@ -796,21 +839,35 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionSigup;
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
-		request("/m/register", params, true, false);
+		request("/m/register", convert(params), true, false);
 	}
 
-	public void editProfile(HashMap<String, String> params) {
+	public void editProfile(HashMap<String, String> params2) {
 		// TODO Auto-generated method stub
 		// first_name, las_name,token,new_password,old_password
+		HashMap<String, Object> params = convert(params2);
 		_action = ServiceAction.ActionEditProfile;
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/profile/edit", params, true, false);
 	}
+	private HashMap<String, Object> convert(HashMap<String, String> params2) {
+		// TODO Auto-generated method stub
+		HashMap<String, Object > result = new HashMap<String, Object>();
+		Set<Entry<String, String>> set = params2.entrySet();
+		Iterator<Entry<String, String>> interator = set.iterator();
+		while (interator.hasNext()) {
+			Entry<String, String> item = interator.next();
+			result.put(item.getKey(), item.getValue());
+			
+		}
+		return result;
+	}
+
 	public void pushNotification(String isReceiveNotify, String isShowFriend) {
 		// TODO Auto-generated method stub
 		// value is 0  or 1 for isReceivedNotify and isShowFriend
-		HashMap<String, String> params = new HashMap<String, String>();
+		HashMap<String, Object> params = new HashMap<String, Object>();
 		_action = ServiceAction.ActionPushNotification;
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("app", Constants.APP);
@@ -824,7 +881,7 @@ public class Service implements Runnable {
 			String objectId) {
 		// TODO Auto-generated method stub
 		// value is 0  or 1 for isReceivedNotify and isShowFriend
-		HashMap<String, String> params = new HashMap<String, String>();
+		HashMap<String, Object> params = new HashMap<String, Object>();
 		_action = ServiceAction.ActionRegisterDeviceToPushServer;
 		params.put("token", ""+WhyqApplication.Instance().getRSAToken());
 		params.put("app", Constants.APP);
@@ -842,7 +899,7 @@ public class Service implements Runnable {
 			String encryptedToken, String key, String accessToken,
 			String oauth_token, String oauth_token_secret) {
 		_action = ServiceAction.ActionSearchOnlyFriend;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("key", key);
 		params.put("app", Constants.APP);
@@ -854,7 +911,7 @@ public class Service implements Runnable {
 	public void deleteFriend(String userId, String encryptedToken) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionDeleteFriend;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
@@ -874,13 +931,13 @@ public class Service implements Runnable {
 		if (ListDetailActivity.commentContent != null) {
 			params.put("note", ListDetailActivity.commentContent);
 		}
-		request("/m/member/order/send", params, true, false);
+		request("/m/member/order/send", convert(params), true, false);
 	}
 
 	public void getBillDetail(String billId, String encryptedToken) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionGetBillDetail;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("bill_id", billId);
 		params.put("app", Constants.APP);
@@ -891,14 +948,14 @@ public class Service implements Runnable {
 	public void getDistance(HashMap<String, String> params) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionGetDistance;
-		request(Constants.GET_DISTANCE_API, params, true, true);
+		request(Constants.GET_DISTANCE_API, convert(params), true, true);
 
 	}
 
 	public void checkBill(String billId, String message, String encryptedToken) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionCheckbill;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("bill_id", billId);
 		params.put("message", message);
@@ -910,7 +967,7 @@ public class Service implements Runnable {
 	public void getPaypalURI(String token, String billId ) {
 		// TODO Auto-generat ed method stub
 		_action = ServiceAction.ActionGetPaypalURI;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", token);
 		params.put("bill_id", billId);
 		params.put("drt", "true");
@@ -926,7 +983,7 @@ public class Service implements Runnable {
 	
 	public void acceptInvitation(String token, String userId){
 		_action = ServiceAction.ActionAcceptInvitation;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", token);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
@@ -935,7 +992,7 @@ public class Service implements Runnable {
 	}
 	public void declineInvitation(String token, String userId){
 		_action = ServiceAction.ActionDeclineInvitation;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", token);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
@@ -946,7 +1003,7 @@ public class Service implements Runnable {
 	public void unFriend(String rsaToken, String id) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionUnFriend;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", rsaToken);
 		params.put("user_id", id);
 		params.put("app", Constants.APP);
@@ -957,7 +1014,7 @@ public class Service implements Runnable {
 	public void pushOrderCheck(String rsaToken, String billId,String facebookId,String message,String image) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionOrderCheck;
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", rsaToken);
 		params.put("bill_id", billId);
 		if(facebookId!=null)

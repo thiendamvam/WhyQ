@@ -570,7 +570,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 		protected ArrayList<Store> doInBackground(ArrayList<Store>... params) {
 			// TODO Auto-generated method stub
 			WhyqListController whyqListController = new WhyqListController();
-			Map<String, String> postParams = new HashMap<String, String>();
+			HashMap<String, String> postParams = new HashMap<String, String>();
 			ArrayList<Store> permList = null;
 			try {			
 				Log.d("LoadPermList","lat "+latgitude);

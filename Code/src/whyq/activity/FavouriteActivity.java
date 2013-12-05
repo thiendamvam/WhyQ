@@ -510,7 +510,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 						RSA rsa = new RSA();
 						String enToken = rsa.RSAEncrypt(XMLParser.getToken(WhyqApplication.Instance().getApplicationContext()));
 //						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						Map<String, String> postParams = new HashMap<String, String>();
+						HashMap<String, String> postParams = new HashMap<String, String>();
 //						nameValuePairs.add(new BasicNameValuePair("token",enToken));
 						postParams.put("token", enToken);
 						postParams.put("page", ""+page);

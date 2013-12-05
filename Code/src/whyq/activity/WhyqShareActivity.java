@@ -5,6 +5,7 @@ import java.util.List;
 
 import whyq.WhyqApplication;
 import whyq.interfaces.FragmentDialogListener;
+import whyq.interfaces.IFacebookLister;
 import whyq.interfaces.IServiceListener;
 import whyq.model.BillPushNotification;
 import whyq.model.FriendFacebook;
@@ -16,10 +17,12 @@ import whyq.model.TransferData;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
+import whyq.service.img.UrlImageViewHelper;
 import whyq.utils.Constants;
 import whyq.utils.SharedPreferencesManager;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
+import whyq.utils.facebook.SessionLoginFragment;
 import whyq.utils.facebook.sdk.DialogError;
 import whyq.utils.facebook.sdk.Facebook;
 import whyq.utils.facebook.sdk.Facebook.DialogListener;
@@ -30,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -41,9 +45,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.facebook.Session;
 import com.whyq.R;
 
-public class WhyqShareActivity extends Activity implements IServiceListener, FragmentDialogListener{
+public class WhyqShareActivity extends FragmentActivity implements IServiceListener, FragmentDialogListener, IFacebookLister{
 
 	private static final int GET_IMAGE = 0;
 	private static final int FACEBOOK = 1;
@@ -67,6 +72,7 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 	private String storeId;
 	private Store store;
 	private ImageView imgTitle;
+	private OrderCheckData orderCheck;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -152,63 +158,50 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 		if(etMessage.getText().toString().equals("")){
 			Toast.makeText(WhyqShareActivity.this, "Please input your comment", Toast.LENGTH_LONG).show();
 		}else{
-			checkLoginFacebook(true);
+			if(isComment){
+				shareWhyq(null);
+			}else{
+				checkLoginFacebook(true);	
+			}
+			
 		}
 	}
 	
 	private void checkLoginFacebook(final boolean isSend) {
-		// TODO Auto-generated method stub
+		try {
+			if(Session.getActiveSession()!=null){
 
-		accessToken = getAccessToken();
-		if (accessToken != null) {
-			Facebook fb = new Facebook(Constants.FACEBOOK_APP_ID);
-			fb.setAccessToken(accessToken);
-			if(isSend){
-				shareWhyq(accessToken);
-			}else{
-				showTagDialog(accessToken);
-			}
+				// TODO Auto-generated method stub
 
-		}else{
-			final Facebook mFacebook;
-			mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
-			final Activity activity = this;
-			mFacebook.authorize(activity, new String[] { "email", "status_update",
-					"user_birthday" }, new DialogListener() {
-				@Override
-				public void onComplete(Bundle values) {
-					WhyqUtils permutils = new WhyqUtils();
-					String accessToken = values.getString(Facebook.TOKEN);
-					permutils.saveFacebookToken("oauth_token", accessToken,
-							getApplication());
-					mFacebook.setAccessExpiresIn("0");
-					mFacebook.setAccessToken(accessToken);
-					mFacebook.setAccessExpires(mFacebook.getAccessExpires());
+				accessToken = Session.getActiveSession().getAccessToken();// getAccessToken();
+				if (accessToken != null) {
+					Facebook fb = new Facebook(Constants.FACEBOOK_APP_ID);
+					fb.setAccessToken(accessToken);
 					if(isSend){
 						shareWhyq(accessToken);
 					}else{
-						showTagDialog(accessToken);
+						if(isComment){
+							exePostFacebook(accessToken);
+						}else{
+							showTagDialog(accessToken);
+						}
 					}
+
+				}else{
+
+					SessionLoginFragment fragment = new SessionLoginFragment();
+					getSupportFragmentManager().beginTransaction().add(fragment, "login_facebook").commit();
 				}
 
-				@Override
-				public void onFacebookError(FacebookError error) {
-
-				}
-
-				@Override
-				public void onError(DialogError e) {
-
-				}
-
-				@Override
-				public void onCancel() {
-					// cancel press or back press
-				}
-			});
+			
+			
+			}else{
+				SessionLoginFragment fragment = new SessionLoginFragment();
+				getSupportFragmentManager().beginTransaction().add(fragment, "login_facebook").commit();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-
-	
 	}
 
 
@@ -224,8 +217,9 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 		setProgressBar(true);
 	}
 	
-	protected void exePostFacebook(String accessToken, OrderCheckData data) {
+	protected void exePostFacebook(String accessToken) {
 		// TODO Auto-generated method stub
+		 OrderCheckData data = orderCheck;
 		ShareHandler shareHandler = new ShareHandler(WhyqShareActivity.this);
 		ShareData shareData = new ShareData();
 		shareData.setCaption("");
@@ -257,7 +251,9 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 		        	if(avatarPath!=null){
 		        		 File imgFile = new  File(avatarPath);
 		        		if(imgFile.exists()){
-		        			btnCaptureImage.setImageURI(Uri.fromFile(imgFile));
+//		        			btnCaptureImage.setImageURI(Uri.fromFile(imgFile));
+		        			
+		        			UrlImageViewHelper.setUrlDrawable(btnCaptureImage, avatarPath);
 		        		}
 		        	}
 		        }else if(requestCode==TAG_FRIENDS){
@@ -284,9 +280,9 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 			if(accessToken!=null){
 				ResponseData data = (ResponseData)result.getData();
 				if(data.getStatus().equals("200")){
-					OrderCheckData responseData = (OrderCheckData)data.getData();
+					orderCheck = (OrderCheckData)data.getData();
 					if(tgleShareFb.isChecked())
-						exePostFacebook(accessToken, responseData);
+						exePostFacebook(accessToken);
 				}else if(data.getStatus().equals("401")){
 					Util.loginAgain(getParent(), data.getMessage());
 				}else if(data.getStatus().equals("204")){
@@ -318,9 +314,10 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 			if (data != null) {
 				if (data.getStatus().equals("200")) {
 					Toast.makeText(context, "Posted comment", Toast.LENGTH_LONG).show();
-					OrderCheckData responseData = (OrderCheckData)data.getData();
+					orderCheck = (OrderCheckData)data.getData();
 					if(tgleShareFb.isChecked())
-						exePostFacebook(accessToken, responseData);
+						checkLoginFacebook(false);
+//						exePostFacebook(accessToken, responseData);
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(context, data.getMessage());
 				} else {
@@ -381,6 +378,17 @@ public class WhyqShareActivity extends Activity implements IServiceListener, Fra
 			return result;
 		}else{
 			return null;
+		}
+	}
+
+
+	@Override
+	public void onCompled(boolean b) {
+		// TODO Auto-generated method stub
+		
+		if(b){
+			accessToken = Session.getActiveSession().getAccessToken();
+			showTagDialog(accessToken);
 		}
 	}
 }
