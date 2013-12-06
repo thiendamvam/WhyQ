@@ -3,8 +3,11 @@ package whyq.utils.share;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,24 +15,20 @@ import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import whyq.model.ShareData;
-import whyq.utils.Constants;
 import whyq.utils.SharedPreferencesManager;
 import whyq.utils.facebook.BaseRequestListener;
-import whyq.utils.facebook.sdk.AsyncFacebookRunner;
-import whyq.utils.facebook.sdk.Facebook;
 import whyq.utils.facebook.sdk.FacebookError;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.facebook.FacebookRequestError;
-import com.facebook.HttpMethod;
+import com.facebook.AccessToken;
 import com.facebook.Request;
-import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.SessionState;
+
 
 public class ShareHandler implements ShareListener {
 	private String shareMessage;
@@ -137,64 +136,174 @@ public class ShareHandler implements ShareListener {
 //					new WallPostListener());
 //			return true;
 //		}
-		publishStory();
+//		publishStory(accessToken);
+		exePostStory(accessToken);
 		return false;
 	}
-	private void publishStory() {
-	    Session session = Session.getActiveSession();
-
-	    if (session != null){
-
-//	        // Check for publish permissions    
-//	        List<String> permissions = session.getPermissions();
-//	        if (!isSubsetOf(PERMISSIONS, permissions)) {
-//	            pendingPublishReauthorization = true;
-//	            Session.NewPermissionsRequest newPermissionsRequest = new Session
-//	                    .NewPermissionsRequest(this, PERMISSIONS);
-//	        session.requestNewPublishPermissions(newPermissionsRequest);
-//	            return;
-//	        }
-
-	        Bundle postParams = new Bundle();
-	        postParams.putString("name", "Facebook SDK for Android");
-	        postParams.putString("caption", "Build great social apps and get more installs.");
-	        postParams.putString("description", "The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
-	        postParams.putString("link", "https://developers.facebook.com/android");
-	        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
-
-	        Request.Callback callback= new Request.Callback() {
-	            public void onCompleted(Response response) {
-	                JSONObject graphResponse = response
-	                                           .getGraphObject()
-	                                           .getInnerJSONObject();
-	                String postId = null;
-	                try {
-	                    postId = graphResponse.getString("id");
-	                } catch (JSONException e) {
-	                    e.printStackTrace();
-	                }
-	                FacebookRequestError error = response.getError();
-	                if (error != null) {
-	                    Toast.makeText(context
-	                         .getApplicationContext(),
-	                         error.getErrorMessage(),
-	                         Toast.LENGTH_SHORT).show();
-	                    } else {
-	                        Toast.makeText(context
-	                             .getApplicationContext(), 
-	                             postId,
-	                             Toast.LENGTH_LONG).show();
-	                }
-	            }
-	        };
-
-	        Request request = new Request(session, "me/feed", postParams, 
-	                              HttpMethod.POST, callback);
-
-	        RequestAsyncTask task = new RequestAsyncTask(request);
-	        task.execute();
+	
+	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
+	private boolean pendingPublishReauthorization = false;
+	
+//	private void publishStory(String accessToken) {
+//		Log.d("publishStory","accessToken"+accessToken);
+//	    Session session = Session.getActiveSession();
+////        // Check for publish permissions    
+////        List<String> permissions = session.getPermissions();
+////        if (!isSubsetOf(PERMISSIONS, permissions)) {
+////            pendingPublishReauthorization = true;
+////            Session.NewPermissionsRequest newPermissionsRequest = new Session
+////                    .NewPermissionsRequest(this, PERMISSIONS);
+////        session.requestNewPublishPermissions(newPermissionsRequest);
+////            return;
+////        }
+//	    if (session != null){
+//	    	if(!session.isOpened()){
+//	    		session = Session.openActiveSessionWithAccessToken(context, AccessToken.createFromExistingAccessToken(accessToken, null, null, null, null), new Session.StatusCallback() {
+//					
+//					@Override
+//					public void call(Session session, SessionState state, Exception exception) {
+//						// TODO Auto-generated method stub
+//						exePostStory(session);
+//					}
+//				});
+//	    	}else{
+//	    		exePostStory(session);
+//	    	}
+//	    
+//	    }else{
+//	    	session = Session.openActiveSessionWithAccessToken(context, AccessToken.createFromExistingAccessToken(accessToken, null, null, null, null), new Session.StatusCallback() {
+//				
+//				@Override
+//				public void call(Session session, SessionState state, Exception exception) {
+//					// TODO Auto-generated method stub
+//					exePostStory(a);
+//				}
+//			});
+//	    }
+//
+//	}
+	private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
+	    for (String string : subset) {
+	        if (!superset.contains(string)) {
+	            return false;
+	        }
 	    }
+	    return true;
+	}
+	private void exePostStory(String  accessToken) {
+		// TODO Auto-generated method stub
+//        Bundle postParams = new Bundle();
+//        postParams.putString("name", "Facebook SDK for Android");
+//        postParams.putString("caption", "Build great social apps and get more installs.");
+//        postParams.putString("description", "The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
+//        postParams.putString("link", "https://developers.facebook.com/android");
+//        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
+//
+//        Request.Callback callback= new Request.Callback() {
+//            public void onCompleted(Response response) {
+//            	Log.d("publishStory","Response"+response);
+//                JSONObject graphResponse = response
+//                                           .getGraphObject()
+//                                           .getInnerJSONObject();
+//                String postId = null;
+//                try {
+//                    postId = graphResponse.getString("id");
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                FacebookRequestError error = response.getError();
+//                if (error != null) {
+//                    Toast.makeText(context
+//                         .getApplicationContext(),
+//                         error.getErrorMessage(),
+//                         Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(context
+//                             .getApplicationContext(), 
+//                             postId,
+//                             Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        };
+//
+//        Request request = new Request(session, "me/feed", postParams, 
+//                              HttpMethod.POST, callback);
+//
+//        RequestAsyncTask task = new RequestAsyncTask(request);
+//        task.execute();
+	
+		try {
+			com.facebook.AccessToken token = AccessToken.createFromExistingAccessToken(accessToken, null, null	, null, null);
 
+            Session.openActiveSessionWithAccessToken(context, token,
+                    new Session.StatusCallback() {
+
+                        @Override
+                        public void call(Session session,
+                                SessionState state, Exception exception) {
+                            // TODO Auto-generated method stub
+
+                            if (session.isOpened()) {
+
+                                Request.executeGraphPathRequestAsync(
+                                        session, "me/home",
+                                        new Request.Callback() {
+
+                                            @Override
+                                            public void onCompleted(
+                                                    Response response) {
+                                                // TODO Auto-generated
+                                                // method stub
+
+                                                JSONObject jsonObject = null;
+                                                JSONArray jArray = null;
+
+                                                try {
+                                                    jsonObject = new JSONObject(
+                                                            response.getGraphObject()
+                                                                    .getInnerJSONObject()
+                                                                    .toString());
+                                                    jArray = jsonObject
+                                                            .getJSONArray("data");
+
+                                                    for (int i = 0; i < jArray
+                                                            .length(); i++) {
+                                                        JSONObject element = null;
+                                                        element = jArray
+                                                                .getJSONObject(i);
+                                                        System.out.println(element
+                                                                .get("id")
+                                                                + "\n");
+                                                    }
+                                                } catch (JSONException e) {
+                                                    // TODO: handle
+                                                    // exception,,
+
+                                                    System.out
+                                                            .println("JSON EXCEPTION:"
+                                                                    + e);
+
+                                                }
+
+                                            }
+                                        });
+
+                            } else {
+                                System.out
+                                        .println("KONEKCIJA NIJE OTVORENA");
+                            }
+
+                        }
+                    });
+
+        } catch (Exception e) {
+            // TODO: handle exception
+
+            System.out.println("Greska PRILIKOM vracanja grafa:"
+                    + e.toString());
+        }
+	
 	}
 	private Handler mRunOnUi = new Handler();
 

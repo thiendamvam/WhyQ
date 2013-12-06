@@ -48,7 +48,8 @@ import android.widget.ToggleButton;
 import com.facebook.Session;
 import com.whyq.R;
 
-public class WhyqShareActivity extends FragmentActivity implements IServiceListener, FragmentDialogListener, IFacebookLister{
+public class WhyqShareActivity extends FragmentActivity implements
+		IServiceListener, FragmentDialogListener, IFacebookLister {
 
 	private static final int GET_IMAGE = 0;
 	private static final int FACEBOOK = 1;
@@ -73,7 +74,7 @@ public class WhyqShareActivity extends FragmentActivity implements IServiceListe
 	private Store store;
 	private ImageView imgTitle;
 	private OrderCheckData orderCheck;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -83,43 +84,42 @@ public class WhyqShareActivity extends FragmentActivity implements IServiceListe
 		isComment = getIntent().getBooleanExtra("is_comment", false);
 		storeId = getIntent().getStringExtra("store_id");
 		BillPushNotification pushNotificationData = null;
-		if(getIntent().getExtras()!=null)
-			pushNotificationData = (BillPushNotification)getIntent().getExtras().getSerializable("push_data");
-		tvTitle = (TextView)findViewById(R.id.tvHeaderTitle);
-		imgTitle = (ImageView)findViewById(R.id.imgHeader);
-		etMessage = (EditText)findViewById(R.id.etMessage);
-		btnCaptureImage = (ImageButton)findViewById(R.id.btnCaptureImage);
+		if (getIntent().getExtras() != null)
+			pushNotificationData = (BillPushNotification) getIntent()
+					.getExtras().getSerializable("push_data");
+		tvTitle = (TextView) findViewById(R.id.tvHeaderTitle);
+		imgTitle = (ImageView) findViewById(R.id.imgHeader);
+		etMessage = (EditText) findViewById(R.id.etMessage);
+		btnCaptureImage = (ImageButton) findViewById(R.id.btnCaptureImage);
 		tglShareWhyq = (ToggleButton) findViewById(R.id.tglShareWhyq);
 		tgleShareFb = (ToggleButton) findViewById(R.id.tglShareFB);
-		rlShareWhyq = (RelativeLayout)findViewById(R.id.rlShareWhyq);
-		rlTags = (RelativeLayout)findViewById(R.id.rlTags);
-		tvIntro = (TextView)findViewById(R.id.tvShareIntro);
-		
-		if(isComment){
+		rlShareWhyq = (RelativeLayout) findViewById(R.id.rlShareWhyq);
+		rlTags = (RelativeLayout) findViewById(R.id.rlTags);
+		tvIntro = (TextView) findViewById(R.id.tvShareIntro);
+
+		if (isComment) {
 			rlShareWhyq.setVisibility(View.GONE);
 			rlTags.setVisibility(View.GONE);
 			tvIntro.setVisibility(View.GONE);
 			tvIntro.setVisibility(View.VISIBLE);
-		}else{
-			
+		} else {
+
 		}
 		findViewById(R.id.btnDone).setVisibility(View.INVISIBLE);
 		tvTitle.setText("Share");
-		prgBar = (ProgressBar)findViewById(R.id.prgBar);
+		prgBar = (ProgressBar) findViewById(R.id.prgBar);
 		sharePreferences = new SharedPreferencesManager(WhyqApplication
 				.Instance().getApplicationContext());
-		if(pushNotificationData!=null){
+		if (pushNotificationData != null) {
 			billId = pushNotificationData.getBillId();
 			findViewById(R.id.btnDone).setVisibility(View.INVISIBLE);
 
-			
-		}else{
-			
+		} else {
+
 		}
-		if(storeId!=null)
+		if (storeId != null)
 			getStoreInfo();
 	}
-
 
 	private void getStoreInfo() {
 		// TODO Auto-generated method stub
@@ -128,98 +128,94 @@ public class WhyqShareActivity extends FragmentActivity implements IServiceListe
 		service.getBusinessDetail(storeId);
 	}
 
-
-	public void setProgressBar(boolean isShow){
-		prgBar.setVisibility(isShow?View.VISIBLE:View.INVISIBLE);
+	public void setProgressBar(boolean isShow) {
+		prgBar.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
 	}
-	public void onBack(View v){
+
+	public void onBack(View v) {
 		finish();
 	}
-	public void onTag(View v){
+
+	public void onTag(View v) {
 		checkLoginFacebook(false);
 	}
-	
-	public void showTagDialog(String fbId){
+
+	public void showTagDialog(String fbId) {
 		WhyqTagFriendsDialog fragment = new WhyqTagFriendsDialog();
 		Bundle bundle = new Bundle();
 		bundle.putString("accessToken", fbId);
-//		fragment.setArguments(bundle);
-//		getFragmentManager().beginTransaction().add(fragment, "add_tag").commit();
+		// fragment.setArguments(bundle);
+		// getFragmentManager().beginTransaction().add(fragment,
+		// "add_tag").commit();
 		Intent i = new Intent(context, WhyqTagFriendsDialog.class);
 		i.putExtras(bundle);
 		startActivityForResult(i, TAG_FRIENDS);
 	}
-	public void onInviteClicked(View v){
-		
+
+	public void onInviteClicked(View v) {
+
 	}
-	
-	public void onSend(View v){
-		
-		if(etMessage.getText().toString().equals("")){
-			Toast.makeText(WhyqShareActivity.this, "Please input your comment", Toast.LENGTH_LONG).show();
-		}else{
-			if(isComment){
+
+	public void onSend(View v) {
+
+		if (etMessage.getText().toString().equals("")) {
+			Toast.makeText(WhyqShareActivity.this, "Please input your comment",
+					Toast.LENGTH_LONG).show();
+		} else {
+			if (isComment) {
 				shareWhyq(null);
-			}else{
-				checkLoginFacebook(true);	
+			} else {
+				checkLoginFacebook(true);
 			}
-			
+
 		}
 	}
-	
+
 	private void checkLoginFacebook(final boolean isSend) {
 		try {
-			if(Session.getActiveSession()!=null){
-
-				// TODO Auto-generated method stub
-
-				accessToken = Session.getActiveSession().getAccessToken();// getAccessToken();
-				if (accessToken != null) {
-					Facebook fb = new Facebook(Constants.FACEBOOK_APP_ID);
-					fb.setAccessToken(accessToken);
-					if(isSend){
-						shareWhyq(accessToken);
-					}else{
-						if(isComment){
-							exePostFacebook(accessToken);
-						}else{
-							showTagDialog(accessToken);
-						}
+			accessToken = getAccessToken();
+			if (accessToken != null) {
+//				Facebook fb = new Facebook(Constants.FACEBOOK_APP_ID);
+//				fb.setAccessToken(accessToken);
+				if (isSend) {
+					shareWhyq(accessToken);
+				} else {
+					if (isComment) {
+						exePostFacebook(accessToken);
+					} else {
+						showTagDialog(accessToken);
 					}
-
-				}else{
-
-					SessionLoginFragment fragment = new SessionLoginFragment();
-					getSupportFragmentManager().beginTransaction().add(fragment, "login_facebook").commit();
 				}
 
-			
-			
-			}else{
+			} else {
 				SessionLoginFragment fragment = new SessionLoginFragment();
-				getSupportFragmentManager().beginTransaction().add(fragment, "login_facebook").commit();
+				getSupportFragmentManager().beginTransaction()
+						.add(fragment, "login_facebook").commit();
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 
-
-	public void shareWhyq(String facebookId){
-		if(!tgleShareFb.isChecked())
+	public void shareWhyq(String facebookId) {
+		if (!tgleShareFb.isChecked())
 			facebookId = null;
-		Service service  = new Service(WhyqShareActivity.this);
-		if(isComment){
-			service.postComment(WhyqApplication.Instance().getRSAToken(),storeId, etMessage.getText().toString(), avatarPath);
-		}else{
-			service.pushOrderCheck(WhyqApplication.Instance().getRSAToken(), billId, facebookIdTag, etMessage.getText().toString()	,avatarPath );
+		Service service = new Service(WhyqShareActivity.this);
+		if (isComment) {
+			service.postComment(WhyqApplication.Instance().getRSAToken(),
+					storeId, etMessage.getText().toString(), avatarPath);
+		} else {
+			service.pushOrderCheck(WhyqApplication.Instance().getRSAToken(),
+					billId, facebookIdTag, etMessage.getText().toString(),
+					avatarPath);
 		}
 		setProgressBar(true);
 	}
-	
+
 	protected void exePostFacebook(String accessToken) {
 		// TODO Auto-generated method stub
-		 OrderCheckData data = orderCheck;
+		OrderCheckData data = orderCheck;
 		ShareHandler shareHandler = new ShareHandler(WhyqShareActivity.this);
 		ShareData shareData = new ShareData();
 		shareData.setCaption("");
@@ -229,43 +225,47 @@ public class WhyqShareActivity extends FragmentActivity implements IServiceListe
 		shareData.setName("WHY Q");
 		shareData.setPicture(data.getImage());
 		shareData.setThumb("");
-		shareHandler.postFacebook(accessToken,shareData);
+		shareHandler.postFacebook(accessToken, shareData);
 	}
 
 	private String getAccessToken() {
 		final WhyqUtils mPermutils = new WhyqUtils();
 		return mPermutils.getFacebookToken(this);
 	}
-	public void onCaptureImage(View v){
+
+	public void onCaptureImage(View v) {
 		Intent intent = new Intent(WhyqShareActivity.this, ImageActivity.class);
-		startActivityForResult(intent,GET_IMAGE);
+		startActivityForResult(intent, GET_IMAGE);
 	}
+
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 
-			Log.d("onActivityResult Join","onActivityResult "+requestCode);
-		    if (resultCode == RESULT_OK) {
-		        if (requestCode == GET_IMAGE ) {
-		        	avatarPath = data.getStringExtra("path");
-		        	Log.d("onActivityResult Join",""+avatarPath);
-		        	if(avatarPath!=null){
-		        		 File imgFile = new  File(avatarPath);
-		        		if(imgFile.exists()){
-//		        			btnCaptureImage.setImageURI(Uri.fromFile(imgFile));
-		        			
-		        			UrlImageViewHelper.setUrlDrawable(btnCaptureImage, avatarPath);
-		        		}
-		        	}
-		        }else if(requestCode==TAG_FRIENDS){
-		        		TransferData tfdata = (TransferData) data.getSerializableExtra("data");
-			        	if(tfdata!=null)
-			        		facebookIdTag = convertData(tfdata.getData());	
-		        	
-		        }
-		    }
-		    
-		    ImageActivity.imagePath = "";
-		
+			Log.d("onActivityResult Join", "onActivityResult " + requestCode);
+			if (resultCode == RESULT_OK) {
+				if (requestCode == GET_IMAGE) {
+					avatarPath = data.getStringExtra("path");
+					Log.d("onActivityResult Join", "" + avatarPath);
+					if (avatarPath != null) {
+						File imgFile = new File(avatarPath);
+						if (imgFile.exists()) {
+							// btnCaptureImage.setImageURI(Uri.fromFile(imgFile));
+
+							UrlImageViewHelper.setUrlDrawable(btnCaptureImage,
+									avatarPath);
+						}
+					}
+				} else if (requestCode == TAG_FRIENDS) {
+					TransferData tfdata = (TransferData) data
+							.getSerializableExtra("data");
+					if (tfdata != null)
+						facebookIdTag = convertData(tfdata.getData());
+
+				}
+			}
+
+			ImageActivity.imagePath = "";
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -276,23 +276,25 @@ public class WhyqShareActivity extends FragmentActivity implements IServiceListe
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
 		setProgressBar(false);
-		if(result.isSuccess()&&result.getAction()==ServiceAction.ActionOrderCheck){
-			if(accessToken!=null){
-				ResponseData data = (ResponseData)result.getData();
-				if(data.getStatus().equals("200")){
-					orderCheck = (OrderCheckData)data.getData();
-					if(tgleShareFb.isChecked())
+		if (result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionOrderCheck) {
+			accessToken = getAccessToken();
+			if (accessToken != null) {
+				ResponseData data = (ResponseData) result.getData();
+				if (data.getStatus().equals("200")) {
+					orderCheck = (OrderCheckData) data.getData();
+					if (tgleShareFb.isChecked())
 						exePostFacebook(accessToken);
-				}else if(data.getStatus().equals("401")){
+				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(getParent(), data.getMessage());
-				}else if(data.getStatus().equals("204")){
-				}else{
-					
+				} else if (data.getStatus().equals("204")) {
+				} else {
+
 				}
-				
-				
+
 			}
-		}else if(result.isSuccess()&&result.getAction()==ServiceAction.ActionGetBusinessDetail){
+		} else if (result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionGetBusinessDetail) {
 
 			ResponseData data = (ResponseData) result.getData();
 			if (data != null) {
@@ -308,87 +310,95 @@ public class WhyqShareActivity extends FragmentActivity implements IServiceListe
 				}
 			}
 
-		
-		}else if(result.isSuccess()&&result.getAction()==ServiceAction.ActionPostComment){
+		} else if (result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionPostComment) {
 			ResponseData data = (ResponseData) result.getData();
 			if (data != null) {
 				if (data.getStatus().equals("200")) {
-					Toast.makeText(context, "Posted comment", Toast.LENGTH_LONG).show();
-					orderCheck = (OrderCheckData)data.getData();
-					if(tgleShareFb.isChecked())
+					Toast.makeText(context, "Posted comment", Toast.LENGTH_LONG)
+							.show();
+					orderCheck = (OrderCheckData) data.getData();
+					if (tgleShareFb.isChecked())
 						checkLoginFacebook(false);
-//						exePostFacebook(accessToken, responseData);
+					// exePostFacebook(accessToken, responseData);
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(context, data.getMessage());
 				} else {
 					// Util.showDialog(context, data.getMessage());
 				}
 			}
-		}else if(!result.isSuccess()&&result.getAction()==ServiceAction.ActionPostComment){
+		} else if (!result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionPostComment) {
 			Toast.makeText(context, "Fail", Toast.LENGTH_LONG).show();
 		}
 	}
 
-
 	private void bindHeaderData() {
 		// TODO Auto-generated method stub
 		try {
-			tvTitle.setText(""+store.getNameStore());
+			tvTitle.setText("" + store.getNameStore());
 			String cateId = store.getCateid();
-			if(cateId.equals("1")){
+			if (cateId.equals("1")) {
 				imgTitle.setImageResource(R.drawable.icon_cat_cutlery);
-			}else if(cateId.equals("1")){
+			} else if (cateId.equals("1")) {
 				imgTitle.setImageResource(R.drawable.icon_cat_wine);
-			}else if(cateId.equals("1")){
+			} else if (cateId.equals("1")) {
 				imgTitle.setImageResource(R.drawable.icon_cat_coffee);
-			}else{
+			} else {
 				imgTitle.setImageResource(R.drawable.icon_cat_hotel);
 			}
-			Log.d("bindHeaderData","cate id "+cateId);
+			Log.d("bindHeaderData", "cate id " + cateId);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		
-	}
 
+	}
 
 	@Override
 	public void onCompleted(Object data) {
 		// TODO Auto-generated method stub
+		Log.d("onCompleted", "onCompleted(Object data) {" + data);
 		facebookIdTag = convertData(data);
-		Toast.makeText(context, "Completed"+data, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, "Completed" + data, Toast.LENGTH_LONG).show();
 	}
-
 
 	private String convertData(Object data) {
 		// TODO Auto-generated method stub
 
-		if(data!=null){
+		if (data != null) {
 			List<FriendFacebook> list = (List<FriendFacebook>) data;
-			String result="";
-			for(int i = 0; i<list.size();i++){
+			String result = "";
+			for (int i = 0; i < list.size(); i++) {
 				FriendFacebook item = list.get(i);
-				if(i==0)
-					result+=""+item.getFacebookId();
+				if (i == 0)
+					result += "" + item.getFacebookId();
 				else
-					result+=","+item.getFacebookId();
+					result += "," + item.getFacebookId();
 			}
-			Log.d("convertData","convertData"+result);
+			Log.d("convertData", "convertData" + result);
 			return result;
-		}else{
+		} else {
 			return null;
 		}
 	}
 
-
+	// Oncompleted will be call when login facebook successful
 	@Override
 	public void onCompled(boolean b) {
 		// TODO Auto-generated method stub
 		
-		if(b){
-			accessToken = Session.getActiveSession().getAccessToken();
-			showTagDialog(accessToken);
+		Log.d("onCompleted", "onCompled(boolean b) {" + b);
+		if (b) {
+			accessToken = getAccessToken();
+			if(isComment){
+				if(accessToken!=null)
+					exePostFacebook(accessToken);
+			}else{
+				if(accessToken!=null)
+					showTagDialog(accessToken);	
+			}
+			
 		}
 	}
 }

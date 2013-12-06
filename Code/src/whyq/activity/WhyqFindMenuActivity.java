@@ -104,14 +104,11 @@ public class WhyqFindMenuActivity extends FragmentActivity implements IServiceLi
 //			startActivity(intent);
 //			finish();
 //		}
-		Session session = Session.getActiveSession();
+		WhyqUtils whyqUtils = new WhyqUtils();
+		String acessToken = whyqUtils.getFacebookToken(getApplication());
 		
-		if(session!=null){
-			if(session.isOpened()){
-				showFacebookLogin();
-			}else{
-				gotoFacebookFriend();
-			}
+		if(acessToken!=null){
+			exeLoginFacebook(acessToken);
 		}else{
 			showFacebookLogin();
 		}

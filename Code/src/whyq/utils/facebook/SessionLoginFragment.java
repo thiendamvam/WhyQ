@@ -17,6 +17,7 @@
 package whyq.utils.facebook;
 
 import whyq.interfaces.IFacebookLister;
+import whyq.utils.WhyqUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,6 +43,8 @@ public class SessionLoginFragment extends DialogFragment {
 	private Activity activity;
 	private IFacebookLister listener;
 
+	private WhyqUtils whyqUtil;
+
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -55,6 +58,7 @@ public class SessionLoginFragment extends DialogFragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment, container, false);
 
+		whyqUtil = new WhyqUtils();
 		buttonLoginLogout = (Button) view.findViewById(R.id.buttonLoginLogout);
 		textInstructionsOrLink = (TextView) view
 				.findViewById(R.id.instructionsOrLink);
@@ -109,28 +113,46 @@ public class SessionLoginFragment extends DialogFragment {
 	}
 
 	private void updateView() {
-		Session session = Session.getActiveSession();
-		if (session.isOpened()) {
-			textInstructionsOrLink.setText(URL_PREFIX_FRIENDS
-					+ session.getAccessToken());
-			buttonLoginLogout.setText(R.string.logout);
-			buttonLoginLogout.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View view) {
-					onClickLogout();
+		try {
+
+			Session session = Session.getActiveSession();
+			if (session.isOpened()) {
+				textInstructionsOrLink.setText(URL_PREFIX_FRIENDS
+						+ session.getAccessToken());
+				buttonLoginLogout.setText(R.string.logout);
+				buttonLoginLogout.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View view) {
+						onClickLogout();
+					}
+				});
+				if(session.getAccessToken()!=null){
+					whyqUtil.saveFacebookToken("oauth_token", session.getAccessToken(), activity);
+					if(getActivity()!=null)
+						getActivity().finish();
+					listener.onCompled(true);	
 				}
-			});
-			getActivity().finish();
-			listener.onCompled(true);
-		} else {
-			textInstructionsOrLink.setText("a");
-			buttonLoginLogout.setText(R.string.login);
-			buttonLoginLogout.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View view) {
-					onClickLogin();
+				
+			} else {
+				textInstructionsOrLink.setText("a");
+				buttonLoginLogout.setText(R.string.login);
+				buttonLoginLogout.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View view) {
+						onClickLogin();
+					}
+				});
+				onClickLogin();
+				if(session.getAccessToken()!=null){
+					whyqUtil.saveFacebookToken("oauth_token", session.getAccessToken(), activity);
+					listener.onCompled(true);
+					if(getActivity()!=null)
+						getActivity().finish();					
 				}
-			});
-			onClickLogin();
-			getActivity().finish();
+
+			}
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 
@@ -155,6 +177,9 @@ public class SessionLoginFragment extends DialogFragment {
 		@Override
 		public void call(Session session, SessionState state,
 				Exception exception) {
+			final WhyqUtils mPermutils = new WhyqUtils();
+			if(session.getAccessToken()!=null)
+				mPermutils.saveFacebookToken("oauth_token", session.getAccessToken(), activity);
 			updateView();
 		}
 	}

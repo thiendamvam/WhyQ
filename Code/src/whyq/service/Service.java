@@ -224,22 +224,14 @@ public class Service implements Runnable {
 		params.put("token", encryptedToken);
 		params.put("store_id", storeId);
 		params.put("content", content);
-		File file = new File(photoFile);
+		
 		try {
+			File file = new File(photoFile);
 			if(file.exists()){
 				FileBody encFile = new FileBody(file,"image/png");	
 				params.put("photo", encFile);
 			}
 		    
-//			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//			Bitmap bm = Util.getBitmapFromFile(photoFile);
-//			if(bm!=null){
-//				bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-//				byte[] data = bos.toByteArray();
-//				String fileName = new File(photoFile).getName();
-//				ByteArrayBody bab = new ByteArrayBody(data, fileName);
-//				params.put("photo", bab.toString());
-//			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -834,12 +826,12 @@ public class Service implements Runnable {
 		params.put("password", pass);
 	}
 
-	public void register(HashMap<String, String> params) {
+	public void register(HashMap<String, Object> params) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionSigup;
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
-		request("/m/register", convert(params), true, false);
+		request("/m/register", params, true, false);
 	}
 
 	public void editProfile(HashMap<String, String> params2) {

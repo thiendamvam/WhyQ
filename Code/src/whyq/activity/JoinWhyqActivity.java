@@ -26,6 +26,7 @@ import oauth.signpost.OAuth;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
@@ -149,8 +150,6 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 		// TODO Auto-generated method stub
 
 		showDialog();
-		// Send request to server to create new account along with its
-		// params
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
 				8);
 		// nameValuePairs.add(new BasicNameValuePair("type",
@@ -210,7 +209,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 			nameValuePairs.add(new BasicNameValuePair("cpassword",
 					confirmPassword.getText().toString()));
 		} else { // Whyq
-			HashMap<String, String> params = new HashMap<String, String>();
+			HashMap<String, Object> params = new HashMap<String, Object>();
 			RSA rsa = new RSA();
 			String pass = "", confirmPass = "";
 			try {
@@ -250,33 +249,22 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 			params.put("password", pass);
 			params.put("first_name", firstNameValue);
 			params.put("lastNameValue", lastNameValue);
-			
-//			
 			try {
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				// Bitmap bm = BitmapFactory.decodeFile(filePath);
-//				Bitmap bm = getBitmap2(avatarPath);
-				Bitmap bm = getBitmapWithCareMemory(avatarPath);
-				
-//				bm.compress(CompressFormat.JPEG, 75, bos);
-				bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-				byte[] data = bos.toByteArray();
-
-				String fileName = new File(avatarPath).getName();
-				ByteArrayBody bab = new ByteArrayBody(data, fileName);
-				nameValuePairs.add(new BasicNameValuePair("avatar",
-						bab.toString()));
+				File file = new File(avatarPath);
+				if(file.exists()){
+					FileBody encFile = new FileBody(file,"image/png");	
+					params.put("avatar", encFile);
+				}
+			    
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
-
 			service.register(params);
 			XMLParser parser = new XMLParser(XMLParser.JOIN_WHYQ,
 					JoinWhyqActivity.this, API.createAccountURL,
 					nameValuePairs);
-//			User user = parser.getUser();
-//			hideDialog();
+
 		}
 
 	

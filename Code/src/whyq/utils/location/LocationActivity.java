@@ -730,4 +730,8 @@ public class LocationActivity extends FragmentActivity implements
             return mDialog;
         }
     }
+    
+    public void onCloseClicked(View v){
+    	finish();
+    }
 }

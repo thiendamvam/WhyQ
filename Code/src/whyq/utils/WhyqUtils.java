@@ -381,7 +381,7 @@ public class WhyqUtils {
 	}
 
 	public boolean saveFacebookToken(String key, String value, Context activity) {
-		Editor editor = activity.getSharedPreferences("TWITTER",
+		Editor editor = activity.getSharedPreferences("FACEBOOK",
 				Context.MODE_PRIVATE).edit();
 		if (value != null)
 			editor.putString("fb_token", value);
@@ -391,9 +391,9 @@ public class WhyqUtils {
 
 	public String getFacebookToken(Context activity) {
 		SharedPreferences savedSession = activity.getSharedPreferences(
-				"TWITTER", Context.MODE_PRIVATE);
+				"FACEBOOK", Context.MODE_PRIVATE);
 		String key = savedSession.getString("fb_token", "");
-		if (key == "") {
+		if (key.equals("")) {
 			return null;
 		}
 		return key;

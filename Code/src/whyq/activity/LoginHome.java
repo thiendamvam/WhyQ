@@ -137,14 +137,11 @@ public class LoginHome extends FragmentActivity
 //								// cancel press or back press
 //							}
 //						});
-				Session session = Session.getActiveSession();
+				WhyqUtils whyqUtils = new WhyqUtils();
+				String acessToken = whyqUtils.getFacebookToken(getApplication());
 				
-				if(session!=null){
-					if(session.isOpened()){
-						showFacebookLogin();
-					}else{
-						exeLoginFacebook(session.getAccessToken());
-					}
+				if(acessToken!=null){
+					exeLoginFacebook(acessToken);
 				}else{
 					showFacebookLogin();
 				}
