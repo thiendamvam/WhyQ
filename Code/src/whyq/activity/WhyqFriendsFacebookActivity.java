@@ -431,73 +431,73 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity implements 
 				} else {
 					displayInviteButtn(holder, item);
 					holder.invite.setTag(holder);
-//					holder.invite.setOnClickListener(new View.OnClickListener() {
+					holder.invite.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							if (item.getIs_join()) {
+								if (INVITED_LIST.containsKey(item.getId())) {
+									mActivity.removeIntiveFriend(item);
+								} else {
+									mActivity.addInviteFriend(item);
+								}
+								displayInviteButtn(holder, item);
+							} else {
+
+								if(Session.getActiveSession()==null){
+									
+									Intent i = new Intent(mActivity, LoginUsingCustomFragmentActivity.class);
+									mActivity.startActivity(i);
+									
+//									LoginUsingCustomFragmentActivity fragment = new LoginUsingCustomFragmentActivity();
+//									mActivity.getFragmentManager().beginTransaction().add(fragment,"LoginFacebook" ).commit();
+								}else{
+//									Bundle params = new Bundle();
+//									params.putString("title", "invite friends");
+//									params.putString("to", item.getFacebookId());
+//									WebDialog requestsDialog = (
+//									        new WebDialog.RequestsDialogBuilder(mActivity,
+//									            Session.getActiveSession(),
+//									            params))
+//									            .build();
+//									    requestsDialog.show();
+								sendRequestDialog(item) ;
+
+								}
+//								Bundle params = new Bundle();
+//								params.putString("title", "invite friends");
+//								params.putString("to", item.getFacebookId());
+//								facebookSdk.dialog(mActivity, "apprequests",
+//										params, new DialogListener() {
 //
-//						@Override
-//						public void onClick(View v) {
-////							if (item.getIs_join()) {
-////								if (INVITED_LIST.containsKey(item.getId())) {
-////									mActivity.removeIntiveFriend(item);
-////								} else {
-////									mActivity.addInviteFriend(item);
-////								}
-////								displayInviteButtn(holder, item);
-////							} else {
-////
-////								if(Session.getActiveSession()==null){
-////									
-////									Intent i = new Intent(mActivity, LoginUsingCustomFragmentActivity.class);
-////									mActivity.startActivity(i);
-////									
-//////									LoginUsingCustomFragmentActivity fragment = new LoginUsingCustomFragmentActivity();
-//////									mActivity.getFragmentManager().beginTransaction().add(fragment,"LoginFacebook" ).commit();
-////								}else{
-//////									Bundle params = new Bundle();
-//////									params.putString("title", "invite friends");
-//////									params.putString("to", item.getFacebookId());
-//////									WebDialog requestsDialog = (
-//////									        new WebDialog.RequestsDialogBuilder(mActivity,
-//////									            Session.getActiveSession(),
-//////									            params))
-//////									            .build();
-//////									    requestsDialog.show();
-////								sendRequestDialog(item) ;
-////
-////								}
-//////								Bundle params = new Bundle();
-//////								params.putString("title", "invite friends");
-//////								params.putString("to", item.getFacebookId());
-//////								facebookSdk.dialog(mActivity, "apprequests",
-//////										params, new DialogListener() {
-//////
-//////											@Override
-//////											public void onFacebookError(
-//////													FacebookError e) {
-//////												// TODO Auto-generated method stub
-//////												Log.d("DialogListener", "onFacebookError"+e.getMessage());
-//////											}
-//////
-//////											@Override
-//////											public void onError(DialogError e) {
-//////												// TODO Auto-generated method stub
-//////												Log.d("DialogListener", "onError"+e.getMessage());
-//////											}
-//////
-//////											@Override
-//////											public void onComplete(Bundle values) {
-//////												// TODO Auto-generated method stub
-//////												Log.d("DialogListener", "onComplete");
-//////											}
-//////
-//////											@Override
-//////											public void onCancel() {
-//////												// TODO Auto-generated method stub
-//////												Log.d("DialogListener", "onCancel");
-//////											}
-//////										});
-////							}
-//						}
-//					});
+//											@Override
+//											public void onFacebookError(
+//													FacebookError e) {
+//												// TODO Auto-generated method stub
+//												Log.d("DialogListener", "onFacebookError"+e.getMessage());
+//											}
+//
+//											@Override
+//											public void onError(DialogError e) {
+//												// TODO Auto-generated method stub
+//												Log.d("DialogListener", "onError"+e.getMessage());
+//											}
+//
+//											@Override
+//											public void onComplete(Bundle values) {
+//												// TODO Auto-generated method stub
+//												Log.d("DialogListener", "onComplete");
+//											}
+//
+//											@Override
+//											public void onCancel() {
+//												// TODO Auto-generated method stub
+//												Log.d("DialogListener", "onCancel");
+//											}
+//										});
+							}
+						}
+					});
 				}
 				viewList.put(item.getFacebookId(), convertView);
 			}else{

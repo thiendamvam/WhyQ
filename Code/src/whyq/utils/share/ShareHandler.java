@@ -165,6 +165,7 @@ public class ShareHandler implements ShareListener {
 		// TODO Auto-generated method stub
         Bundle postParams = new Bundle();
         postParams.putString("name", ""+data.getName());
+        postParams.putString("message", ""+data.getMessage());
         postParams.putString("caption", ""+data.getCaption());
         postParams.putString("description", ""+data.getDescription());
         postParams.putString("link", ""+data.getLink());
