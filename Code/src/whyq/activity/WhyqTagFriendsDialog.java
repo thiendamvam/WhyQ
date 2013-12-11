@@ -108,6 +108,7 @@ public class WhyqTagFriendsDialog extends FragmentActivity {
 	private void exeGetData(String accessToken) {
 		// TODO Auto-generated method stub
 		setProgressBarShowing(true);
+		accessToken = whyq.utils.Util.createSession().getAccessToken();
 		if (accessToken != null) {
 			Facebook mfacebook = new Facebook(Constants.FACEBOOK_APP_ID);
 			mfacebook.setAccessToken(accessToken);

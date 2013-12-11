@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,18 +15,21 @@ import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import whyq.model.ShareData;
 import whyq.utils.SharedPreferencesManager;
+import whyq.utils.Util;
 import whyq.utils.facebook.BaseRequestListener;
 import whyq.utils.facebook.sdk.FacebookError;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
+import com.facebook.FacebookRequestError;
+import com.facebook.HttpMethod;
 import com.facebook.Request;
+import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.SessionState;
 
 
 public class ShareHandler implements ShareListener {
@@ -105,39 +107,7 @@ public class ShareHandler implements ShareListener {
 
 	public boolean postFacebook(String accessToken, ShareData data) {
 		// message = IssueAdapter.currentDesription;
-
-//		Facebook facebook = new Facebook(Constants.FACEBOOK_APP_ID);
-//		facebook.setAccessToken(accessToken);
-//		if (facebook != null) {
-//			String namePost = "";// = IssueAdapter.currentDesription;
-//
-//			String msg = limitContent(data.getMessage(), " " + linkshareFacebook);
-//			// FacebookController.updateMessage(facebook, msg);
-//			AsyncFacebookRunner mAsyncFbRunner = new AsyncFacebookRunner(
-//					facebook);
-//			Bundle params = new Bundle();
-//			params.putString("message", msg);
-//			params.putString("name", data.getName());
-//			if( data.getLink()!=null)
-//				params.putString("caption", data.getLink());
-//			String disription = data.getDescription();
-//			String picture = data.getPicture();
-//			if(data.getLink()!=null)
-//				params.putString("link", "https://developers.facebook.com/android");//data.getLink()
-//			params.putString("description", data.getDescription());
-//
-//			Log.d("WallPostListener", "picture is:" + picture);
-////			if (picture != null)
-//				params.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
-//			// else
-//			// params.putString("picture",
-//			// "http://blogs.news.com.au/images/uploads/black.jpg");
-//			mAsyncFbRunner.request("me/feed", params, "POST",
-//					new WallPostListener());
-//			return true;
-//		}
-//		publishStory(accessToken);
-		exePostStory(accessToken);
+		exePostStory(accessToken, data);
 		return false;
 	}
 	
@@ -191,118 +161,119 @@ public class ShareHandler implements ShareListener {
 	    }
 	    return true;
 	}
-	private void exePostStory(String  accessToken) {
+	private void exePostStory(String  accessToken, ShareData data) {
 		// TODO Auto-generated method stub
-//        Bundle postParams = new Bundle();
-//        postParams.putString("name", "Facebook SDK for Android");
-//        postParams.putString("caption", "Build great social apps and get more installs.");
-//        postParams.putString("description", "The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
-//        postParams.putString("link", "https://developers.facebook.com/android");
-//        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
-//
-//        Request.Callback callback= new Request.Callback() {
-//            public void onCompleted(Response response) {
-//            	Log.d("publishStory","Response"+response);
-//                JSONObject graphResponse = response
-//                                           .getGraphObject()
-//                                           .getInnerJSONObject();
-//                String postId = null;
-//                try {
-//                    postId = graphResponse.getString("id");
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                FacebookRequestError error = response.getError();
-//                if (error != null) {
-//                    Toast.makeText(context
-//                         .getApplicationContext(),
-//                         error.getErrorMessage(),
-//                         Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(context
-//                             .getApplicationContext(), 
-//                             postId,
-//                             Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        };
-//
-//        Request request = new Request(session, "me/feed", postParams, 
-//                              HttpMethod.POST, callback);
-//
-//        RequestAsyncTask task = new RequestAsyncTask(request);
-//        task.execute();
+        Bundle postParams = new Bundle();
+        postParams.putString("name", ""+data.getName());
+        postParams.putString("caption", ""+data.getCaption());
+        postParams.putString("description", ""+data.getDescription());
+        postParams.putString("link", ""+data.getLink());
+        postParams.putString("picture", ""+data.getPicture());
+
+        Request.Callback callback= new Request.Callback() {
+            public void onCompleted(Response response) {
+            	Log.d("publishStory","Response"+response);
+                JSONObject graphResponse = response
+                                           .getGraphObject()
+                                           .getInnerJSONObject();
+                String postId = null;
+                try {
+                    postId = graphResponse.getString("id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                FacebookRequestError error = response.getError();
+                if (error != null) {
+                    Toast.makeText(context
+                         .getApplicationContext(),
+                         error.getErrorMessage(),
+                         Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context
+                             .getApplicationContext(), 
+                             "Posted to faceboo!",
+                             Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+        Session session = Util.createSession();
+        Request request = new Request(session, "me/feed", postParams, 
+                              HttpMethod.POST, callback);
+
+        RequestAsyncTask task = new RequestAsyncTask(request);
+        task.execute();
 	
-		try {
-			com.facebook.AccessToken token = AccessToken.createFromExistingAccessToken(accessToken, null, null	, null, null);
-
-            Session.openActiveSessionWithAccessToken(context, token,
-                    new Session.StatusCallback() {
-
-                        @Override
-                        public void call(Session session,
-                                SessionState state, Exception exception) {
-                            // TODO Auto-generated method stub
-
-                            if (session.isOpened()) {
-
-                                Request.executeGraphPathRequestAsync(
-                                        session, "me/home",
-                                        new Request.Callback() {
-
-                                            @Override
-                                            public void onCompleted(
-                                                    Response response) {
-                                                // TODO Auto-generated
-                                                // method stub
-
-                                                JSONObject jsonObject = null;
-                                                JSONArray jArray = null;
-
-                                                try {
-                                                    jsonObject = new JSONObject(
-                                                            response.getGraphObject()
-                                                                    .getInnerJSONObject()
-                                                                    .toString());
-                                                    jArray = jsonObject
-                                                            .getJSONArray("data");
-
-                                                    for (int i = 0; i < jArray
-                                                            .length(); i++) {
-                                                        JSONObject element = null;
-                                                        element = jArray
-                                                                .getJSONObject(i);
-                                                        System.out.println(element
-                                                                .get("id")
-                                                                + "\n");
-                                                    }
-                                                } catch (JSONException e) {
-                                                    // TODO: handle
-                                                    // exception,,
-
-                                                    System.out
-                                                            .println("JSON EXCEPTION:"
-                                                                    + e);
-
-                                                }
-
-                                            }
-                                        });
-
-                            } else {
-                                System.out
-                                        .println("KONEKCIJA NIJE OTVORENA");
-                            }
-
-                        }
-                    });
-
-        } catch (Exception e) {
-            // TODO: handle exception
-
-            System.out.println("Greska PRILIKOM vracanja grafa:"
-                    + e.toString());
-        }
+//		try {
+//			com.facebook.AccessToken token = AccessToken.createFromExistingAccessToken(accessToken, null, null	, null, null);
+//
+//            Session.openActiveSessionWithAccessToken(context, token,
+//                    new Session.StatusCallback() {
+//
+//                        @SuppressWarnings("deprecation")
+//						@Override
+//                        public void call(Session session,
+//                                SessionState state, Exception exception) {
+//                            // TODO Auto-generated method stub
+//
+//                            if (session.isOpened()) {
+//
+//                                Request.executeGraphPathRequestAsync(
+//                                        session, "me/home",
+//                                        new Request.Callback() {
+//
+//                                            @Override
+//                                            public void onCompleted(
+//                                                    Response response) {
+//                                                // TODO Auto-generated
+//                                                // method stub
+//
+//                                                JSONObject jsonObject = null;
+//                                                JSONArray jArray = null;
+//
+//                                                try {
+//                                                    jsonObject = new JSONObject(
+//                                                            response.getGraphObject()
+//                                                                    .getInnerJSONObject()
+//                                                                    .toString());
+//                                                    jArray = jsonObject
+//                                                            .getJSONArray("data");
+//
+//                                                    for (int i = 0; i < jArray
+//                                                            .length(); i++) {
+//                                                        JSONObject element = null;
+//                                                        element = jArray
+//                                                                .getJSONObject(i);
+//                                                        System.out.println(element
+//                                                                .get("id")
+//                                                                + "\n");
+//                                                    }
+//                                                } catch (JSONException e) {
+//                                                    // TODO: handle
+//                                                    // exception,,
+//
+//                                                    System.out
+//                                                            .println("JSON EXCEPTION:"
+//                                                                    + e);
+//
+//                                                }
+//
+//                                            }
+//                                        });
+//
+//                            } else {
+//                                System.out
+//                                        .println("KONEKCIJA NIJE OTVORENA");
+//                            }
+//
+//                        }
+//                    });
+//
+//        } catch (Exception e) {
+//            // TODO: handle exception
+//
+//            System.out.println("Greska PRILIKOM vracanja grafa:"
+//                    + e.toString());
+//        }
 	
 	}
 	private Handler mRunOnUi = new Handler();

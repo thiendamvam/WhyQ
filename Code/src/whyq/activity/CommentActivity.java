@@ -1,6 +1,7 @@
 package whyq.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import whyq.WhyqApplication;
@@ -17,6 +18,7 @@ import whyq.utils.Util;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,9 +72,17 @@ public class CommentActivity extends ImageWorkerActivity {
 
 		View filter = getLayoutInflater().inflate(R.layout.filter, null);
 		setExtraView(filter);
-		getComments(false);
+//		getComments(false);
 	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		Log.d("onResume","storeId "+mStoreId);
+		super.onResume();
+		getComments(false);
+	}
+	
 	private void getComments(boolean onlyFriend) {
 		setLoading(true);
 		getService().getComments(getEncryptedToken(), mStoreId, 1, 20,
@@ -151,44 +161,52 @@ public class CommentActivity extends ImageWorkerActivity {
 			return 0;
 		}
 
+		HashMap<String, View > viewList = new HashMap<String, View>();
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
-				convertView = LayoutInflater.from(mContext).inflate(
-						R.layout.comment_list_item, parent, false);
-				Util.applyTypeface(convertView,
-						WhyqApplication.sTypefaceRegular);
-			}
-
-			ViewHolder holder = getViewHolder(convertView);
 			Comment item = mItems.get(position);
-
-			holder.name.setText(item.getUser().getFirstName());
-			holder.comment.setText(item.getContent());
-			holder.like.setText("" + item.getCount_like());
-			holder.like.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-
+			convertView = viewList.get(item.getId());
+			if(convertView==null){
+				if (convertView == null) {
+					convertView = LayoutInflater.from(mContext).inflate(
+							R.layout.comment_list_item, parent, false);
+					Util.applyTypeface(convertView,
+							WhyqApplication.sTypefaceRegular);
 				}
-			});
 
-			mImageWorker.downloadImage(item.getUser().getUrlAvatar(),
-					holder.avatar);
-			Photo photo = item.getPhotos();
-			if (photo != null) {
-				mImageWorker.downloadImage(item.getPhotos().getThumb(),
-						holder.thumb);
-			}
-			if (item.getUser().getLike() > 0) {
-				holder.favorite.setImageResource(R.drawable.icon_fav_enable);
-			} else {
-				holder.favorite.setImageResource(R.drawable.icon_fav_disable);
+				ViewHolder holder = getViewHolder(convertView);
+				
+
+				holder.name.setText(item.getUser().getFirstName());
+				holder.comment.setText(item.getContent());
+				holder.like.setText("" + item.getCount_like());
+				holder.like.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+
+				mImageWorker.downloadImage(item.getUser().getUrlAvatar(),
+						holder.avatar);
+				Photo photo = item.getPhotos();
+				if (photo != null) {
+					mImageWorker.downloadImage(item.getPhotos().getThumb(),
+							holder.thumb);
+				}
+				if (item.getUser().getLike() > 0) {
+					holder.favorite.setImageResource(R.drawable.icon_fav_enable);
+				} else {
+					holder.favorite.setImageResource(R.drawable.icon_fav_disable);
+				}
+
+				return convertView;
+			}else {
+				return convertView;
 			}
 
-			return convertView;
 		}
 
 		private ViewHolder getViewHolder(View view) {

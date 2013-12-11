@@ -132,7 +132,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		setContentView(R.layout.store_detail);
 		context = ListDetailActivity.this;
 		id = getIntent().getStringExtra("id");
-
+		Log.d("ListDetailActivity","id "+id);
 		service = new Service(this);
 		bundle = new Bundle();
 		svContent = (ScrollviewCustom) findViewById(R.id.svContent);
@@ -1070,20 +1070,22 @@ public class ListDetailActivity extends FragmentActivity implements
 			if (store.getCountFavaouriteMember() != null) {
 				if (store.getCountFavaouriteMember().equals("0")) {
 					Intent intent = new Intent(ListDetailActivity.this,
-							WhyQCommentActivity.class);
-					intent.putExtra("store_id", store.getId());
+							WhyqShareActivity.class);
+					intent.putExtra("store_id", store.getStoreId());
+					intent.putExtra("is_comment", true);
+					
 					startActivity(intent);
 				} else {
 					Intent intent = new Intent(ListDetailActivity.this,
 							CommentActivity.class);
-					intent.putExtra("store_id", store.getId());
+					intent.putExtra("store_id", store.getStoreId());
 					startActivity(intent);
 				}
 
 			} else {
 				Intent intent = new Intent(ListDetailActivity.this,
 						WhyqShareActivity.class);
-				intent.putExtra("store_id", store.getId());
+				intent.putExtra("store_id", store.getStoreId());
 				startActivity(intent);
 			}
 		}

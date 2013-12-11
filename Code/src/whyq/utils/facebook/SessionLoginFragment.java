@@ -22,12 +22,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.facebook.LoggingBehavior;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -178,8 +179,12 @@ public class SessionLoginFragment extends DialogFragment {
 		public void call(Session session, SessionState state,
 				Exception exception) {
 			final WhyqUtils mPermutils = new WhyqUtils();
-			if(session.getAccessToken()!=null)
-				mPermutils.saveFacebookToken("oauth_token", session.getAccessToken(), activity);
+			if(session.getAccessToken()!=null){
+				if(!session.getAccessToken().equals("")){
+					mPermutils.saveFacebookToken("oauth_token", session.getAccessToken(), activity);
+					Log.d("SessionStatusCallback","SessionStatusCallback acessToken "+session.getAccessToken());	
+				}
+			}
 			updateView();
 		}
 	}

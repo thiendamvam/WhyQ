@@ -29,6 +29,7 @@ import whyq.utils.facebook.sdk.Facebook.DialogListener;
 import whyq.utils.facebook.sdk.FacebookError;
 import whyq.utils.share.ShareHandler;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -46,21 +47,24 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.Session.StatusCallback;
 import com.whyq.R;
 
 public class WhyqShareActivity extends FragmentActivity implements
-		IServiceListener, FragmentDialogListener, IFacebookLister {
+		IServiceListener, FragmentDialogListener {
 
 	private static final int GET_IMAGE = 0;
 	private static final int FACEBOOK = 1;
 	private static final int TAG_FRIENDS = 4;
+	private static final String PENDING_REQUEST_BUNDLE_KEY = "com.whyq:PendingRequest";
 	private TextView tvTitle;
 	private EditText etMessage;
 	private String avatarPath;
 	private ImageButton btnCaptureImage;
 	private SharedPreferencesManager sharePreferences;
 	private String billId;
-	private String accessToken;
+//	private String accessToken;
 	private ToggleButton tglShareWhyq;
 	private ToggleButton tgleShareFb;
 	private ProgressBar prgBar;
@@ -74,6 +78,9 @@ public class WhyqShareActivity extends FragmentActivity implements
 	private Store store;
 	private ImageView imgTitle;
 	private OrderCheckData orderCheck;
+	private Session session;
+	private boolean pendingRequest;
+	private boolean isSend;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +124,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 		} else {
 
 		}
+		Log.d("WhyqShareActivity","storeId "+storeId);
 		if (storeId != null)
 			getStoreInfo();
 	}
@@ -173,24 +181,55 @@ public class WhyqShareActivity extends FragmentActivity implements
 
 	private void checkLoginFacebook(final boolean isSend) {
 		try {
-			accessToken = getAccessToken();
-			if (accessToken != null) {
-//				Facebook fb = new Facebook(Constants.FACEBOOK_APP_ID);
-//				fb.setAccessToken(accessToken);
+//			accessToken = getAccessToken();
+//			if (accessToken != null) {
+////				Facebook fb = new Facebook(Constants.FACEBOOK_APP_ID);
+////				fb.setAccessToken(accessToken);
+//				if (isSend) {
+//					shareWhyq(accessToken);
+//				} else {
+//					if (isComment) {
+//						exePostFacebook(accessToken);
+//					} else {
+//						showTagDialog(accessToken);
+//					}
+//				}
+//
+//			} else {
+//				SessionLoginFragment fragment = new SessionLoginFragment();
+//				getSupportFragmentManager().beginTransaction()
+//						.add(fragment, "login_facebook").commit();
+//			}
+			this.isSend = isSend;
+			session = Util.createSession();
+			if (session.isOpened()) {
 				if (isSend) {
-					shareWhyq(accessToken);
+					shareWhyq(session.getAccessToken());
 				} else {
 					if (isComment) {
-						exePostFacebook(accessToken);
+						exePostFacebook(session.getAccessToken());
 					} else {
-						showTagDialog(accessToken);
+						showTagDialog(session.getAccessToken());
 					}
 				}
-
+				pendingRequest = false;
 			} else {
-				SessionLoginFragment fragment = new SessionLoginFragment();
-				getSupportFragmentManager().beginTransaction()
-						.add(fragment, "login_facebook").commit();
+				StatusCallback callback = new StatusCallback() {
+					public void call(Session session, SessionState state,
+							Exception exception) {
+						if (exception != null) {
+							new AlertDialog.Builder(context)
+									.setTitle(R.string.login_text1)
+									.setMessage(exception.getMessage())
+									.setPositiveButton(R.string.ok, null)
+									.show();
+							session = Util.createSession();
+						}
+					}
+				};
+				pendingRequest = true;
+				session.openForRead(new Session.OpenRequest(WhyqShareActivity.this)
+						.setCallback(callback));
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -262,29 +301,56 @@ public class WhyqShareActivity extends FragmentActivity implements
 						facebookIdTag = convertData(tfdata.getData());
 
 				}
+				ImageActivity.imagePath = "";
+			}else if (session
+					.onActivityResult(this, requestCode, resultCode, data)
+					&& pendingRequest && this.session.getState().isOpened()) {
+
+				if (isSend) {
+					shareWhyq(session.getAccessToken());
+				} else {
+					if (isComment) {
+						exePostFacebook(session.getAccessToken());
+					} else {
+						showTagDialog(session.getAccessToken());
+					}
+				}
+				pendingRequest = false;
+			
 			}
 
-			ImageActivity.imagePath = "";
+			
 
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 	}
+	@Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
+        pendingRequest = savedInstanceState.getBoolean(PENDING_REQUEST_BUNDLE_KEY, pendingRequest);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(PENDING_REQUEST_BUNDLE_KEY, pendingRequest);
+    }
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
 		setProgressBar(false);
 		if (result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionOrderCheck) {
-			accessToken = getAccessToken();
-			if (accessToken != null) {
+			if (session.getAccessToken() != null) {
 				ResponseData data = (ResponseData) result.getData();
 				if (data.getStatus().equals("200")) {
 					orderCheck = (OrderCheckData) data.getData();
 					if (tgleShareFb.isChecked())
-						exePostFacebook(accessToken);
+						exePostFacebook(session.getAccessToken());
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(getParent(), data.getMessage());
 				} else if (data.getStatus().equals("204")) {
@@ -383,22 +449,22 @@ public class WhyqShareActivity extends FragmentActivity implements
 		}
 	}
 
-	// Oncompleted will be call when login facebook successful
-	@Override
-	public void onCompled(boolean b) {
-		// TODO Auto-generated method stub
-		
-		Log.d("onCompleted", "onCompled(boolean b) {" + b);
-		if (b) {
-			accessToken = getAccessToken();
-			if(isComment){
-				if(accessToken!=null)
-					exePostFacebook(accessToken);
-			}else{
-				if(accessToken!=null)
-					showTagDialog(accessToken);	
-			}
-			
-		}
-	}
+//	// Oncompleted will be call when login facebook successful
+//	@Override
+//	public void onCompled(boolean b) {
+//		// TODO Auto-generated method stub
+//		
+//		Log.d("onCompleted", "onCompled(boolean b) {" + b);
+//		if (b) {
+//			accessToken = getAccessToken();
+//			if(isComment){
+//				if(accessToken!=null)
+//					exePostFacebook(accessToken);
+//			}else{
+//				if(accessToken!=null)
+//					showTagDialog(accessToken);	
+//			}
+//			
+//		}
+//	}
 }

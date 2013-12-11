@@ -6,6 +6,7 @@ import whyq.service.ServiceResponse;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -35,6 +36,7 @@ public class WhyQCommentActivity extends Activity implements IServiceListener {
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
+		Log.d("onResume","storeId "+storeId);
 		super.onResume();
 		exeComment();
 	}

@@ -110,6 +110,7 @@ public class Constants {
 	public static final String CURRENT_BOARD = "current_board";
 	public static final String TERMS_URL = "http://whyq.net.au/m/termandconditions?m=true";
 	public static final String GET_DISTANCE_API = "http://maps.googleapis.com/maps/api/distancematrix/xml?";
+	public static final String FB_APP_PERMISSIONS = null;
 	public static String LINK_SHARE_FACEBOOK_GLOBAL = null;
 
 }

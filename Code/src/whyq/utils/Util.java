@@ -75,6 +75,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.Session;
 import com.whyq.R;
 
 public class Util {
@@ -610,4 +611,12 @@ public class Util {
 		
 		return null;
 	}
+    public static Session createSession() {
+        Session activeSession = Session.getActiveSession();
+        if (activeSession == null || activeSession.getState().isClosed()) {
+            activeSession = new Session.Builder(WhyqApplication.Instance().getApplicationContext()).setApplicationId(Constants.FACEBOOK_APP_ID).build();
+            Session.setActiveSession(activeSession);
+        }
+        return activeSession;
+    }
 }

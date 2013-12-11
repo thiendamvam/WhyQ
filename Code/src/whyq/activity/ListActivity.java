@@ -257,6 +257,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	protected void gotoStoreDetail(String storeId, String storeName) {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(ListActivity.this, ListDetailActivity.class);
+		intent.putExtra("id", storeId);
 		intent.putExtra("store_type", storeType);
 		intent.putExtra("store_name", storeName);
 		startActivity(intent);
