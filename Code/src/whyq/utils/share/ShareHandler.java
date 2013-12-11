@@ -19,6 +19,7 @@ import whyq.utils.Util;
 import whyq.utils.facebook.BaseRequestListener;
 import whyq.utils.facebook.sdk.FacebookError;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -161,6 +162,9 @@ public class ShareHandler implements ShareListener {
 	    }
 	    return true;
 	}
+	
+
+	
 	private void exePostStory(String  accessToken, ShareData data) {
 		// TODO Auto-generated method stub
         Bundle postParams = new Bundle();
@@ -168,9 +172,10 @@ public class ShareHandler implements ShareListener {
         postParams.putString("message", ""+data.getMessage());
         postParams.putString("caption", ""+data.getCaption());
         postParams.putString("description", ""+data.getDescription());
-        postParams.putString("link", ""+data.getLink());
+        postParams.putString("link", ""+data.getLink()); 
         postParams.putString("picture", ""+data.getPicture());
 
+        Log.d("exePostStory","Link "+data.getLink());
         Request.Callback callback= new Request.Callback() {
             public void onCompleted(Response response) {
             	Log.d("publishStory","Response"+response);

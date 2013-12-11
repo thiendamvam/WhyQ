@@ -1659,5 +1659,18 @@ public class DataParser {
 			return null;
 		}
 	
+	}
+
+	public Object parserPostOpenGraphResult(String input) {
+		// TODO Auto-generated method stub
+		boolean result = false ;
+		try {
+			Log.d("parserPostOpenGraphResult","result "+input);
+			JSONObject json = new JSONObject(input);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return true;
 	} 
 }

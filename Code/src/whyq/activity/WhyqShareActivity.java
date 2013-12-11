@@ -264,7 +264,10 @@ public class WhyqShareActivity extends FragmentActivity implements
 		shareData.setName("WHY Q");
 		shareData.setPicture(data.getImage());
 		shareData.setThumb("");
-		shareHandler.postFacebook(accessToken, shareData);
+//		shareHandler.postFacebook(accessToken, shareData);
+		Service service = new Service(WhyqShareActivity.this);
+		service.postFBComments(accessToken, shareData);
+		setProgressBar(true);
 	}
 
 	private String getAccessToken() {
@@ -393,7 +396,18 @@ public class WhyqShareActivity extends FragmentActivity implements
 					// Util.showDialog(context, data.getMessage());
 				}
 			}
+		} else if (result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionPostFBComment) {
+			setProgressBar(false);
+			boolean status = (Boolean) result.getData();
+			if(status){
+				Toast.makeText(context, "Posted to Facebook!", Toast.LENGTH_LONG).show();
+			}
 		} else if (!result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionPostFBComment) {
+			setProgressBar(false);
+			Toast.makeText(context, "Fail post to Facebook!", Toast.LENGTH_LONG).show();
+		}else if (!result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionPostComment) {
 			Toast.makeText(context, "Fail", Toast.LENGTH_LONG).show();
 		}

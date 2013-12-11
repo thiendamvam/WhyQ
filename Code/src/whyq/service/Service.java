@@ -41,6 +41,7 @@ import whyq.WhyqApplication;
 import whyq.activity.ListDetailActivity;
 import whyq.interfaces.IServiceListener;
 import whyq.model.SearchFriendCriteria;
+import whyq.model.ShareData;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.Logger;
@@ -217,21 +218,21 @@ public class Service implements Runnable {
 		request("/m/member/recent/activity", params, true, false);
 	}
 
-	public void postComment(String encryptedToken,String storeId, String content,
-			String photoFile) {
+	public void postComment(String encryptedToken, String storeId,
+			String content, String photoFile) {
 		_action = ServiceAction.ActionPostComment;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("store_id", storeId);
 		params.put("content", content);
-		
+
 		try {
 			File file = new File(photoFile);
-			if(file.exists()){
-				FileBody encFile = new FileBody(file,"image/png");	
+			if (file.exists()) {
+				FileBody encFile = new FileBody(file, "image/png");
 				params.put("photo", encFile);
 			}
-		    
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -359,20 +360,20 @@ public class Service implements Runnable {
 			break;
 		case ActionPostComment:
 			resObj = parser.parseOrderCheck(result);// Same structor
-																// data
+													// data
 			break;
-			
+
 		case ActionAcceptInvitation:
 			resObj = parser.parseAcceptInvitation(result);// Same structor
-																// data
+															// data
 			break;
 		case ActionDeclineInvitation:
 			resObj = parser.parseAcceptInvitation(result);// Same structor
-																// data
+															// data
 			break;
 		case ActionUnFriend:
 			resObj = parser.parseAcceptInvitation(result);// Same structor
-																// data
+															// data
 			break;
 		case ActionOrderCheck:
 			resObj = parser.parseOrderCheck(result);
@@ -425,6 +426,18 @@ public class Service implements Runnable {
 		case ActionCheckbill:
 			resObj = parser.parserCheckBillResult(result);
 			break;
+		case ActionPostFBComment:
+			resObj = parser.parserPostOpenGraphResult(result);
+			break;
+		case ActionPostFBCheckBill:
+			resObj = parser.parserPostOpenGraphResult(result);
+			break;
+		case ActionPostFBCheckDiscountBill:
+			resObj = parser.parserPostOpenGraphResult(result);
+			break;
+		case ActionPostFBAdd:
+			resObj = parser.parserPostOpenGraphResult(result);
+			break;
 		default:
 			resObj = result;
 			Logger.appendLog(result);
@@ -472,12 +485,24 @@ public class Service implements Runnable {
 		try {
 			final String urlString;
 			if (_action == ServiceAction.ActionGetLocation) {
-				String textSearch = (String)_params.get("text-search");
+				String textSearch = (String) _params.get("text-search");
 				textSearch = textSearch.replace(" ", "+");
 				urlString = "http://ws.geonames.org/search?q=" + textSearch
 						+ "&style=full&maxRows=10";
 			} else if (_action == ServiceAction.ActionGetDistance) {
 				urlString = _actionURI;
+			} else if (_action == ServiceAction.ActionPostFBComment) {
+				urlString = _includeHost ? API.hostFbOpenGraph + _actionURI
+						: _actionURI;
+			} else if (_action == ServiceAction.ActionPostFBCheckBill) {
+				urlString = _includeHost ? API.hostFbOpenGraph + _actionURI
+						: _actionURI;
+			} else if (_action == ServiceAction.ActionPostFBCheckDiscountBill) {
+				urlString = _includeHost ? API.hostFbOpenGraph + _actionURI
+						: _actionURI;
+			} else if (_action == ServiceAction.ActionPostFBAdd) {
+				urlString = _includeHost ? API.hostFbOpenGraph + _actionURI
+						: _actionURI;
 			} else
 				urlString = _includeHost ? API.hostURL + _actionURI
 						: _actionURI;
@@ -491,10 +516,11 @@ public class Service implements Runnable {
 			} else {
 				request = new HttpPost(urlString);
 				if (_params != null) {
-					MultipartEntity reqEntity = paramsToList2(_params);  
-					   
-//					UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(
-//							paramsToList(_params), HTTP.UTF_8);
+					MultipartEntity reqEntity = paramsToList2(_params);
+
+					// UrlEncodedFormEntity formEntity = new
+					// UrlEncodedFormEntity(
+					// paramsToList(_params), HTTP.UTF_8);
 					((HttpPost) request).setEntity(reqEntity);
 				}
 			}
@@ -660,26 +686,27 @@ public class Service implements Runnable {
 		for (String key : params.keySet()) {
 			Object value = params.get(key);
 
-				if (value != null)
-					formList.add(new BasicNameValuePair(key, value.toString()));
-			}
+			if (value != null)
+				formList.add(new BasicNameValuePair(key, value.toString()));
+		}
 
 		return formList;
 	}
-	public static MultipartEntity paramsToList2(
-			Map<String, Object> params) {
+
+	public static MultipartEntity paramsToList2(Map<String, Object> params) {
 		MultipartEntity reqEntity = new MultipartEntity();
 		for (String key : params.keySet()) {
 			try {
 
 				Object value = params.get(key);
-				if(key.toUpperCase().equals("PHOTO")){
+				if (key.toUpperCase().equals("PHOTO")) {
 					reqEntity.addPart(key, (ContentBody) value);
-				}else{
+				} else {
 					Charset chars = Charset.forName("UTF-8");
-					reqEntity.addPart(key, new StringBody(value.toString(), chars));
+					reqEntity.addPart(key, new StringBody(value.toString(),
+							chars));
 				}
-				
+
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
@@ -688,6 +715,7 @@ public class Service implements Runnable {
 
 		return reqEntity;
 	}
+
 	public void getBusinessList(HashMap<String, String> params, String url) {
 		_action = ServiceAction.ActionGetBusinessList;
 		request(url, convert(params), true, false);
@@ -843,22 +871,23 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/profile/edit", params, true, false);
 	}
+
 	private HashMap<String, Object> convert(HashMap<String, String> params2) {
 		// TODO Auto-generated method stub
-		HashMap<String, Object > result = new HashMap<String, Object>();
+		HashMap<String, Object> result = new HashMap<String, Object>();
 		Set<Entry<String, String>> set = params2.entrySet();
 		Iterator<Entry<String, String>> interator = set.iterator();
 		while (interator.hasNext()) {
 			Entry<String, String> item = interator.next();
 			result.put(item.getKey(), item.getValue());
-			
+
 		}
 		return result;
 	}
 
 	public void pushNotification(String isReceiveNotify, String isShowFriend) {
 		// TODO Auto-generated method stub
-		// value is 0  or 1 for isReceivedNotify and isShowFriend
+		// value is 0 or 1 for isReceivedNotify and isShowFriend
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		_action = ServiceAction.ActionPushNotification;
 		params.put("token", WhyqApplication.Instance().getRSAToken());
@@ -868,14 +897,15 @@ public class Service implements Runnable {
 		params.put("is_show_friend", isReceiveNotify);
 		request("/m/member/setting/edit", params, true, false);
 	}
-	
-	public void registerDeviceToPushNotificationServer(String appName, String appVersion, String deviceName,String deviceModel,String  installationId,
-			String objectId) {
+
+	public void registerDeviceToPushNotificationServer(String appName,
+			String appVersion, String deviceName, String deviceModel,
+			String installationId, String objectId) {
 		// TODO Auto-generated method stub
-		// value is 0  or 1 for isReceivedNotify and isShowFriend
+		// value is 0 or 1 for isReceivedNotify and isShowFriend
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		_action = ServiceAction.ActionRegisterDeviceToPushServer;
-		params.put("token", ""+WhyqApplication.Instance().getRSAToken());
+		params.put("token", "" + WhyqApplication.Instance().getRSAToken());
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		params.put("appname", appName);
@@ -887,6 +917,7 @@ public class Service implements Runnable {
 		params.put("objectId", objectId);
 		request("/m/member/device/register", params, true, false);
 	}
+
 	public void searchOnlyFriend(SearchFriendCriteria criteria,
 			String encryptedToken, String key, String accessToken,
 			String oauth_token, String oauth_token_secret) {
@@ -956,7 +987,7 @@ public class Service implements Runnable {
 		request("/m/member/order/show", params, true, false);
 	}
 
-	public void getPaypalURI(String token, String billId ) {
+	public void getPaypalURI(String token, String billId) {
 		// TODO Auto-generat ed method stub
 		_action = ServiceAction.ActionGetPaypalURI;
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -964,16 +995,15 @@ public class Service implements Runnable {
 		params.put("bill_id", billId);
 		params.put("drt", "true");
 		params.put("currencyCode", "AUD");
-		if(Constants.isSaxbox)
-			params.put("env", Constants.isSaxbox?"dev":"live");
+		if (Constants.isSaxbox)
+			params.put("env", Constants.isSaxbox ? "dev" : "live");
 		params.put("app", Constants.APP);
-		
+
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/expressCheckout/set", params, true, false);
 	}
 
-	
-	public void acceptInvitation(String token, String userId){
+	public void acceptInvitation(String token, String userId) {
 		_action = ServiceAction.ActionAcceptInvitation;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", token);
@@ -982,7 +1012,8 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/friend/accept", params, true, false);
 	}
-	public void declineInvitation(String token, String userId){
+
+	public void declineInvitation(String token, String userId) {
 		_action = ServiceAction.ActionDeclineInvitation;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", token);
@@ -1002,19 +1033,90 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/friend/delete", params, true, false);
 	}
-	
-	public void pushOrderCheck(String rsaToken, String billId,String facebookId,String message,String image) {
+
+	public void pushOrderCheck(String rsaToken, String billId,
+			String facebookId, String message, String image) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionOrderCheck;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", rsaToken);
 		params.put("bill_id", billId);
-		if(facebookId!=null)
+		if (facebookId != null)
 			params.put("facebook_id ", facebookId);
 		params.put("message", message);
 		params.put("image", image);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/order/check", params, true, false);
+	}
+
+	public void postFBComments(String accessToken, ShareData data) {
+		Log.d("postFBComments","accessToken "+accessToken);
+		_action = ServiceAction.ActionPostFBComment;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("access_token", accessToken);
+		params.put("fb:explicitly_shared", true);
+		params.put("format", "json");
+		if(data.getPicture()!=null)
+			params.put("image[0][user_generated]", data.getPicture());
+		params.put("message", "" + data.getMessage());
+		params.put("place", data.getLink());
+		params.put("scrape", true);
+		params.put("sdk", "android");
+		params.put("sdk_version", 1);
+		params.put("venue", data.getLink());
+
+		request("/whyqapp:comment", params, true, false);
+	}
+
+	public void postFBCheckBill(String accessToken, ShareData data) {
+		_action = ServiceAction.ActionPostFBCheckBill;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("access_token", accessToken);
+		params.put("fb:explicitly_shared", true);
+		params.put("format", "json");
+		params.put("image[0][user_generated]", data.getPicture());
+		params.put("message", "" + data.getMessage());
+		params.put("place", data.getLink());
+		params.put("scrape", true);
+		params.put("sdk", "android");
+		params.put("sdk_version", 1);
+		params.put("venue", data.getLink());
+
+		request("/whyqapp:check_bill", params, true, false);
+	}
+
+	public void postFBCheckDiscountBill(String encryptedToken, ShareData data) {
+		_action = ServiceAction.ActionPostFBCheckDiscountBill;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("access_token", encryptedToken);
+		params.put("fb:explicitly_shared", true);
+		params.put("format", "json");
+		params.put("image[0][user_generated]", data.getPicture());
+		params.put("message", "" + data.getMessage());
+		params.put("place", data.getLink());
+		params.put("scrape", true);
+		params.put("sdk", "android");
+		params.put("sdk_version", 1);
+		params.put("venue", data.getLink());
+
+		request("/whyqapp:check_discount_bill", params, true, false);
+	}
+
+	public void postFBAdd(String encryptedToken, ShareData data) {
+		_action = ServiceAction.ActionPostFBAdd;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("access_token", encryptedToken);
+		params.put("fb:explicitly_shared", true);
+		params.put("format", "json");
+		params.put("image[0][user_generated]", data.getPicture());
+		params.put("message", "" + data.getMessage());
+		params.put("place", data.getLink());
+		params.put("scrape", true);
+		params.put("sdk", "android");
+		params.put("sdk_version", 1);
+		params.put("venue", data.getLink());
+
+		request("/whyqapp:add", params, true, false);
 	}
 }

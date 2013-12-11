@@ -29,5 +29,7 @@ public class API {
 	public static final String getNewPerm = hostURL + "/permservice/getnewperm";
 	public static final String follow  = hostURL + "/userservice/followuser";
 	public static final String deleteUrl  = hostURL + "/permservice/delete";
+
+	public static final String hostFbOpenGraph = "https://graph.facebook.com/me";
 	
 }
