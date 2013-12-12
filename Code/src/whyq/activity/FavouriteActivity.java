@@ -233,8 +233,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 				if((currentItem >=  totalItemCount-1) && !isLoadMore){
 					isLoadMore = true;
 					page++;
-					loadPermList = new LoadPermList(isSearch);
-					loadPermList.execute();;
+					exeListActivity(isSearch);
 				}
 			}
 		});
@@ -513,10 +512,12 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 						HashMap<String, String> postParams = new HashMap<String, String>();
 //						nameValuePairs.add(new BasicNameValuePair("token",enToken));
 						postParams.put("token", enToken);
-						postParams.put("page", ""+page);
+						if(isLoadMore)
+							postParams.put("page", ""+page);
 						postParams.put("longitude", longitude);
 						postParams.put("latitude", latgitude);
 						Log.d("Favourite","Favourite is search"+isSearch);
+						Log.d("Favourite","page"+page);
 						if(isSearch){
 //							nameValuePairs.add(new BasicNameValuePair("key", searchKey));
 //							nameValuePairs.add(new BasicNameValuePair("search_longitude", longitude));
@@ -760,7 +761,14 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		if(result.isSuccess()&& result.getAction() == ServiceAction.ActionGetBusinessList){
 			ResponseData data = (ResponseData)result.getData();
 			if(data.getStatus().equals("200")){
-				permListMain = (ArrayList<Store>)data.getData();
+				if(isLoadMore){if(permListMain==null){
+					permListMain = new ArrayList<Store>();
+				}
+					permListMain.addAll((ArrayList<Store>)data.getData());
+				}else{
+					permListMain = (ArrayList<Store>)data.getData();	
+				}
+				
 				loadPerms();
 				
 				WhyqListController.isLoading = false;

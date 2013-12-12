@@ -10,6 +10,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
+import whyq.activity.FavouriteActivity.LoadPermList;
 import whyq.adapter.ExpandableStoreAdapter;
 import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
@@ -195,6 +196,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	private TextView tvNodata;
 	private TextView tvNumberResult;
 	private TextView tvTextSearch;
+	private int page = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -359,6 +361,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	}
 	protected void exeSearch(String string, boolean isExpandable) {
 		// TODO Auto-generated method stub
+		page  = 0;
 		isExpandableSearch = isExpandable;
 		searchKey = string;
 		isSearch = true;
@@ -575,6 +578,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			ArrayList<Store> permList = null;
 			try {			
 				Log.d("LoadPermList","lat "+latgitude);
+				Log.d("load perm ",nextItem+" is nextItem and page is "+page);
 				if (nextItem != -1) {
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("nextItem", String.valueOf(nextItem)));
@@ -589,6 +593,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 						postParams.put("token", enToken);
 						postParams.put("longitude", longitude);
 						postParams.put("latitude", latgitude);
+						postParams.put("page", ""+page );
+						
 						if(filterType.equals("1")){
 							
 						}else if(filterType.equals("2")){
@@ -631,6 +637,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 						
 						postParams.put("longitude", longitude);
 						postParams.put("latitude", latgitude);
+						postParams.put("page", ""+page );
 						if(filterType.equals("1")){
 							
 						}else if(filterType.equals("2")){
@@ -887,6 +894,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 					exeDisableSearchFocus();
 					isSearch = false;
 					exeDisableSearchFocus();
+					page = 0;
 					exeListActivity(false);
 					
 				}else{
@@ -904,6 +912,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	private String currentStoreId;
 	private int mPosition;
 	private int mOffset;
+	private boolean isLoadMore = false;
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
 	    if(hasFocus){
@@ -1090,12 +1099,24 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			ResponseData data = (ResponseData)result.getData();
 			if(data.getStatus().equals("200")){
 				if(isExpandableSearch){
-					permListMain = (ArrayList<Store>)data.getData();
+					if(isLoadMore){
+						permListMain.addAll((ArrayList<Store>)data.getData());
+					}else{
+						permListMain = (ArrayList<Store>)data.getData();	
+					}
+					
 					exeBindSearchExpandableStoreData(permListMain);
 					isExpandableSearch = false;
 				}else{
 					showSearchExpandableList(false);
-					permListMain = (ArrayList<Store>)data.getData();
+					if(isLoadMore){
+						if(permListMain==null){
+							permListMain = new ArrayList<Store>();
+						}
+						permListMain.addAll((ArrayList<Store>)data.getData());
+					}else{
+						permListMain = (ArrayList<Store>)data.getData();	
+					}
 					loadPerms();
 					
 					WhyqListController.isLoading = false;
@@ -1112,6 +1133,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 					exeBindSearchExpandableStoreData(permListMain);
 					isExpandableSearch = false;
 				}
+				if(isLoadMore)
+					page--;
 			}else{
 //				Util.showDialog(getParent(), data.getMessage());
 			}
@@ -1147,6 +1170,8 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 			Toast.makeText(context, "Can get data for now", Toast.LENGTH_SHORT).show();
 			hideProgress();
 		}
+		if(isLoadMore)
+			isLoadMore = false;
 	}
 	private void updateFavoriteWitId(String id, boolean b) {
 		// TODO Auto-generated method stub
@@ -1179,6 +1204,16 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+   
+    	int currentItem = firstVisibleItem + visibleItemCount;
+		Log.d("onScroll","onScroll current "+currentItem+" and total "+totalItemCount);
+		if((currentItem >=  totalItemCount-1) && !isLoadMore){
+			isLoadMore = true;
+			page++;
+			loadPermList = new LoadPermList(isSearch);
+			loadPermList.execute();;
+		}
+    
     }
 
     @Override
