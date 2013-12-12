@@ -382,7 +382,7 @@ public class ListDetailActivity extends FragmentActivity implements
 			}
 			// UrlImageViewHelper.setUrlDrawable(imgView, store.getPhotos());
 			if (!store.getCountFavaouriteMember().equals("0")) {
-				tvCommendRever.setText(store.getCountFavaouriteMember()
+				tvCommendRever.setText(store.getCountComment()
 						+ " comments");
 				tvCommendRever.setTextColor(getResources().getColor(
 						R.color.profifle_blue));

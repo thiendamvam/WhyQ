@@ -379,6 +379,7 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	@Override
 	protected void onResume() {
 		super.onResume();
+		page = 1;
 		if(!isFirst){
 			isFirst = true;
 			exeListActivity(false);

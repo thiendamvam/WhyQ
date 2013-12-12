@@ -49,7 +49,21 @@ public class Store implements Serializable{
 	private StoreInfo storeInfo;
 	private String minimum;
 	private boolean isPlace;
+	private String countComment;
+	private String hotelPlace;
 	
+	public String getCountComment() {
+		return countComment;
+	}
+	public void setCountComment(String countComment) {
+		this.countComment = countComment;
+	}
+	public String getHotelPlace() {
+		return hotelPlace;
+	}
+	public void setHotelPlace(String hotelPlace) {
+		this.hotelPlace = hotelPlace;
+	}
 	public Store() {
 		// TODO Auto-generated constructor stub
 	}

@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -36,7 +37,8 @@ public class CommentActivity extends ImageWorkerActivity {
 	private CommentAdapter mAdapter;
 	private RadioGroup mFilterLayout;
 	private String mStoreId;
-
+	private int page = 1;
+	private boolean isLoadMore = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,6 +75,29 @@ public class CommentActivity extends ImageWorkerActivity {
 		View filter = getLayoutInflater().inflate(R.layout.filter, null);
 		setExtraView(filter);
 //		getComments(false);
+		listview.setOnScrollListener(new AbsListView.OnScrollListener() {
+			
+		
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+				int currentItem = firstVisibleItem + visibleItemCount;
+				Log.d("onScroll","onScroll current "+currentItem+" and total "+totalItemCount);
+				if((currentItem >=  totalItemCount-1) && !isLoadMore){
+					isLoadMore = true;
+					page++;
+					getComments(false);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -80,12 +105,15 @@ public class CommentActivity extends ImageWorkerActivity {
 		// TODO Auto-generated method stub
 		Log.d("onResume","storeId "+mStoreId);
 		super.onResume();
+		page = 1;
 		getComments(false);
 	}
 	
 	private void getComments(boolean onlyFriend) {
 		setLoading(true);
-		getService().getComments(getEncryptedToken(), mStoreId, 1, 20,
+		if(!isLoadMore)
+			page = 1;
+		getService().getComments(getEncryptedToken(), mStoreId, page , 20,
 				onlyFriend);
 	}
 
@@ -117,8 +145,19 @@ public class CommentActivity extends ImageWorkerActivity {
 			
 			if (data.getStatus().equals("401")) {
 				Util.loginAgain(this, data.getStatus());
+			} if (data.getStatus().equals("204")) {
+				Util.loginAgain(this, data.getStatus());
+				isLoadMore = false;
+				page = 1;
 			} else {
-				mAdapter.setItems((List<Comment>) data.getData());
+				if(isLoadMore){
+					List<Comment> newData = mAdapter.getItems();
+					newData.addAll((List<Comment>) data.getData());
+					mAdapter.setItems(newData);
+				}else{
+					mAdapter.setItems((List<Comment>) data.getData());	
+				}
+				
 			}
 		}
 	}
@@ -146,6 +185,9 @@ public class CommentActivity extends ImageWorkerActivity {
 			notifyDataSetChanged();
 		}
 
+		public List<Comment> getItems(){
+			return mItems;
+		}
 		@Override
 		public int getCount() {
 			return mItems.size();

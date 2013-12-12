@@ -602,6 +602,7 @@ public class DataParser {
 					String nameCate = getValue(permElement, "name_cate");
 					String distance = getValue(permElement, "distance");
 					String description = getValue(permElement, "description");
+					String countComment = getValue(permElement, "count_comment");
 					item.setId(id);
 					item.setStoreId(storeId);
 					item.setAddress(address);
@@ -633,6 +634,7 @@ public class DataParser {
 					item.setDistance(distance);
 					item.setDiscription(description);
 					item.setPlace(isPlace);
+					item.setCountComment(countComment);
 					item.setMinimum(minimunTimeDeliver);
 					NodeList nodes = permElement.getElementsByTagName("user");
 					int lengthUser = nodes.getLength();
