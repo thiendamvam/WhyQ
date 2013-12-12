@@ -1,6 +1,7 @@
 package whyq.activity;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import whyq.WhyqApplication;
@@ -68,7 +69,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 	private ToggleButton tglShareWhyq;
 	private ToggleButton tgleShareFb;
 	private ProgressBar prgBar;
-	private String facebookIdTag;
+	private String facebookIdTag, facebookNameTag;
 	private Context context;
 	private boolean isComment;
 	private RelativeLayout rlTags;
@@ -81,6 +82,8 @@ public class WhyqShareActivity extends FragmentActivity implements
 	private Session session;
 	private boolean pendingRequest;
 	private boolean isSend;
+	private ArrayList<String> tagsList;
+	private boolean isTag = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_share);
 		context = this;
+		tagsList = new ArrayList<String>();
 		isComment = getIntent().getBooleanExtra("is_comment", false);
 		storeId = getIntent().getStringExtra("store_id");
 		BillPushNotification pushNotificationData = null;
@@ -129,6 +133,13 @@ public class WhyqShareActivity extends FragmentActivity implements
 			getStoreInfo();
 	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		Log.d("onResume","onResume");
+		isTag = false;
+		super.onResume();
+	}
 	private void getStoreInfo() {
 		// TODO Auto-generated method stub
 		setProgressBar(true);
@@ -145,7 +156,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 	}
 
 	public void onTag(View v) {
-		checkLoginFacebook(false);
+		checkLoginFacebook(false, true);
 	}
 
 	public void showTagDialog(String fbId) {
@@ -155,6 +166,10 @@ public class WhyqShareActivity extends FragmentActivity implements
 		// fragment.setArguments(bundle);
 		// getFragmentManager().beginTransaction().add(fragment,
 		// "add_tag").commit();
+		tagsList.clear();
+		facebookIdTag = "";
+		facebookNameTag = "";
+		isTag = true;
 		Intent i = new Intent(context, WhyqTagFriendsDialog.class);
 		i.putExtras(bundle);
 		startActivityForResult(i, TAG_FRIENDS);
@@ -173,33 +188,19 @@ public class WhyqShareActivity extends FragmentActivity implements
 			if (isComment) {
 				shareWhyq(null);
 			} else {
-				checkLoginFacebook(true);
+				shareWhyq(null);
+//				checkLoginFacebook(true, false);
 			}
 
 		}
+//		tagsList.clear();
+//		facebookIdTag= "";
+//		facebookNameTag = "";
 	}
 
-	private void checkLoginFacebook(final boolean isSend) {
+	private void checkLoginFacebook(final boolean isSend, boolean isTag) {
 		try {
-//			accessToken = getAccessToken();
-//			if (accessToken != null) {
-////				Facebook fb = new Facebook(Constants.FACEBOOK_APP_ID);
-////				fb.setAccessToken(accessToken);
-//				if (isSend) {
-//					shareWhyq(accessToken);
-//				} else {
-//					if (isComment) {
-//						exePostFacebook(accessToken);
-//					} else {
-//						showTagDialog(accessToken);
-//					}
-//				}
-//
-//			} else {
-//				SessionLoginFragment fragment = new SessionLoginFragment();
-//				getSupportFragmentManager().beginTransaction()
-//						.add(fragment, "login_facebook").commit();
-//			}
+
 			this.isSend = isSend;
 			session = Util.createSession();
 			if (session.isOpened()) {
@@ -209,10 +210,16 @@ public class WhyqShareActivity extends FragmentActivity implements
 					if (isComment) {
 						exePostFacebook(session.getAccessToken());
 					} else {
-						showTagDialog(session.getAccessToken());
+						if(isTag){
+							showTagDialog(session.getAccessToken());
+						}else{
+							exePostFacebook(session.getAccessToken());							
+						}
+						
+
 					}
 				}
-				pendingRequest = false;
+				
 			} else {
 				StatusCallback callback = new StatusCallback() {
 					public void call(Session session, SessionState state,
@@ -230,6 +237,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 				pendingRequest = true;
 				session.openForRead(new Session.OpenRequest(WhyqShareActivity.this)
 						.setCallback(callback));
+
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -260,14 +268,23 @@ public class WhyqShareActivity extends FragmentActivity implements
 		shareData.setCaption("");
 		shareData.setDescription("");
 		shareData.setLink(data.getLink());
-		shareData.setMessage(etMessage.getText().toString());
+		shareData.setMessage(etMessage.getText().toString().replace(facebookNameTag, ""));
 		shareData.setName("WHY Q");
 		shareData.setPicture(data.getImage());
 		shareData.setThumb("");
+		shareData.setTags(tagsList);
+		setProgressBar(true);
 //		shareHandler.postFacebook(accessToken, shareData);
 		Service service = new Service(WhyqShareActivity.this);
-		service.postFBComments(accessToken, shareData);
-		setProgressBar(true);
+		if(isComment){
+			service.postFBComments(accessToken, shareData);	
+		}else{
+			service.postFBCheckBill(accessToken, shareData);
+		}
+		
+		
+		
+		pendingRequest = false;
 	}
 
 	private String getAccessToken() {
@@ -284,7 +301,26 @@ public class WhyqShareActivity extends FragmentActivity implements
 		try {
 
 			Log.d("onActivityResult Join", "onActivityResult " + requestCode);
-			if (resultCode == RESULT_OK) {
+			 if (session
+						.onActivityResult(this, requestCode, resultCode, data)
+						&& pendingRequest && this.session.getState().isOpened()) {
+
+				Log.d("onActivityResult","isSend "+isSend);
+				if (isSend) {
+					shareWhyq(session.getAccessToken());
+				} else {
+					if (isComment) {
+						exePostFacebook(session.getAccessToken());
+					} else {
+						if(isTag ){
+							showTagDialog(session.getAccessToken());
+						}else{
+							exePostFacebook(session.getAccessToken());
+						}
+					}
+				}
+			
+			}else if (resultCode == RESULT_OK) {
 				if (requestCode == GET_IMAGE) {
 					avatarPath = data.getStringExtra("path");
 					Log.d("onActivityResult Join", "" + avatarPath);
@@ -300,26 +336,15 @@ public class WhyqShareActivity extends FragmentActivity implements
 				} else if (requestCode == TAG_FRIENDS) {
 					TransferData tfdata = (TransferData) data
 							.getSerializableExtra("data");
-					if (tfdata != null)
+					if (tfdata != null){
 						facebookIdTag = convertData(tfdata.getData());
-
+						facebookNameTag = convertFBNameData(tfdata.getData());
+						tagsList = convertDataToFBIDArray(tfdata.getData());
+					}
+//					shareWhyq(session.getAccessToken());
+					etMessage.setText("With "+facebookNameTag);
 				}
 				ImageActivity.imagePath = "";
-			}else if (session
-					.onActivityResult(this, requestCode, resultCode, data)
-					&& pendingRequest && this.session.getState().isOpened()) {
-
-				if (isSend) {
-					shareWhyq(session.getAccessToken());
-				} else {
-					if (isComment) {
-						exePostFacebook(session.getAccessToken());
-					} else {
-						showTagDialog(session.getAccessToken());
-					}
-				}
-				pendingRequest = false;
-			
 			}
 
 			
@@ -329,6 +354,8 @@ public class WhyqShareActivity extends FragmentActivity implements
 			e.printStackTrace();
 		}
 	}
+	
+	
 	@Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -353,7 +380,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 				if (data.getStatus().equals("200")) {
 					orderCheck = (OrderCheckData) data.getData();
 					if (tgleShareFb.isChecked())
-						exePostFacebook(session.getAccessToken());
+						checkLoginFacebook(false,false);
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(getParent(), data.getMessage());
 				} else if (data.getStatus().equals("204")) {
@@ -388,7 +415,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 							.show();
 					orderCheck = (OrderCheckData) data.getData();
 					if (tgleShareFb.isChecked())
-						checkLoginFacebook(false);
+						checkLoginFacebook(false, false);
 					// exePostFacebook(accessToken, responseData);
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(context, data.getMessage());
@@ -396,15 +423,17 @@ public class WhyqShareActivity extends FragmentActivity implements
 					// Util.showDialog(context, data.getMessage());
 				}
 			}
-		} else if (result.isSuccess()
-				&& result.getAction() == ServiceAction.ActionPostFBComment) {
+		} else if ((result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionPostFBComment)||((result.isSuccess()
+						&& result.getAction() == ServiceAction.ActionPostFBCheckBill))) {
 			setProgressBar(false);
 			boolean status = (Boolean) result.getData();
 			if(status){
 				Toast.makeText(context, "Posted to Facebook!", Toast.LENGTH_LONG).show();
 			}
-		} else if (!result.isSuccess()
-				&& result.getAction() == ServiceAction.ActionPostFBComment) {
+		} else if ((!result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionPostFBComment)||((result.isSuccess()
+						&& result.getAction() == ServiceAction.ActionPostFBCheckBill))) {
 			setProgressBar(false);
 			Toast.makeText(context, "Fail post to Facebook!", Toast.LENGTH_LONG).show();
 		}else if (!result.isSuccess()
@@ -440,12 +469,14 @@ public class WhyqShareActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		Log.d("onCompleted", "onCompleted(Object data) {" + data);
 		facebookIdTag = convertData(data);
+		facebookNameTag = convertFBNameData(data);
+		tagsList = convertDataToFBIDArray(data);
 		Toast.makeText(context, "Completed" + data, Toast.LENGTH_LONG).show();
 	}
 
 	private String convertData(Object data) {
 		// TODO Auto-generated method stub
-
+		facebookIdTag = "";
 		if (data != null) {
 			List<FriendFacebook> list = (List<FriendFacebook>) data;
 			String result = "";
@@ -459,10 +490,44 @@ public class WhyqShareActivity extends FragmentActivity implements
 			Log.d("convertData", "convertData" + result);
 			return result;
 		} else {
-			return null;
+			return "";
 		}
 	}
-
+	
+	private ArrayList<String> convertDataToFBIDArray(Object data) {
+		// TODO Auto-generated method stub
+		tagsList.clear();
+		if (data != null) {
+			List<FriendFacebook> list = (List<FriendFacebook>) data;
+			for (int i = 0; i < list.size(); i++) {
+				FriendFacebook item = list.get(i);
+				tagsList.add(item.getFacebookId());
+			}
+			Log.d("convertData", "convertData" + tagsList);
+			return tagsList;
+		} else {
+			return tagsList;
+		}
+	}
+	private String convertFBNameData(Object data) {
+		// TODO Auto-generated method stub
+		facebookNameTag = "";
+		if (data != null) {
+			List<FriendFacebook> list = (List<FriendFacebook>) data;
+			String result = "";
+			for (int i = 0; i < list.size(); i++) {
+				FriendFacebook item = list.get(i);
+				if (i == 0)
+					result += "" + item.getFirstName();
+				else
+					result += "," + item.getFirstName();
+			}
+			Log.d("convertData", "convertData" + result);
+			return result;
+		} else {
+			return "";
+		}
+	}
 //	// Oncompleted will be call when login facebook successful
 //	@Override
 //	public void onCompled(boolean b) {

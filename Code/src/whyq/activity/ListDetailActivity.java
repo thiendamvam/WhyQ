@@ -577,7 +577,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private void bindFriend() {
 		// TODO Auto-generated method stub
 		service.getUserCheckedBills(WhyqApplication.Instance().getRSAToken(),
-				store.getId(), null);
+				store.getStoreId(), null);
 		showDialog();
 	}
 
@@ -917,7 +917,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		Intent intent = new Intent(ListDetailActivity.this,
 				WhyQBillScreen.class);
 
-		bundle.putString("store_id", store.getId());
+		bundle.putString("store_id", store.getStoreId());
 		bundle.putString("list_items", getListItem());
 		bundle.putString("lat", "" + store.getLatitude());
 		bundle.putString("lon", "" + store.getLongitude());
@@ -1130,7 +1130,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	protected void exeSearchUserChecked(String text) {
 		// TODO Auto-generated method stub
 		service.getUserCheckedBills(WhyqApplication.Instance().getRSAToken(),
-				store.getId(), text);
+				store.getStoreId(), text);
 		showDialog();
 	}
 

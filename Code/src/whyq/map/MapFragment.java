@@ -637,7 +637,7 @@ public class MapFragment extends Fragment implements
 				Log.d("fdsfsfsdfs","fdsfsdfsf");
 				Intent intent = new Intent(context, ListDetailActivity.class);
 				intent.putExtra("store_id", ListActivity.storeId);
-				intent.putExtra("id", store.getId());
+				intent.putExtra("id", store.getStoreId());
 				context.startActivity(intent);
 			}
 		});

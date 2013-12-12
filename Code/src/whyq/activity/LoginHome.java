@@ -148,6 +148,7 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 					pendingRequest = true;
 					session.openForRead(new Session.OpenRequest(LoginHome.this)
 							.setCallback(callback));
+					
 				}
 			}
 		});

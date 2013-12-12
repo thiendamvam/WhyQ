@@ -40,6 +40,7 @@ import org.apache.http.params.HttpParams;
 import whyq.WhyqApplication;
 import whyq.activity.ListDetailActivity;
 import whyq.interfaces.IServiceListener;
+import whyq.model.FriendFacebook;
 import whyq.model.SearchFriendCriteria;
 import whyq.model.ShareData;
 import whyq.utils.API;
@@ -1044,7 +1045,18 @@ public class Service implements Runnable {
 		if (facebookId != null)
 			params.put("facebook_id ", facebookId);
 		params.put("message", message);
-		params.put("image", image);
+		try {
+			File file = new File(image);
+			if (file.exists()) {
+				FileBody encFile = new FileBody(file, "image/png");
+				params.put("photo", encFile);
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+//		params.put("image", image);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/order/check", params, true, false);
@@ -1058,7 +1070,7 @@ public class Service implements Runnable {
 		params.put("fb:explicitly_shared", true);
 		params.put("format", "json");
 		if(data.getPicture()!=null)
-			params.put("image[0][user_generated]", data.getPicture());
+			params.put("image[0][url]", data.getPicture());
 		params.put("message", "" + data.getMessage());
 		params.put("place", data.getLink());
 		params.put("scrape", true);
@@ -1075,15 +1087,57 @@ public class Service implements Runnable {
 		params.put("access_token", accessToken);
 		params.put("fb:explicitly_shared", true);
 		params.put("format", "json");
-		params.put("image[0][user_generated]", data.getPicture());
-		params.put("message", "" + data.getMessage());
+		params.put("image[0][url]", data.getPicture());
+		params.put("message", data.getMessage()+ " " + convertArrayToFBArray(data.getTags()));
 		params.put("place", data.getLink());
 		params.put("scrape", true);
 		params.put("sdk", "android");
 		params.put("sdk_version", 1);
+		params.put("tags", convertArrayToString(data.getTags()));
 		params.put("venue", data.getLink());
 
 		request("/whyqapp:check_bill", params, true, false);
+	}
+
+	private String convertArrayToString(ArrayList<String> data) {
+		// TODO Auto-generated method stub
+		if (data != null) {
+			List<String> list = (List<String>) data;
+			String result = "";
+			for (int i = 0; i < list.size(); i++) {
+				String item = "";
+				item = list.get(i);
+				if (i == 0)
+					result += "" + item;
+				else
+					result += "," + item;
+			}
+			Log.d("convertArrayToString", "result" + result);
+			return result;
+		} else {
+			return null;
+		}
+	}
+	
+	private String convertArrayToFBArray(ArrayList<String> data) {
+		// TODO Auto-generated method stub
+		if (data != null) {
+			ArrayList<String> list = (ArrayList<String>) data;
+			String result = "";
+			for (int i = 0; i < list.size(); i++) {
+				String item = "";
+				item = list.get(i);
+				item="@["+item+"]";
+				if (i == 0)
+					result += "" + item;
+				else
+					result += "," + item;
+			}
+			Log.d("convertArrayToString", "result" + result);
+			return result;
+		} else {
+			return "";
+		}
 	}
 
 	public void postFBCheckDiscountBill(String encryptedToken, ShareData data) {
@@ -1092,7 +1146,7 @@ public class Service implements Runnable {
 		params.put("access_token", encryptedToken);
 		params.put("fb:explicitly_shared", true);
 		params.put("format", "json");
-		params.put("image[0][user_generated]", data.getPicture());
+		params.put("image[0][url]", data.getPicture());
 		params.put("message", "" + data.getMessage());
 		params.put("place", data.getLink());
 		params.put("scrape", true);
@@ -1109,7 +1163,7 @@ public class Service implements Runnable {
 		params.put("access_token", encryptedToken);
 		params.put("fb:explicitly_shared", true);
 		params.put("format", "json");
-		params.put("image[0][user_generated]", data.getPicture());
+		params.put("image[0][url]", data.getPicture());
 		params.put("message", "" + data.getMessage());
 		params.put("place", data.getLink());
 		params.put("scrape", true);

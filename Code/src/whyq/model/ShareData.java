@@ -1,13 +1,14 @@
 package whyq.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class ShareData implements Serializable {
 
 	private String name;
 	private String message;
 	private String picture;
-
+	private ArrayList<String> tags;
 	public String getName() {
 		return name;
 	}
@@ -63,6 +64,20 @@ public class ShareData implements Serializable {
 
 	public void setThumb(String thumb) {
 		this.thumb = thumb;
+	}
+
+	/**
+	 * @return the tags
+	 */
+	public ArrayList<String> getTags() {
+		return tags;
+	}
+
+	/**
+	 * @param tags the tags to set
+	 */
+	public void setTags(ArrayList<String> tags) {
+		this.tags = tags;
 	}
 
 	private String description;

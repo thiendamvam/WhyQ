@@ -169,7 +169,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					return footerView;
 				}
 				final Store store = items.get(position);
-				final String viewId = store.getId();
+				final String viewId = store.getStoreId();
 				if(viewId == null || viewId.length() == 0) {
 					return createNullView();
 				}
@@ -269,7 +269,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 							Log.d("fdsfsfsdfs","fdsfsdfsf");
 							Intent intent = new Intent(context, ListDetailActivity.class);
 							intent.putExtra("store_id", ListActivity.storeId);
-							intent.putExtra("id", store.getId());
+							intent.putExtra("id", store.getStoreId());
 							context.startActivity(intent);
 						}
 					});
@@ -280,7 +280,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					viewHolder.imgFavouriteThumb.setTag(item);
 					viewHolder.btnDistance.setTag(item);
 					rowView.setEnabled(true);
-					viewList.put(store.getId(), rowView);
+					viewList.put(store.getStoreId(), rowView);
 					return rowView;
 				}
 			}
@@ -504,7 +504,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 						HttpPermUtils util = new HttpPermUtils();
 						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair("cmnt", cmText ) );
-						nameValuePairs.add(new BasicNameValuePair("pid", store.getId() ) );
+						nameValuePairs.add(new BasicNameValuePair("pid", store.getStoreId() ) );
 						nameValuePairs.add(new BasicNameValuePair("uid", user.getId() ) );
 						String response  = util.sendRequest(API.commentUrl, nameValuePairs, false);
 						
@@ -523,7 +523,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 			  				dialog.dismiss();
 			  				Toast.makeText(context,"Added comment!",Toast.LENGTH_LONG).show();
 			  				int position = items.indexOf(store);			  				
-			  				Comment comment = new Comment(store.getId(), cmText);
+			  				Comment comment = new Comment(store.getStoreId(), cmText);
 			  				comment.setUser(user);
 			  				//perm.addCommnent(comment);
 //			  				items.get(position).addCommnent(comment);
@@ -632,13 +632,13 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 	}
 	
 	public boolean isPermDuplicate(Store store) {
-		if(store == null || store.getId() == null) {
+		if(store == null || store.getStoreId() == null) {
 			return false;
 		}
 		for(int i = 0; i < items.size(); i++) {
 			Store permItem = items.get(i);
-			if(permItem != null && permItem.getId() != null) {
-				if(permItem.getId().equals(store.getId())) {
+			if(permItem != null && permItem.getStoreId() != null) {
+				if(permItem.getStoreId().equals(store.getStoreId())) {
 					return true;
 				}
 			}
@@ -710,7 +710,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 //			bundle.putString("thumbnail", store.getLogo());
 //			googleMap.putExtra("locationData", bundle);
 //			//Log.d("AA+++++============","========="+perm.getImage().getUrl());
-//			View view2 = ListActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+store.getId(), googleMap).getDecorView();
+//			View view2 = ListActivityGroup.group.getLocalActivityManager().startActivity( "GoogleMapActivity"+store.getStoreId(), googleMap).getDecorView();
 //			ListActivityGroup.group.replaceView(view2);
 //
 //		}	

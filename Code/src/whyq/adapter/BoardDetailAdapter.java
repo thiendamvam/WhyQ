@@ -78,7 +78,7 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 				if (user != null && store != null) {
 					HttpPermUtils httpPermUtils = new HttpPermUtils();
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("pid", String.valueOf(store.getId())));
+					nameValuePairs.add(new BasicNameValuePair("pid", String.valueOf(store.getStoreId())));
 					nameValuePairs.add(new BasicNameValuePair("uid", String.valueOf(user.getId()))); 
 					httpPermUtils.sendRequest(API.likeURL, nameValuePairs, false);
 //					if (v instanceof Button) {
@@ -115,7 +115,7 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 				if (store != null) {
 					
 					Intent myIntent = new Intent(view.getContext(), NewWhyqActivity.class);
-					myIntent.putExtra("permID", (String) store.getId() );
+					myIntent.putExtra("permID", (String) store.getStoreId() );
 					View repermView = ProfileActivityGroup.group.getLocalActivityManager() .startActivity("RepermActivity", myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
 					ProfileActivityGroup.group.replaceView( repermView );
 					
@@ -150,7 +150,7 @@ public class BoardDetailAdapter extends BaseAdapter implements ListAdapter {
 //				bundle.putString("thumbnail", store.getLogo());
 //				googleMap.putExtra("locationData", bundle);
 //				//Log.d("AA+++++============","========="+perm.getImage().getUrl());
-//				View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "PrGoogleMapActivity"+store.getId(), googleMap).getDecorView();
+//				View view = ProfileActivityGroup.group.getLocalActivityManager().startActivity( "PrGoogleMapActivity"+store.getStoreId(), googleMap).getDecorView();
 //				ProfileActivityGroup.group.replaceView(view);	
 			}
 		});

@@ -116,7 +116,7 @@ public class ExpandableStoreAdapter extends BaseExpandableListAdapter {
 		// TODO Auto-generated method stub
 		View view = arg3;
 		final Store store = mGroupCollection.get(arg0).getStoriesList().get(arg1);
-		final String viewId = store.getId();
+		final String viewId = store.getStoreId();
 
 		currentPermId = viewId;
 		convertView = viewList.get(viewId);
@@ -217,7 +217,7 @@ public class ExpandableStoreAdapter extends BaseExpandableListAdapter {
 					Log.d("fdsfsfsdfs","fdsfsdfsf");
 					Intent intent = new Intent(context, ListDetailActivity.class);
 					intent.putExtra("store_id", ListActivity.storeId);
-					intent.putExtra("id", store.getId());
+					intent.putExtra("id", store.getStoreId());
 					context.startActivity(intent);
 				}
 			});
@@ -228,7 +228,7 @@ public class ExpandableStoreAdapter extends BaseExpandableListAdapter {
 			viewHolder.imgFavouriteThumb.setTag(store);
 			viewHolder.btnDistance.setTag(store);
 			rowView.setEnabled(true);
-			viewList.put(store.getId(), rowView);
+			viewList.put(store.getStoreId(), rowView);
 			return rowView;
 			}
 

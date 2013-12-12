@@ -243,6 +243,8 @@ public class WhyqTagFriendsDialog extends FragmentActivity {
 		Log.d("onChecked","onChecked"+cbx.isChecked());
 		if(cbx.isChecked()){
 			friendTagList.add((FriendFacebook)v.getTag());
+		}else{
+			friendTagList.remove((FriendFacebook)v.getTag());
 		}
 	}
 	
