@@ -1024,9 +1024,9 @@ public class ListDetailActivity extends FragmentActivity implements
 			value = 0;
 		if (totalValue < 0)
 			totalValue = 0;
-		holder.tvCount.setText("" + value);
+		holder.tvCount.setText("" + String.format("%.2f", value));
 		holder.tvCount.requestLayout();
-		btnTotalValue.setText("" + totalValue);
+		btnTotalValue.setText("" + String.format("%.2f", totalValue));
 		checkCommentView(totalValue);
 	}
 

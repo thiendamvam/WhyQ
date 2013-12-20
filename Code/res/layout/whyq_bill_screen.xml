@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
     android:background="@color/white"
+    android:baselineAligned="false"
     android:orientation="vertical"
     android:weightSum="10" >
 
@@ -18,152 +18,158 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
         android:layout_weight="1"
-        android:background="@drawable/bg_bill"
-        android:baselineAligned="false"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:weightSum="14" >
+        android:background="@color/white"
+        android:baselineAligned="false" >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/transparent"
-            android:padding="0dp" >
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bill"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:weightSum="14" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="10" >
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:padding="0dp" >
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="10" >
 
-                    <ImageView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/icon_status_gray"
-                        android:padding="3dp" />
+                        android:layout_weight="4" >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/icon_status_gray"
+                            android:padding="3dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical"
+                        android:text="Price"
+                        android:textColor="@android:color/background_dark" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical"
+                        android:text="Unit"
+                        android:textColor="@android:color/background_dark" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical"
+                        android:text="Amount"
+                        android:textColor="@android:color/background_dark" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/lvBill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:divider="@color/transparent"
+                android:dividerHeight="0dp" >
+            </ListView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:weightSum="4" >
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="Price"
+                    android:text="Subtotal:" />
+
+                <TextView
+                    android:id="@+id/tvTotal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="10dp"
+                    android:text="$0.0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:weightSum="4" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Discount:" />
+
+                <TextView
+                    android:id="@+id/tvDiscount"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="10dp"
+                    android:text="$0.0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:weightSum="2" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Total:"
                     android:textColor="@android:color/background_dark" />
 
                 <TextView
+                    android:id="@+id/tvTotalafterDiscount"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center_vertical"
-                    android:text="Unit"
-                    android:textColor="@android:color/background_dark" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center_vertical"
-                    android:text="Amount"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:text="$0.0"
                     android:textColor="@android:color/background_dark" />
             </LinearLayout>
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/lvBill"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:divider="@color/transparent"
-            android:dividerHeight="0dp"
-            android:layout_weight="10" >
-        </ListView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:weightSum="4" >
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="Subtotal:" />
-
-            <TextView
-                android:id="@+id/tvTotal"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical|right"
-                android:paddingRight="10dp"
-                android:text="$0.0" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:weightSum="4" >
-
-            <TextView
-                android:layout_width="0dp"
-                android:gravity="center_vertical"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Discount:" />
-
-            <TextView
-                android:id="@+id/tvDiscount"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical|right"
-                android:paddingRight="10dp"
-                android:text="$0.0" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:weightSum="2" >
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="Total:"
-                android:textColor="@android:color/background_dark" />
-
-            <TextView
-                android:id="@+id/tvTotalafterDiscount"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical|right"
-                android:text="$0.0"
-                android:textColor="@android:color/background_dark" />
         </LinearLayout>
     </LinearLayout>
 

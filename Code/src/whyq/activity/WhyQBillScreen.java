@@ -104,14 +104,14 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 	private void bindBillValue() {
 		// TODO Auto-generated method stub
 		
-		tvTotal.setText("$"+totalValue);
+		tvTotal.setText("$"+String.format("%.2f",totalValue));
 		if(valueDiscount!=0)
-			tvDiscount.setText("%"+ valueDiscount*100);
+			tvDiscount.setText("%"+ Float.parseFloat(String.format("%.2f", valueDiscount))*100);
 		if(valueDiscount!=0)
 			totalafterDiscount = (float)(totalValue*valueDiscount);
 		else
 			totalafterDiscount = totalValue;
-		tvTotalAfterDiscount.setText("$"+totalafterDiscount);
+		tvTotalAfterDiscount.setText("$"+String.format("%.2f", totalafterDiscount));
 	}
 	private void getValue(ArrayList<Bill> listBill2) {
 		// TODO Auto-generated method stub
