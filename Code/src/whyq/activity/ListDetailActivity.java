@@ -448,8 +448,12 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	private void getDetailData() {
 		// TODO Auto-generated method stub
-		showDialog();
-		service.getBusinessDetail(id);
+		if(Util.checkInternetConnection()){
+			showDialog();
+			service.getBusinessDetail(id);
+		}else{
+			Util.showNetworkError(context);
+		}
 	}
 
 	private void showDialog() {
@@ -483,11 +487,15 @@ public class ListDetailActivity extends FragmentActivity implements
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(context, data.getMessage());
 				} else {
-					// Util.showDialog(context, data.getMessage());
+					 Util.showDialog(context, data.getMessage());
+					 finish();
 				}
 			}
 
-		} else if (result.isSuccess()
+		} else if (result.getAction() == ServiceAction.ActionGetBusinessDetail) {
+			Toast.makeText(context, "Can not get store detail for now", Toast.LENGTH_LONG).show();
+			finish();
+		}else if (result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionPostFavorite) {
 			// Toast.makeText(context, "Favourite successfully",
 			// Toast.LENGTH_SHORT).show();

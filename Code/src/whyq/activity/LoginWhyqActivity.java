@@ -99,31 +99,29 @@ public class LoginWhyqActivity extends Activity implements Login_delegate,
 		// Login button
 		login.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (checkInputData()) {
-					showDialog();
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
-							8);
-					HashMap<String, String> params = new HashMap<String, String>();
-					// nameValuePairs.add(new BasicNameValuePair("type",
-					// Constants.LOGIN_TYPE));
-					// nameValuePairs.add(new BasicNameValuePair("oauth_token",
-					// ""));
-					nameValuePairs.add(new BasicNameValuePair("email", email
-							.getText().toString()));
-					String pass = null;
-					try {
-						RSA rsa = new RSA();
-						pass = rsa.RSAEncrypt(password.getText().toString());
-					} catch (Exception e) {
-						// TODO: handle exception
+				if(Util.checkInternetConnection()){
+
+					if (checkInputData()) {
+						showDialog();
+						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+								8);
+						HashMap<String, String> params = new HashMap<String, String>();
+						nameValuePairs.add(new BasicNameValuePair("email", email
+								.getText().toString()));
+						String pass = null;
+						try {
+							RSA rsa = new RSA();
+							pass = rsa.RSAEncrypt(password.getText().toString());
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+						nameValuePairs
+								.add(new BasicNameValuePair("password", pass));
+						service.loginWhyq(email.getText().toString(), pass);
 					}
-					nameValuePairs
-							.add(new BasicNameValuePair("password", pass));
-					// AuthorizeController authorizeController = new
-					// AuthorizeController(LoginWhyqActivity.this);
-					// authorizeController.authorize(v.getContext(),
-					// nameValuePairs);
-					service.loginWhyq(email.getText().toString(), pass);
+				
+				}else{
+					Util.showNetworkError(context);
 				}
 			}
 

@@ -87,68 +87,35 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 			
 
 			public void onClick(final View v) {
-				// TODO Auto-generated method stub
+				if(Util.checkInternetConnection()){
 
-				// Facebook mFacebook;
-				// String token = null;
-				// mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
-				// final Activity activity = LoginHome.this;
-				// mFacebook.authorize(activity, new String[] { "email",
-				// "status_update", "user_birthday" },
-				// new DialogListener() {
-				// @Override
-				// public void onComplete(Bundle values) {
-				// // Log.d("", "=====>"+values.toString());
-				// WhyqUtils permutils = new WhyqUtils();
-				// String accessToken = values
-				// .getString(Facebook.TOKEN);
-				// permutils.saveFacebookToken("oauth_token",
-				// accessToken, getApplication());
-				// // // Check on server
-				// HashMap<String, String> params = new HashMap<String,
-				// String>();
-				// params.put("access_token", accessToken);
-				// exeLoginFacebook(accessToken);
-				// // exeSendMessage(true, params);
-				// }
-				//
-				// @Override
-				// public void onFacebookError(FacebookError error) {
-				//
-				// }
-				//
-				// @Override
-				// public void onError(DialogError e) {
-				//
-				// }
-				//
-				// @Override
-				// public void onCancel() {
-				// // cancel press or back press
-				// }
-				// });
+					// TODO Auto-generated method stub
 
-				session = Util.createSession();
-				if (session.isOpened()) {
-					exeLoginFacebook(session.getAccessToken());
-				} else {
-					StatusCallback callback = new StatusCallback() {
-						public void call(Session session, SessionState state,
-								Exception exception) {
-							if (exception != null) {
-								new AlertDialog.Builder(context)
-										.setTitle(R.string.login_text1)
-										.setMessage(exception.getMessage())
-										.setPositiveButton(R.string.ok, null)
-										.show();
-								session = Util.createSession();
+					session = Util.createSession();
+					if (session.isOpened()) {
+						exeLoginFacebook(session.getAccessToken());
+					} else {
+						StatusCallback callback = new StatusCallback() {
+							public void call(Session session, SessionState state,
+									Exception exception) {
+								if (exception != null) {
+									new AlertDialog.Builder(context)
+											.setTitle(R.string.login_text1)
+											.setMessage(exception.getMessage())
+											.setPositiveButton(R.string.ok, null)
+											.show();
+									session = Util.createSession();
+								}
 							}
-						}
-					};
-					pendingRequest = true;
-					session.openForRead(new Session.OpenRequest(LoginHome.this)
-							.setCallback(callback));
-					
+						};
+						pendingRequest = true;
+						session.openForRead(new Session.OpenRequest(LoginHome.this)
+								.setCallback(callback));
+						
+					}
+				
+				}else{
+					Util.showNetworkError(context);
 				}
 			}
 		});
@@ -157,19 +124,25 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 		twitterLogin.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				isTwitter = true;
-				SharedPreferencesManager shareManager = new SharedPreferencesManager(
-						WhyqApplication.Instance().getApplicationContext());
-				AccessToken a = shareManager.loadTwitterToken();
-				if (a != null) {
-					String token = a.getToken();
-					String tokenSecret = a.getTokenSecret();
-					exeLoginTwitter(token, tokenSecret);
-				} else {
-					Intent i = new Intent(LoginHome.this, TwitterActivity.class);
-					startActivityForResult(i, LOGIN_TWITTER);
-				}
+				if(Util.checkInternetConnection()){
 
+					isTwitter = true;
+					SharedPreferencesManager shareManager = new SharedPreferencesManager(
+							WhyqApplication.Instance().getApplicationContext());
+					AccessToken a = shareManager.loadTwitterToken();
+					if (a != null) {
+						String token = a.getToken();
+						String tokenSecret = a.getTokenSecret();
+						exeLoginTwitter(token, tokenSecret);
+					} else {
+						Intent i = new Intent(LoginHome.this, TwitterActivity.class);
+						startActivityForResult(i, LOGIN_TWITTER);
+					}
+
+				
+				}else{
+					Util.showNetworkError(context);
+				}
 			}
 		});
 

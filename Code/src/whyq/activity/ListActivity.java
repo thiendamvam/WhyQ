@@ -474,9 +474,14 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	
 	private void exeGetBusinessList() {
 		// TODO Auto-generated method stub
-		getLocation();
-		loadPermList = new LoadPermList(isSearch);
-		loadPermList.execute();
+
+		if(Util.checkInternetConnection()){
+			getLocation();
+			loadPermList = new LoadPermList(isSearch);
+			loadPermList.execute();
+		}else{
+			Util.showNetworkError(context);
+		}
 	}
 
 
