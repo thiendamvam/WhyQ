@@ -40,6 +40,7 @@ import org.json.JSONObject;
 
 import whyq.WhyqApplication;
 import whyq.activity.LoginHome;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -73,6 +74,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.facebook.Session;
@@ -393,13 +395,13 @@ public class Util {
 				.getSystemService(Context.LOCATION_SERVICE);
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {// ||
 																				// locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-		// Toast.makeText(context, "GPS is Enabled in your devide",
-		// Toast.LENGTH_SHORT).show();
+			// Toast.makeText(context, "GPS is Enabled in your devide",
+			// Toast.LENGTH_SHORT).show();
 			return true;
 		} else {
-//			turnGPSOn();
-//			turnGPSOff();
-//			showGPSDisabledAlertToUser(context);
+			// turnGPSOn();
+			// turnGPSOff();
+			// showGPSDisabledAlertToUser(context);
 			return false;
 		}
 	}
@@ -535,7 +537,8 @@ public class Util {
 		}
 
 	}
-//
+
+	//
 	public static void turnGPSOn() {
 
 		Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
@@ -572,35 +575,36 @@ public class Util {
 
 	public static void generateKeyHash(Context context) {
 		// TODO Auto-generated method stub
-        try {
-            PackageInfo info = context.getPackageManager().getPackageInfo(
-                    "com.whyq", 
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-                }
-        } catch (NameNotFoundException e) {
+		try {
+			PackageInfo info = context.getPackageManager().getPackageInfo(
+					"com.whyq", PackageManager.GET_SIGNATURES);
+			for (Signature signature : info.signatures) {
+				MessageDigest md = MessageDigest.getInstance("SHA");
+				md.update(signature.toByteArray());
+				Log.d("KeyHash:",
+						Base64.encodeToString(md.digest(), Base64.DEFAULT));
+			}
+		} catch (NameNotFoundException e) {
 
-        } catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 
-        }
+		}
 	}
 
-	public static Bitmap getBitmapFromFile( String photoFile) {
+	public static Bitmap getBitmapFromFile(String photoFile) {
 		// TODO Auto-generated method stub
 		File file = new File(photoFile);
 		InputStream in;
 		try {
-			if(file.exists()){
+			if (file.exists()) {
 				in = new FileInputStream(file);
 				BufferedInputStream bfInputStream = new BufferedInputStream(in);
 				Options options = new Options();
-				options.inSampleSize= 4;
+				options.inSampleSize = 4;
 				options.inScaled = true;
 				Rect rect = new Rect(0, 0, 0, 0);
-				Bitmap bm = BitmapFactory.decodeStream(bfInputStream,rect,options);
+				Bitmap bm = BitmapFactory.decodeStream(bfInputStream, rect,
+						options);
 				return bm;
 			}
 		} catch (FileNotFoundException e) {
@@ -608,15 +612,31 @@ public class Util {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 		return null;
 	}
-    public static Session createSession() {
-        Session activeSession = Session.getActiveSession();
-        if (activeSession == null || activeSession.getState().isClosed()) {
-            activeSession = new Session.Builder(WhyqApplication.Instance().getApplicationContext()).setApplicationId(Constants.FACEBOOK_APP_ID).build();
-            Session.setActiveSession(activeSession);
-        }
-        return activeSession;
-    }
+
+	public static Session createSession() {
+		Session activeSession = Session.getActiveSession();
+		if (activeSession == null || activeSession.getState().isClosed()) {
+			activeSession = new Session.Builder(WhyqApplication.Instance()
+					.getApplicationContext()).setApplicationId(
+					Constants.FACEBOOK_APP_ID).build();
+			Session.setActiveSession(activeSession);
+		}
+		return activeSession;
+	}
+
+	public static void hideSoftKeyboard(Activity activity) {
+		// TODO Auto-generated method stub
+		try {
+			InputMethodManager inputManager = (InputMethodManager) activity
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputManager.hideSoftInputFromWindow(activity.getCurrentFocus()
+					.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		} catch (Exception e) {
+			// Ignore exceptions if any
+			e.printStackTrace();
+		}
+	}
 }

@@ -146,7 +146,7 @@
             android:name="whyq.activity.StoreDetailAdsctivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="whyq.activity.WhyqLogout"
             android:screenOrientation="portrait"
@@ -166,15 +166,18 @@
         <activity
             android:name="whyq.activity.WhyQDineInActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Translucent" />
+            android:theme="@style/Theme.Translucent"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="whyq.activity.WhyQTakeAwayActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Translucent" />
+            android:theme="@style/Theme.Translucent"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="whyq.activity.WhyQHotelRoomDelivery"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Translucent" />
+            android:theme="@style/Theme.Translucent"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="whyq.activity.WhyqProfileNotifyPersionalActivity"
             android:screenOrientation="portrait"
@@ -273,7 +276,7 @@
             android:name="whyq.activity.ListDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="whyq.activity.ProfileActivity"
             android:screenOrientation="portrait" />

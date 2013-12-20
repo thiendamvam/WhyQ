@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.0"
+        android:layout_weight="0.9"
         android:baselineAligned="false"
         android:gravity="center"
         android:orientation="vertical" >
@@ -41,46 +41,68 @@
             android:padding="0dp"
             android:weightSum="3" >
 
-            <Button
-                android:id="@+id/btnCarTime"
+            <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_height="40dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_car_active"
-                android:paddingLeft="15dp"
-                android:text="It takes" >
-            </Button>
+                android:paddingLeft="15dp" >
 
-            <Button
-                android:id="@+id/btnBycicalTime"
+                <Button
+                    android:id="@+id/btnCarTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:background="@color/transparent"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="It takes" >
+                </Button>
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_height="40dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_bicycle_normal"
-                android:orientation="horizontal"
-                android:paddingLeft="15dp"
-                android:text="It takes" >
-            </Button>
+                android:paddingLeft="15dp" >
 
-            <Button
-                android:id="@+id/btnWalkTime"
+                <Button
+                    android:id="@+id/btnBycicalTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="It takes" >
+                </Button>
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_gravity="left"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_walking_normal"
-                android:orientation="horizontal"
-                android:paddingLeft="15dp"
-                android:text="It takes" >
-            </Button>
+                android:paddingLeft="15dp" >
+
+                <Button
+                    android:id="@+id/btnWalkTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:ellipsize="end"
+                    android:orientation="horizontal"
+                    android:singleLine="true"
+                    android:text="It takes" >
+                </Button>
+            </RelativeLayout>
         </LinearLayout>
 
         <TextView
@@ -94,9 +116,9 @@
             android:id="@+id/lnTimeTogoField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
             android:weightSum="4" >
 
             <EditText
@@ -134,9 +156,9 @@
                 <CheckBox
                     android:id="@+id/cbLeaveNow"
                     android:layout_width="wrap_content"
-                    android:checked="true"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp" />
+                    android:layout_marginRight="5dp"
+                    android:checked="true" />
 
                 <TextView
                     style="@style/small_grey_text"
