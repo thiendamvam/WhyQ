@@ -248,6 +248,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	}
 
 	private String currentStoreId;
+	private Promotion promotion;
 	public static String commentContent;
 
 	public void onDoneClicked(View v) {
@@ -649,7 +650,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		try {
 			if (store.getPromotionList() != null) {
 				if (store.getPromotionList().size() > 0) {
-					Promotion promotion = store.getPromotionList().get(0);
+					promotion = store.getPromotionList().get(0);
 					tvNumberDiscount.setText(promotion.getValuePromotion() + ""
 							+ promotion.getTypeValue());
 					tvDes.setText(promotion.getDescriptionPromotion());
@@ -881,6 +882,8 @@ public class ListDetailActivity extends FragmentActivity implements
 				Bill bill = new Bill();
 				bill.setId(item.getId());
 				bill.setPrice(item.getValue());
+				if(promotion!=null)
+					bill.setDiscount(promotion.getValuePromotion()!=null?promotion.getValuePromotion():""+0);
 				bill.setUnit("1");
 				bill.setProductId(item.getId());
 				bill.setProductName(item.getNameProduct());
@@ -921,6 +924,9 @@ public class ListDetailActivity extends FragmentActivity implements
 				Bill bill = new Bill();
 				bill.setId(item.getId());
 				bill.setPrice(item.getValue());
+				if(promotion!=null)
+					bill.setDiscount(promotion.getValuePromotion()!=null?promotion.getValuePromotion():""+0);
+
 				bill.setThumb(item.getImageThumb());
 				bill.setUnit("1");
 				billList.put(item.getId(), bill);

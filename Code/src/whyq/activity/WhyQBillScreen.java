@@ -93,6 +93,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		
 		
 		bindDatatoListview();
+		getValue(listBill);
 		bindBillValue();
 	}
 	private void exeGetBillDetail(String billId) {
@@ -106,9 +107,9 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		
 		tvTotal.setText("$"+String.format("%.2f",totalValue));
 		if(valueDiscount!=0)
-			tvDiscount.setText("%"+ Float.parseFloat(String.format("%.2f", valueDiscount))*100);
+			tvDiscount.setText("%"+ Float.parseFloat(String.format("%.2f", valueDiscount)));
 		if(valueDiscount!=0)
-			totalafterDiscount = (float)(totalValue*valueDiscount);
+			totalafterDiscount = (float)(totalValue*(100-valueDiscount)/100);
 		else
 			totalafterDiscount = totalValue;
 		tvTotalAfterDiscount.setText("$"+String.format("%.2f", totalafterDiscount));
