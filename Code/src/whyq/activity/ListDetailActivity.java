@@ -177,6 +177,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		etComment = (EditText) findViewById(R.id.etComment);
 		// showHeaderImage();
 		storeName = getIntent().getStringExtra("store_name");
+		showPhotoList();
 		initTabbar();
 
 		getDetailData();
@@ -260,7 +261,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	public void showPhotoList() {
 		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) rlPhotoList
 				.getLayoutParams();
-		params.height = (int) (WhyqApplication.Instance().getDensity() * 180);
+		params.height = (int) (WhyqApplication.Instance().getDisplayMetrics().widthPixels);//WhyqApplication.Instance().getDensity() * 
 		rlPhotoList.setLayoutParams(params);
 	}
 
