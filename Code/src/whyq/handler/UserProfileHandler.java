@@ -111,7 +111,7 @@ public class UserProfileHandler extends BaseHandler {
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
-		if (localName.equals("obj")) {
+		if (localName.equals("user")) {
 			user = new UserProfile();
 		} else if (localName.equals(TAG_TOTAL_COUNT)) {
 			totalCount = new TotalCount();

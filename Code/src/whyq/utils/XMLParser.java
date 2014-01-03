@@ -71,7 +71,7 @@ public class XMLParser implements HttpAccess {
     public static final String STORE_LAST_TIME_LOGIN = "LastTimeLogin";
     public static final long ACCOUNT_TIME_OUT = 3 * 60 * 60 * 1000;
     public static final String STORE_USER_TOKEN = "TOKEN";
-    public static final String STORE_USER_ID = "UserID";
+    public static final String STORE_USER_ID = "STORE_USER_ID";
     public static final String STORE_TOTAL_CHECK_BILL = "total_check_bill";
     public static final String STORE_TOTAL_SAVING = "total_saving";
 	public static final String STORE_USER_AVATAR = "userAvatar";
