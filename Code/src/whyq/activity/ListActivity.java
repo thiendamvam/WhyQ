@@ -519,32 +519,39 @@ public class ListActivity extends FragmentActivity implements  OnClickListener,O
 	}
 	
 	private void loadPerms() {
-		User user = WhyqUtils.isAuthenticated(getApplicationContext());		
-		if(permListMain != null && !permListMain.isEmpty()){
-//			clearData();
-			//createUI();
-			if(this.permListAdapter == null) {
-				this.permListAdapter = new WhyqAdapter(ListActivity.this,
-					getSupportFragmentManager(),R.layout.whyq_item_1, permListMain, this, screenWidth, screenHeight, header, user);
-			} else {
-				for(int i = 0; i < permListMain.size(); i++) {
-					Store store = permListMain.get(i);
-					if(!permListAdapter.isPermDuplicate(store)) {
-						permListAdapter.add(store);
+		try {
+
+			User user = WhyqUtils.isAuthenticated(getApplicationContext());		
+			if(permListMain != null){
+//				clearData();
+				//createUI();
+				if(this.permListAdapter == null) {
+					this.permListAdapter = new WhyqAdapter(ListActivity.this,
+						getSupportFragmentManager(),R.layout.whyq_item_1, permListMain, this, screenWidth, screenHeight, header, user);
+				} else {
+					for(int i = 0; i < permListMain.size(); i++) {
+						Store store = permListMain.get(i);
+						if(!permListAdapter.isPermDuplicate(store)) {
+							permListAdapter.add(store);
+						}
 					}
 				}
+
+				
+				whyqListView.setAdapter(permListAdapter);
+				permListAdapter.notifyDataSetChanged();
+
+
+			}else{
+				
+				
 			}
 
-			
-			whyqListView.setAdapter(permListAdapter);
-			permListAdapter.notifyDataSetChanged();
-
-
-		}else{
-			
-			
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
-
 	}
 	
 	public void clearData() {

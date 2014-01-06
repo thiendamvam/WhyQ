@@ -102,20 +102,21 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 	private void addMarkersToMap() {
 		try {
 
-			LatLng STORE_POSITION = new LatLng(Double.parseDouble(latgitude), Double.parseDouble(longitude));
+			LatLng STORE_POSITION = new LatLng(Double.parseDouble(latgitude),
+					Double.parseDouble(longitude));
 			// TODO Auto-generated method stub
 			store = mMap.addMarker(new MarkerOptions()
-					.position(STORE_POSITION )
+					.position(STORE_POSITION)
 					.title("")
 					.snippet("")
 					.icon(BitmapDescriptorFactory
 							.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-			LatLngBounds bounds = new LatLngBounds.Builder()
-			.include(STORE_POSITION).build();
-//			mMap.moveCamera(CameraUpdateFactory
-//					.newLatLngBounds(bounds, 50));
-			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-					STORE_POSITION, 15));
+			LatLngBounds bounds = new LatLngBounds.Builder().include(
+					STORE_POSITION).build();
+			// mMap.moveCamera(CameraUpdateFactory
+			// .newLatLngBounds(bounds, 50));
+			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(STORE_POSITION,
+					15));
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -138,8 +139,28 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 
 	public boolean checkInputData() {
 		if (cbASAP.isChecked()) {
-			showDialog();
-			new asyncExeOrderSend().execute();
+
+			Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+
+			String otherAddress = etOtherAddress.getText().toString();
+			String phoneNumber = etPhoneNumber.getText().toString();
+			String hours = etHours.getText().toString();
+			String minutes = etMinutes.getText().toString();
+			if (otherAddress.length() == 0) {
+				etOtherAddress.setFocusable(true);
+				etOtherAddress.startAnimation(shake);
+				etOtherAddress.requestFocus();
+				return false;
+			} else if (phoneNumber.length() == 0) {
+				etPhoneNumber.setFocusable(true);
+				etPhoneNumber.startAnimation(shake);
+				etPhoneNumber.requestFocus();
+				return false;
+			} else {
+				showDialog();
+				new asyncExeOrderSend().execute();
+
+			}
 			return true;
 		} else {
 			Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
