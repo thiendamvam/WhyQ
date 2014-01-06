@@ -103,10 +103,16 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 			rlContent.setBackgroundColor(getResources().getColor(R.color.white));
 		}
 
-		getFriends();
+//		getFriends();
 
 	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		getFriends();
+	}
 	
 	public void onInviteClicked(View v){
 		final FriendWhyq item = (FriendWhyq)v.getTag();		
