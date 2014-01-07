@@ -175,11 +175,13 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 			tmp = new BillPlaceItem();
 			tmp.setStoreId(item.getStore_id());
 			tmp.setCountVisited(1);
-			tmp.setStoreAddress(item.getBusiness_info().getAddress());
+			if(item.getBusiness_info()!=null)
+				tmp.setStoreAddress(item.getBusiness_info().getAddress());
 			tmp.setStoreName(item.getBusiness_info().getName_store());
 			tmp.setTotalDiscountValue(item.getDiscount_value());
 			tmp.setTotalValue(item.getTotal_value());
-			tmp.setStoreLogo(item.getBusiness_info().getLogo());
+			if(item.getBusiness_info()!=null)
+				tmp.setStoreLogo(item.getBusiness_info().getLogo());
 			mBillPlaceItems.add(tmp);
 		} else {
 			tmp = mBillPlaceItems.get(index);

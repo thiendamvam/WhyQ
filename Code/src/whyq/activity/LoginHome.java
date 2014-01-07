@@ -17,6 +17,7 @@ import whyq.service.ServiceResponse;
 import whyq.utils.Constants;
 import whyq.utils.SharedPreferencesManager;
 import whyq.utils.Util;
+import whyq.utils.XMLParser;
 import whyq.utils.facebook.FacebookConnector;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -269,8 +270,8 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 				isLoginFb = true;
 				Log.d("LoginHome by Facebook", "result: ");
 				WhyqApplication.Instance().setToken(user);
-				// XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(),
-				// user);
+				XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(),
+				 user);
 				Intent intent = new Intent(LoginHome.this, WhyqMain.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
@@ -291,6 +292,8 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 				User user = (User) data.getData();
 				// if(user.isLogined()){
 				WhyqApplication.Instance().setToken(user);
+				XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(),
+						 user);
 				ListActivity.isLogin = true;
 				ListActivity.loginType = 2;
 				// dismissLoadingDialog();
