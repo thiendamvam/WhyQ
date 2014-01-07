@@ -13,6 +13,7 @@ import whyq.service.ServiceResponse;
 import whyq.utils.Util;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,17 +21,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.whyq.R;
 
 public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 		IServiceListener {
 
-	private EditText etHours;
-	private EditText etMinutes;
+	private Button etHours;
+	private Button etMinutes;
 	private CheckBox cbLeaveNow;
 	private Button btnCarTime;
 	private Button btnBycicalTime;
@@ -45,6 +48,8 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 	private int getDistanceStep = 1;
 	private HashMap<String, String> params;
 	private TextView tvheader;
+	protected int currentHours;
+	protected int currentMinutes;
 
 	public WhyQTakeAwayActivity() {
 
@@ -58,8 +63,8 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 
 		tvheader = (TextView)findViewById(R.id.tvHeaderTitle);
 		tvheader.setText("Take away");
-		etHours = (EditText) findViewById(R.id.etHours);
-		etMinutes = (EditText) findViewById(R.id.etMinutes);
+		etHours = (Button) findViewById(R.id.etHours);
+		etMinutes = (Button) findViewById(R.id.etMinutes);
 		cbLeaveNow = (CheckBox) findViewById(R.id.cbLeaveNow);
 		btnCarTime = (Button) findViewById(R.id.btnCarTime);
 		btnBycicalTime = (Button) findViewById(R.id.btnBycicalTime);
@@ -73,8 +78,33 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 		new asyncGetLocatoin().execute();
 		// btnDone = (Button)findViewById(R.id.btnDone);
 		// btnDone.setOnClickListener(this);
+		disableTimeField();
+		cbLeaveNow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				if(cbLeaveNow.isChecked()){
+					disableTimeField();
+				}else{
+					endAbleTimeField();
+				}
+			}
+		});
+		etHours.setOnClickListener(this);
+		etMinutes.setOnClickListener(this);
+	}
+	protected void endAbleTimeField() {
+		// TODO Auto-generated method stub
+		etHours.setEnabled(true);
+		etMinutes.setEnabled(true);
 	}
 
+	protected void disableTimeField() {
+		// TODO Auto-generated method stub
+		etHours.setEnabled(false);
+		etMinutes.setEnabled(false);
+	}
 	class asyncGetLocatoin extends AsyncTask<Bundle, Void, Bundle> {
 
 		public asyncGetLocatoin() {
@@ -106,6 +136,20 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 
 		default:
 			break;
+		}
+		if(id == R.id.etHours||id == R.id.etMinutes){
+			new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+
+
+				@Override
+				public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+					// TODO Auto-generated method stub
+					currentHours = hourOfDay;
+					currentMinutes = minute;
+					etHours.setText(""+hourOfDay);
+					etMinutes.setText(""+minute);
+				}
+			}, currentHours, currentMinutes, true).show();
 		}
 	}
 
@@ -171,8 +215,8 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 
 	private String getTimeInpu() {
 		// TODO Auto-generated method stub
-		String hours = etHours.getText().toString();
-		String minutes = etMinutes.getText().toString();
+		String hours = ""+currentHours;
+		String minutes = ""+currentMinutes;
 		if (hours.length() < 2) {
 			hours = "0" + hours;
 		}
@@ -183,9 +227,11 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 	}
 
 	public boolean checkInputData() {
+		String hours = ""+currentHours;
+		String minutes = ""+currentMinutes;
 		boolean status = true;
-		if (etHours.getText().toString().equals("")
-				|| etMinutes.getText().toString().equals("")) {
+		if (hours.equals("")
+				|| minutes.equals("")) {
 			return false;
 		}
 		return status;

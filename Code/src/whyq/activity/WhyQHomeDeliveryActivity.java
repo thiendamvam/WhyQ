@@ -3,23 +3,33 @@ package whyq.activity;
 import java.util.HashMap;
 
 import whyq.WhyqApplication;
+import whyq.adapter.PlacesAutoCompleteAdapter;
 import whyq.interfaces.IServiceListener;
 import whyq.model.ResponseData;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.Util;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,11 +41,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.whyq.R;
 
 public class WhyQHomeDeliveryActivity extends FragmentActivity implements
-		IServiceListener {
+		IServiceListener, OnClickListener {
 	private EditText etOtherAddress;
 	private EditText etPhoneNumber;
-	private EditText etHours;
-	private EditText etMinutes;
+	private Button etHours;
+	private Button etMinutes;
 	private CheckBox cbASAP;
 	private String storeId;
 	private ProgressBar progressBar;
@@ -47,22 +57,31 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 	private Service servivice;
 	private GoogleMap mMap;
 	private Object store;
+	private AutoCompleteTextView atAddress;
+	private int currentMinutes;
+	private int currentHours;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_home_delivery);
+		context = this;
 		TextView headerTitle = (TextView) findViewById(R.id.tvHeaderTitle);
 		headerTitle.setText("Home Deliver");
 		storeId = getIntent().getStringExtra("store_id");
 		etOtherAddress = (EditText) findViewById(R.id.etOtherAddress);
 		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
-		etHours = (EditText) findViewById(R.id.etHours);
-		etMinutes = (EditText) findViewById(R.id.etMinutes);
+		etHours = (Button) findViewById(R.id.etHours);
+		etMinutes = (Button) findViewById(R.id.etMinutes);
 		cbASAP = (CheckBox) findViewById(R.id.cbASAP);
+		atAddress = (AutoCompleteTextView)findViewById(R.id.atAddress);
+		atAddress.setAdapter(new PlacesAutoCompleteAdapter(context, R.layout.place_item_2));
 		progressBar = (ProgressBar) findViewById(R.id.prgBar);
-		context = this;
+		
+		currentHours = 0;
+		currentMinutes = 0;
+		
 		// Util.checkLocationSetting(context);
 		Bundle bundle = Util.getLocation(context);
 		if (bundle != null) {
@@ -71,6 +90,32 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		}
 		servivice = new Service(this);
 		setUpMapIfNeeded();
+		cbASAP.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				if(cbASAP.isChecked()){
+					disableTimeField();
+				}else{
+					endAbleTimeField();
+				}
+			}
+		});
+		etHours.setOnClickListener(this);
+		etMinutes.setOnClickListener(this);
+	}
+
+	protected void endAbleTimeField() {
+		// TODO Auto-generated method stub
+		etHours.setEnabled(true);
+		etMinutes.setEnabled(true);
+	}
+
+	protected void disableTimeField() {
+		// TODO Auto-generated method stub
+		etHours.setEnabled(false);
+		etMinutes.setEnabled(false);
 	}
 
 	private void setUpMapIfNeeded() {
@@ -137,19 +182,21 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		checkInputData();
 	}
 
+	
 	public boolean checkInputData() {
 		if (cbASAP.isChecked()) {
 
 			Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
 
-			String otherAddress = etOtherAddress.getText().toString();
+			String otherAddress = atAddress.getText().toString();//etOtherAddress.getText().toString();
 			String phoneNumber = etPhoneNumber.getText().toString();
-			String hours = etHours.getText().toString();
-			String minutes = etMinutes.getText().toString();
+			String hours = ""+currentHours;
+			String minutes = ""+currentMinutes;
 			if (otherAddress.length() == 0) {
 				etOtherAddress.setFocusable(true);
 				etOtherAddress.startAnimation(shake);
 				etOtherAddress.requestFocus();
+				
 				return false;
 			} else if (phoneNumber.length() == 0) {
 				etPhoneNumber.setFocusable(true);
@@ -165,14 +212,17 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		} else {
 			Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
 
-			String otherAddress = etOtherAddress.getText().toString();
+			String otherAddress = atAddress.getText().toString();//etOtherAddress.getText().toString();
 			String phoneNumber = etPhoneNumber.getText().toString();
-			String hours = etHours.getText().toString();
-			String minutes = etMinutes.getText().toString();
+			String hours = ""+currentHours;
+			String minutes = ""+currentMinutes;
 			if (otherAddress.length() == 0) {
-				etOtherAddress.setFocusable(true);
-				etOtherAddress.startAnimation(shake);
-				etOtherAddress.requestFocus();
+//				etOtherAddress.setFocusable(true);
+//				etOtherAddress.startAnimation(shake);
+//				etOtherAddress.requestFocus();
+				atAddress.setFocusable(true);
+				atAddress.startAnimation(shake);
+				atAddress.requestFocus();
 				return false;
 			} else if (phoneNumber.length() == 0) {
 				etPhoneNumber.setFocusable(true);
@@ -219,7 +269,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 			params.put("store_id", storeId);
 			params.put("deliver_type", "2");
 			params.put("list_items", listItem);
-			params.put("deliver_to", "" + etOtherAddress.getText().toString());
+			params.put("deliver_to", "" + atAddress.getText().toString());//etOtherAddress.getText().toString());
 			params.put("time_zone", Util.getTimeZone(""));
 			if (cbASAP.isChecked()) {
 				params.put("time_deliver", "ASAP");
@@ -236,8 +286,8 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 
 		private String getTimeInpu() {
 			// TODO Auto-generated method stub
-			String hours = etHours.getText().toString();
-			String minutes = etMinutes.getText().toString();
+			String hours = ""+currentHours;
+			String minutes = ""+currentMinutes;
 			if (hours.length() < 2) {
 				hours = "0" + hours;
 			}
@@ -252,8 +302,8 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 				HashMap<String, String>... params) {
 			// TODO Auto-generated method stub
 
-			return Util.getLatLonFromAddress(etOtherAddress.getText()
-					.toString());
+//			return Util.getLatLonFromAddress(etOtherAddress.getText().toString());
+			return Util.getLatLonFromAddress(atAddress.getText().toString());
 		}
 	}
 
@@ -285,5 +335,26 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		// dialog.dismiss();
 		progressBar.setVisibility(View.GONE);
 	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		int id = v.getId();
+		if(id == R.id.etHours||id == R.id.etMinutes){
+			new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+				
+				@Override
+				public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+					// TODO Auto-generated method stub
+					currentHours = hourOfDay;
+					currentMinutes = minute;
+					etHours.setText(""+hourOfDay);
+					etMinutes.setText(""+minute);
+				}
+			}, currentHours, currentMinutes, true).show();
+		}
+	}
+
+
 
 }

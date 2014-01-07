@@ -111,6 +111,10 @@ public class Constants {
 	public static final String TERMS_URL = "http://whyq.net.au/m/termandconditions?m=true";
 	public static final String GET_DISTANCE_API = "http://maps.googleapis.com/maps/api/distancematrix/xml?";
 	public static final String FB_APP_PERMISSIONS = null;
+	public static final String API_KEY = "AIzaSyA6Uvh8dCH5toBfRWtceEPu1XPqfmaDtJ0";
+	public static final String PLACES_API_BASE ="http://maps.googleapis.com/maps/api/geocode";
+	public static final String TYPE_AUTOCOMPLETE = "/autocomplete";
+	public static final String OUT_JSON = "/json";
 	public static String LINK_SHARE_FACEBOOK_GLOBAL = null;
 
 }

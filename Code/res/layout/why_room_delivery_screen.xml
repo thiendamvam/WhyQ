@@ -65,7 +65,7 @@
             android:paddingTop="10dp"
             android:weightSum="3" >
 
-            <EditText
+            <Button
                 style="@style/myEditText"
                 android:id="@+id/etHours"
                 android:layout_width="match_parent"
@@ -75,7 +75,7 @@
                 android:hint="Hours"
                 android:singleLine="true" />
 
-            <EditText
+            <Button
                 style="@style/myEditText"
                 android:id="@+id/etMinutes"
                 android:layout_width="match_parent"

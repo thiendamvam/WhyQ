@@ -10,24 +10,29 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.Util;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.whyq.R;
 
-public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceListener {
+public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceListener, OnClickListener {
 	private EditText etRoomNo;
 	private EditText etHotelChargeCode;
-	private EditText etHours;
-	private EditText etMinutes;
+	private Button etHours;
+	private Button etMinutes;
 	private CheckBox cbASAP;
 	private String storeId;
 	private String listItem;
@@ -35,6 +40,8 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
 	private String note;
 	private Service service;
 	private Context context;
+	protected int currentHours;
+	protected int currentMinutes;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -45,14 +52,40 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
 		storeId = getIntent().getStringExtra("store_id");
 		etRoomNo = (EditText)findViewById(R.id.etRoomNo);
 		etHotelChargeCode = (EditText)findViewById(R.id.etHotelChargeCode);
-		etHours = (EditText)findViewById(R.id.etHours);
-		etMinutes = (EditText)findViewById(R.id.etMinutes);
+		etHours = (Button)findViewById(R.id.etHours);
+		etMinutes = (Button)findViewById(R.id.etMinutes);
 		cbASAP = (CheckBox)findViewById(R.id.cbASAP);
 		progressBar = (ProgressBar)findViewById(R.id.prgBar);
 		context = this;
 		service = new Service(this);
+		
+		cbASAP.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				if(cbASAP.isChecked()){
+					disableTimeField();
+				}else{
+					endAbleTimeField();
+				}
+			}
+		});
+		
+		etHours.setOnClickListener(this);
+		etMinutes.setOnClickListener(this);
+	}
+	protected void endAbleTimeField() {
+		// TODO Auto-generated method stub
+		etHours.setEnabled(true);
+		etMinutes.setEnabled(true);
 	}
 
+	protected void disableTimeField() {
+		// TODO Auto-generated method stub
+		etHours.setEnabled(false);
+		etMinutes.setEnabled(false);
+	}
 //	@Override
 //	protected boolean isRouteDisplayed() {
 //		// TODO Auto-generated method stub
@@ -71,8 +104,8 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
         
 		String otherAddress = etRoomNo.getText().toString();
 		String phoneNumber = etHotelChargeCode.getText().toString();
-		String hours = etHours.getText().toString();
-		String minutes = etMinutes.getText().toString();
+		String hours = ""+currentHours;
+		String minutes = ""+currentMinutes;
         if (otherAddress.length() == 0)
         {
         	etRoomNo.setFocusable(true);
@@ -145,8 +178,8 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
 	}
 	private String getTimeInpu() {
 		// TODO Auto-generated method stub
-		String hours = etHours.getText().toString();
-		String minutes = etMinutes.getText().toString();
+		String hours =""+currentHours;
+		String minutes = ""+currentMinutes;
 		if(hours.length()<2){
 			hours="0"+hours;
 		}
@@ -163,5 +196,23 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
 	private void hideDialog() {
 		// dialog.dismiss();
 		progressBar.setVisibility(View.GONE);
+	}
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		int id = v.getId();
+		if(id == R.id.etHours||id == R.id.etMinutes){
+			new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+				
+				@Override
+				public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+					// TODO Auto-generated method stub
+					currentHours = hourOfDay;
+					currentMinutes = minute;
+					etHours.setText(""+hourOfDay);
+					etMinutes.setText(""+minute);
+				}
+			}, currentHours, currentMinutes, true).show();
+		}
 	}
 }
