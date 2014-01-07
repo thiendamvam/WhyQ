@@ -361,6 +361,7 @@ public class Util {
 		List<Address> user = null;
 		double lat;
 		double lng;
+		String address;
 		Bundle bundle = new Bundle();
 		LocationManager lm = (LocationManager) activity
 				.getSystemService(Context.LOCATION_SERVICE);
@@ -378,9 +379,11 @@ public class Util {
 						location.getLongitude(), 1);
 				lat = (double) user.get(0).getLatitude();
 				lng = (double) user.get(0).getLongitude();
+				address= user.get(0).getAddressLine(0)+""+user.get(0).getAddressLine(1)+"-"+user.get(0).getAddressLine(2)+"-"+user.get(0).getAddressLine(3)+"-"+user.get(0).getAddressLine(4);
 				bundle.putString("lat", "" + String.valueOf(lat));
 				bundle.putString("lon", "" + String.valueOf(lng));
-				System.out.println(" DDD lat: " + lat + ",  longitude: " + lng);
+				bundle.putString("address", address);
+				System.out.println(" DDD lat: " + lat + ",  longitude: " + lng+" address "+address);
 
 			} catch (Exception e) {
 				e.printStackTrace();

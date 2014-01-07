@@ -60,6 +60,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 	private AutoCompleteTextView atAddress;
 	private int currentMinutes;
 	private int currentHours;
+	private String address;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		if (bundle != null) {
 			longitude = bundle.getString("lon");
 			latgitude = bundle.getString("lat");
+			address = bundle.getString("address");
 		}
 		servivice = new Service(this);
 		setUpMapIfNeeded();
@@ -104,6 +106,8 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		});
 		etHours.setOnClickListener(this);
 		etMinutes.setOnClickListener(this);
+		if(address!=null)
+			atAddress.setText(address);
 	}
 
 	protected void endAbleTimeField() {

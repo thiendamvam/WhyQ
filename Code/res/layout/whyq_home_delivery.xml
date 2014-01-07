@@ -57,17 +57,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:hint="Give us other address if it&apos;s not"
                 android:visibility="gone" />
 
             <AutoCompleteTextView
                 android:id="@+id/atAddress"
                 style="@style/myEditText"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:hint="Give us other address if it&apos;s not" />
 
             <EditText
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:id="@+id/etPhoneNumber"
                 style="@style/myEditText"
                 android:layout_width="match_parent"

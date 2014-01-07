@@ -954,11 +954,12 @@ public class DataParser {
 		try {
 			Document doc = XMLfromString(result);
 			ResponseData data = new ResponseData();
-			String statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
+			ArrayList<Location> locationList = new ArrayList<Location>();
+			String statusResponse = "200";//doc.getElementsByTagName("Status").item(0).getFirstChild().getNodeValue();
 			if(statusResponse.equals("200")){
 				ArrayList<Store> permList = new ArrayList<Store>();
 				NodeList nodeList = doc.getElementsByTagName("geoname");
-				ArrayList<Location> locationList = new ArrayList<Location>();
+				
 				for (int i = 0; i < nodeList.getLength(); i++) {
 					Location location = new Location();
 					Element infoElement = (Element) nodeList.item(i);
@@ -969,17 +970,18 @@ public class DataParser {
 					locationList.add(location);
 				}
 				
-				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
-				data.setStatus(statusResponse);
-				data.setData(locationList);
-				data.setMessage(mes);
-				return data;
+//				final String mes = "Good";//doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+//				data.setStatus(statusResponse);
+//				data.setData(locationList);
+//				data.setMessage(mes);
+				return locationList;
 			}else{
-				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
-				data.setStatus(statusResponse);
-				data.setData(null);
-				data.setMessage(mes);
-				return data;
+//				final String mes = doc.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue();
+//				data.setStatus(statusResponse);
+//				data.setData(null);
+//				data.setMessage(mes);
+//				return data;
+				return locationList;
 				
 			}
 		} catch (Exception e) {

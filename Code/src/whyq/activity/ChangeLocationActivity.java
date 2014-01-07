@@ -15,6 +15,8 @@ package whyq.activity;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Currency;
 
 import whyq.interfaces.IServiceListener;
 import whyq.model.Location;
@@ -28,6 +30,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.CalendarContract.Calendars;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -55,7 +59,8 @@ import com.whyq.R;
  * @author dvthien
  * @copyright TMA Solutions, www.tmasolutions.com
  */
-public class ChangeLocationActivity extends Activity implements IServiceListener{
+public class ChangeLocationActivity extends Activity implements
+		IServiceListener {
 
 	private EditText etSearchLocation;
 	private String locationToChange;
@@ -67,15 +72,20 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 	ArrayList<Location> locationList = new ArrayList<Location>();
 	private ProgressBar progressBar;
 	private Button btnDelete;
+	private Calendar calendar;
+	private long now = 0;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.changelocation);
+
+		calendar = Calendar.getInstance();
 		etSearchLocation = (EditText) findViewById(R.id.etTextSearch);
 		lvLocation = (ListView) findViewById(R.id.lwLocationToChange);
-		btnDelete = (Button)findViewById(R.id.btnCancel);
-		progressBar = (ProgressBar)findViewById(R.id.prgBar);
+		btnDelete = (Button) findViewById(R.id.btnCancel);
+		progressBar = (ProgressBar) findViewById(R.id.prgBar);
 		etSearchLocation
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -96,7 +106,7 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 		lvLocation.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				final Location location = (Location)view.getTag();
+				final Location location = (Location) view.getTag();
 				etSearchLocation.setText(location.getName());
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -108,20 +118,27 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
-										
-										ListActivity.latgitude = location.getLat();
-										ListActivity.longitude = location.getLon();
-										ListActivity.currentLocation = location.getName();
-										
+
+										ListActivity.latgitude = location
+												.getLat();
+										ListActivity.longitude = location
+												.getLon();
+										ListActivity.currentLocation = location
+												.getName();
+
 										Intent intent = new Intent();
-										intent.putExtra("lat", location.getLat());
-										intent.putExtra("lng",location.getLon());
-										intent.putExtra("name", location.getName());
-										intent.putExtra("country", location.getCountry());
+										intent.putExtra("lat",
+												location.getLat());
+										intent.putExtra("lng",
+												location.getLon());
+										intent.putExtra("name",
+												location.getName());
+										intent.putExtra("country",
+												location.getCountry());
 										setResult(RESULT_OK, intent);
-										
+
 										finish();
-										
+
 									}
 								})
 						.setNegativeButton("No",
@@ -136,14 +153,17 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 		});
 
 	}
-	public void onCancelClicked(View v){
+
+	public void onCancelClicked(View v) {
 		etSearchLocation.setText("");
 		hideBtnCancel();
 	}
+
 	private void hideBtnCancel() {
 		// TODO Auto-generated method stub
 		btnDelete.setVisibility(View.GONE);
 	}
+
 	public void performSearch() {
 		try {
 			URL url;
@@ -155,17 +175,18 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 			Service service = new Service(ChangeLocationActivity.this);
 			service.setLocation(etSearchLocation.getText().toString());
 			showProgress();
-//			tfh = new ParseChangedLocationXMLFile();
-//			/* Get a SAXParser from the SAXPArserFactory. */
-//			SAXParserFactory spf = SAXParserFactory.newInstance();
-//			SAXParser sp = spf.newSAXParser();
-//
-//			/* Get the XMLReader of the SAXParser we created. */
-//			XMLReader xr = sp.getXMLReader();
-//			xr.setContentHandler(tfh);
-//			xr.parse(new InputSource(url.openStream()));
-//			ParseChangedLocationXMLFile parseLocation = new ParseChangedLocationXMLFile();
-//			locationList = tfh.getResults();
+			// tfh = new ParseChangedLocationXMLFile();
+			// /* Get a SAXParser from the SAXPArserFactory. */
+			// SAXParserFactory spf = SAXParserFactory.newInstance();
+			// SAXParser sp = spf.newSAXParser();
+			//
+			// /* Get the XMLReader of the SAXParser we created. */
+			// XMLReader xr = sp.getXMLReader();
+			// xr.setContentHandler(tfh);
+			// xr.parse(new InputSource(url.openStream()));
+			// ParseChangedLocationXMLFile parseLocation = new
+			// ParseChangedLocationXMLFile();
+			// locationList = tfh.getResults();
 
 		}
 
@@ -174,40 +195,67 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 		}
 
 	}
+
 	private final TextWatcher mTextEditorWatcher = new TextWatcher() {
 		public void beforeTextChanged(CharSequence s, int start, int count,
 				int after) {
-//			exeSearchFocus();
+			// exeSearchFocus();
 		}
 
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			// This sets a textview to the current length
 
+			Log.d("onTextChanged", before + " fdfd " + start);
+
+		}
+
+		public void afterTextChanged(Editable s) {
 			try {
-				String text = s.toString();
-				Log.d("Text serch","Text "+text);
-				if(text.equals(""))
-				{
-					exeDisableSearchFocus();
-					
-				}else{
-					exeSearchFocus();
-					performSearch();
-				}
-			
+				final Editable s2 = s;
+//				new Handler().postDelayed(new Runnable() {
+//					
+//					@Override
+//					public void run() {
+//						// TODO Auto-generated method stub
+//						calendar = Calendar.getInstance();
+//						long now2 = calendar.getTimeInMillis();
+//						if (now == 0) {
+//							now = now2;
+//						}
+//						long a = now2 - now;
+//						Log.d("afterTextChanged", now2 + " and " + now + "===" + a);
+//
+//						if (a > 1500) {
+//							now = now2;
+							String text = s2.toString();
+							Log.d("Text serch", "Text " + text);
+
+							if (text.equals("")) {
+								exeDisableSearchFocus();
+
+							} else {
+								exeSearchFocus();
+								performSearch();
+							}
+							now = 0;
+//						}else{
+//							now = now2;
+//						}
+//					}
+//				}, 1500);
+
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
 		}
-
-		public void afterTextChanged(Editable s) {
-		}
 	};
+
 	private void showProgress() {
 		// TODO Auto-generated method stub
 		progressBar.setVisibility(View.VISIBLE);
 	}
+
 	protected void exeSearchFocus() {
 		// TODO Auto-generated method stub
 		btnDelete.setVisibility(View.VISIBLE);
@@ -222,21 +270,24 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 		// TODO Auto-generated method stub
 		progressBar.setVisibility(View.INVISIBLE);
 	}
-	public void updateListView(){
-		adapter = new EfficientAdapter(ChangeLocationActivity.this, locationList);
+
+	public void updateListView() {
+		adapter = new EfficientAdapter(ChangeLocationActivity.this,
+				locationList);
 		lvLocation.setAdapter(adapter);
 	}
+
 	public static class EfficientAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
-		ArrayList<Location> locationList; 
+		ArrayList<Location> locationList;
+
 		public EfficientAdapter(Context context, ArrayList<Location> list) {
 			mInflater = LayoutInflater.from(context);
 			locationList = list;
 		}
 
 		public int getCount() {
-			return locationList.size()
-					;
+			return locationList.size();
 		}
 
 		public Object getItem(int position) {
@@ -251,11 +302,11 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 			Location location = locationList.get(position);
 			ViewHolder holder;
 			if (convertView == null) {
-				
+
 				convertView = mInflater.inflate(
 						R.layout.listviewchangelocation, null);
 				holder = new ViewHolder();
-				holder.name = (TextView)convertView.findViewById(R.id.tvName);
+				holder.name = (TextView) convertView.findViewById(R.id.tvName);
 				Util.applyTypeface(holder.name, Util.sTypefaceRegular);
 				holder.name.setText(location.getName());
 				convertView.setTag(location);
@@ -293,8 +344,8 @@ public class ChangeLocationActivity extends Activity implements IServiceListener
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto- generated method stub
 		hideProgress();
-		locationList = (ArrayList<Location>)result.getData();
-		if(locationList !=null)
+		locationList = (ArrayList<Location>) result.getData();
+		if (locationList != null)
 			updateListView();
 	}
 
