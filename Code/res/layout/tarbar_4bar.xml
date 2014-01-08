@@ -22,7 +22,8 @@
             android:id="@+id/imgCutleryIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_tab_cutlery_active" />
+            android:background="@color/transparent"
+            android:src="@drawable/icon_tab_cutlery_active" />
     </LinearLayout>
 
     <LinearLayout
@@ -40,7 +41,9 @@
             android:id="@+id/imgWinIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_tab_wine_normal" />
+            android:background="@color/transparent"
+            android:src="@drawable/icon_tab_wine_normal" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -59,7 +62,8 @@
             android:id="@+id/imgCoffeeIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_tab_coffee_normal" />
+            android:background="@color/transparent"
+            android:src="@drawable/icon_tab_coffee_normal" />
     </LinearLayout>
 
     <LinearLayout
@@ -78,7 +82,8 @@
             android:id="@+id/imgHotelIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_tab_hotel_normal" />
+            android:background="@color/transparent"
+            android:src="@drawable/icon_tab_hotel_normal" />
     </LinearLayout>
 
 </LinearLayout>

@@ -880,10 +880,11 @@ public class XMLParser implements HttpAccess {
 		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = account.edit();
 		if (user  == null) {
-			editor.putString(STORE_USER_ID, "");
-			editor.putString(STORE_USER_EMAIL, "");
-			editor.putString(STORE_USER_NAME, "");
-			editor.putString(STORE_USER_TOKEN, "");
+//			editor.putString(STORE_USER_ID, "");
+//			editor.putString(STORE_USER_EMAIL, "");
+//			editor.putString(STORE_USER_NAME, "");
+//			editor.putString(STORE_USER_TOKEN, "");
+			editor.clear();
 		} else {
 			editor.putString(STORE_USER_ID, user.getId());
 			editor.putString(STORE_USER_EMAIL, user.getEmail());

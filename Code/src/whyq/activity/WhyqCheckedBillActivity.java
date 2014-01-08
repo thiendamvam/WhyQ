@@ -256,7 +256,8 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 				holder.unit.setText("Normal bill");
 				holder.price.setText("$ " + item.getTotal_value());
 			}
-			holder.name.setText(item.getBusiness_info().getName_store());
+			if(item.getBusiness_info()!=null)
+				holder.name.setText(item.getBusiness_info().getName_store());
 			holder.data = item;
 			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
 					holder.photo);

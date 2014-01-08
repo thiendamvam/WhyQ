@@ -4,6 +4,7 @@ import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
+import whyq.utils.XMLParser;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ public class WhyqLogout extends Activity implements IServiceListener{
 			
 			WhyqApplication.Instance().clearToken();
 			WhyqApplication.Instance().setToken(null);
+			XMLParser.storePermpingAccount(WhyqApplication.Instance().getApplicationContext(), null);
 			Intent intent = new Intent(WhyqLogout.this, LoginHome.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);

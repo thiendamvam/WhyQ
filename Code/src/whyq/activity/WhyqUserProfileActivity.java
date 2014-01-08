@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,7 +66,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		ACTIVITY_MAP.put("comment_like", "liked a comment of");
 	}
 
-	private static final int AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
+	private static int AVATAR_SIZE =0;
 	private ActivitiesAdapter mActivitiesAdapter;
 	private PhotoAdapter mPhotoAdapter;
 	protected String mUserId;
@@ -169,8 +170,14 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			}
 			String avatar = user.getAvatar();
 			if (avatar != null) {
+				DisplayMetrics displaymetrics = new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+				WhyqApplication.initScreenSize(displaymetrics.widthPixels,
+						displaymetrics.heightPixels);
 				ImageView imageView = (ImageView) findViewById(R.id.avatar);
+				imageView.setVisibility(View.VISIBLE);
 				LayoutParams LP = imageView.getLayoutParams();
+				AVATAR_SIZE = WhyqApplication.sBaseViewHeight / 5 * 4;
 				LP.width = AVATAR_SIZE;
 				LP.height = AVATAR_SIZE;
 				mImageWorker.downloadImage(avatar, imageView);
@@ -258,6 +265,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	}
 
 	int count = 0;
+	private UserProfile userProfile;
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
@@ -291,8 +299,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			mPhotos.setVisibility(View.VISIBLE);
 			mPhotoAdapter.setItems(photos);
 		} else if (result.getAction() == ServiceAction.ActionGetProfiles) {
-			UserProfile user = DataParser.parseUerProfiles(String.valueOf(result.getData()));
-			bindData(user);
+			userProfile = DataParser.parseUerProfiles(String.valueOf(result.getData()));
+			bindData(userProfile);
 		} else if (result.isSuccess() && (result.getAction() == ServiceAction.ActionInviteFriendsWhyQ)) {
 			setLoading(false);
 			ResponseData data = (ResponseData)result.getData();
@@ -337,7 +345,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 							Intent i = new Intent(WhyqUserProfileActivity.this,
 									WhyqFriendsActivity.class);
 							i.putExtra("is_friend", true);
-							i.putExtra("friend_id", mUserId);
+							i.putExtra("friend_id", userProfile.getId());
 							startActivity(i);
 						}else{
 							Intent i = new Intent(WhyqUserProfileActivity.this,

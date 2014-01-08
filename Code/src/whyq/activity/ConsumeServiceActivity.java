@@ -29,7 +29,7 @@ public class ConsumeServiceActivity extends NavigationActivity implements IServi
 	
 	protected String getEncryptedToken() {
 		try {
-			String token = XMLParser.getToken(WhyqApplication._instance
+			String token = XMLParser.getToken(WhyqApplication.Instance()
 					.getApplicationContext());
 			if(token!=null)
 				token = Util.encryptToken(token);
