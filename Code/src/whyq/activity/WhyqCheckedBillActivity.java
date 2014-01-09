@@ -259,8 +259,8 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 			if(item.getBusiness_info()!=null)
 				holder.name.setText(item.getBusiness_info().getName_store());
 			holder.data = item;
-			mImageWorker.downloadImage(item.getBusiness_info().getLogo(),
-					holder.photo);
+			if(item.getBusiness_info()!=null)
+				mImageWorker.downloadImage(item.getBusiness_info().getLogo(),holder.photo);
 			convertView.setTag(holder);
 			return convertView;
 		}
