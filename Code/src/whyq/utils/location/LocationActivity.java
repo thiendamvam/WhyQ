@@ -186,11 +186,13 @@ public class LocationActivity extends FragmentActivity implements
     @Override
     public void onStop() {
 
+    	Log.d("LocationActivity","onStop"+mLocationClient.isConnected());
         // If the client is connected
-        if (mLocationClient.isConnected()) {
+        if (mLocationClient.isConnected())
+        {
             stopPeriodicUpdates();
         }
-
+        
         // After disconnect() is called, the client is considered "dead".
         mLocationClient.disconnect();
 
@@ -539,7 +541,7 @@ public class LocationActivity extends FragmentActivity implements
      * Location Services
      */
     private void stopPeriodicUpdates() {
-        mLocationClient.removeLocationUpdates(this);
+        mLocationClient.removeLocationUpdates(LocationActivity.this);
 //        mConnectionState.setText(R.string.location_updates_stopped);
     }
 

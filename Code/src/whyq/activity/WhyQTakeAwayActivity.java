@@ -253,6 +253,7 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 					Util.showDialog(context, data.getMessage());
 				}
 			}
+			finish();
 		}else if(result.getAction()== ServiceAction.ActionGetDistance&& result.isSuccess()){
 			ResponseData data = (ResponseData) result.getData();
 			hideDialog();
