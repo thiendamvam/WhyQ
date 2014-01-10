@@ -278,7 +278,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 			Service service = getService();
 			setLoading(true);
 			service.getFriends(getEncryptedToken(),
-					XMLParser.getValue(this, friendId));
+					 friendId);
 		}else{
 			Service service = getService();
 			setLoading(true);
