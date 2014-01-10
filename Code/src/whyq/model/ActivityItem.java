@@ -47,7 +47,7 @@ public class ActivityItem {
 	}
 
 	public String getActivity_type() {
-		return activity_type;
+		return activity_type!=null?activity_type:"";
 	}
 
 	public void setActivity_type(String activity_type) {

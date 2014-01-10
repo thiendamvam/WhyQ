@@ -462,8 +462,11 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			} else {
 				holder.activity.setText(SpannableUtils.stylistText(message,
 						key, 0xff808080));
+				
 			}
-
+			if(item.getActivity_type().toUpperCase().equals("COMMENT")){
+				holder.activity.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_status_comment, 0, 0, 0);
+			}
 			return convertView;
 		}
 
