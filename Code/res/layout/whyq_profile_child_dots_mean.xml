@@ -9,13 +9,13 @@
     <include
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.85"
         layout="@layout/navigate_text_2" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_weight="9.15"
         android:orientation="vertical"
         android:padding="0dp" >
 
