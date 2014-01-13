@@ -142,6 +142,21 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		
 		
 		setExtraView(setting);
+//
+//		hideExtraButton();
+//
+//		setLoading(true);
+//		getService().getUserActivities(getEncryptedToken(), mUserId);
+//		getService().getPhotos(getEncryptedToken(), mUserId);
+//		getService().getProfiles(getEncryptedToken(), mUserId);
+
+	}
+	
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
 
 		hideExtraButton();
 

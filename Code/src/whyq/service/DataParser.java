@@ -756,19 +756,24 @@ public class DataParser {
 							NodeList childList = elementPr.getChildNodes();
 							int lengthMenuNode = childList.getLength();
 							for (int c = 0; c < lengthMenuNode; c++) {
-								Element menuElement = (Element) childList.item(c);
+								Element menuElement = (Element) childList
+										.item(c);
 
 								NodeList productNodes = menuElement
 										.getElementsByTagName("list_item");
 								int lengthProductNode2 = productNodes
 										.getLength();
 								for (int c3 = 0; c3 < lengthProductNode2; c3++) {
-									Element elementList = (Element) productNodes.item(c3);
-									NodeList productsNoteList = elementList.getChildNodes();
-									int lengthProductNode = productsNoteList.getLength();
+									Element elementList = (Element) productNodes
+											.item(c3);
+									NodeList productsNoteList = elementList
+											.getChildNodes();
+									int lengthProductNode = productsNoteList
+											.getLength();
 
 									for (int c4 = 0; c4 < lengthProductNode; c4++) {
-										Element element = (Element) productsNoteList.item(c4);
+										Element element = (Element) productsNoteList
+												.item(c4);
 										Menu menu = new Menu();
 										menu.setId(getValue(element, "id"));
 										menu.setStoreId(getValue(element,
@@ -776,13 +781,14 @@ public class DataParser {
 										menu.setNameProduct(getValue(element,
 												"name_product"));
 										menu.setValue(getValue(element, "value"));
-										menu.setValuePromotion(getValue(element,
-												"value_promotion"));
+										menu.setValuePromotion(getValue(
+												element, "value_promotion"));
 										menu.setImageProduct(getValue(element,
 												"image_product"));
 										menu.setImageThumb(getValue(element,
 												"image_thumb"));
-										menu.setStatus(getValue(element, "status"));
+										menu.setStatus(getValue(element,
+												"status"));
 										menu.setTypeProductId(getValue(element,
 												"type_product_id"));
 										menu.setCreateDate(getValue(element,
@@ -800,9 +806,11 @@ public class DataParser {
 											Element inElement = (Element) productTypeInfoNodes
 													.item(y);
 											ProductTypeInfo product = new ProductTypeInfo();
-											product.setId(getValue(inElement, "id"));
+											product.setId(getValue(inElement,
+													"id"));
 											product.setNameProductType(getValue(
-													inElement, "name_product_type"));
+													inElement,
+													"name_product_type"));
 											product.setCreateDate(getValue(
 													inElement, "createdate"));
 											product.setSort(getValue(inElement,
@@ -819,20 +827,24 @@ public class DataParser {
 											Element infoElement = (Element) storeInfoNodes
 													.item(w);
 											StoreInfo storeInfo = new StoreInfo();
-											storeInfo.setId(getValue(infoElement,
-													"id"));
+											storeInfo.setId(getValue(
+													infoElement, "id"));
 											storeInfo.setCateid(getValue(
 													infoElement, "cate_id"));
 											storeInfo.setUserId(getValue(
 													infoElement, "user_id"));
 											storeInfo.setNameSore(getValue(
 													infoElement, "name_store"));
-											storeInfo.setIntroStore(getValue(
-													infoElement, "intro_store"));
-											storeInfo.setPhoneStore(getValue(
-													infoElement, "phone_store"));
-											storeInfo.setLogo(getValue(infoElement,
-													"logo"));
+											storeInfo
+													.setIntroStore(getValue(
+															infoElement,
+															"intro_store"));
+											storeInfo
+													.setPhoneStore(getValue(
+															infoElement,
+															"phone_store"));
+											storeInfo.setLogo(getValue(
+													infoElement, "logo"));
 											storeInfo.setStyle(getValue(
 													infoElement, "style"));
 											storeInfo.setStartTime(getValue(
@@ -840,23 +852,29 @@ public class DataParser {
 											storeInfo.setEndTime(getValue(
 													infoElement, "end_time"));
 											storeInfo.setHomeDeliver(getValue(
-													infoElement, "is_home_deliver")
-													.equals("1") ? true : false);
+													infoElement,
+													"is_home_deliver").equals(
+													"1") ? true : false);
+											storeInfo.setHotelDeliver(getValue(
+													infoElement,
+													"is_hotel_deliver").equals(
+													"2") ? true : false);
 											storeInfo
-													.setHotelDeliver(getValue(
+													.setTakeAray(getValue(
 															infoElement,
-															"is_hotel_deliver")
+															"is_take_away")
+															.equals("1") ? true
+															: false);
+											storeInfo
+													.setAtPlace(getValue(
+															infoElement,
+															"is_at_place")
 															.equals("2") ? true
 															: false);
-											storeInfo.setTakeAray(getValue(
-													infoElement, "is_take_away")
-													.equals("1") ? true : false);
-											storeInfo.setAtPlace(getValue(
-													infoElement, "is_at_place")
-													.equals("2") ? true : false);
-											storeInfo.setStartTimeDeliver(getValue(
-													infoElement,
-													"start_time_deliver"));
+											storeInfo
+													.setStartTimeDeliver(getValue(
+															infoElement,
+															"start_time_deliver"));
 											storeInfo
 													.setEndtimeDeliver(getValue(
 															infoElement,
@@ -869,8 +887,10 @@ public class DataParser {
 													.setValueConditionDeliver(getValue(
 															infoElement,
 															"value_condition_deliver"));
-											storeInfo.setTableWuantity(getValue(
-													infoElement, "table_quantity"));
+											storeInfo
+													.setTableWuantity(getValue(
+															infoElement,
+															"table_quantity"));
 											storeInfo
 													.setCountFavouriteMember(getValue(
 															infoElement,
@@ -890,9 +910,7 @@ public class DataParser {
 										}
 										menuList.add(menu);
 									}
-									
-									
-									
+
 								}
 							}
 
@@ -1607,40 +1625,59 @@ public class DataParser {
 					Element element1 = (Element) objNodeList.item(ii);
 
 					discount = getValue(element1, "discount_value");
-					break;
-				}
+					ArrayList<Bill> listBill = new ArrayList<Bill>();
+					NodeList permNodeList = doc.getElementsByTagName("detail");
+					int size = permNodeList.getLength();
 
-				ArrayList<Bill> listBill = new ArrayList<Bill>();
-				NodeList permNodeList = doc.getElementsByTagName("detail");
-				int size = permNodeList.getLength();
-				for (int i = 0; i < size; i++) {
-					try {
+					for (int i3 = 0; i3 < size; i3++) {
+						try {
 
-						Element element = (Element) permNodeList.item(i);
-						Bill item = new Bill();
-						item.setId(getValue(element, "id"));
-						item.setPrice(getValue(element, "item_price"));
-						item.setProductId(getValue(element, "product_id"));
-						item.setUnit(getValue(element, "quantity"));
-						item.setDiscount(discount);
-						NodeList productes = element
-								.getElementsByTagName("product");
-						for (int j = 0; j < productes.getLength(); j++) {
-							Element elementChild = (Element) productes.item(j);
-							item.setProductName(getValue(element,
-									"name_product"));
-							item.setThumb(getValue(element, "image_thumb"));
-							// item.setAmount(getValue(element, "id"));
+							Element element2 = (Element) permNodeList.item(i3);
+
+							NodeList billItemList = element2
+									.getElementsByTagName("data");
+							int sizeBillItem = billItemList.getLength();
+							for (int i = 0; i < sizeBillItem; i++) {
+								try {
+
+									Element element = (Element) billItemList
+											.item(i);
+									Bill item = new Bill();
+									item.setId(getValue(element, "id"));
+									item.setPrice(getValue(element,
+											"item_price"));
+									item.setProductId(getValue(element,
+											"product_id"));
+									item.setUnit(getValue(element, "quantity"));
+									item.setDiscount(discount);
+									NodeList productes = element
+											.getElementsByTagName("product");
+									for (int j = 0; j < productes.getLength(); j++) {
+										Element elementChild = (Element) productes
+												.item(j);
+										item.setProductName(getValue(element,
+												"name_product"));
+										item.setThumb(getValue(element,
+												"image_thumb"));
+										// item.setAmount(getValue(element,
+										// "id"));
+									}
+
+									listBill.add(item);
+
+								} catch (Exception e) {
+									// TODO: handle exception
+								}
+							}
+
+						} catch (Exception e) {
+							// TODO: handle exception
+							e.printStackTrace();
 						}
-
-						listBill.add(item);
-
-					} catch (Exception e) {
-						// TODO: handle exception
-						e.printStackTrace();
 					}
+					data.setData(listBill);
 				}
-				data.setData(listBill);
+
 				return data;
 			} else {
 				final String mes = doc.getElementsByTagName("Message").item(0)

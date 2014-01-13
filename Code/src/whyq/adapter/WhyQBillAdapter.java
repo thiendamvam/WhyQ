@@ -58,10 +58,13 @@ public class WhyQBillAdapter extends ArrayAdapter<Bill> {
 			viewHolder.tvName = (TextView)view.findViewById(R.id.tvName);
 			viewHolder.unit = (TextView)view.findViewById(R.id.tvUnit);
 			viewHolder.tvAmount = (TextView)view.findViewById(R.id.tvAmount);
-			viewHolder.tvPrice.setText("$"+String.format("%.2f",Float.parseFloat(item.getPrice())));
+			if(!item.getPrice().equals(""))
+				viewHolder.tvPrice.setText("$"+String.format("%.2f",Float.parseFloat(item.getPrice())));
 			viewHolder.unit.setText(item.getUnit());
-			float value = Float.parseFloat(item.getUnit())*Float.parseFloat(item.getPrice());
-			viewHolder.tvAmount.setText(""+String.format("%.2f",value));
+			if(!item.getPrice().equals("")){
+				float value = Float.parseFloat(item.getUnit())*Float.parseFloat(item.getPrice());
+				viewHolder.tvAmount.setText(""+String.format("%.2f",value));
+			}
 //			viewHolder.tvCount.setText(item.getSort());
 //			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getThumb());
 			viewHolder.tvName.setText(Html.fromHtml(item.getProductName()));

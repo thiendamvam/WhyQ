@@ -16,13 +16,13 @@ public class Bill {
 		this.id = id;
 	}
 	public String getProductName() {
-		return productName;
+		return productName!=null?productName:"";
 	}
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
 	public String getPrice() {
-		return price;
+		return price!=null?price:"";
 	}
 	public void setPrice(String price) {
 		this.price = price;

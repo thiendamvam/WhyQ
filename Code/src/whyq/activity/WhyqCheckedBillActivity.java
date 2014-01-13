@@ -177,7 +177,8 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 			tmp.setCountVisited(1);
 			if(item.getBusiness_info()!=null)
 				tmp.setStoreAddress(item.getBusiness_info().getAddress());
-			tmp.setStoreName(item.getBusiness_info().getName_store());
+			if(item.getBusiness_info()!=null)
+				tmp.setStoreName(item.getBusiness_info().getName_store());
 			tmp.setTotalDiscountValue(item.getDiscount_value());
 			tmp.setTotalValue(item.getTotal_value());
 			if(item.getBusiness_info()!=null)
