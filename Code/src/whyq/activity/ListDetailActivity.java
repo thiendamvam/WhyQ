@@ -1,5 +1,6 @@
 package whyq.activity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,9 +11,7 @@ import whyq.adapter.BasicImageListAdapter;
 import whyq.adapter.BasicUserAdapter;
 import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
-import whyq.adapter.WhyqAdapter.ViewHolder;
 import whyq.adapter.WhyqMenuAdapter;
-import whyq.controller.SreenGestureControllerwithParams;
 import whyq.interfaces.IServiceListener;
 import whyq.map.MapsActivity;
 import whyq.model.Bill;
@@ -43,15 +42,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
@@ -64,11 +56,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whyq.R;
 
@@ -1030,12 +1021,16 @@ public class ListDetailActivity extends FragmentActivity implements
 			value = 0;
 		if (totalValue < 0)
 			totalValue = 0;
-		holder.tvCount.setText("" + String.format("%.2f", value));
+		holder.tvCount.setText("" + round(value, 0));
 		holder.tvCount.requestLayout();
-		btnTotalValue.setText("" + String.format("%.2f", totalValue));
+		btnTotalValue.setText("" + round(totalValue, 2));
 		checkCommentView(totalValue);
 	}
-
+	public static BigDecimal round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);       
+        return bd;
+    }
 	private void checkCommentView(float totalValue) {
 		// TODO Auto-generated method stub
 		Log.d("checkCommentView", "totalValue: " + totalValue);

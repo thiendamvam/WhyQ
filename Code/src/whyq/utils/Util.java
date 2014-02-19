@@ -14,6 +14,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -145,6 +146,11 @@ public class Util {
 			return "";
 		}
 	}
+	public static BigDecimal round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);       
+        return bd;
+    }
 
 	public static String getFileName(String path) {
 		String imageFileName = path.substring(path.lastIndexOf('/') + 1);

@@ -55,6 +55,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidexample.lazyimagedownload.ImageLoader;
 import com.whyq.R;
 
 public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener {
@@ -86,7 +87,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 	private int screenWidth;
 	private int screenHeight;
 	private Context context;
-	private HashMap<String, View> viewList = new HashMap<String, View>();
+//	private HashMap<String, View> viewList = new HashMap<String, View>();
 	private HashMap<String, Store> newPermList = new HashMap<String, Store>();
 	private HashMap<String, TextView> permStateList = new HashMap<String, TextView>();
 	public int count = 11;
@@ -102,27 +103,29 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 	final String commentString = this.getContext().getResources().getString(R.string.bt_comment);
 	final String textCurrentLike = this.getContext().getResources().getString(R.string.delete);
 	private Promotion promotion;
+	private ImageLoader imageLoader;
 //	private ArrayList<Whyq> listProducts;
 /*	
 	PermAdapter(ArrayList<Perm> perms) {
 		super(PermAdapter.getContext(), new SpecialAdapter(perms), R.layout.pending);
 	}
 	*/
-	public WhyqAdapter(Context context, int textViewResourceId,
-			ArrayList<Store> items, Activity activity, int screenWidth,
-			int screenHeight, Boolean header) {
-		super(context, textViewResourceId, items);
-		this.context = context;
-		this.activity = activity;
-		this.header = header;
-		this.items = items;
-		this.screenWidth = screenWidth;
-		this.screenHeight = screenHeight;
-		facebookConnector = new FacebookConnector(Constants.FACEBOOK_APP_ID,
-				this.activity, context, new String[] { Constants.EMAIL,
-						Constants.PUBLISH_STREAM });
-		prefs = PreferenceManager.getDefaultSharedPreferences(context);
-	}
+//	public WhyqAdapter(Context context, int textViewResourceId,
+//			ArrayList<Store> items, Activity activity, int screenWidth,
+//			int screenHeight, Boolean header) {
+//		super(context, textViewResourceId, items);
+//		this.context = context;
+//		this.activity = activity;
+//		this.header = header;
+//		this.items = items;
+//		this.screenWidth = screenWidth;
+//		this.screenHeight = screenHeight;
+//		facebookConnector = new FacebookConnector(Constants.FACEBOOK_APP_ID,
+//				this.activity, context, new String[] { Constants.EMAIL,
+//						Constants.PUBLISH_STREAM });
+//		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+//		
+//	}
 
 	public WhyqAdapter(Context context,FragmentManager fragmentManager, int textViewResourceId,
 			ArrayList<Store> items, Activity activity, int screenWidth,
@@ -140,7 +143,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 				this.activity, context, new String[] { Constants.EMAIL,
 						Constants.PUBLISH_STREAM });
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
+		imageLoader = WhyqApplication.Instance().getImageLoader();
 	}
 
 	private String getActivityGroupName() {
@@ -152,7 +155,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 	}
 
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View rowView, ViewGroup parent) {
 		try {
 
 			if(items != null && !items.isEmpty() && position < items.size()){
@@ -174,19 +177,20 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					return createNullView();
 				}
 				currentPermId = viewId;
-				convertView = viewList.get(viewId);
+//				convertView = viewList.get(viewId);
+				ViewHolder viewHolder = new ViewHolder();
 				newPermList.put(viewId, store);
-				if (convertView != null){
-
-					return convertView;
+				Store item = items.get(position);
+				if (rowView != null){
+					viewHolder = (ViewHolder)rowView.getTag();
+//					return convertView;
 				}else{
 
-					Store item = items.get(position);
 					LayoutInflater inflater = (LayoutInflater) context
 							.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					View rowView = inflater.inflate(R.layout.whyq_item_new, null);
+					rowView = inflater.inflate(R.layout.whyq_item_new, null);
 					LayoutParams PARAMS = (LinearLayout.LayoutParams)rowView.getLayoutParams();
-					ViewHolder viewHolder = new ViewHolder();
+					
 					viewHolder.id = item.getStoreId();
 					viewHolder.imgThumb = (ImageView) rowView.findViewById(R.id.imgThumbnal2);
 					viewHolder.tvItemName = (TextView) rowView.findViewById(R.id.tvItemName);
@@ -198,91 +202,91 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					viewHolder.imgFavouriteThumb = (ImageView)rowView.findViewById(R.id.imgFavourite);
 					viewHolder.prgFavourite = (ProgressBar)rowView.findViewById(R.id.prgFavourite);
 					viewHolder.rlDiscount = (RelativeLayout)rowView.findViewById(R.id.rlDiscount);
-					viewHolder.tvItemName.setText(item.getNameStore().toUpperCase());
-					viewHolder.tvItemAddress.setText(item.getAddress());
-					viewHolder.tvNumberFavourite.setText(""+item.getCountFavaouriteMember());
-					if(item.getPromotionList().size() > 0){
-						viewHolder.tvDiscoutNumber.setVisibility(View.VISIBLE);
-						promotion = item.getPromotionList().get(0);
-						viewHolder.tvDiscoutNumber.setText(""+promotion.getValuePromotion()+promotion.getTypeValue()+ " for bill over $"+promotion.getConditionPromotion());
-					}else{
-						viewHolder.rlDiscount.setVisibility(View.GONE);
-						
-					}
-					
-					if(!item.getDistance().equals(""))
-						viewHolder.btnDistance.setText((int)Float.parseFloat(item.getDistance())+" km");
 					viewHolder.imgFriendThumb = (ImageView)rowView.findViewById(R.id.imgFriendThumb);
-					
-					UserCheckBill userCheckBill = item.getUserCheckBill();
-					if(userCheckBill !=null){
-						if(userCheckBill.getTotalMember()!=null && !userCheckBill.getTotalMember().equals("")){
-							if(userCheckBill.getAvatar()!=null && !userCheckBill.getAvatar().equals("")){
-								if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
-									viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" others visited");	
-								}else{
-									viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" other visited");
-								}
-								
-								viewHolder.imgFriendThumb.setVisibility(View.VISIBLE);
-								UrlImageViewHelper.setUrlDrawable(viewHolder.imgFriendThumb, userCheckBill.getAvatar());	
-							}else{
-								if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
-									viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" others visited");
-								}else{
-									viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" other visited");
-								}
-								
-							}
 
-						}
-					}
-//					if(item.getCountFavaouriteMember() !=null)
-//						if(!item.getCountFavaouriteMember().equals(""))
-//							if(Integer.parseInt(item.getCountFavaouriteMember()) >0){
-////								viewHolder.imgFavouriteThumb.setBackgroundResource(R.drawable.icon_fav_enable);
-//								viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
-//					}
-					if(item.getIsFavourite()){
-						viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
-					}else{
-						viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_disable);
-					}
-					viewHolder.imgFavouriteThumb.setOnClickListener(new View.OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							if( FavouriteActivity.isFavorite)
-								((FavouriteActivity)context).onFavouriteClicked(v);
-							else
-								((ListActivity)context).onFavouriteClicked(v);
-						}
-					});
-					UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
 					rowView.setTag(viewHolder);
-					rowView.setOnClickListener(new View.OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							Log.d("fdsfsfsdfs","fdsfsdfsf");
-							Intent intent = new Intent(context, ListDetailActivity.class);
-							intent.putExtra("store_id", ListActivity.storeId);
-							intent.putExtra("id", store.getStoreId());
-							context.startActivity(intent);
+//					viewList.put(store.getStoreId(), rowView);
+					
+				}
+				viewHolder.tvItemName.setText(item.getNameStore().toUpperCase());
+				viewHolder.tvItemAddress.setText(item.getAddress());
+				viewHolder.tvNumberFavourite.setText(""+item.getCountFavaouriteMember());
+				if(item.getPromotionList().size() > 0){
+					viewHolder.tvDiscoutNumber.setVisibility(View.VISIBLE);
+					promotion = item.getPromotionList().get(0);
+					viewHolder.tvDiscoutNumber.setText(""+promotion.getValuePromotion()+promotion.getTypeValue()+ " for bill over $"+promotion.getConditionPromotion());
+				}else{
+					viewHolder.rlDiscount.setVisibility(View.GONE);
+					
+				}
+				
+				if(!item.getDistance().equals(""))
+					viewHolder.btnDistance.setText((int)Float.parseFloat(item.getDistance())+" km");
+				
+				
+				UserCheckBill userCheckBill = item.getUserCheckBill();
+				if(userCheckBill !=null){
+					if(userCheckBill.getTotalMember()!=null && !userCheckBill.getTotalMember().equals("")){
+						if(userCheckBill.getAvatar()!=null && !userCheckBill.getAvatar().equals("")){
+							if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
+								viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" others visited");	
+							}else{
+								viewHolder.tvVisited.setText(userCheckBill.getFirstName()+" "+userCheckBill.getLastName()+ " & "+userCheckBill.getTotalMember()+" other visited");
+							}
+							
+							viewHolder.imgFriendThumb.setVisibility(View.VISIBLE);
+//							UrlImageViewHelper.setUrlDrawable(viewHolder.imgFriendThumb, userCheckBill.getAvatar());
+							imageLoader.DisplayImage(userCheckBill.getAvatar(), viewHolder.imgFriendThumb);
+						}else{
+							if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
+								viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" others visited");
+							}else{
+								viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" other visited");
+							}
+							
 						}
-					});
-					if (store != null) {
-						
 
 					}
-					viewHolder.imgFavouriteThumb.setTag(item);
-					viewHolder.btnDistance.setTag(item);
-					rowView.setEnabled(true);
-					viewList.put(store.getStoreId(), rowView);
-					return rowView;
 				}
+				if(item.getIsFavourite()){
+					viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_enable);
+				}else{
+					viewHolder.imgFavouriteThumb.setImageResource(R.drawable.icon_fav_disable);
+				}
+				viewHolder.imgFavouriteThumb.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						if( FavouriteActivity.isFavorite)
+							((FavouriteActivity)context).onFavouriteClicked(v);
+						else
+							((ListActivity)context).onFavouriteClicked(v);
+					}
+				});
+//				UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
+				imageLoader.DisplayImage(item.getLogo(), viewHolder.imgThumb);
+				rowView.setTag(viewHolder);
+				rowView.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Log.d("fdsfsfsdfs","fdsfsdfsf");
+						Intent intent = new Intent(context, ListDetailActivity.class);
+						intent.putExtra("store_id", ListActivity.storeId);
+						intent.putExtra("id", store.getStoreId());
+						context.startActivity(intent);
+					}
+				});
+				if (store != null) {
+					
+
+				}
+				viewHolder.imgFavouriteThumb.setTag(item);
+				viewHolder.btnDistance.setTag(item);
+				rowView.setEnabled(true);
+				return rowView;
 			}
 			else{
 		

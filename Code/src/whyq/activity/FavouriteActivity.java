@@ -29,12 +29,13 @@ import whyq.utils.UrlImageViewHelper;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.XMLParser;
-import whyq.utils.location.LocationActivity;
+import whyq.utils.location.LocationActivityNew;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -294,19 +295,17 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	
 	private void getLocation() {
 		// TODO Auto-generated method stub
-//		Util.checkLocationSetting(getParent());
-//		Bundle bundle = Util.getLocation(getParent());
-//		if(bundle!=null){
-//			longitude = bundle.getString("lon");
-//			latgitude = bundle.getString("lat");
-//		}
-		if(LocationActivity.currentLocation!=null){
-			longitude = ""+LocationActivity.currentLocation.getLongitude();
-			latgitude = ""+LocationActivity.currentLocation.getLatitude();
-		}else{
-			Intent i = new Intent(context, LocationActivity.class);
+		Location location = WhyqApplication.Instance().getCurrentLocation();
+		Log.d("getLocation","location: "+location);
+		if (location != null) {
+			longitude = "" + location.getLongitude();
+			latgitude = "" + location.getLatitude();
+		} else {
+//			Intent i = new Intent(context, LocationActivity.class);
+			Intent i = new Intent(context, LocationActivityNew.class);
 			startActivityForResult(i, GET_LOCATION);
 		}
+
 	}
 
 	@Override

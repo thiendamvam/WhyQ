@@ -3,6 +3,8 @@
  */
 package whyq;
 
+import com.androidexample.lazyimagedownload.ImageLoader;
+
 import whyq.model.User;
 import whyq.utils.RSA;
 import whyq.utils.Util;
@@ -11,6 +13,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
@@ -38,6 +41,7 @@ public class WhyqApplication extends Application {
 	public static Typeface sTypefaceRegular;
 	public static Typeface sTypefaceBold;
 	public static Typeface sTypefaceItalic;
+	private Location currentLocation;
 
 	/**
 	 * The current login type 
@@ -113,6 +117,7 @@ public class WhyqApplication extends Application {
 		XMLParser.clearToken(getApplicationContext());
 	}
 	private DisplayMetrics metrics;
+	private ImageLoader imageLoader;
 	
 	public void setDisplayMetrics( DisplayMetrics metrics ){
 		this.metrics = metrics;
@@ -185,4 +190,26 @@ public class WhyqApplication extends Application {
 				.getDefaultSharedPreferences(getApplicationContext());
 		return pref.getString("password", null);
 	}
+
+	public Location getCurrentLocation() {
+		// TODO Auto-generated method stub
+		if(currentLocation!=null){
+			
+		}else{
+			
+		}
+		return currentLocation;
+	}
+	public void setCurrentLocation(Location location) {
+		// TODO Auto-generated method stub
+		
+		this.currentLocation = location;
+	}
+	
+	public ImageLoader getImageLoader(){
+		if(imageLoader == null)
+			imageLoader = new ImageLoader(getApplicationContext());
+		return imageLoader;
+	}
+	
 }

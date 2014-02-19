@@ -105,14 +105,19 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 	private void bindBillValue() {
 		// TODO Auto-generated method stub
 		
-		tvTotal.setText("$"+String.format("%.2f",totalValue));
-		if(valueDiscount!=0)
-			tvDiscount.setText("%"+ Float.parseFloat(String.format("%.2f", valueDiscount)));
-		if(valueDiscount!=0)
-			totalafterDiscount = (float)(totalValue*(100-valueDiscount)/100);
-		else
-			totalafterDiscount = totalValue;
-		tvTotalAfterDiscount.setText("$"+String.format("%.2f", totalafterDiscount));
+		try {
+			tvTotal.setText("$"+Util.round(totalValue, 2));
+			if(valueDiscount!=0)
+				tvDiscount.setText("%"+ Util.round(valueDiscount, 2));
+			if(valueDiscount!=0)
+				totalafterDiscount = (float)(totalValue*(100-valueDiscount)/100);
+			else
+				totalafterDiscount = totalValue;
+			tvTotalAfterDiscount.setText("$"+Util.round(totalafterDiscount, 2));
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 	private void getValue(ArrayList<Bill> listBill2) {
 		// TODO Auto-generated method stub
@@ -207,7 +212,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 			if(data.getStatus().equals("200")){
 				listBill = (ArrayList<Bill>)data.getData();
 				if(listBill!=null){
-					
+					listBill = filterBillWithName(listBill);
 					bindDatatoListview();
 					getValue(listBill);
 					bindBillValue();
@@ -218,5 +223,16 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 			}else{
 			}
 		} 
+	}
+	private ArrayList<Bill> filterBillWithName(ArrayList<Bill> listBill2) {
+		// TODO Auto-generated method stub
+		ArrayList<Bill> result = new ArrayList<Bill>();
+		for(Bill bill:listBill2){
+			if(bill.getProductName()!=null){
+				if(!bill.getProductName().equals("")&&!bill.getUnit().equals(""))
+					result.add(bill);
+			}
+		}
+		return result;
 	}
 }

@@ -225,7 +225,7 @@ public class LocationActivity extends FragmentActivity implements
          * Connect the client. Don't re-start any requests here;
          * instead, wait for onResume()
          */
-        Log.d("onStart","Start LoginActivity");
+        Log.d("LocationActivity","onStart");
         mLocationClient.connect();
     }
     /*
@@ -375,7 +375,7 @@ public class LocationActivity extends FragmentActivity implements
 
     public void finishActivity(){
     	Intent i = getIntent();
-    	i.putExtra("have_location", true);
+    	i.putExtra("have_location", currentLocation!=null?true:false);
     	setResult(RESULT_OK,i);
     	finish();
     }
