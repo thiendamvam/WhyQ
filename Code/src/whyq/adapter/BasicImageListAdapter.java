@@ -3,6 +3,7 @@ package whyq.adapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import whyq.WhyqApplication;
 import whyq.activity.ListDetailActivity;
 import whyq.model.Photo;
 import whyq.service.img.UrlImageViewHelper;
@@ -57,7 +58,8 @@ public class BasicImageListAdapter extends Fragment implements OnScrollListener 
 //			tvNumberFavourtie.setText(ListDetailActivity.store.getCountFavaouriteMember());
 
 			if(photo.getThumb() !=null)
-				UrlImageViewHelper.setUrlDrawable(imgView, photo.getThumb());
+//				UrlImageViewHelper.setUrlDrawable(imgView, photo.getThumb());
+				WhyqApplication.Instance().getImageLoader().DisplayImage(photo.getThumb(), imgView);
 
 			return v;
 		}

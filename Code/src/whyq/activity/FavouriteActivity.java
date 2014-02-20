@@ -323,7 +323,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	protected void onPause () {
     	super.onPause();
     	isFavorite = false;
-    	isFirst = false;
+//    	isFirst = false;
     	nextItem = -1;
 //    	showProgress();
     	
