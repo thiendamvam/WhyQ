@@ -15,7 +15,7 @@
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -23,7 +23,7 @@
             <RadioButton
                 android:id="@+id/viewBill"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/btn_radio_bg_lef"
                 android:button="@null"
@@ -35,7 +35,7 @@
             <RadioButton
                 android:id="@+id/viewPlace"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/btn_radio_bg_right"
                 android:button="@null"

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import whyq.WhyqApplication;
 import whyq.activity.ListDetailActivity;
 import whyq.model.User;
 import whyq.utils.UrlImageViewHelper;
@@ -60,7 +61,9 @@ public class BasicUserAdapter extends BaseAdapter {
 			viewHolder.imgThumb = (ImageView) view.findViewById(R.id.imgAvatar);
 			viewHolder.imgFriendThumb = (ImageView) view.findViewById(R.id.imgFriend);
 			viewHolder.tvName = (TextView)view.findViewById(R.id.tvFriendCount);
-			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getUrlAvatar());
+//			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getUrlAvatar());
+			WhyqApplication.Instance().getImageLoader().DisplayImage(item.getUrlAvatar(), viewHolder.imgThumb);
+			
 			viewHolder.tvName.setText(item.getFirstName()+" "+item.getLastName());
 			if(item.isFriend()){
 				viewHolder.imgFriendThumb.setBackgroundResource(R.drawable.icon_friended);

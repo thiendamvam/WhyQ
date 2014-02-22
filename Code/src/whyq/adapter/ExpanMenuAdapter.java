@@ -5,6 +5,7 @@ package whyq.adapter;
 import java.util.HashMap;
 import java.util.List;
 
+import whyq.WhyqApplication;
 import whyq.activity.ListDetailActivity;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.model.GroupMenu;
@@ -142,8 +143,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 			viewHolder.menuId = item.getId();
 			
 			viewHolder.btnRemove.setTag(viewHolder);
-			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getImageThumb());
-			
+//			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getImageThumb());
+			WhyqApplication.Instance().getImageLoader().DisplayImage(item.getImageThumb(),viewHolder.imgThumb);
 			viewHolder.btnAdd.setTag(viewHolder);
 			view.setTag(viewHolder);
 			

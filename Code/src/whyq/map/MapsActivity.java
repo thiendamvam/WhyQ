@@ -510,7 +510,8 @@ public class MapsActivity extends FragmentActivity implements
 					}
 					
 					viewHolder.imgFriendThumb.setVisibility(View.VISIBLE);
-					UrlImageViewHelper.setUrlDrawable(viewHolder.imgFriendThumb, userCheckBill.getAvatar());	
+//					UrlImageViewHelper.setUrlDrawable(viewHolder.imgFriendThumb, userCheckBill.getAvatar());
+					WhyqApplication.Instance().getImageLoader().DisplayImage(userCheckBill.getAvatar(),viewHolder.imgFriendThumb);
 				}else{
 					if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
 						viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" others visited");
@@ -539,7 +540,8 @@ public class MapsActivity extends FragmentActivity implements
 					((ListActivity)context).onFavouriteClicked(v);
 			}
 		});
-		UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
+//		UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
+		WhyqApplication.Instance().getImageLoader().DisplayImage(item.getLogo(),viewHolder.imgThumb);
 		rowView.setTag(viewHolder);
 		rowView.setOnClickListener(new View.OnClickListener() {
 			

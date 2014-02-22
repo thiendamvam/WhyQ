@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import whyq.WhyqApplication;
 import whyq.activity.ListDetailActivity;
 import whyq.model.Menu;
 import whyq.utils.UrlImageViewHelper;
@@ -72,8 +73,8 @@ public class WhyqMenuAdapter extends ArrayAdapter<Menu> {
 			viewHolder.btnAdd.setTag(item);
 			viewHolder.btnRemove.setTag(item);
 			
-			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getImageThumb());
-			
+//			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getImageThumb());
+			WhyqApplication.Instance().getImageLoader().DisplayImage(item.getImageThumb(),viewHolder.imgThumb);
 			view.setTag(viewHolder);
 			
 			viewList.put(String.valueOf(item.getStoreId()), view);

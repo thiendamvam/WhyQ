@@ -166,7 +166,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 						}
 						
 						viewHolder.imgFriendThumb.setVisibility(View.VISIBLE);
-						UrlImageViewHelper.setUrlDrawable(viewHolder.imgFriendThumb, userCheckBill.getAvatar());	
+//						UrlImageViewHelper.setUrlDrawable(viewHolder.imgFriendThumb, userCheckBill.getAvatar());
+						WhyqApplication.Instance().getImageLoader().DisplayImage(userCheckBill.getAvatar(), viewHolder.imgFriendThumb);
 					}else{
 						if(Integer.parseInt(userCheckBill.getTotalMember()) > 0){
 							viewHolder.tvVisited.setText(userCheckBill.getTotalMember()+" others visited");
@@ -200,7 +201,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 						((ListActivity)context).onFavouriteClicked(v);
 				}
 			});
-			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, store.getLogo());
+//			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, store.getLogo());
+			WhyqApplication.Instance().getImageLoader().DisplayImage(store.getLogo(), viewHolder.imgThumb);
 			rowView.setTag(viewHolder);
 			rowView.setOnClickListener(new View.OnClickListener() {
 				

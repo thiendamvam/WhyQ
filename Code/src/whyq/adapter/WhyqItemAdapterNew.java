@@ -3,6 +3,7 @@ package whyq.adapter;
 
 import java.util.ArrayList;
 
+import whyq.WhyqApplication;
 import whyq.model.Store;
 import whyq.utils.UrlImageViewHelper;
 import android.content.Context;
@@ -54,7 +55,8 @@ public class WhyqItemAdapterNew extends BaseAdapter {
 			viewHolder.tvItemAddress.setText(item.getAddress());
 			viewHolder.tvNumberFavourite.setText(""+item.getCountFavaouriteMember());
 			viewHolder.btnDistance.setText("");
-			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
+//			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getLogo());
+			WhyqApplication.Instance().getImageLoader().DisplayImage(item.getLogo(),viewHolder.imgThumb);
 			rowView.setTag(viewHolder);
 		}
 
