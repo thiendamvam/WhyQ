@@ -15,8 +15,8 @@
 
         <LinearLayout
             android:id="@+id/imgThumbnal"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:gravity="center_horizontal|top"
             android:orientation="vertical" >
 

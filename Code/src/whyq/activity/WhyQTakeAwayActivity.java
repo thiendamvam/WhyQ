@@ -3,6 +3,7 @@ package whyq.activity;
 import java.util.HashMap;
 
 import whyq.WhyqApplication;
+import whyq.interfaces.IDialogListener;
 import whyq.interfaces.IServiceListener;
 import whyq.model.Distance;
 import whyq.model.ResponseData;
@@ -30,7 +31,7 @@ import android.widget.TimePicker;
 import com.whyq.R;
 
 public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
-		IServiceListener {
+		IServiceListener, IDialogListener {
 
 	private Button etHours;
 	private Button etMinutes;
@@ -246,14 +247,14 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 			hideDialog();
 			if (data != null) {
 				if (data.getStatus().equals("200")) {
-					Util.showDialog(context, data.getMessage());
+					Util.showDialog(context, data.getMessage(), WhyQTakeAwayActivity.this);
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(context, data.getMessage());
 				} else {
-					Util.showDialog(context, data.getMessage());
+					Util.showDialog(context, data.getMessage(),this);
 				}
 			}
-			finish();
+//			finish();
 		}else if(result.getAction()== ServiceAction.ActionGetDistance&& result.isSuccess()){
 			ResponseData data = (ResponseData) result.getData();
 			hideDialog();
@@ -313,6 +314,12 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 	private void hideDialog() {
 		// dialog.dismiss();
 		progressBar.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onClose(int type, Object data) {
+		// TODO Auto-generated method stub
+		finish();
 	}
 
 }

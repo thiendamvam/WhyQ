@@ -41,6 +41,7 @@ import org.json.JSONObject;
 
 import whyq.WhyqApplication;
 import whyq.activity.LoginHome;
+import whyq.interfaces.IDialogListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -232,7 +233,6 @@ public class Util {
 		alertError.show();
 
 	}
-
 	public static void showDialog(final Context context, String mes) {
 		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
 				context);
@@ -243,6 +243,23 @@ public class Util {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				alertError.dismiss();
+			}
+		});
+
+		alertError.show();
+
+	}
+	public static void showDialog(final Context context, String mes, final IDialogListener listener) {
+		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+				context);
+		builder.setTitle(context.getString(R.string.app_name_title));
+		builder.setMessage(mes);
+		final android.app.AlertDialog alertError = builder.create();
+		alertError.setButton("Ok", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				alertError.dismiss();
+				listener.onClose(1, true);
 			}
 		});
 

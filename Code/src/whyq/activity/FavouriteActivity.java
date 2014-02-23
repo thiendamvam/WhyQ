@@ -268,7 +268,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	protected void onResume() {
 		super.onResume();
 		if(!isFirst){
-			isFirst = true;
+//			isFirst = true;
 			exeListActivity(false);	
 		}
 //		if(isLogin && WhyqMain.getCurrentTab() == 3){

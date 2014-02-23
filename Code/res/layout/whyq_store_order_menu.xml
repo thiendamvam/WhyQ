@@ -8,8 +8,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.7" >
+        android:layout_height="wrap_content"
+         >
 
         <include layout="@layout/navigationbar_order_menu">
         </include>
@@ -17,8 +17,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8.3"
+        android:layout_height="match_parent"
         android:background="@android:color/white"
         android:orientation="vertical"
         android:weightSum="3" >
@@ -34,7 +33,7 @@
                 android:id="@+id/btnHomeDelivery"
                 style="@style/small_grey_text"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:background="@drawable/btn_delivery"
                 android:padding="0dp"
                 android:text="Home delivery" />
@@ -43,7 +42,7 @@
                 android:id="@+id/btnHomeTakeAway"
                 style="@style/small_grey_text"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="7dp"
                 android:background="@drawable/btn_delivery"
                 android:padding="0dp"
@@ -53,7 +52,7 @@
                 android:id="@+id/btnHotelRoomDelivery"
                 style="@style/small_grey_text"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="7dp"
                 android:background="@drawable/btn_delivery"
                 android:padding="0dp"
@@ -63,7 +62,7 @@
                 android:id="@+id/btnDineIn"
                 style="@style/small_grey_text"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="7dp"
                 android:background="@drawable/btn_delivery"
                 android:padding="0dp"
