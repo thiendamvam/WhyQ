@@ -314,8 +314,16 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		super.onActivityResult(requestCode, resultCode, arg2);
 		if(resultCode== RESULT_OK){
 			if(requestCode == GET_LOCATION){
-				exeListActivity(false);
-				isFirst = true;
+				boolean isUpdate =arg2.getBooleanExtra("have_location", false); 
+				Log.d("onActivityResult","isUpdate: "+isUpdate);
+				if (isUpdate) {
+					exeListActivity(false);
+//					isFirst = true;
+					WhyqApplication.Instance().setCurrentLocation(
+							LocationActivityNew.currentLocation);
+//					isFirst = true;
+				}
+				
 			}
 		}
 	}

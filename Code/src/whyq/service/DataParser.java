@@ -208,7 +208,9 @@ public class DataParser {
 
 			Document doc = XMLfromString(inputString);
 			ResponseData data = new ResponseData();
-			String statusResponse = doc.getElementsByTagName("Status").item(0)
+			String statusResponse ="";
+			if(doc!=null)
+				doc.getElementsByTagName("Status").item(0)
 					.getFirstChild().getNodeValue();
 			if (statusResponse.equals("200")) {
 				XMLReader xmlReader = initializeReader();
