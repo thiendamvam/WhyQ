@@ -4,14 +4,19 @@ import whyq.WhyqApplication;
 import whyq.interfaces.IServiceListener;
 import whyq.service.Service;
 import whyq.service.ServiceResponse;
+import whyq.utils.Util;
 import whyq.utils.XMLParser;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.Session.StatusCallback;
 import com.whyq.R;
 
 public class WhyqLogout extends Activity implements IServiceListener{
@@ -43,7 +48,7 @@ public class WhyqLogout extends Activity implements IServiceListener{
 		endLoading();
 		Log.d("Logout",""+result.getAction()+"status"+result.isSuccess());
 //		if(result.isSuccess()){
-			
+			onLogoutFacebook();
 			WhyqApplication.Instance().clearToken();
 			WhyqApplication.Instance().setToken(null);
 			XMLParser.storePermpingAccount(WhyqApplication.Instance().getApplicationContext(), null);
@@ -52,6 +57,20 @@ public class WhyqLogout extends Activity implements IServiceListener{
 			startActivity(intent);
 			
 //		}
+	}
+	private void onLogoutFacebook() {
+		// TODO Auto-generated method stub
+		try {
+			Session session = Util.createSession();
+			if (session.isOpened()) {
+				session.closeAndClearTokenInformation();
+			} else {
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 	private void showLoading() {
 		// TODO Auto-generated method stub
