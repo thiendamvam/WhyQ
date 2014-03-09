@@ -7,14 +7,13 @@ import java.util.List;
 
 import whyq.activity.WhyQBillScreen;
 import whyq.model.Bill;
-import whyq.utils.UrlImageViewHelper;
+import whyq.utils.Util;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.whyq.R;
@@ -58,12 +57,14 @@ public class WhyQBillAdapter extends ArrayAdapter<Bill> {
 			viewHolder.tvName = (TextView)view.findViewById(R.id.tvName);
 			viewHolder.unit = (TextView)view.findViewById(R.id.tvUnit);
 			viewHolder.tvAmount = (TextView)view.findViewById(R.id.tvAmount);
-			if(!item.getPrice().equals(""))
-				viewHolder.tvPrice.setText("$"+String.format("%.2f",Float.parseFloat(item.getPrice())));
+			if(!item.getPrice().equals("")){
+				viewHolder.tvPrice.setText("$"+Util.round(Float.parseFloat(item.getPrice()), 2));
+			}
+				
 			viewHolder.unit.setText(item.getUnit());
 			if(!item.getPrice().equals("")){
 				float value = Float.parseFloat(item.getUnit())*Float.parseFloat(item.getPrice());
-				viewHolder.tvAmount.setText(""+String.format("%.2f",value));
+				viewHolder.tvAmount.setText(""+Util.round(value, 2));
 			}
 //			viewHolder.tvCount.setText(item.getSort());
 //			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getThumb());
