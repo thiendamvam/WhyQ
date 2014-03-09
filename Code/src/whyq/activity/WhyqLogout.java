@@ -48,7 +48,7 @@ public class WhyqLogout extends Activity implements IServiceListener{
 		endLoading();
 		Log.d("Logout",""+result.getAction()+"status"+result.isSuccess());
 //		if(result.isSuccess()){
-			onLogoutFacebook();
+			Util.onLogoutFacebook();
 			WhyqApplication.Instance().clearToken();
 			WhyqApplication.Instance().setToken(null);
 			XMLParser.storePermpingAccount(WhyqApplication.Instance().getApplicationContext(), null);
@@ -58,20 +58,7 @@ public class WhyqLogout extends Activity implements IServiceListener{
 			
 //		}
 	}
-	private void onLogoutFacebook() {
-		// TODO Auto-generated method stub
-		try {
-			Session session = Util.createSession();
-			if (session.isOpened()) {
-				session.closeAndClearTokenInformation();
-			} else {
-				
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-	}
+
 	private void showLoading() {
 		// TODO Auto-generated method stub
 		prgBar.setVisibility(View.VISIBLE);

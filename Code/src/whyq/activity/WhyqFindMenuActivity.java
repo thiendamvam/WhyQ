@@ -115,6 +115,7 @@ public class WhyqFindMenuActivity extends FragmentActivity implements
 				 startActivity(intent);
 				 finish();
 			} else {
+				Util.onLogoutFacebook();
 				StatusCallback callback = new StatusCallback() {
 					public void call(Session session, SessionState state,
 							Exception exception) {

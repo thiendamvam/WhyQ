@@ -665,4 +665,19 @@ public class Util {
 			e.printStackTrace();
 		}
 	}
+
+	public static void onLogoutFacebook() {
+		// TODO Auto-generated method stub
+		try {
+			Session session = Util.createSession();
+			if (session.isOpened()) {
+				session.closeAndClearTokenInformation();
+			} else {
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
 }

@@ -96,6 +96,7 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 					if (session.isOpened()) {
 						exeLoginFacebook(session.getAccessToken());
 					} else {
+						Util.onLogoutFacebook();
 						StatusCallback callback = new StatusCallback() {
 							public void call(Session session, SessionState state,
 									Exception exception) {
