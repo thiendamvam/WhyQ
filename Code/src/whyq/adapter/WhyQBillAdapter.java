@@ -64,7 +64,7 @@ public class WhyQBillAdapter extends ArrayAdapter<Bill> {
 			viewHolder.unit.setText(item.getUnit());
 			if(!item.getPrice().equals("")){
 				float value = Float.parseFloat(item.getUnit())*Float.parseFloat(item.getPrice());
-				viewHolder.tvAmount.setText(""+Util.round(value, 2));
+				viewHolder.tvAmount.setText("$"+Util.round(value, 2));
 			}
 //			viewHolder.tvCount.setText(item.getSort());
 //			UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb, item.getThumb());

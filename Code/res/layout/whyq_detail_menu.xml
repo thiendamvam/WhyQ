@@ -2,9 +2,9 @@
     android:id="@+id/lnMenuContent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="7dp"
     android:background="@color/white"
     android:orientation="vertical"
+    android:padding="7dp"
     android:visibility="invisible" >
 
     <RelativeLayout
@@ -18,8 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:text="View Bill"
             android:onClick="onViewBillClicked"
+            android:text="View Bill"
             android:textColor="@color/profifle_blue" />
 
         <LinearLayout
@@ -40,13 +40,23 @@
                 android:text="Total:" />
 
             <Button
+                android:id="@+id/btnTotalValue$"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="$"
+                android:textColor="@color/profifle_blue" />
+
+            <Button
                 android:id="@+id/btnTotalValue"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="$0.0"
+                android:text="0.0"
                 android:textColor="@color/profifle_blue" />
         </LinearLayout>
     </RelativeLayout>

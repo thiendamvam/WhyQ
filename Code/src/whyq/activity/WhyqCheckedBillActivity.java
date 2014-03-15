@@ -149,13 +149,19 @@ public class WhyqCheckedBillActivity extends ImageWorkerActivity {
 	}
 
 	private void createBillItems(List<BillItem> data) {
-		mBillItems = data;
-		for (BillItem billItem : data) {
+		if(data!=null){
 			try {
-				addToPlace(billItem);
+				mBillItems = data;
+				for (BillItem billItem : data) {
+					try {
+						addToPlace(billItem);
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}
 			} catch (Exception e) {
 				// TODO: handle exception
-				e.printStackTrace();
 			}
 		}
 	}
