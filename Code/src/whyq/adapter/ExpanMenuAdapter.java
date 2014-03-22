@@ -19,6 +19,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
@@ -33,8 +34,10 @@ import android.widget.TextView;
 import com.custom.WebImageView;
 import com.whyq.R;
 
-public class ExpanMenuAdapter extends BaseExpandableListAdapter {
+public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnClickListener{
 
+	
+	
 	@Override
 	public void notifyDataSetChanged() {
 		// TODO Auto-generated method stub
@@ -55,6 +58,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 	}
 
 	private int[] groupStatus;
+	private int mFocusColor;
+	private int mNormalColor;
 
 	public ExpanMenuAdapter(Context pContext, ExpandableListView pExpandableListView,
 			List<GroupMenu> pGroupCollection) {
@@ -63,6 +68,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 		mExpandableListView = pExpandableListView;
 		groupStatus = new int[mGroupCollection.size()];
 
+		mFocusColor = mContext.getResources().getColor(R.color.red);
+		mNormalColor = mContext.getResources().getColor(R.color.grey);
 		setListEvent();
 	}
 
@@ -142,13 +149,13 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 			viewHolder.btnAdd = (Button) view.findViewById(R.id.btnAdd);
 			viewHolder.btnRemove = (Button) view.findViewById(R.id.btnRemove);
 			viewHolder.menuId = item.getId();
-			View extra = inflator.inflate(R.layout.extra_item, arg4, false);
-			LinearLayout lnOption = (LinearLayout) extra.findViewById(R.id.ln_option);
-			LinearLayout lnSize = (LinearLayout) extra.findViewById(R.id.ln_size);
-			LinearLayout lnExtra = (LinearLayout) extra.findViewById(R.id.ln_extra);
+			View extra = view;//inflator.inflate(R.layout.extra_item, arg4, false);
+//			LinearLayout lnOption = (LinearLayout) extra.findViewById(R.id.ln_option);
+//			LinearLayout lnSize = (LinearLayout) extra.findViewById(R.id.ln_size);
+//			LinearLayout lnExtra = (LinearLayout) extra.findViewById(R.id.ln_extra);
 
 			if (item.getOptionItemList() != null && item.getOptionItemList().size() > 0) {
-				setViewVisibility(lnOption, true);
+//				setViewVisibility(lnOption, true);
 				List<OptionItem> list = item.getOptionItemList();
 
 				for (int i = 0; i < list.size(); i++) {
@@ -161,7 +168,11 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 						setViewVisibility(tvItem1Name, true);
 						setViewVisibility(tvItem1Price, true);
 						tvItem1Name.setText(itemDetail.getName());
-						tvItem1Price.setText(itemDetail.getValue());
+						tvItem1Price.setText("$"+itemDetail.getValue());
+						
+						((LinearLayout) extra.findViewById(R.id.ln_item1_option)).setOnClickListener(this);
+						
+						extra.findViewById(R.id.ln_item1_option).setTag(extra);
 					} else if (i == 1) {
 						TextView tvItem2Name = (TextView) extra
 								.findViewById(R.id.tv_item2_name_option);
@@ -170,7 +181,10 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 						setViewVisibility(tvItem2Name, true);
 						setViewVisibility(tvItem2Price, true);
 						tvItem2Name.setText(itemDetail.getName());
-						tvItem2Price.setText(itemDetail.getValue());
+						tvItem2Price.setText("$"+itemDetail.getValue());
+						
+						((LinearLayout) extra.findViewById(R.id.ln_item2_option)).setOnClickListener(this);
+						extra.findViewById(R.id.ln_item2_option).setTag(extra);
 					} else if (i == 2) {
 						TextView tvItem3Name = (TextView) extra
 								.findViewById(R.id.tv_item3_name_option);
@@ -179,17 +193,20 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 						setViewVisibility(tvItem3Name, true);
 						setViewVisibility(tvItem3Price, true);
 						tvItem3Name.setText(itemDetail.getName());
-						tvItem3Price.setText(itemDetail.getValue());
+						tvItem3Price.setText("$"+itemDetail.getValue());
+						
+						((LinearLayout) extra.findViewById(R.id.ln_item3_option)).setOnClickListener(this);
+						extra.findViewById(R.id.ln_item3_option).setTag(extra);
 					}
 
 				}
 
 			} else {
-				setViewVisibility(lnOption, false);
+//				setViewVisibility(lnOption, false);
 			}
 
 			if (item.getSizeItemList() != null && item.getSizeItemList().size() > 0) {
-				setViewVisibility(lnSize, true);
+//				setViewVisibility(lnSize, true);
 				List<SizeItem> list = item.getSizeItemList();
 
 				for (int i = 0; i < list.size(); i++) {
@@ -202,7 +219,11 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 						setViewVisibility(tvItem1Name, true);
 						setViewVisibility(tvItem1Price, true);
 						tvItem1Name.setText(itemDetail.getName());
-						tvItem1Price.setText(itemDetail.getValue());
+						tvItem1Price.setText("$"+itemDetail.getValue());
+						
+						((LinearLayout) extra.findViewById(R.id.ln_item1_size)).setOnClickListener(this);
+						
+						extra.findViewById(R.id.ln_item1_size).setTag(extra);
 					} else if (i == 1) {
 						TextView tvItem2Name = (TextView) extra
 								.findViewById(R.id.tv_item2_name_size);
@@ -211,7 +232,10 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 						setViewVisibility(tvItem2Name, true);
 						setViewVisibility(tvItem2Price, true);
 						tvItem2Name.setText(itemDetail.getName());
-						tvItem2Price.setText(itemDetail.getValue());
+						tvItem2Price.setText("$"+itemDetail.getValue());
+						
+						((LinearLayout) extra.findViewById(R.id.ln_item2_size)).setOnClickListener(this);
+						extra.findViewById(R.id.ln_item2_size).setTag(extra);
 					} else if (i == 2) {
 						TextView tvItem3Name = (TextView) extra
 								.findViewById(R.id.tv_item3_name_size);
@@ -220,15 +244,18 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 						setViewVisibility(tvItem3Name, true);
 						setViewVisibility(tvItem3Price, true);
 						tvItem3Name.setText(itemDetail.getName());
-						tvItem3Price.setText(itemDetail.getValue());
+						tvItem3Price.setText("$"+itemDetail.getValue());
+						
+						((LinearLayout) extra.findViewById(R.id.ln_item3_size)).setOnClickListener(this);
+						extra.findViewById(R.id.ln_item3_size).setTag(extra);
 					}
 				}
 			} else {
-				setViewVisibility(lnSize, false);
+//				setViewVisibility(lnSize, false);
 			}
 
 			if (item.getExtraItemList() != null && item.getExtraItemList().size() > 0) {
-				setViewVisibility(lnExtra, true);
+//				setViewVisibility(lnExtra, true);
 				List<ExtraItem> list = item.getExtraItemList();
 
 				for (int i = 0; i < list.size(); i++) {
@@ -241,7 +268,11 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 						setViewVisibility(tvItem1Name, true);
 						setViewVisibility(tvItem1Price, true);
 						tvItem1Name.setText(itemDetail.getName());
-						tvItem1Price.setText(itemDetail.getValue());
+						tvItem1Price.setText("$"+itemDetail.getValue());
+						
+						((LinearLayout) extra.findViewById(R.id.ln_item1_extra)).setOnClickListener(this);
+						
+						extra.findViewById(R.id.ln_item1_extra).setTag(extra);
 					} else if (i == 1) {
 						TextView tvItem2Name = (TextView) extra
 								.findViewById(R.id.tv_item2_name_extra);
@@ -250,7 +281,11 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 						setViewVisibility(tvItem2Name, true);
 						setViewVisibility(tvItem2Price, true);
 						tvItem2Name.setText(itemDetail.getName());
-						tvItem2Price.setText(itemDetail.getValue());
+						tvItem2Price.setText("$"+itemDetail.getValue());
+						
+						((LinearLayout) extra.findViewById(R.id.ln_item2_extra)).setOnClickListener(this);
+						
+						extra.findViewById(R.id.ln_item2_extra).setTag(extra);
 					} else if (i == 2) {
 						TextView tvItem3Name = (TextView) extra
 								.findViewById(R.id.tv_item3_name_extra);
@@ -258,11 +293,15 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 								.findViewById(R.id.tv_item3_price_extra);
 						setViewVisibility(tvItem3Name, true);
 						setViewVisibility(tvItem3Price, true);
-						tvItem3Name.setText(itemDetail.getName());
+						tvItem3Name.setText("$"+itemDetail.getName());
+						
+						((LinearLayout) extra.findViewById(R.id.ln_item3_extra)).setOnClickListener(this);
+						
+						extra.findViewById(R.id.ln_item3_extra).setTag(extra);
 					}
 				}
 			} else {
-				setViewVisibility(lnExtra, false);
+//				setViewVisibility(lnExtra, false);
 			}
 			viewHolder.btnRemove.setTag(viewHolder);
 			// UrlImageViewHelper.setUrlDrawable(viewHolder.imgThumb,
@@ -351,6 +390,124 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter {
 	public boolean isChildSelectable(int arg0, int arg1) {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		
+		Log.d("onClick","onClick");
+		int id = v.getId();
+		switch (id) {
+		case R.id.ln_item1_option:
+			onOptionClicked(1, v);
+			break;
+		case R.id.ln_item2_option:
+			onOptionClicked(2, v);
+			break;
+		case R.id.ln_item3_option:
+			onOptionClicked(3, v);
+			break;
+		case R.id.ln_item1_size:
+			onSizeClicked(1, v);
+			break;
+		case R.id.ln_item2_size:
+			onSizeClicked(2, v);
+			break;
+		case R.id.ln_item3_size:
+			onSizeClicked(3, v);
+			break;
+		case R.id.ln_item1_extra:
+			onExtraClicked(1, v);
+			break;
+		case R.id.ln_item2_extra:
+			onExtraClicked(2, v);
+			break;
+		case R.id.ln_item3_extra:
+			onExtraClicked(3, v);
+			break;
+			
+		default:
+			break;
+		}
+	}
+
+	private void onExtraClicked(int i, View v0) {
+		// TODO Auto-generated method stub
+		Log.d("onClick","onExtraClicked"+i);
+		View v = (View )v0.getTag();
+		switch (i) {
+		case 1:
+			((TextView) v.findViewById(R.id.tv_item1_name_extra)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item1_price_extra)).setTextColor(mFocusColor);
+			break;
+		case 2:
+			((TextView) v.findViewById(R.id.tv_item2_name_extra)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item2_price_extra)).setTextColor(mFocusColor);
+			break;
+		case 3:
+			((TextView) v.findViewById(R.id.tv_item3_name_extra)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item3_price_extra)).setTextColor(mFocusColor);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void onSizeClicked(int i, View v0) {
+		// TODO Auto-generated method stub
+		Log.d("onClick","onSizeClicked"+i);
+		View v = (View )v0.getTag();
+		switch (i) {
+		case 1:
+			((TextView) v.findViewById(R.id.tv_item1_name_size)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item1_price_size)).setTextColor(mFocusColor);
+			break;
+		case 2:
+			((TextView) v.findViewById(R.id.tv_item2_name_size)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item2_price_size)).setTextColor(mFocusColor);
+			break;
+		case 3:
+			((TextView) v.findViewById(R.id.tv_item3_name_size)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item3_price_size)).setTextColor(mFocusColor);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void onOptionClicked(int i, View v0) {
+		// TODO Auto-generated method stub
+		Log.d("onClick","onOptionClicked"+i);
+		View v = (View )v0.getTag();
+		switch (i) {
+		case 1:
+			((TextView) v.findViewById(R.id.tv_item1_name_option)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item1_price_option)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item2_name_option)).setTextColor(mNormalColor);
+			((TextView) v.findViewById(R.id.tv_item2_price_option)).setTextColor(mNormalColor);
+			((TextView) v.findViewById(R.id.tv_item3_name_option)).setTextColor(mNormalColor);
+			((TextView) v.findViewById(R.id.tv_item3_price_option)).setTextColor(mNormalColor);
+			break;
+		case 2:
+			((TextView) v.findViewById(R.id.tv_item1_name_option)).setTextColor(mNormalColor);
+			((TextView) v.findViewById(R.id.tv_item1_price_option)).setTextColor(mNormalColor);
+			((TextView) v.findViewById(R.id.tv_item2_name_option)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item2_price_option)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item3_name_option)).setTextColor(mNormalColor);
+			((TextView) v.findViewById(R.id.tv_item3_price_option)).setTextColor(mNormalColor);
+			break;
+		case 3:
+			((TextView) v.findViewById(R.id.tv_item1_name_option)).setTextColor(mNormalColor);
+			((TextView) v.findViewById(R.id.tv_item1_price_option)).setTextColor(mNormalColor);
+			((TextView) v.findViewById(R.id.tv_item2_name_option)).setTextColor(mNormalColor);
+			((TextView) v.findViewById(R.id.tv_item2_price_option)).setTextColor(mNormalColor);
+			((TextView) v.findViewById(R.id.tv_item3_name_option)).setTextColor(mFocusColor);
+			((TextView) v.findViewById(R.id.tv_item3_price_option)).setTextColor(mFocusColor);
+			break;
+		default:
+			break;
+		}
 	}
 
 }

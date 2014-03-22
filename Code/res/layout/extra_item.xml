@@ -13,14 +13,21 @@
         android:background="@drawable/bg_btn_search"
         android:hint="Send us a note?"
         android:padding="3dp"
-        android:visibility="gone"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/et_product_note"
         android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/grey" />
 
         <LinearLayout
             android:id="@+id/ln_option"
@@ -30,11 +37,11 @@
             android:orientation="horizontal" >
 
             <LinearLayout
-                android:id="@+id/rl_item1_option"
+                android:id="@+id/ln_item1_option"
                 android:layout_width="0dp"
-                android:orientation="vertical"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tv_item1_name_option"
@@ -60,11 +67,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/rl_item2_option"
+                android:id="@+id/ln_item2_option"
                 android:layout_width="0dp"
-                android:orientation="vertical"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tv_item2_name_option"
@@ -90,11 +97,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/rl_item3_option"
+                android:id="@+id/ln_item3_option"
                 android:layout_width="0dp"
-                android:orientation="vertical"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tv_item3_name_option"
@@ -120,6 +127,13 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/grey" />
+
         <LinearLayout
             android:id="@+id/ln_size"
             android:layout_width="match_parent"
@@ -128,11 +142,11 @@
             android:orientation="horizontal" >
 
             <LinearLayout
-                android:id="@+id/rl_item1_size"
+                android:id="@+id/ln_item1_size"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tv_item1_name_size"
@@ -142,6 +156,7 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="2"
+                    android:text="testfdsfsd"
                     android:textColor="@color/grey"
                     android:visibility="invisible" />
 
@@ -158,11 +173,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/rl_item2_size"
+                android:id="@+id/ln_item2_size"
                 android:layout_width="0dp"
-                android:orientation="vertical"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tv_item2_name_size"
@@ -188,11 +203,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/rl_item3_size"
+                android:id="@+id/ln_item3_size"
                 android:layout_width="0dp"
-                android:orientation="vertical"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tv_item3_name_size"
@@ -218,6 +233,13 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/grey" />
+
         <LinearLayout
             android:id="@+id/ln_extra"
             android:layout_width="match_parent"
@@ -226,11 +248,11 @@
             android:orientation="horizontal" >
 
             <LinearLayout
-                android:id="@+id/rl_item1_extra"
+                android:id="@+id/ln_item1_extra"
                 android:layout_width="0dp"
-                android:orientation="vertical"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tv_item1_name_extra"
@@ -256,11 +278,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/rl_item2_extra"
+                android:id="@+id/ln_item2_extra"
                 android:layout_width="0dp"
-                android:orientation="vertical"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tv_item2_name_extra"
@@ -286,11 +308,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/rl_item3_extra"
+                android:id="@+id/ln_item3_extra"
                 android:layout_width="0dp"
-                android:orientation="vertical"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tv_item3_name_extra"

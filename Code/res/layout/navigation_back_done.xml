@@ -37,7 +37,7 @@
         android:layout_marginLeft="7dp"
         android:layout_toRightOf="@+id/lnBack"
         android:gravity="center_vertical"
-        android:text="Add User"
+        android:text=""
         android:textColor="#FFFFFF"
         android:textStyle="normal" />
 

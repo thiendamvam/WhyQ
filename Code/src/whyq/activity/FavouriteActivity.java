@@ -305,26 +305,35 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 			Intent i = new Intent(context, LocationActivityNew.class);
 			startActivityForResult(i, GET_LOCATION);
 		}
-
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent arg2) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, arg2);
-		if(resultCode== RESULT_OK){
-			if(requestCode == GET_LOCATION){
-				boolean isUpdate =arg2.getBooleanExtra("have_location", false); 
+		super.onActivityResult(requestCode, resultCode, data);
+//		if(resultCode== RESULT_OK){
+//			if(requestCode == GET_LOCATION){
+//				boolean isUpdate =arg2.getBooleanExtra("have_location", false); 
+//				Log.d("onActivityResult","isUpdate: "+isUpdate);
+//				if (isUpdate) {
+//					exeListActivity(false);
+//					WhyqApplication.Instance().setCurrentLocation(
+//							LocationActivityNew.currentLocation);
+//				}
+//				
+//			}
+//		}
+		if (resultCode == RESULT_OK) {
+			if (requestCode == GET_LOCATION) {
+				boolean isUpdate = data.getBooleanExtra("have_location", false); 
 				Log.d("onActivityResult","isUpdate: "+isUpdate);
 				if (isUpdate) {
-					exeListActivity(false);
-//					isFirst = true;
 					WhyqApplication.Instance().setCurrentLocation(
 							LocationActivityNew.currentLocation);
-//					isFirst = true;
+					exeListActivity(false);
 				}
-				
 			}
+
 		}
 	}
 
@@ -386,7 +395,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		}
 		clearData();
 		showProgress();
-		getLocation();
+//		getLocation();
 		loadPermList = new LoadPermList(isSearch);
 		loadPermList.execute();
 	}

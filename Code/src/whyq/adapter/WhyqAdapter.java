@@ -13,6 +13,7 @@ import whyq.activity.FavouriteActivity;
 import whyq.activity.ListActivity;
 import whyq.activity.ListActivityGroup;
 import whyq.activity.ListDetailActivity;
+import whyq.activity.ListVipStoreActivity;
 import whyq.controller.WhyqListController;
 import whyq.model.Comment;
 import whyq.model.Promotion;
@@ -272,11 +273,22 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						Log.d("fdsfsfsdfs","fdsfsdfsf");
-						Intent intent = new Intent(context, ListDetailActivity.class);
-						intent.putExtra("store_id", ListActivity.storeId);
-						intent.putExtra("id", store.getStoreId());
-						context.startActivity(intent);
+						Log.d("rowView","rowView oid"+viewId);
+
+						if(viewId.equals(""+49)){
+							//Vip restaurent
+							Intent intent = new Intent(context, ListVipStoreActivity.class);
+							intent.putExtra("vip", true);
+							intent.putExtra("name", store.getNameStore());
+							context.startActivity(intent);							
+							
+							
+						}else{
+							Intent intent = new Intent(context, ListDetailActivity.class);
+							intent.putExtra("store_id", store.getStoreId());//store.getStoreId()
+							intent.putExtra("id", viewId);//store.getStoreId()
+							context.startActivity(intent);							
+						}
 					}
 				});
 				if (store != null) {

@@ -832,28 +832,31 @@ public class DataParser {
 										for (int y = 0; y < lengthOption; y++) {
 											Element inElement = (Element) optionItem
 													.item(y);
-											OptionItem item2 = new OptionItem();
-											item2.setId(getValue(inElement,
-													"id"));
-											item2.setProductId(getValue(inElement,
-													"product_id"));
-											item2.setName(getValue(inElement,
-													"name"));
-											item2.setSkue(getValue(inElement,
-													"sku"));
-											item2.setValue(getValue(inElement,
-													"value"));
-											item2.setStatus(getValue(inElement,
-													"status"));
-											item2.setType(getValue(inElement,
-													"type"));
-											item2.setNote(getValue(inElement,
-													"note"));
-											item2.setSort(getValue(inElement,
-													"sort"));
-											item2.setCreatedata(getValue(inElement,
-													"createdate"));
-											optionItemList.add(item2);
+											if(!getValue(inElement, "id").equals("")){
+												OptionItem item2 = new OptionItem();
+												item2.setId(getValue(inElement,
+														"id"));
+												item2.setProductId(getValue(inElement,
+														"product_id"));
+												item2.setName(getValue(inElement,
+														"name"));
+												item2.setSkue(getValue(inElement,
+														"sku"));
+												item2.setValue(getValue(inElement,
+														"value"));
+												item2.setStatus(getValue(inElement,
+														"status"));
+												item2.setType(getValue(inElement,
+														"type"));
+												item2.setNote(getValue(inElement,
+														"note"));
+												item2.setSort(getValue(inElement,
+														"sort"));
+												item2.setCreatedata(getValue(inElement,
+														"createdate"));
+												optionItemList.add(item2);
+											}
+
 										}
 										menu.setOptionItemList(optionItemList);
 										
@@ -865,28 +868,31 @@ public class DataParser {
 										for (int y = 0; y < lengthExtra; y++) {
 											Element inElement = (Element) extraItem
 													.item(y);
-											ExtraItem item2 = new ExtraItem();
-											item2.setId(getValue(inElement,
-													"id"));
-											item2.setProductId(getValue(inElement,
-													"product_id"));
-											item2.setName(getValue(inElement,
-													"name"));
-											item2.setSkue(getValue(inElement,
-													"sku"));
-											item2.setValue(getValue(inElement,
-													"value"));
-											item2.setStatus(getValue(inElement,
-													"status"));
-											item2.setType(getValue(inElement,
-													"type"));
-											item2.setNote(getValue(inElement,
-													"note"));
-											item2.setSort(getValue(inElement,
-													"sort"));
-											item2.setCreatedata(getValue(inElement,
-													"createdate"));
-											extraItemList.add(item2);
+											if(!getValue(inElement, "id").equals("")){
+												ExtraItem item2 = new ExtraItem();
+												item2.setId(getValue(inElement,
+														"id"));
+												item2.setProductId(getValue(inElement,
+														"product_id"));
+												item2.setName(getValue(inElement,
+														"name"));
+												item2.setSkue(getValue(inElement,
+														"sku"));
+												item2.setValue(getValue(inElement,
+														"value"));
+												item2.setStatus(getValue(inElement,
+														"status"));
+												item2.setType(getValue(inElement,
+														"type"));
+												item2.setNote(getValue(inElement,
+														"note"));
+												item2.setSort(getValue(inElement,
+														"sort"));
+												item2.setCreatedata(getValue(inElement,
+														"createdate"));
+												extraItemList.add(item2);
+											}
+	
 										}
 										menu.setExtraItemList(extraItemList);
 										
@@ -898,28 +904,32 @@ public class DataParser {
 										for (int y = 0; y < lengthSize; y++) {
 											Element inElement = (Element) sizeItem
 													.item(y);
-											SizeItem item2 = new SizeItem();
-											item2.setId(getValue(inElement,
-													"id"));
-											item2.setProductId(getValue(inElement,
-													"product_id"));
-											item2.setName(getValue(inElement,
-													"name"));
-											item2.setSkue(getValue(inElement,
-													"sku"));
-											item2.setValue(getValue(inElement,
-													"value"));
-											item2.setStatus(getValue(inElement,
-													"status"));
-											item2.setType(getValue(inElement,
-													"type"));
-											item2.setNote(getValue(inElement,
-													"note"));
-											item2.setSort(getValue(inElement,
-													"sort"));
-											item2.setCreatedata(getValue(inElement,
-													"createdate"));
-											sizeItemList.add(item2);
+											if(!getValue(inElement, "id").equals("")){
+												
+												SizeItem item2 = new SizeItem();
+												item2.setId(getValue(inElement,
+														"id"));
+												item2.setProductId(getValue(inElement,
+														"product_id"));
+												item2.setName(getValue(inElement,
+														"name"));
+												item2.setSkue(getValue(inElement,
+														"sku"));
+												item2.setValue(getValue(inElement,
+														"value"));
+												item2.setStatus(getValue(inElement,
+														"status"));
+												item2.setType(getValue(inElement,
+														"type"));
+												item2.setNote(getValue(inElement,
+														"note"));
+												item2.setSort(getValue(inElement,
+														"sort"));
+												item2.setCreatedata(getValue(inElement,
+														"createdate"));
+												sizeItemList.add(item2);
+											}
+	
 										}
 										menu.setSizeItemList(sizeItemList);
 										NodeList storeInfoNodes = permElement

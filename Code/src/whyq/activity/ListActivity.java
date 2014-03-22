@@ -199,6 +199,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 		whyqListView.setOnScrollListener(this);
 		showProgress();
 		Util.generateKeyHash(this);
+		exeListActivity(false);
 	}
 
 	private void checkLocationAccess() {
@@ -366,7 +367,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 		page = 0;
 		if (!isFirst) {
 			isFirst = true;
-			exeListActivity(false);
+//			exeListActivity(false);
 
 		}
 

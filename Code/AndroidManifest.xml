@@ -234,6 +234,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="whyq.activity.ListVipStoreActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" >
+            <intent-filter>
+                <action android:name="com.permpings.activity.intent.action.SEND_LOG" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="whyq.activity.BoardListActivity"
             android:screenOrientation="portrait" />
         <activity
