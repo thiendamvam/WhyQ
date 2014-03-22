@@ -1096,6 +1096,7 @@ public class ListDetailActivity extends FragmentActivity implements
 				} else {
 					Intent intent = new Intent(ListDetailActivity.this,
 							CommentActivity.class);
+					intent.putExtra("is_show_filter", true);
 					intent.putExtra("store_id", store.getStoreId());
 					startActivity(intent);
 				}

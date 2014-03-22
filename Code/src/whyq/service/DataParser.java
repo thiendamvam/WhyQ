@@ -34,9 +34,11 @@ import whyq.model.Bill;
 import whyq.model.BillItem;
 import whyq.model.BillPushNotification;
 import whyq.model.Distance;
+import whyq.model.ExtraItem;
 import whyq.model.Faq;
 import whyq.model.Location;
 import whyq.model.Menu;
+import whyq.model.OptionItem;
 import whyq.model.OrderCheckData;
 import whyq.model.OrderSendResult;
 import whyq.model.Photo;
@@ -44,6 +46,7 @@ import whyq.model.ProductTypeInfo;
 import whyq.model.Promotion;
 import whyq.model.ResponseData;
 import whyq.model.SearchFriend;
+import whyq.model.SizeItem;
 import whyq.model.StatusUser;
 import whyq.model.Store;
 import whyq.model.StoreInfo;
@@ -821,6 +824,104 @@ public class DataParser {
 										}
 										menu.setProductTypeInfoList(productTypeInfoList);
 
+										NodeList optionItem = permElement
+												.getElementsByTagName("extra_item");
+										int lengthOption = optionItem
+												.getLength();
+										List<OptionItem> optionItemList = new ArrayList<OptionItem>();
+										for (int y = 0; y < lengthOption; y++) {
+											Element inElement = (Element) optionItem
+													.item(y);
+											OptionItem item2 = new OptionItem();
+											item2.setId(getValue(inElement,
+													"id"));
+											item2.setProductId(getValue(inElement,
+													"product_id"));
+											item2.setName(getValue(inElement,
+													"name"));
+											item2.setSkue(getValue(inElement,
+													"sku"));
+											item2.setValue(getValue(inElement,
+													"value"));
+											item2.setStatus(getValue(inElement,
+													"status"));
+											item2.setType(getValue(inElement,
+													"type"));
+											item2.setNote(getValue(inElement,
+													"note"));
+											item2.setSort(getValue(inElement,
+													"sort"));
+											item2.setCreatedata(getValue(inElement,
+													"createdate"));
+											optionItemList.add(item2);
+										}
+										menu.setOptionItemList(optionItemList);
+										
+										NodeList extraItem = permElement
+												.getElementsByTagName("extra_item");
+										int lengthExtra = extraItem
+												.getLength();
+										List<ExtraItem> extraItemList = new ArrayList<ExtraItem>();
+										for (int y = 0; y < lengthExtra; y++) {
+											Element inElement = (Element) extraItem
+													.item(y);
+											ExtraItem item2 = new ExtraItem();
+											item2.setId(getValue(inElement,
+													"id"));
+											item2.setProductId(getValue(inElement,
+													"product_id"));
+											item2.setName(getValue(inElement,
+													"name"));
+											item2.setSkue(getValue(inElement,
+													"sku"));
+											item2.setValue(getValue(inElement,
+													"value"));
+											item2.setStatus(getValue(inElement,
+													"status"));
+											item2.setType(getValue(inElement,
+													"type"));
+											item2.setNote(getValue(inElement,
+													"note"));
+											item2.setSort(getValue(inElement,
+													"sort"));
+											item2.setCreatedata(getValue(inElement,
+													"createdate"));
+											extraItemList.add(item2);
+										}
+										menu.setExtraItemList(extraItemList);
+										
+										NodeList sizeItem = permElement
+												.getElementsByTagName("size_item");
+										int lengthSize = sizeItem
+												.getLength();
+										List<SizeItem> sizeItemList = new ArrayList<SizeItem>();
+										for (int y = 0; y < lengthSize; y++) {
+											Element inElement = (Element) sizeItem
+													.item(y);
+											SizeItem item2 = new SizeItem();
+											item2.setId(getValue(inElement,
+													"id"));
+											item2.setProductId(getValue(inElement,
+													"product_id"));
+											item2.setName(getValue(inElement,
+													"name"));
+											item2.setSkue(getValue(inElement,
+													"sku"));
+											item2.setValue(getValue(inElement,
+													"value"));
+											item2.setStatus(getValue(inElement,
+													"status"));
+											item2.setType(getValue(inElement,
+													"type"));
+											item2.setNote(getValue(inElement,
+													"note"));
+											item2.setSort(getValue(inElement,
+													"sort"));
+											item2.setCreatedata(getValue(inElement,
+													"createdate"));
+											sizeItemList.add(item2);
+										}
+										menu.setSizeItemList(sizeItemList);
 										NodeList storeInfoNodes = permElement
 												.getElementsByTagName("store_info");
 										int storeInfoLength = productTypeInfoNodes

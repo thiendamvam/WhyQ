@@ -23,6 +23,7 @@ import whyq.service.ServiceResponse;
 import whyq.utils.Constants;
 import whyq.utils.RSA;
 import whyq.utils.Util;
+import whyq.utils.XMLParser;
 import whyq.utils.facebook.FacebookConnector;
 import android.app.Activity;
 import android.content.Context;
@@ -417,6 +418,8 @@ public class LoginWhyqActivity extends Activity implements Login_delegate,
 				User user = (User)data.getData();
 					WhyqApplication.Instance().setToken(user);
 					WhyqApplication.Instance().savePassword(password.getText().toString());
+					XMLParser.storePermpingAccount(WhyqApplication.Instance().getApplicationContext(),
+							 user);
 					ListActivity.isLogin = true;
 					ListActivity.loginType = 2;
 					Intent intent = new Intent(LoginWhyqActivity.this, WhyqMain.class);

@@ -271,7 +271,7 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 				isLoginFb = true;
 				Log.d("LoginHome by Facebook", "result: ");
 				WhyqApplication.Instance().setToken(user);
-				XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(),
+				XMLParser.storePermpingAccount(WhyqApplication.Instance().getApplicationContext(),
 				 user);
 				Intent intent = new Intent(LoginHome.this, WhyqMain.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -293,7 +293,7 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 				User user = (User) data.getData();
 				// if(user.isLogined()){
 				WhyqApplication.Instance().setToken(user);
-				XMLParser.storePermpingAccount(WhyqApplication._instance.getApplicationContext(),
+				XMLParser.storePermpingAccount(WhyqApplication.Instance().getApplicationContext(),
 						 user);
 				ListActivity.isLogin = true;
 				ListActivity.loginType = 2;

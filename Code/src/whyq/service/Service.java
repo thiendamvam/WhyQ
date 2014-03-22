@@ -110,12 +110,16 @@ public class Service implements Runnable {
 		request("/m/member/favourite/business", params, true, false);
 	}
 
-	public void getComments(String encryptedToken, String store_id, int page,
-			int count, boolean onlyFriend) {
+	public void getComments(String encryptedToken, String id, int page,
+			int count, boolean onlyFriend, boolean isStore) {
 		_action = ServiceAction.ActionGetComment;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
-		params.put("store_id", store_id);
+		if(isStore){
+			params.put("store_id", id);			
+		}else{
+			params.put("user_id", id);
+		}
 		params.put("page", String.valueOf(page));
 		params.put("count", String.valueOf(count));
 		params.put("only_friend", onlyFriend ? "1" : "");

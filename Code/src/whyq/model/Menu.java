@@ -2,12 +2,16 @@ package whyq.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Menu implements Serializable{
 	String id;
 	String storeId;
 	private String nameProduct;
 	private ArrayList<ProductTypeInfo> productTypeInfoList;
+	private List<SizeItem> sizeItemList;
+	private List<ExtraItem> extraItemList;
+	private List<OptionItem> optionItemList;
 	String value;
 	String valuePromotion;
 	String imageProduct;
@@ -115,6 +119,42 @@ public class Menu implements Serializable{
 	 */
 	public void setNameProduct(String nameProduct) {
 		this.nameProduct = nameProduct;
+	}
+	/**
+	 * @return the extraItemList
+	 */
+	public List<ExtraItem> getExtraItemList() {
+		return extraItemList;
+	}
+	/**
+	 * @param extraItemList the extraItemList to set
+	 */
+	public void setExtraItemList(List<ExtraItem> extraItemList) {
+		this.extraItemList = extraItemList;
+	}
+	/**
+	 * @return the sizeItemList
+	 */
+	public List<SizeItem> getSizeItemList() {
+		return sizeItemList;
+	}
+	/**
+	 * @param sizeItemList the sizeItemList to set
+	 */
+	public void setSizeItemList(List<SizeItem> sizeItemList) {
+		this.sizeItemList = sizeItemList;
+	}
+	/**
+	 * @return the optionItemList
+	 */
+	public List<OptionItem> getOptionItemList() {
+		return optionItemList;
+	}
+	/**
+	 * @param optionItemList the optionItemList to set
+	 */
+	public void setOptionItemList(List<OptionItem> optionItemList) {
+		this.optionItemList = optionItemList;
 	}
 	String typeProductId;
 	String createDate;

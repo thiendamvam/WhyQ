@@ -49,6 +49,7 @@ public class CommentHandler extends BaseHandler {
 	private static final String TAG_TOTAL_CHECK_BILL = "total_check_bill";
 	private static final String TAG_TOKEN = "token";
 	private static final String TAG_FIRST_NAME = "first_name";
+	private static final String TAG_LAST_NAME = "last_name";
 	private static final String TAG_GENDER = "gender";
 	private static final String TAG_AVATAR = "avatar";
 	private static final String TAG_STATUS_USER = "status_user";
@@ -101,6 +102,8 @@ public class CommentHandler extends BaseHandler {
 					currentUser.setUpdateDate(getString());
 				} else if (localName.equals(TAG_FIRST_NAME)) {
 					currentUser.setFirstName(getString());
+				} else if (localName.equals(TAG_LAST_NAME)) {
+					currentUser.setLastName(getString());
 				} else if (localName.equals(TAG_GENDER)) {
 					currentUser.setGender(getInt());
 				} else if (localName.equals(TAG_AVATAR)) {

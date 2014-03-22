@@ -39,6 +39,8 @@ public class CommentActivity extends ImageWorkerActivity {
 	private String mStoreId;
 	private int page = 1;
 	private boolean isLoadMore = false;
+	private boolean mIsShowFilter;
+	private String mUserId;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,7 +55,14 @@ public class CommentActivity extends ImageWorkerActivity {
 		listview.setAdapter(mAdapter);
 
 		Intent i = getIntent();
-		mStoreId = i.getStringExtra("store_id");
+		mIsShowFilter = i.getBooleanExtra("is_show_filter", false);
+		if(mIsShowFilter){
+			mStoreId = i.getStringExtra("store_id");	
+		}else{
+			mUserId = i.getStringExtra("user_id");
+		}
+		
+		
 		if (mStoreId == null) {
 			mStoreId = "";
 		}
@@ -71,9 +80,13 @@ public class CommentActivity extends ImageWorkerActivity {
 				}
 			}
 		});
-
+		
 		View filter = getLayoutInflater().inflate(R.layout.filter, null);
 		setExtraView(filter);
+		
+		if(!mIsShowFilter){
+			filter.setVisibility(View.INVISIBLE);
+		}
 //		getComments(false);
 		listview.setOnScrollListener(new AbsListView.OnScrollListener() {
 			
@@ -113,19 +126,21 @@ public class CommentActivity extends ImageWorkerActivity {
 		setLoading(true);
 		if(!isLoadMore)
 			page = 1;
-		getService().getComments(getEncryptedToken(), mStoreId, page , 20,
-				onlyFriend);
+		getService().getComments(getEncryptedToken(), mIsShowFilter?mStoreId:mUserId, page , 20,
+				onlyFriend, mIsShowFilter);
 	}
 
 	@Override
 	protected void onExtraButtonPressed(View v) {
 		super.onExtraButtonPressed(v);
-		if (mFilterLayout.getVisibility() == View.VISIBLE) {
-			mFilterLayout.setVisibility(View.GONE);
-			findViewById(R.id.triAngle).setVisibility(View.GONE);
-		} else {
-			mFilterLayout.setVisibility(View.VISIBLE);
-			findViewById(R.id.triAngle).setVisibility(View.VISIBLE);
+		if(mIsShowFilter){
+			if (mFilterLayout.getVisibility() == View.VISIBLE) {
+				mFilterLayout.setVisibility(View.GONE);
+				findViewById(R.id.triAngle).setVisibility(View.GONE);
+			} else {
+				mFilterLayout.setVisibility(View.VISIBLE);
+				findViewById(R.id.triAngle).setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
@@ -146,7 +161,6 @@ public class CommentActivity extends ImageWorkerActivity {
 			if (data.getStatus().equals("401")) {
 				Util.loginAgain(this, data.getStatus());
 			} if (data.getStatus().equals("204")) {
-				Util.loginAgain(this, data.getStatus());
 				isLoadMore = false;
 				page = 1;
 			} else {
@@ -219,7 +233,7 @@ public class CommentActivity extends ImageWorkerActivity {
 				ViewHolder holder = getViewHolder(convertView);
 				
 
-				holder.name.setText(item.getUser().getFirstName());
+				holder.name.setText(item.getUser().getFirstName()+" "+item.getUser().getLastName());
 				holder.comment.setText(item.getContent());
 				holder.like.setText("" + item.getCount_like());
 				holder.like.setOnClickListener(new View.OnClickListener() {

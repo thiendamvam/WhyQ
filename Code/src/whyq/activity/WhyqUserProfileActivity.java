@@ -112,7 +112,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 		mUserId = i.getStringExtra(ARG_USER_ID);
 		if (mUserId == null) {
-			mUserId = XMLParser.getUserId(this);
+			mUserId = XMLParser.getUserId(WhyqApplication.Instance().getApplicationContext());
 			showTab(true);
 		} else {
 			showTab(false);
@@ -331,7 +331,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		}
 	}
 
-	private void initCategory(UserProfile user) {
+	private void initCategory(final UserProfile user) {
 		TotalCount total = user.getTotal_count();
 		if (total == null) {
 			return;
@@ -392,8 +392,10 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 
 					@Override
 					public void onClick(View v) {
-						startActivity(new Intent(WhyqUserProfileActivity.this,
-								CommentActivity.class));
+						Intent intent = new Intent(WhyqUserProfileActivity.this, CommentActivity.class);
+						intent.putExtra("is_show_filter", false);
+						intent.putExtra("user_id", mUserId);
+						startActivity(intent);
 					}
 				});
 	}
