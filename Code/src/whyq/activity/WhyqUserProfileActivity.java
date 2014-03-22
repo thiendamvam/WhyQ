@@ -161,9 +161,9 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		hideExtraButton();
 
 		setLoading(true);
-		getService().getUserActivities(getEncryptedToken(), mUserId);
-		getService().getPhotos(getEncryptedToken(), mUserId);
-		getService().getProfiles(getEncryptedToken(), mUserId);
+		getService().getUserActivities(WhyqApplication.Instance().getRSAToken(), mUserId);
+		getService().getPhotos(WhyqApplication.Instance().getRSAToken(), mUserId);
+		getService().getProfiles(WhyqApplication.Instance().getRSAToken(), mUserId);
 
 	}
 	

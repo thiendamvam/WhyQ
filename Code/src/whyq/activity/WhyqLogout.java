@@ -51,7 +51,7 @@ public class WhyqLogout extends Activity implements IServiceListener{
 			Util.onLogoutFacebook();
 			WhyqApplication.Instance().clearToken();
 			WhyqApplication.Instance().setToken(null);
-			XMLParser.storePermpingAccount(WhyqApplication.Instance().getApplicationContext(), null);
+			XMLParser.storeUserAccount(WhyqApplication.Instance().getApplicationContext(), null);
 			Intent intent = new Intent(WhyqLogout.this, LoginHome.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);

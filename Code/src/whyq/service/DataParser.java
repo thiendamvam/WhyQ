@@ -2,6 +2,7 @@ package whyq.service;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,15 +87,60 @@ public class DataParser {
 			String statusResponse = doc.getElementsByTagName("Status").item(0)
 					.getFirstChild().getNodeValue();
 			if (statusResponse.equals("200")) {
-				XMLReader xmlReader = initializeReader();
+			/*	XMLReader xmlReader = initializeReader();
 				UserHandler userHandler = new UserHandler();
 				// assign the handler
 				xmlReader.setContentHandler(userHandler);
 				xmlReader.parse(new InputSource(new StringReader(inputString)));
+				*/
 				final String mes = doc.getElementsByTagName("Message").item(0)
 						.getFirstChild().getNodeValue();
 				data.setStatus(statusResponse);
-				data.setData(userHandler.getUser());
+//				data.setData(userHandler.getUser());
+				
+				User user = new User();
+				NodeList nodeList = doc.getElementsByTagName("obj");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					try {
+						Element element = (Element) nodeList.item(i);
+						
+						user.setToken(getValue(element, "token"));
+						user.setId(getValue(element, "id"));
+						user.setEmail(getValue(element, "email"));
+						user.setRoleId(getValue(element, "role_id"));
+						user.setAcive(getValue(element, "is_active").equals("1"));
+						user.setTotalMoney(getValue(element, "total_saving_money"));
+						user.setTotalSavingMoney(getValue(element, "total_saving_money"));
+						user.setTotalComment(getValue(element, "total_comment"));
+						user.setTotalFriend(getValue(element, "total_friend"));
+						user.setTotalFavourite(getValue(element, "total_favourite"));
+						user.setTotalCheckBill(getValue(element, "total_check_bill"));
+						user.setTwitterId(getValue(element, "twitter_id"));
+						user.setFacebookId(getValue(element, "facebook_id"));
+						user.setStatus(getValue(element, "status"));
+						user.setCreateDate(getValue(element, "createdate"));
+						user.setUpdateDate(getValue(element, "updatedate"));
+						user.setFirstName(getValue(element, "first_name"));
+						user.setLastName(getValue(element, "last_name"));
+						if(!getValue(element, "gender").equals(""))
+							user.setGender(Integer.parseInt(getValue(element, "gender")));
+//						user.seta(getValue(element, "avatar"));
+						user.setCity(getValue(element, "city"));
+						user.setAddress(getValue(element, "address"));
+						user.setPhoneNumber(getValue(element, "phone_number"));
+						user.setPaypalEmail(getValue(element, "paypal_email"));
+						user.setStatusUser(getValue(element, "status_user"));
+						user.setTotalCount(getValue(element, "total_count"));
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+					
+				}
+						
+	
+				
+				data.setData(user);
 				data.setMessage(mes);
 				return data;
 			} else {
@@ -419,12 +465,12 @@ public class DataParser {
 			String statusResponse = doc.getElementsByTagName("Status").item(0)
 					.getFirstChild().getNodeValue();
 			if (statusResponse.equals("200")) {
-				NodeList permNodeList = doc.getElementsByTagName("obj");
+				NodeList nodeList = doc.getElementsByTagName("obj");
 
-				for (int i = 0; i < permNodeList.getLength(); i++) {
+				for (int i = 0; i < nodeList.getLength(); i++) {
 					try {
 
-						Element permElement = (Element) permNodeList.item(i);
+						Element permElement = (Element) nodeList.item(i);
 						Store item = new Store();
 						String id = getValue(permElement, "id");
 						String storeId = getValue(permElement, "store_id");
@@ -631,10 +677,10 @@ public class DataParser {
 			String statusResponse = doc.getElementsByTagName("Status").item(0)
 					.getFirstChild().getNodeValue();
 			if (statusResponse.equals("200")) {
-				NodeList permNodeList = doc.getElementsByTagName("obj");
+				NodeList nodeList = doc.getElementsByTagName("obj");
 
-				for (int i = 0; i < permNodeList.getLength(); i++) {
-					Element permElement = (Element) permNodeList.item(i);
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					Element permElement = (Element) nodeList.item(i);
 					Store item = new Store();
 					String id = getValue(permElement, "id");
 					String storeId = getValue(permElement, "store_id");
@@ -1434,13 +1480,13 @@ public class DataParser {
 				data.setStatus(statusResponse);
 				// data.setData(userHandler.getUser());
 				data.setMessage(mes);
-				NodeList permNodeList = doc.getElementsByTagName("obj");
-				int size = permNodeList.getLength();
+				NodeList nodeList = doc.getElementsByTagName("obj");
+				int size = nodeList.getLength();
 				ArrayList<User> userList = new ArrayList<User>();
 				for (int i = 0; i < size; i++) {
 					try {
 
-						Element element = (Element) permNodeList.item(i);
+						Element element = (Element) nodeList.item(i);
 						User user = new User();
 						user.setId(getValue(element, "id"));
 						user.setEmail(getValue(element, "email"));
@@ -1540,13 +1586,13 @@ public class DataParser {
 				data.setStatus(statusResponse);
 				// data.setData(userHandler.getUser());
 				data.setMessage(mes);
-				NodeList permNodeList = doc.getElementsByTagName("obj");
-				int size = permNodeList.getLength();
+				NodeList nodeList = doc.getElementsByTagName("obj");
+				int size = nodeList.getLength();
 				ArrayList<SearchFriend> friendList = new ArrayList<SearchFriend>();
 				for (int i = 0; i < size; i++) {
 					try {
 
-						Element element = (Element) permNodeList.item(i);
+						Element element = (Element) nodeList.item(i);
 						SearchFriend item = new SearchFriend();
 						item.setId(getValue(element, "id"));
 						item.setFacebookId(getValue(element, "id"));
@@ -1739,13 +1785,13 @@ public class DataParser {
 
 					discount = getValue(element1, "discount_value");
 					ArrayList<Bill> listBill = new ArrayList<Bill>();
-					NodeList permNodeList = doc.getElementsByTagName("detail");
-					int size = permNodeList.getLength();
+					NodeList nodeList = doc.getElementsByTagName("detail");
+					int size = nodeList.getLength();
 
 					for (int i3 = 0; i3 < size; i3++) {
 						try {
 
-							Element element2 = (Element) permNodeList.item(i3);
+							Element element2 = (Element) nodeList.item(i3);
 
 							NodeList billItemList = element2
 									.getElementsByTagName("data");

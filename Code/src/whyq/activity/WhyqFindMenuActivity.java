@@ -208,7 +208,7 @@ public class WhyqFindMenuActivity extends FragmentActivity implements
 			if (data.getStatus().equals("200")) {
 				User user = (User) data.getData();
 				XMLParser
-						.storePermpingAccount(WhyqApplication._instance
+						.storeUserAccount(WhyqApplication._instance
 								.getApplicationContext(), user);
 				Intent intent = new Intent(this,
 						WhyqFriendsFacebookActivity.class);

@@ -56,7 +56,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:background="@drawable/icon_status_gray"
-                            android:padding="3dp" />
+                            android:padding="3dp"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <TextView
@@ -64,7 +65,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="2"
                         android:gravity="center_vertical"
-                        android:text="Price"
+                        android:text="PRICE"
                         android:textColor="@android:color/background_dark" />
 
                     <TextView
@@ -72,7 +73,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="2"
                         android:gravity="center_vertical"
-                        android:text="Unit"
+                        android:text="UNIT"
                         android:textColor="@android:color/background_dark" />
 
                     <TextView
@@ -80,7 +81,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="2"
                         android:gravity="center_vertical"
-                        android:text="Amount"
+                        android:text="AMOUNT"
                         android:textColor="@android:color/background_dark" />
                 </LinearLayout>
             </LinearLayout>

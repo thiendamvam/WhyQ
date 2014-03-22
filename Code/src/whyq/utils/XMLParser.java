@@ -846,7 +846,7 @@ public class XMLParser implements HttpAccess {
 		if(isSuccess){
 			WhyqApplication state = (WhyqApplication)context.getApplicationContext();
 			state.setUser(null);
-			XMLParser.storePermpingAccount(context, null);
+			XMLParser.storeUserAccount(context, null);
 			WhyqMain.back();
 			WhyqMain.showLogin();
 		}else{
@@ -876,14 +876,14 @@ public class XMLParser implements HttpAccess {
 
 	
 	
-	public static void storePermpingAccount(Context context, User user) {
+	public static void storeUserAccount(Context context, User user) {
 		SharedPreferences account = context.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = account.edit();
 		if (user  == null) {
 //			editor.putString(STORE_USER_ID, "");
 //			editor.putString(STORE_USER_EMAIL, "");
 //			editor.putString(STORE_USER_NAME, "");
-//			editor.putString(STORE_USER_TOKEN, "");
+			editor.putString(STORE_USER_TOKEN, "");
 			editor.clear();
 		} else {
 			editor.putString(STORE_USER_ID, user.getId());
@@ -959,7 +959,7 @@ public class XMLParser implements HttpAccess {
 //					token = pair.getValue();
 //				}
 //			}
-			storePermpingAccount(WhyqApplication.Instance().getApplicationContext(), user);
+			storeUserAccount(WhyqApplication.Instance().getApplicationContext(), user);
 //		}
 	}
 	

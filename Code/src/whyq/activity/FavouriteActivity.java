@@ -238,7 +238,7 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 				}
 			}
 		});
-
+		exeListActivity(false);	
 	}
 
 	
@@ -267,10 +267,10 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(!isFirst){
-//			isFirst = true;
-			exeListActivity(false);	
-		}
+//		if(!isFirst){
+////			isFirst = true;
+//			exeListActivity(false);	
+//		}
 //		if(isLogin && WhyqMain.getCurrentTab() == 3){
 //			User user2 = WhyqUtils.isAuthenticated(getApplicationContext());
 //			if(user2 != null){

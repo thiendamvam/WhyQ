@@ -86,6 +86,7 @@ public class CommentActivity extends ImageWorkerActivity {
 		
 		if(!mIsShowFilter){
 			filter.setVisibility(View.INVISIBLE);
+			findViewById(R.id.btnCommentHere).setVisibility(View.GONE);
 		}
 //		getComments(false);
 		listview.setOnScrollListener(new AbsListView.OnScrollListener() {

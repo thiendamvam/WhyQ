@@ -16,7 +16,6 @@ import whyq.utils.Constants;
 
 
 /**
- * @author Linh Nguyen
  *
  */
 public class UserHandler extends DefaultHandler {

@@ -475,7 +475,7 @@ public class JoinWhyqActivity extends Activity implements TextWatcher,
 			state.setUser(user);
 			if(getApplicationContext() != null && email != null && password != null) {
 				if(email.getText().toString().length() > 0 && password.getText().toString().length() > 0) {
-					XMLParser.storePermpingAccount(getApplicationContext(), user);
+					XMLParser.storeUserAccount(getApplicationContext(), user);
 
 				}
 			}

@@ -418,7 +418,7 @@ public class LoginWhyqActivity extends Activity implements Login_delegate,
 				User user = (User)data.getData();
 					WhyqApplication.Instance().setToken(user);
 					WhyqApplication.Instance().savePassword(password.getText().toString());
-					XMLParser.storePermpingAccount(WhyqApplication.Instance().getApplicationContext(),
+					XMLParser.storeUserAccount(WhyqApplication.Instance().getApplicationContext(),
 							 user);
 					ListActivity.isLogin = true;
 					ListActivity.loginType = 2;

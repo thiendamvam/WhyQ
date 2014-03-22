@@ -110,7 +110,7 @@ public class WhyqApplication extends Application {
 //		}
 //	}
 	public void setToken(User user){
-		XMLParser.storePermpingAccount(getApplicationContext(), user);
+		XMLParser.storeUserAccount(getApplicationContext(), user);
 	}
 	
 	public void clearToken(){

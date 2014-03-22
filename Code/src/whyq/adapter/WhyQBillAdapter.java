@@ -9,6 +9,7 @@ import whyq.activity.WhyQBillScreen;
 import whyq.model.Bill;
 import whyq.utils.Util;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,7 @@ public class WhyQBillAdapter extends ArrayAdapter<Bill> {
 		if (convertView == null) {
 			LayoutInflater inflator = ((WhyQBillScreen) context)
 					.getLayoutInflater();
-			view = inflator.inflate(R.layout.whyq_bill_item, null);
+			view = inflator.inflate(R.layout.whyq_bill_item_phase2, null);
 			final ViewBillHolder viewHolder = new ViewBillHolder();
 			viewHolder.tvPrice = (TextView) view.findViewById(R.id.tvPrice);
 //			viewHolder.imgThumb = (ImageView) view.findViewById(R.id.imgThumb);
@@ -77,7 +78,9 @@ public class WhyQBillAdapter extends ArrayAdapter<Bill> {
 			view = convertView;
 
 		}
-
+		if(position%2==0){
+			view.setBackgroundColor(Color.parseColor("#f5f5f5"));
+		}
 		return view;
 	}
 
