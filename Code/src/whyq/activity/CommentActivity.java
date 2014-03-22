@@ -30,6 +30,7 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import com.androidexample.lazyimagedownload.ImageLoader;
 import com.whyq.R;
 
 public class CommentActivity extends ImageWorkerActivity {
@@ -184,11 +185,13 @@ public class CommentActivity extends ImageWorkerActivity {
 		private Context mContext;
 		private List<Comment> mItems;
 		private ImageViewHelper mImageWorker;
+		private ImageLoader mImageLoader;
 
 		public CommentAdapter(Context context, ImageViewHelper imageWorker) {
 			this.mContext = context;
 			this.mItems = new ArrayList<Comment>();
 			this.mImageWorker = imageWorker;
+			this.mImageLoader = WhyqApplication.Instance().getImageLoader();
 		}
 
 		public void setItems(List<Comment> items) {
@@ -245,13 +248,14 @@ public class CommentActivity extends ImageWorkerActivity {
 
 					}
 				});
-
-				mImageWorker.downloadImage(item.getUser().getUrlAvatar(),
-						holder.avatar);
+//				mImageWorker.downloadImage(item.getUser().getUrlAvatar(),
+//						holder.avatar);
+				mImageLoader.DisplayImage(item.getUser().getUrlAvatar(), holder.avatar);
 				Photo photo = item.getPhotos();
 				if (photo != null) {
-					mImageWorker.downloadImage(item.getPhotos().getThumb(),
-							holder.thumb);
+//					mImageWorker.downloadImage(item.getPhotos().getThumb(),
+//							holder.thumb);
+					mImageLoader.DisplayImage(item.getPhotos().getThumb(), holder.thumb);
 				}
 				if (item.getUser().getLike() > 0) {
 					holder.favorite.setImageResource(R.drawable.icon_fav_enable);

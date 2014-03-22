@@ -44,6 +44,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidexample.lazyimagedownload.ImageLoader;
 import com.devsmart.android.ui.HorizontalListView;
 import com.whyq.R;
 
@@ -512,10 +513,12 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		private Context mContext;
 		private List<Photo> mItems;
 		private ImageViewHelper mImageWorker;
+		private ImageLoader mImageLoader;
 
 		public PhotoAdapter(Context context, ImageViewHelper imageWorker) {
 			this.mContext = context;
 			this.mImageWorker = imageWorker;
+			this.mImageLoader = WhyqApplication.Instance().getImageLoader();
 			this.mItems = new ArrayList<Photo>();
 		}
 
@@ -553,7 +556,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			final Photo item = mItems.get(position);
 
 			ViewHolder holder = getViewHolder(convertView);
-			mImageWorker.downloadImage(item.getImage(), holder.photo);
+//			mImageWorker.downloadImage(item.getImage(), holder.photo);
+			mImageLoader.DisplayImage(item.getImage(), holder.photo);
 
 			return convertView;
 		}

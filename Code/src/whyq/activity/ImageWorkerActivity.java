@@ -15,7 +15,7 @@ public class ImageWorkerActivity extends ConsumeServiceActivity {
 		super.onCreate(savedInstanceState);
 		mImageWorker = new ImageViewHelper();
 		mImageWorker.setLoading(BitmapFactory.decodeResource(getResources(),
-				R.drawable.icon));
+				R.drawable.transparent_container));
 	}
 
 	@Override
