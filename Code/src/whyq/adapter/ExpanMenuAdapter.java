@@ -1,5 +1,6 @@
 package whyq.adapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,14 +8,13 @@ import whyq.WhyqApplication;
 import whyq.activity.ListDetailActivity;
 import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
 import whyq.model.ExtraItem;
+import whyq.model.ExtraItemSet;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
 import whyq.model.OptionItem;
 import whyq.model.SizeItem;
-import whyq.utils.UrlImageViewHelper;
 import whyq.utils.Util;
 import android.content.Context;
-import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -147,12 +147,12 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 			viewHolder.tvPrice.setText("$" + Html.fromHtml(item.getValue()));
 			viewHolder.storeId = item.getStoreId();
 			viewHolder.btnAdd = (Button) view.findViewById(R.id.btnAdd);
+			viewHolder.btnDoneSelect = (Button) view.findViewById(R.id.btn_done_select_extra);
 			viewHolder.btnRemove = (Button) view.findViewById(R.id.btnRemove);
 			viewHolder.menuId = item.getId();
+			viewHolder.lnPreview = (LinearLayout)view.findViewById(R.id.ln_preview_extra_selected);
+			viewHolder.rlExtraView = (RelativeLayout)view.findViewById(R.id.rl_extra_view);
 			View extra = view;//inflator.inflate(R.layout.extra_item, arg4, false);
-//			LinearLayout lnOption = (LinearLayout) extra.findViewById(R.id.ln_option);
-//			LinearLayout lnSize = (LinearLayout) extra.findViewById(R.id.ln_size);
-//			LinearLayout lnExtra = (LinearLayout) extra.findViewById(R.id.ln_extra);
 
 			if (item.getOptionItemList() != null && item.getOptionItemList().size() > 0) {
 //				setViewVisibility(lnOption, true);
@@ -169,7 +169,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(tvItem1Price, true);
 						tvItem1Name.setText(itemDetail.getName());
 						tvItem1Price.setText("$"+itemDetail.getValue());
-						
+						tvItem1Price.setTag(itemDetail);
 						((LinearLayout) extra.findViewById(R.id.ln_item1_option)).setOnClickListener(this);
 						
 						extra.findViewById(R.id.ln_item1_option).setTag(extra);
@@ -182,6 +182,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(tvItem2Price, true);
 						tvItem2Name.setText(itemDetail.getName());
 						tvItem2Price.setText("$"+itemDetail.getValue());
+						tvItem2Price.setTag(itemDetail);
 						
 						((LinearLayout) extra.findViewById(R.id.ln_item2_option)).setOnClickListener(this);
 						extra.findViewById(R.id.ln_item2_option).setTag(extra);
@@ -194,6 +195,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(tvItem3Price, true);
 						tvItem3Name.setText(itemDetail.getName());
 						tvItem3Price.setText("$"+itemDetail.getValue());
+						tvItem3Price.setTag(itemDetail);
 						
 						((LinearLayout) extra.findViewById(R.id.ln_item3_option)).setOnClickListener(this);
 						extra.findViewById(R.id.ln_item3_option).setTag(extra);
@@ -220,6 +222,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(tvItem1Price, true);
 						tvItem1Name.setText(itemDetail.getName());
 						tvItem1Price.setText("$"+itemDetail.getValue());
+						tvItem1Price.setTag(itemDetail);
 						
 						((LinearLayout) extra.findViewById(R.id.ln_item1_size)).setOnClickListener(this);
 						
@@ -233,6 +236,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(tvItem2Price, true);
 						tvItem2Name.setText(itemDetail.getName());
 						tvItem2Price.setText("$"+itemDetail.getValue());
+						tvItem2Price.setTag(itemDetail);
 						
 						((LinearLayout) extra.findViewById(R.id.ln_item2_size)).setOnClickListener(this);
 						extra.findViewById(R.id.ln_item2_size).setTag(extra);
@@ -245,6 +249,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(tvItem3Price, true);
 						tvItem3Name.setText(itemDetail.getName());
 						tvItem3Price.setText("$"+itemDetail.getValue());
+						tvItem3Price.setTag(itemDetail);
+						
 						
 						((LinearLayout) extra.findViewById(R.id.ln_item3_size)).setOnClickListener(this);
 						extra.findViewById(R.id.ln_item3_size).setTag(extra);
@@ -269,6 +275,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(tvItem1Price, true);
 						tvItem1Name.setText(itemDetail.getName());
 						tvItem1Price.setText("$"+itemDetail.getValue());
+						tvItem1Price.setTag(itemDetail);
 						
 						((LinearLayout) extra.findViewById(R.id.ln_item1_extra)).setOnClickListener(this);
 						
@@ -282,6 +289,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(tvItem2Price, true);
 						tvItem2Name.setText(itemDetail.getName());
 						tvItem2Price.setText("$"+itemDetail.getValue());
+						tvItem2Price.setTag(itemDetail);
 						
 						((LinearLayout) extra.findViewById(R.id.ln_item2_extra)).setOnClickListener(this);
 						
@@ -294,6 +302,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(tvItem3Name, true);
 						setViewVisibility(tvItem3Price, true);
 						tvItem3Name.setText("$"+itemDetail.getName());
+						tvItem3Price.setTag(itemDetail);
 						
 						((LinearLayout) extra.findViewById(R.id.ln_item3_extra)).setOnClickListener(this);
 						
@@ -309,9 +318,10 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 			WhyqApplication.Instance().getImageLoader()
 					.DisplayImage(item.getImageThumb(), viewHolder.imgThumb);
 			viewHolder.btnAdd.setTag(viewHolder);
+			viewHolder.btnDoneSelect.setTag(viewHolder);
 			view.setTag(viewHolder);
-
-			viewList.put(String.valueOf(item.getStoreId()), view);
+			View extraTem = inflator.inflate(R.layout.item_extra_preview, arg4, false);
+			
 		} else {
 			view = arg3;
 
@@ -436,21 +446,37 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		// TODO Auto-generated method stub
 		Log.d("onClick","onExtraClicked"+i);
 		View v = (View )v0.getTag();
+		ExtraItem item = null;
 		switch (i) {
 		case 1:
 			((TextView) v.findViewById(R.id.tv_item1_name_extra)).setTextColor(mFocusColor);
 			((TextView) v.findViewById(R.id.tv_item1_price_extra)).setTextColor(mFocusColor);
+			item = (ExtraItem) ((TextView) v.findViewById(R.id.tv_item1_price_extra)).getTag();
 			break;
 		case 2:
 			((TextView) v.findViewById(R.id.tv_item2_name_extra)).setTextColor(mFocusColor);
 			((TextView) v.findViewById(R.id.tv_item2_price_extra)).setTextColor(mFocusColor);
+			item = (ExtraItem) ((TextView) v.findViewById(R.id.tv_item2_price_extra)).getTag();
 			break;
 		case 3:
 			((TextView) v.findViewById(R.id.tv_item3_name_extra)).setTextColor(mFocusColor);
 			((TextView) v.findViewById(R.id.tv_item3_price_extra)).setTextColor(mFocusColor);
+			item = (ExtraItem) ((TextView) v.findViewById(R.id.tv_item3_price_extra)).getTag();
 			break;
 		default:
 			break;
+		}
+		
+		if(item!=null && item.getProductId()!=null){
+			if (ListDetailActivity.extraList.get(item.getProductId()) != null) {
+				ListDetailActivity.extraList.get(item.getProductId()).getExtraList().add(item);
+			} else {
+				ExtraItemSet extraItemSet = new ExtraItemSet();
+				List<ExtraItem> list = new ArrayList<ExtraItem>();
+				list.add(item);
+				extraItemSet.setExtraList(list);
+				ListDetailActivity.extraList.put(item.getProductId(), extraItemSet);
+			}
 		}
 	}
 
@@ -458,21 +484,36 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		// TODO Auto-generated method stub
 		Log.d("onClick","onSizeClicked"+i);
 		View v = (View )v0.getTag();
+		SizeItem item = null;
 		switch (i) {
 		case 1:
 			((TextView) v.findViewById(R.id.tv_item1_name_size)).setTextColor(mFocusColor);
 			((TextView) v.findViewById(R.id.tv_item1_price_size)).setTextColor(mFocusColor);
+			item = (SizeItem) ((TextView) v.findViewById(R.id.tv_item1_price_size)).getTag();
 			break;
 		case 2:
 			((TextView) v.findViewById(R.id.tv_item2_name_size)).setTextColor(mFocusColor);
 			((TextView) v.findViewById(R.id.tv_item2_price_size)).setTextColor(mFocusColor);
+			item = (SizeItem) ((TextView) v.findViewById(R.id.tv_item2_price_size)).getTag();
 			break;
 		case 3:
 			((TextView) v.findViewById(R.id.tv_item3_name_size)).setTextColor(mFocusColor);
 			((TextView) v.findViewById(R.id.tv_item3_price_size)).setTextColor(mFocusColor);
+			item = (SizeItem) ((TextView) v.findViewById(R.id.tv_item3_price_size)).getTag();
 			break;
 		default:
 			break;
+		}
+		if(item!=null && item.getProductId()!=null){
+			if (ListDetailActivity.extraList.get(item.getProductId()) != null) {
+				ListDetailActivity.extraList.get(item.getProductId()).getSizeList().add(item);
+			} else {
+				ExtraItemSet extraItemSet = new ExtraItemSet();
+				List<SizeItem> list = new ArrayList<SizeItem>();
+				list.add(item);
+				extraItemSet.setSizeList(list);
+				ListDetailActivity.extraList.put(item.getProductId(), extraItemSet);
+			}
 		}
 	}
 
@@ -480,6 +521,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		// TODO Auto-generated method stub
 		Log.d("onClick","onOptionClicked"+i);
 		View v = (View )v0.getTag();
+		OptionItem item = null;
 		switch (i) {
 		case 1:
 			((TextView) v.findViewById(R.id.tv_item1_name_option)).setTextColor(mFocusColor);
@@ -488,6 +530,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 			((TextView) v.findViewById(R.id.tv_item2_price_option)).setTextColor(mNormalColor);
 			((TextView) v.findViewById(R.id.tv_item3_name_option)).setTextColor(mNormalColor);
 			((TextView) v.findViewById(R.id.tv_item3_price_option)).setTextColor(mNormalColor);
+			item = (OptionItem) ((TextView) v.findViewById(R.id.tv_item1_price_option)).getTag();
+			
 			break;
 		case 2:
 			((TextView) v.findViewById(R.id.tv_item1_name_option)).setTextColor(mNormalColor);
@@ -496,6 +540,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 			((TextView) v.findViewById(R.id.tv_item2_price_option)).setTextColor(mFocusColor);
 			((TextView) v.findViewById(R.id.tv_item3_name_option)).setTextColor(mNormalColor);
 			((TextView) v.findViewById(R.id.tv_item3_price_option)).setTextColor(mNormalColor);
+			item = (OptionItem) ((TextView) v.findViewById(R.id.tv_item2_price_option)).getTag();
+			
 			break;
 		case 3:
 			((TextView) v.findViewById(R.id.tv_item1_name_option)).setTextColor(mNormalColor);
@@ -504,9 +550,23 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 			((TextView) v.findViewById(R.id.tv_item2_price_option)).setTextColor(mNormalColor);
 			((TextView) v.findViewById(R.id.tv_item3_name_option)).setTextColor(mFocusColor);
 			((TextView) v.findViewById(R.id.tv_item3_price_option)).setTextColor(mFocusColor);
+			
+			item = (OptionItem) ((TextView) v.findViewById(R.id.tv_item3_price_option)).getTag();
+			
 			break;
 		default:
 			break;
+		}
+		if(item!=null && item.getProductId()!=null){
+			if (ListDetailActivity.extraList.get(item.getProductId()) != null) {
+				ListDetailActivity.extraList.get(item.getProductId()).getOptionList().add(item);
+			} else {
+				ExtraItemSet extraItemSet = new ExtraItemSet();
+				List<OptionItem> list = new ArrayList<OptionItem>();
+				list.add(item);
+				extraItemSet.setOptionList(list);
+				ListDetailActivity.extraList.put(item.getProductId(), extraItemSet);
+			}
 		}
 	}
 

@@ -298,6 +298,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		public Button btnAdd;
 		public Button btnRemove;
 		public String menuId;
+		public LinearLayout lnPreview;
+		public RelativeLayout rlExtraView;
+		public Button btnDoneSelect;
 
 		public ViewHolderMitemInfo() {
 

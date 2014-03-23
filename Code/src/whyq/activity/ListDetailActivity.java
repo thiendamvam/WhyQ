@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 import whyq.WhyqApplication;
 import whyq.adapter.BasicImageListAdapter;
@@ -15,7 +18,12 @@ import whyq.adapter.WhyqMenuAdapter;
 import whyq.interfaces.IServiceListener;
 import whyq.map.MapsActivity;
 import whyq.model.Bill;
+import whyq.model.ExtraItem;
+import whyq.model.ExtraItemSet;
 import whyq.model.GroupMenu;
+import whyq.model.ExtraItem;
+import whyq.model.OptionItem;
+import whyq.model.SizeItem;
 import whyq.model.Menu;
 import whyq.model.Photo;
 import whyq.model.ProductTypeInfo;
@@ -42,8 +50,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
@@ -118,6 +128,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private String storeName;
 	public static Bundle bundle;
 	public static HashMap<String, Bill> billList;
+	public static NavigableMap<String, ExtraItemSet> extraList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -165,6 +176,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		btnTotalValue.setText("0");
 		lvMenu = (ExpandableListView) findViewById(R.id.lvMenu);
 		billList = new HashMap<String, Bill>();
+		extraList = new TreeMap<String, ExtraItemSet>();
 		vpPhotoList = (CustomViewPager) findViewById(R.id.vpStorephoto);
 		rlPhotoList = (RelativeLayout) findViewById(R.id.rlPhotoList);
 		etComment = (EditText) findViewById(R.id.etComment);
@@ -863,6 +875,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	public void onAddClicked(View v) {
 		Log.d("onAddClicked", "id =" + v.getId());
 		ViewHolderMitemInfo holder = (ViewHolderMitemInfo) v.getTag();
+		holder.rlExtraView.setVisibility(View.VISIBLE);
 		Menu item = getMenuById(holder.menuId);
 		if (item != null) {
 			if (billList.containsKey(item.getId())) {
@@ -909,8 +922,11 @@ public class ListDetailActivity extends FragmentActivity implements
 						.getUnit()) - 1;
 
 				billList.get(item.getId()).setUnit("" + value);
-				if (value < 0)
+				if (value < 0){
 					billList.remove(item.getId());
+				}else if(value == 0){
+					holder.rlExtraView.setVisibility(View.GONE);
+				}
 			} else {
 				Bill bill = new Bill();
 				bill.setId(item.getId());
@@ -1008,14 +1024,20 @@ public class ListDetailActivity extends FragmentActivity implements
 				.toString());
 		Menu item2;
 		Menu item = getMenuById(holder.menuId);
+		ExtraItemSet extraSet = extraList.get(holder.menuId);
+		float totolExtraValue = getTotalExtraValue(extraSet);
 		if (b) {
 			value = Float.parseFloat(holder.tvCount.getText().toString())
 					+ Float.parseFloat("1");
+			
 			totalValue += Float.parseFloat(item.getValue());
+			totalValue+=totolExtraValue;
+			
 		} else {
 			value = Float.parseFloat(holder.tvCount.getText().toString())
 					- Float.parseFloat("1");
 			totalValue -= Float.parseFloat(item.getValue());
+			totalValue-=totolExtraValue;
 		}
 		if (value < 0)
 			value = 0;
@@ -1026,6 +1048,42 @@ public class ListDetailActivity extends FragmentActivity implements
 		btnTotalValue.setText("" + round(totalValue, 2));
 		checkCommentView(totalValue);
 	}
+	private float getTotalExtraValue(ExtraItemSet extraSet) {
+		// TODO Auto-generated method stub
+		float total = 0;
+		if(extraSet!=null){
+			List<OptionItem> optionList = extraSet.getOptionList();
+			List<SizeItem> sizeList = extraSet.getSizeList();
+			List<ExtraItem> extraList = extraSet.getExtraList();
+			if(optionList!=null){
+				for(OptionItem item: optionList){
+					if(item.getValue().equals("")){
+						total+= Float.parseFloat(item.getValue());
+					}
+				} 
+			}
+			
+			if(sizeList!=null){
+				for(SizeItem item: sizeList){
+					if(item.getValue().equals("")){
+						total+= Float.parseFloat(item.getValue());
+					}
+				}
+			}
+			
+			if(extraList!=null){
+				for(ExtraItem item: extraList){
+					if(item.getValue().equals("")){
+						total+= Float.parseFloat(item.getValue());
+					}
+				}
+			}
+		}
+ 		return total;
+	}
+
+
+
 	public static BigDecimal round(float d, int decimalPlace) {
         BigDecimal bd = new BigDecimal(Float.toString(d));
         bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);       
@@ -1178,4 +1236,33 @@ public class ListDetailActivity extends FragmentActivity implements
 		refreshDataAfterScroll();
 	}
 
+	public void onDoneSelectExtraClicked(View v){
+		ViewHolderMitemInfo holder = (ViewHolderMitemInfo) v.getTag();
+		
+		ViewGroup viewGroup = (ViewGroup) v.getParent();
+		if(extraList.lastEntry()!=null){
+			ExtraItemSet item = extraList.lastEntry().getValue();
+			if(item!=null){
+				holder.lnPreview.setVisibility(View.VISIBLE);
+				View preview = LayoutInflater.from(context).inflate(R.layout.item_extra_preview, viewGroup,false);
+				holder.lnPreview.addView(preview);
+				if(item.getOptionList().size() > 0){
+					OptionItem optionItem = item.getOptionList().get(item.getOptionList().size() - 1);
+					((TextView) preview.findViewById(R.id.tv_option)).setText("Option: $"+optionItem.getValue());
+				}
+				if(item.getSizeList().size() > 0){
+					SizeItem sizeItem = item.getSizeList().get(item.getSizeList().size() - 1);
+					((TextView) preview.findViewById(R.id.tv_size)).setText("Size: $"+sizeItem.getValue());
+				}
+				if(item.getExtraList().size() > 0){
+					ExtraItem extraItem = item.getExtraList().get(item.getExtraList().size() - 1);
+					((TextView) preview.findViewById(R.id.tv_option)).setText("Extra: $"+extraItem.getValue());
+				}
+				float totalExtra = getTotalExtraValue(item);
+				float currentTotal = Float.parseFloat(btnTotalValue.getText().toString()) + totalExtra;
+				btnTotalValue.setText(""+round(currentTotal,2));
+			}
+			
+		}
+	}
 }
