@@ -871,7 +871,7 @@ public class DataParser {
 										menu.setProductTypeInfoList(productTypeInfoList);
 
 										NodeList optionItem = permElement
-												.getElementsByTagName("extra_item");
+												.getElementsByTagName("option_item");
 										int lengthOption = optionItem
 												.getLength();
 										List<OptionItem> optionItemList = new ArrayList<OptionItem>();
@@ -900,7 +900,10 @@ public class DataParser {
 														"sort"));
 												item2.setCreatedata(getValue(inElement,
 														"createdate"));
-												optionItemList.add(item2);
+												if(!getValue(inElement,
+														"value").equals("")){
+													optionItemList.add(item2);
+												}
 											}
 
 										}
@@ -936,7 +939,10 @@ public class DataParser {
 														"sort"));
 												item2.setCreatedata(getValue(inElement,
 														"createdate"));
-												extraItemList.add(item2);
+												if(!getValue(inElement,
+														"value").equals("")){
+													extraItemList.add(item2);
+												}
 											}
 	
 										}
@@ -973,11 +979,15 @@ public class DataParser {
 														"sort"));
 												item2.setCreatedata(getValue(inElement,
 														"createdate"));
-												sizeItemList.add(item2);
+												if(!getValue(inElement,
+														"createdate").equals("")){
+													sizeItemList.add(item2);
+												}
 											}
 	
 										}
 										menu.setSizeItemList(sizeItemList);
+										
 										NodeList storeInfoNodes = permElement
 												.getElementsByTagName("store_info");
 										int storeInfoLength = productTypeInfoNodes
