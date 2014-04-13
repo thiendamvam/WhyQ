@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import whyq.WhyqApplication;
 import whyq.adapter.WhyQBillAdapter;
@@ -65,6 +67,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		isOrdered = bundle.getBoolean("is_ordered", true);
 		btnDone = (Button)findViewById(R.id.btnDone);
 		if(!isOrdered){
+			totalValue = bundle.getFloat("total", 0);
 			listBill = getBillList(ListDetailActivity.billList);
 			btnDone.setText("Order");
 		}else{
@@ -144,27 +147,35 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		WhyQBillAdapter adapter = new WhyQBillAdapter(WhyQBillScreen.this, listBill);
 		lvBill.setAdapter(adapter);
 	}
-	private ArrayList<Bill> getBillList(HashMap<String, Bill> billList) {
+	private ArrayList<Bill> getBillList(Map<String, List<Bill>> billList) {
 		// TODO Auto-generated method stub
 		totalValue = 0;
 		totalafterDiscount = 0;
 
 		if(billList!=null){
-			Collection<Bill> c = billList.values();
-			if(c!=null){
-				for (Iterator collectionItr = c.iterator(); collectionItr.hasNext(); ) {
-					try {
-
-						  Bill item = (Bill)collectionItr.next();
-						  this.listBill.add(item);
-						  totalValue+= Float.parseFloat(item.getPrice())*Float.parseFloat(item.getUnit());
-					
-					} catch (Exception e) {
-						// TODO: handle exception
-						e.printStackTrace();
-					}
+			
+			for(String key: billList.keySet()){
+				List<Bill> list = billList.get(key);
+				for(Bill item: list){
+					  this.listBill.add(item);
+//					  totalValue+= Float.parseFloat(item.getPrice())*Float.parseFloat(item.getUnit());					
 				}
 			}
+//			Collection<Bill> c = billList.values();
+//			if(c!=null){
+//				for (Iterator collectionItr = c.iterator(); collectionItr.hasNext(); ) {
+//					try {
+//
+//						  Bill item = (Bill)collectionItr.next();
+//						  this.listBill.add(item);
+//						  totalValue+= Float.parseFloat(item.getPrice())*Float.parseFloat(item.getUnit());
+//					
+//					} catch (Exception e) {
+//						// TODO: handle exception
+//						e.printStackTrace();
+//					}
+//				}
+//			}
 		}
 		
 		return this.listBill;

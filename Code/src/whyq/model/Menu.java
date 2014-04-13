@@ -18,6 +18,7 @@ public class Menu implements Serializable{
 	String imageThumb;
 	String status;
 	String sort;
+	private int unitForBill =0;
 	public String getSort() {
 		return sort;
 	}
@@ -155,6 +156,18 @@ public class Menu implements Serializable{
 	 */
 	public void setOptionItemList(List<OptionItem> optionItemList) {
 		this.optionItemList = optionItemList;
+	}
+	/**
+	 * @return the unitForBill
+	 */
+	public int getUnitForBill() {
+		return unitForBill;
+	}
+	/**
+	 * @param unitForBill the unitForBill to set
+	 */
+	public void setUnitForBill(int unitForBill) {
+		this.unitForBill = unitForBill;
 	}
 	String typeProductId;
 	String createDate;

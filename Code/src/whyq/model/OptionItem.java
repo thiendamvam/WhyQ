@@ -18,6 +18,7 @@ public class OptionItem implements Serializable {
 	private String note;
 	private String sort;
 	private String createdata;
+	private boolean isSelected;
 
 	/**
 	 * @param args
@@ -175,6 +176,20 @@ public class OptionItem implements Serializable {
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the isSelected
+	 */
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	/**
+	 * @param isSelected the isSelected to set
+	 */
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
 	}
 
 }

@@ -1,4 +1,4 @@
-package why.adapter;
+package whyq.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -13,7 +13,7 @@ import whyq.WhyqApplication;
 import whyq.adapter.BasicImageListAdapter;
 import whyq.adapter.BasicUserAdapter;
 import whyq.adapter.ExpanMenuAdapter;
-import whyq.adapter.ExpandableListAdapter.ViewHolderMitemInfo;
+import whyq.adapter.ExpanMenuAdapter.ViewHolderMitemInfo;
 import whyq.adapter.WhyqMenuAdapter;
 import whyq.interfaces.IServiceListener;
 import whyq.map.MapsActivity;
@@ -127,7 +127,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private TextView tvTelephoneTitle;
 	private String storeName;
 	public static Bundle bundle;
-	public static HashMap<String, Bill> billList;
+	public static Map<String, List<Bill>> billList;
 	public static NavigableMap<String, ExtraItemSet> extraList;
 
 	@Override
@@ -137,6 +137,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		context = ListDetailActivity.this;
 		id = getIntent().getStringExtra("id");
 		Log.d("ListDetailActivity", "id " + id);
+		billList = new HashMap<String, List<Bill>>();
 		service = new Service(this);
 		bundle = new Bundle();
 		svContent = (ScrollviewCustom) findViewById(R.id.svContent);
@@ -175,7 +176,6 @@ public class ListDetailActivity extends FragmentActivity implements
 		btnTotalValue = (Button) findViewById(R.id.btnTotalValue);
 		btnTotalValue.setText("0");
 		lvMenu = (ExpandableListView) findViewById(R.id.lvMenu);
-		billList = new HashMap<String, Bill>();
 		extraList = new TreeMap<String, ExtraItemSet>();
 		vpPhotoList = (CustomViewPager) findViewById(R.id.vpStorephoto);
 		rlPhotoList = (RelativeLayout) findViewById(R.id.rlPhotoList);
@@ -251,7 +251,8 @@ public class ListDetailActivity extends FragmentActivity implements
 	}
 
 	private String currentStoreId;
-	private Promotion promotion;
+	public static Promotion promotion;
+	private ExpanMenuAdapter mExpanMenuAdapter;
 	public static String commentContent;
 
 	public void onDoneClicked(View v) {
@@ -697,13 +698,13 @@ public class ListDetailActivity extends FragmentActivity implements
 						e.printStackTrace();
 					}
 				}
-				ExpanMenuAdapter adapter = new ExpanMenuAdapter(
+			   mExpanMenuAdapter = new ExpanMenuAdapter(
 						ListDetailActivity.this, lvMenu, mGroupCollection);
 
-				lvMenu.setAdapter(adapter);
-				adapter.notifyDataSetChanged();
+				lvMenu.setAdapter(mExpanMenuAdapter);
+				mExpanMenuAdapter.notifyDataSetChanged();
 
-				lvMenu.setAdapter(adapter);
+				lvMenu.setAdapter(mExpanMenuAdapter);
 				for (int i = 0; i < mGroupCollection.size(); i++) {
 					lvMenu.expandGroup(i);
 				}
@@ -834,70 +835,65 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	}
 
-	// public void onAddClicked(View v){
-	// Log.d("onAddClicked","id ="+v.getId());
-	// Menu item = (Menu)v.getTag();
-	// if(item!=null){
-	// if(billList.containsKey(item.getId())){
-	// int value = Integer.parseInt(billList.get(item.getId()).getUnit())+1;
-	// billList.get(item.getId()).setUnit(""+value);
-	// }else{
-	// Bill bill = new Bill();
-	// bill.setId(item.getId());
-	// bill.setPrice(item.getValue());
-	// bill.setUnit("1");
-	// billList.put(item.getId(),bill);
-	// }
-	//
-	// updateCount(item,true);
-	// }
-	// }
-	//
-	// public void onRemoveClicked(View v){
-	// Log.d("onRemoveClicked","id ="+v.getId());
-	// Menu item = (Menu)v.getTag();
-	// updateCount(item,false);
-	// if(billList.containsKey(item.getId())){
-	// int value = Integer.parseInt(billList.get(item.getId()).getUnit())-1;
-	//
-	// billList.get(item.getId()).setUnit(""+value);
-	// if(value < 0)
-	// billList.remove(item.getId());
-	// }else{
-	// Bill bill = new Bill();
-	// bill.setId(item.getId());
-	// bill.setPrice(item.getValue());
-	// bill.setThumb(item.getImageThumb());
-	// bill.setUnit("1");
-	// billList.put(item.getId(),bill);
-	// }
-	// }
+	
 	public void onAddClicked(View v) {
 		Log.d("onAddClicked", "id =" + v.getId());
 		ViewHolderMitemInfo holder = (ViewHolderMitemInfo) v.getTag();
-		holder.rlExtraView.setVisibility(View.VISIBLE);
-		Menu item = getMenuById(holder.menuId);
+//		holder.rlExtraView.setVisibility(View.VISIBLE);
+//		holder.rlExtraView.setEnabled(true);
+//		holder.rlExtraView.requestLayout();
+//		Menu item = getMenuById(holder.menuId);
+		Menu item = getMenuItemById(holder.menuId);
 		if (item != null) {
-			if (billList.containsKey(item.getId())) {
-				int value = Integer.parseInt(billList.get(item.getId())
-						.getUnit()) + 1;
-				billList.get(item.getId()).setUnit("" + value);
-			} else {
+//			if (billList.containsKey(item.getId())) {
+//				int value = Integer.parseInt(billList.get(item.getId()).getUnit()) + 1;
+//				billList.get(item.getId()).setUnit("" + value);
+//			} else 
+//			{
 				Bill bill = new Bill();
 				bill.setId(item.getId());
 				bill.setPrice(item.getValue());
-				if(promotion!=null)
+				if(promotion!=null){
 					bill.setDiscount(promotion.getValuePromotion()!=null?promotion.getValuePromotion():""+0);
+				}
 				bill.setUnit("1");
 				bill.setProductId(item.getId());
 				bill.setProductName(item.getNameProduct());
-				billList.put(item.getId(), bill);
-			}
+				if(billList.get(item.getId())!=null){
+
+					billList.get(item.getId()).add(bill);					
+				}else{
+					List<Bill> list = new ArrayList<Bill>();
+					list.add(bill);
+					billList.put(item.getId(), list);
+				}
+
+//				billList.put(item.getId(), bill);
+//			}
 
 			// updateCount(holder,true);
-			updateCountInExpandListview(holder, true);
+//			updateCountInExpandListview(holder, true);
+		}
+		if(mExpanMenuAdapter!=null){
+			mExpanMenuAdapter.notifyDataSetChanged();
 		}
 	}
+
+	private Menu getMenuItemById(String menuId) {
+		// TODO Auto-generated method stub
+		List<GroupMenu> data = mExpanMenuAdapter.getData();
+		for (GroupMenu groupItem : data) {
+			List<Menu> menuList = groupItem.getMenuList();
+			for (Menu menu : menuList) {
+				if (menu.getId() != null && menuId.equalsIgnoreCase(menu.getId())) {
+					return menu;
+				}
+			}
+		}
+		return null;
+	}
+
+
 
 	private Menu getMenuById(String menuId) {
 		// TODO Auto-generated method stub
@@ -913,30 +909,36 @@ public class ListDetailActivity extends FragmentActivity implements
 	public void onRemoveClicked(View v) {
 		Log.d("onRemoveClicked", "id =" + v.getId());
 		ViewHolderMitemInfo holder = (ViewHolderMitemInfo) v.getTag();
-		Menu item = getMenuById(holder.menuId);
+//		Menu item = getMenuById(holder.menuId);
+		Menu item = getMenuItemById(holder.menuId);
 		// updateCount(holder,false);
 		updateCountInExpandListview(holder, false);
 		if (item != null) {
 			if (billList.containsKey(item.getId())) {
-				int value = Integer.parseInt(billList.get(item.getId())
-						.getUnit()) - 1;
-
-				billList.get(item.getId()).setUnit("" + value);
-				if (value < 0){
-					billList.remove(item.getId());
-				}else if(value == 0){
-					holder.rlExtraView.setVisibility(View.GONE);
-				}
+				
+				billList.remove(item.getId());
+//				int value = Integer.parseInt(billList.get(item.getId())
+//						.getUnit()) - 1;
+//
+//				billList.get(item.getId()).setUnit("" + value);
+//				if (value <= 0){
+//					billList.remove(item.getId());
+//				}else if(value == 0){
+//					holder.rlExtraView.setVisibility(View.GONE);
+//				}
 			} else {
-				Bill bill = new Bill();
-				bill.setId(item.getId());
-				bill.setPrice(item.getValue());
-				if(promotion!=null)
-					bill.setDiscount(promotion.getValuePromotion()!=null?promotion.getValuePromotion():""+0);
-
-				bill.setThumb(item.getImageThumb());
-				bill.setUnit("1");
-				billList.put(item.getId(), bill);
+//				Bill bill = new Bill();
+//				bill.setId(item.getId());
+//				bill.setPrice(item.getValue());
+//				if(promotion!=null)
+//					bill.setDiscount(promotion.getValuePromotion()!=null?promotion.getValuePromotion():""+0);
+//
+//				bill.setThumb(item.getImageThumb());
+//				bill.setUnit("1");
+//				billList.put(item.getId(), bill);
+			}
+			if(mExpanMenuAdapter!=null){
+				mExpanMenuAdapter.notifyDataSetChanged();
 			}
 		}
 	}
@@ -954,6 +956,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		bundle.putString("start_time", "" + store.getStartTime());
 		bundle.putString("close_time", "" + store.getEndTime());
 		bundle.putBoolean("is_ordered", false);
+		bundle.putFloat("total", Float.parseFloat(btnTotalValue.getText().toString()));
 		intent.putExtra("data", bundle);
 		startActivity(intent);
 	}
@@ -961,22 +964,40 @@ public class ListDetailActivity extends FragmentActivity implements
 	private String getListItem() {
 		// TODO Auto-generated method stub
 		String result = "";
+		for (String key : billList.keySet()) {
+			List<Bill> list = billList.get(key);
+			for (Bill bill : list) {
+				if (bill != null) {
+					if (result.equals("")) {
+						result += bill.getProductId() + ":" + bill.getUnit() + ":"
+								+ bill.getPrice();
+					} else {
+						result += "|" + bill.getProductId() + ":" + bill.getUnit() + ":"
+								+ bill.getPrice();
+					}
 
-		Iterator myVeryOwnIterator = billList.keySet().iterator();
-		while (myVeryOwnIterator.hasNext()) {
-			String key = (String) myVeryOwnIterator.next();
-			Bill bill = billList.get(key);
-			if (bill != null) {
-				if (result.equals("")) {
-					result += bill.getProductId() + ":" + bill.getUnit() + ":"
-							+ bill.getPrice();
-				} else {
-					result += "|" + bill.getProductId() + ":" + bill.getUnit()
-							+ ":" + bill.getPrice();
 				}
 
 			}
 		}
+//		Iterator myVeryOwnIterator = billList.keySet().iterator();
+//		while (myVeryOwnIterator.hasNext()) {
+//			String key = (String) myVeryOwnIterator.next();
+//			List<Bill> list = billList.get(key);
+//			
+//			
+//			Bill bill = billList.get(key);
+//			if (bill != null) {
+//				if (result.equals("")) {
+//					result += bill.getProductId() + ":" + bill.getUnit() + ":"
+//							+ bill.getPrice();
+//				} else {
+//					result += "|" + bill.getProductId() + ":" + bill.getUnit()
+//							+ ":" + bill.getPrice();
+//				}
+//
+//			}
+//		}
 		return result;
 	}
 
@@ -1237,14 +1258,16 @@ public class ListDetailActivity extends FragmentActivity implements
 	}
 
 	public void onDoneSelectExtraClicked(View v){
-		ViewHolderMitemInfo holder = (ViewHolderMitemInfo) v.getTag();
+		final ViewHolderMitemInfo holder = (ViewHolderMitemInfo) v.getTag();
 		
 		ViewGroup viewGroup = (ViewGroup) v.getParent();
 		if(extraList.lastEntry()!=null){
 			ExtraItemSet item = extraList.lastEntry().getValue();
 			if(item!=null){
 				holder.lnPreview.setVisibility(View.VISIBLE);
-				View preview = LayoutInflater.from(context).inflate(R.layout.item_extra_preview, viewGroup,false);
+				final View preview = LayoutInflater.from(context).inflate(R.layout.item_extra_preview, viewGroup,false);
+				ImageButton btnDeleteMenu = (ImageButton)preview.findViewById(R.id.imgbtn_delete_item);
+				btnDeleteMenu.setTag(v);
 				holder.lnPreview.addView(preview);
 				if(item.getOptionList().size() > 0){
 					OptionItem optionItem = item.getOptionList().get(item.getOptionList().size() - 1);
@@ -1261,8 +1284,104 @@ public class ListDetailActivity extends FragmentActivity implements
 				float totalExtra = getTotalExtraValue(item);
 				float currentTotal = Float.parseFloat(btnTotalValue.getText().toString()) + totalExtra;
 				btnTotalValue.setText(""+round(currentTotal,2));
+				btnDeleteMenu.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						holder.lnPreview.removeView(preview);
+					}
+				});
+				mExpanMenuAdapter.notifyDataSetChanged();
 			}
 			
 		}
+	}
+
+
+
+	public void updateTotal(ExtraItemSet extraItemSet) {
+		// TODO Auto-generated method stub
+		float totalExtra = getTotalExtraValue(extraItemSet);
+		float currentTotal = Float.parseFloat(btnTotalValue.getText().toString()) + totalExtra;
+		btnTotalValue.setText(""+round(currentTotal,2));
+
+	}
+
+
+
+	public void updateTotal() {
+		// TODO Auto-generated method stub
+		float total = 0;
+		for(String key: billList.keySet()){
+			List<Bill> list = billList.get(key);
+			for(Bill bill: list){
+				float sizeValue = getTotalSize(bill.getSizeList());
+				float optionValue = getTotalOption(bill.getOptionList());
+				float extraValue = getTotalExtra(bill.getExtraList());
+				total+= sizeValue + optionValue + extraValue;
+			}
+		}
+		btnTotalValue.setText(""+round(total,2));
+	}
+
+
+
+	public float getTotalSize(List<SizeItem> list) {
+		// TODO Auto-generated method stub
+		float result = 0;
+		if(list!=null){
+			for(SizeItem item: list){
+				try {
+					if(item.isSelected()){
+						result+= Float.parseFloat(item.getValue());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					// TODO: handle exception
+				}
+			}
+		}
+		return result;
+	}
+
+
+
+	public float getTotalOption(List<OptionItem> list) {
+		// TODO Auto-generated method stub
+		float result = 0;
+		if(list!=null){
+			for(OptionItem item: list){
+				try {
+					if(item.isSelected()){
+						result+= Float.parseFloat(item.getValue());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					// TODO: handle exception
+				}
+			}
+		}
+		return result;
+	}
+
+
+
+	public float getTotalExtra(List<ExtraItem> list) {
+		// TODO Auto-generated method stub
+		float result = 0;
+		if(list!=null){
+			for(ExtraItem item: list){
+				try {
+					if(item.isSelected()){
+						result+= Float.parseFloat(item.getValue());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					// TODO: handle exception
+				}
+			}
+		}
+		return result;
 	}
 }

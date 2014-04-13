@@ -2,8 +2,8 @@ package whyq.activity;
 
 import java.util.ArrayList;
 
-import why.adapter.InvitationAdapter;
 import whyq.WhyqApplication;
+import whyq.adapter.InvitationAdapter;
 import whyq.interfaces.IServiceListener;
 import whyq.model.ResponseData;
 import whyq.model.User;

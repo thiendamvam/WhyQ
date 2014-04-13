@@ -870,7 +870,7 @@ public class DataParser {
 										}
 										menu.setProductTypeInfoList(productTypeInfoList);
 
-										NodeList optionItem = permElement
+										NodeList optionItem = elementList
 												.getElementsByTagName("option_item");
 										int lengthOption = optionItem
 												.getLength();
@@ -909,7 +909,7 @@ public class DataParser {
 										}
 										menu.setOptionItemList(optionItemList);
 										
-										NodeList extraItem = permElement
+										NodeList extraItem = elementList
 												.getElementsByTagName("extra_item");
 										int lengthExtra = extraItem
 												.getLength();
@@ -948,7 +948,7 @@ public class DataParser {
 										}
 										menu.setExtraItemList(extraItemList);
 										
-										NodeList sizeItem = permElement
+										NodeList sizeItem = elementList
 												.getElementsByTagName("size_item");
 										int lengthSize = sizeItem
 												.getLength();
@@ -981,6 +981,9 @@ public class DataParser {
 														"createdate"));
 												if(!getValue(inElement,
 														"createdate").equals("")){
+													if(y==0){
+														item2.setSelected(true);
+													}
 													sizeItemList.add(item2);
 												}
 											}

@@ -301,6 +301,38 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		public LinearLayout lnPreview;
 		public RelativeLayout rlExtraView;
 		public Button btnDoneSelect;
+		public TextView tvItem1NameOption;
+		public TextView tvItem1PriceOption;
+		public TextView tvItem2NameOption;
+		public TextView tvItem2PriceOption;
+		public TextView tvItem3NameOption;
+		public TextView tvItem3PriceOption;
+		
+		public TextView tvItem1NameSize;
+		public TextView tvItem1PriceSize;
+		public TextView tvItem2NameSize;
+		public TextView tvItem2PriceSize;
+		public TextView tvItem3NameSize;
+		public TextView tvItem3PriceSize;
+
+		public TextView tvItem1NameExtra;
+		public TextView tvItem1PriceExtra;
+		public TextView tvItem2NameExtra;
+		public TextView tvItem2PriceExtra;
+		public TextView tvItem3NameExtra;
+		public TextView tvItem3PriceExtra;
+		public LinearLayout lnItem1Option;
+		public LinearLayout lnItem2Option;
+		public LinearLayout lnItem3Option;
+		
+		public LinearLayout lnItem1Size;
+		public LinearLayout lnItem2Size;
+		public LinearLayout lnItem3Size;
+		
+		public LinearLayout lnItem1Extra;
+		public LinearLayout lnItem2Extra;
+		public LinearLayout lnItem3Extra;
+		
 
 		public ViewHolderMitemInfo() {
 
