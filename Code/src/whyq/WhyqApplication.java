@@ -3,9 +3,8 @@
  */
 package whyq;
 
-import com.androidexample.lazyimagedownload.ImageLoader;
-
 import whyq.model.User;
+import whyq.service.img.good.ImageLoader;
 import whyq.utils.RSA;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;

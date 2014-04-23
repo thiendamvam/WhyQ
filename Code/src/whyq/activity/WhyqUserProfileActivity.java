@@ -20,6 +20,7 @@ import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
+import whyq.service.img.good.ImageLoader;
 import whyq.utils.ImageViewHelper;
 import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
@@ -44,7 +45,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidexample.lazyimagedownload.ImageLoader;
 import com.devsmart.android.ui.HorizontalListView;
 import com.whyq.R;
 

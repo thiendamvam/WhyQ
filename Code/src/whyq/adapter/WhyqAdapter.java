@@ -20,6 +20,7 @@ import whyq.model.Promotion;
 import whyq.model.Store;
 import whyq.model.User;
 import whyq.model.UserCheckBill;
+import whyq.service.img.good.ImageLoader;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.HttpPermUtils;
@@ -56,7 +57,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidexample.lazyimagedownload.ImageLoader;
 import com.whyq.R;
 
 public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener {

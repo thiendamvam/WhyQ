@@ -30,7 +30,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.gpstracking.GPSTracker;
+import com.gso.gpstracker.GPSTracker;
 import com.whyq.R;
 
 /**

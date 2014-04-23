@@ -13,6 +13,7 @@ import whyq.service.ResultCode;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
+import whyq.service.img.good.ImageLoader;
 import whyq.utils.ImageViewHelper;
 import whyq.utils.Util;
 import android.content.Context;
@@ -30,7 +31,6 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
-import com.androidexample.lazyimagedownload.ImageLoader;
 import com.whyq.R;
 
 public class CommentActivity extends ImageWorkerActivity {
