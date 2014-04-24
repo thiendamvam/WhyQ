@@ -43,11 +43,19 @@
                 layout="@layout/bottom_image" />
         </RelativeLayout>
 
+        <include
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/rlPhotoList"
+            layout="@layout/tab_3bar_radio" >
+        </include>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/lnComment"
-            android:layout_below="@+id/rlPhotoList" >
+            android:layout_below="@+id/tabs" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,12 +79,6 @@
                             android:layout_height="wrap_content"
                             android:background="@color/white"
                             android:orientation="vertical" >
-
-                            <include
-                                android:layout_width="match_parent"
-                                android:layout_height="52dp"
-                                layout="@layout/tab_3bar_radio" >
-                            </include>
 
                             <RelativeLayout
                                 android:layout_width="match_parent"

@@ -12,12 +12,12 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.Util;
-
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -207,6 +207,8 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 
 			showDialog();
 			service.orderSend(params);
+			
+			Log.d("onDoneClicked","onDoneClicked"+listItem);
 		} else {
 			// Util.showDialog(context, "Please input data");
 			etHours.setError("Please input Hours");

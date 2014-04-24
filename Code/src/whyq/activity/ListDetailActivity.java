@@ -880,6 +880,30 @@ public class ListDetailActivity extends FragmentActivity implements
 		}
 	}
 
+	public void onItemToBillList(Menu item) {
+		Log.d("onItemToBillList", "onItemToBillList =" + item);
+		if (item != null) {
+
+			Bill bill = new Bill();
+			bill.setId(item.getId());
+			bill.setPrice(item.getValue());
+			if (promotion != null) {
+				bill.setDiscount(promotion.getValuePromotion() != null ? promotion
+						.getValuePromotion() : "" + 0);
+			}
+			bill.setUnit("1");
+			bill.setProductId(item.getId());
+			bill.setProductName(item.getNameProduct());
+			if (billList.get(item.getId()) != null) {
+
+				billList.get(item.getId()).add(bill);
+			} else {
+				List<Bill> list = new ArrayList<Bill>();
+				list.add(bill);
+				billList.put(item.getId(), list);
+			}
+		}
+	}
 	private Menu getMenuItemById(String menuId) {
 		// TODO Auto-generated method stub
 		List<GroupMenu> data = mExpanMenuAdapter.getData();
