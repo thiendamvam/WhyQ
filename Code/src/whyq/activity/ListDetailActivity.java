@@ -264,14 +264,14 @@ public class ListDetailActivity extends FragmentActivity implements
 	}
 
 	public void hidePhotoList() {
-		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) rlPhotoList
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rlPhotoList
 				.getLayoutParams();
 		params.height = 0;
 		rlPhotoList.setLayoutParams(params);
 	}
 
 	public void showPhotoList() {
-		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) rlPhotoList
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rlPhotoList
 				.getLayoutParams();
 		params.height = (int) (WhyqApplication.Instance().getDisplayMetrics().widthPixels * 3 / 5);// WhyqApplication.Instance().getDensity()
 																									// *
@@ -611,6 +611,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		lvResult.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		lvResult.requestLayout();
+		Util.setListViewHeightBasedOnChildren(lvResult);
 	}
 
 	private void bindImageList() {
