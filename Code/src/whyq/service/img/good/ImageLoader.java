@@ -47,14 +47,15 @@ public class ImageLoader {
 			cacheDir.mkdirs();
 	}
 
-	final int stub_id = R.drawable.logo_whyq;
+//	final int stub_id = R.drawable.logo_whyq;
 
 	public void DisplayImage(String url, ImageView imageView) {
 		if (cache.containsKey(url))
 			imageView.setImageBitmap(cache.get(url));
 		else {
 			queuePhoto(url, imageView);
-			imageView.setImageResource(stub_id);
+//			No set default image for imageview
+//			imageView.setImageResource(stub_id);
 		}
 	}
 
@@ -217,8 +218,10 @@ public class ImageLoader {
 		public void run() {
 			if (bitmap != null)
 				imageView.setImageBitmap(bitmap);
-			else
-				imageView.setImageResource(stub_id);
+			else{
+//				No set default image
+//				imageView.setImageResource(stub_id);
+			}
 		}
 	}
 

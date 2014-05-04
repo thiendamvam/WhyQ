@@ -611,7 +611,15 @@ public class ListDetailActivity extends FragmentActivity implements
 		lvResult.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		lvResult.requestLayout();
-		Util.setListViewHeightBasedOnChildren(lvResult);
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Util.setListViewHeightBasedOnChildren(lvResult);
+			}
+		});
+		
 	}
 
 	private void bindImageList() {

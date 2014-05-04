@@ -1,15 +1,15 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:weightSum="8" >
+    android:padding="5dp" >
 
     <LinearLayout
         android:id="@+id/lnAvatar"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical" >
 
@@ -22,26 +22,31 @@
             android:scaleType="fitXY" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvFriendCount"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/imgFriend"
-        android:layout_toRightOf="@+id/lnAvatar"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:textColor="@color/black" >
-    </TextView>
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp" >
 
-    <ImageView
-        android:id="@+id/imgFriend"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/logo_whyq"
-        android:scaleType="fitXY" />
+        <TextView
+            android:id="@+id/tvFriendCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/imgFriend"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:textColor="@color/black" >
+        </TextView>
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/imgFriend"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/logo_whyq"
+            android:scaleType="fitXY" />
+    </RelativeLayout>
+
+</LinearLayout>
