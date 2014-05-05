@@ -52,10 +52,15 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 	private String billId;
 	public static int LOGIN_REQUEST = 1;
 	
+	public static WhyQBillScreen sBillActivity;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whyq_bill_screen);
+		
+		sBillActivity = this;
+		
 		bundle = getIntent().getBundleExtra("data");
 		if(bundle==null)
 			bundle = getIntent().getExtras();

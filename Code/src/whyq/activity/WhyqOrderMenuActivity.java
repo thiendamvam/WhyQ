@@ -35,6 +35,8 @@ public class WhyqOrderMenuActivity extends DialogFragment implements
 	public static int HOTEL_ROOM_DELIVERY = 3;
 	public static int DINE_IN = 4;
 
+	public static WhyqOrderMenuActivity sOrderMenuActivity;
+	
 	public WhyqOrderMenuActivity() {
 
 	}
@@ -84,6 +86,8 @@ public class WhyqOrderMenuActivity extends DialogFragment implements
 				(int) (density * 300));// display.getWidth()/3,
 										// display.getHeight() / 4
 		getDialog().setCanceledOnTouchOutside(true);
+		
+		sOrderMenuActivity = this;
 		return v;
 	}
 
