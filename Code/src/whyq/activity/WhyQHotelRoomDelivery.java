@@ -168,8 +168,8 @@ public class WhyQHotelRoomDelivery extends FragmentActivity implements IServiceL
 			if(data!=null){
 				if(data.getStatus().equals("200")){
 					Util.showDialog(context, data.getMessage());
-					WhyqOrderMenuActivity.sOrderMenuActivity.dismiss();
-					WhyQBillScreen.sBillActivity.finish();
+//					WhyqOrderMenuActivity.sOrderMenuActivity.dismiss();
+//					WhyQBillScreen.sBillActivity.finish();
 				}else if(data.getStatus().equals("401")){
 					Util.loginAgain(context, data.getMessage());
 				}else{
