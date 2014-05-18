@@ -40,7 +40,7 @@ public class Bill {
 	}
 
 	public String getUnit() {
-		return unit;
+		return unit ==null? "1": unit;
 	}
 
 	public void setUnit(String unit) {
