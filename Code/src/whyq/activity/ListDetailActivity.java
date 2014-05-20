@@ -126,6 +126,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private TextView tvOpeningTimeTitle;
 	private TextView tvTelephoneTitle;
 	private String storeName;
+	private TextView tvTitleDiscount;
 	public static Bundle bundle;
 	public static Map<String, List<Bill>> billList;
 	public static NavigableMap<String, ExtraItemSet> extraList;
@@ -171,6 +172,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		lnPromotionContent = (LinearLayout) findViewById(R.id.lnStoreDetailPromotion);
 		imgView = (ImageView) findViewById(R.id.imgView);
 		tvNumberDiscount = (TextView) findViewById(R.id.tvNumberDiscount);
+		tvTitleDiscount = (TextView)findViewById(R.id.tvTitle);
 		tvDate = (TextView) findViewById(R.id.tvDate);
 		tvDes = (TextView) findViewById(R.id.tvDescription);
 		btnTotalValue = (Button) findViewById(R.id.btnTotalValue);
@@ -670,6 +672,7 @@ public class ListDetailActivity extends FragmentActivity implements
 			if (store.getPromotionList() != null) {
 				if (store.getPromotionList().size() > 0) {
 					promotion = store.getPromotionList().get(0);
+					tvTitleDiscount.setText(""+promotion.getTitlePromotion());
 					tvNumberDiscount.setText(promotion.getValuePromotion() + ""
 							+ promotion.getTypeValue());
 					tvDes.setText(promotion.getDescriptionPromotion());
