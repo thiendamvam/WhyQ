@@ -476,6 +476,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 								}
 								ListDetailActivity.billList.remove(item.getId());
 								ListDetailActivity.billList.put(item.getId(), result);
+								notifyDataSetChanged();
+								((ListDetailActivity)mContext).updateTotal();
 							}
 						});
 						
