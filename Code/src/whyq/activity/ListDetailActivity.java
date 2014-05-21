@@ -987,7 +987,7 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	public void onViewBillClicked(View v) {
 
-		if(billList !=null && billList.size() > 0){
+		if(billList !=null && billList.size() > 0 && Float.parseFloat(btnTotalValue.getText().toString())!=0.00){
 			commentContent = etComment.getText().toString();
 			Intent intent = new Intent(ListDetailActivity.this,
 					WhyQBillScreen.class);
