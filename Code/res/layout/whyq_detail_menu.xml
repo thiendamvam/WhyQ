@@ -61,15 +61,29 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ExpandableListView
-        android:id="@+id/lvMenu"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:divider="@drawable/divider_store"
-        android:dividerHeight="1dp"
-        android:groupIndicator="@drawable/play_group_item"
-        android:listSelector="@drawable/play_expand_seletor"
-        android:scrollbars="vertical" />
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="No data"
+            android:textColor="@color/blue"
+            android:textStyle="bold" />
+
+        <ExpandableListView
+            android:id="@+id/lvMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:divider="@drawable/divider_store"
+            android:dividerHeight="1dp"
+            android:groupIndicator="@drawable/play_group_item"
+            android:listSelector="@drawable/play_expand_seletor"
+            android:scrollbars="vertical" />
+    </RelativeLayout>
 
 </LinearLayout>
