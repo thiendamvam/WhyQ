@@ -71,6 +71,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="No data"
+            android:visibility="gone"
             android:textColor="@color/blue"
             android:textStyle="bold" />
 
