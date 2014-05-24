@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import twitter4j.http.AccessToken;
+import twitter4j.auth.AccessToken;
 import whyq.WhyqApplication;
 import whyq.adapter.AmazingAdapter;
 import whyq.interfaces.FriendTwitterController;
@@ -16,16 +16,11 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.utils.ImageViewHelper;
-import whyq.utils.SharedPreferencesManager;
 import whyq.utils.SpannableUtils;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.view.AmazingListView;
 import whyq.view.SearchField;
-
-import com.whyq.BuildConfig;
-import com.whyq.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -37,9 +32,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.whyq.BuildConfig;
+import com.whyq.R;
 
 public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 	private FriendsTwitterAdapter mFriendsTwitterAdapter = null;

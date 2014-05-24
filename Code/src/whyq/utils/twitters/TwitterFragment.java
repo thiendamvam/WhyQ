@@ -8,7 +8,7 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 import twitter4j.Twitter;
-import twitter4j.http.AccessToken;
+import twitter4j.auth.AccessToken;
 import whyq.utils.Constants;
 import whyq.utils.SharedPreferencesManager;
 import android.content.Context;
@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 

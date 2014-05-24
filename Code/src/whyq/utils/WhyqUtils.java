@@ -12,9 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-import com.whyq.R;
-
-import twitter4j.http.AccessToken;
+import twitter4j.auth.AccessToken;
 import whyq.WhyqApplication;
 import whyq.activity.ListActivity;
 import whyq.activity.NewWhyqActivity;
@@ -46,10 +44,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.whyq.R;
 
 
 /**
