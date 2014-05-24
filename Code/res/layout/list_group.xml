@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:paddingBottom="0dp"
-    android:paddingLeft="15dp"
+    android:paddingLeft="5dp"
     android:paddingRight="15dp"
     android:paddingTop="0dp" >
 
@@ -17,8 +17,8 @@
         android:src="@drawable/group_down" />
 
     <TextView
-        style="@style/big_blue_text"
         android:id="@+id/group_title"
+        style="@style/big_blue_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -26,12 +26,12 @@
         android:background="@android:color/transparent"
         android:ellipsize="end"
         android:gravity="left"
-        android:textStyle="bold"
-        android:text="Type"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         android:scrollbars="none"
         android:singleLine="true"
-        android:textColor="@android:color/darker_gray" />
+        android:text="Type"
+        android:textColor="@color/profifle_blue"
+        android:textStyle="bold" />
 
 </RelativeLayout>

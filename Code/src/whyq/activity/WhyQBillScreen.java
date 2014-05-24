@@ -1,6 +1,7 @@
 package whyq.activity;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -115,8 +116,15 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		
 		try {
 			tvTotal.setText("$"+Util.round(totalValue, 2));
-			if(valueDiscount!=0)
-				tvDiscount.setText("%"+ Util.round(valueDiscount, 2));
+			if(valueDiscount!=0){
+//				tvDiscount.setText("%"+ Util.round(valueDiscount, 2));
+				if(ListDetailActivity.promotion !=null && ListDetailActivity.promotion.getValuePromotion() !=null && !ListDetailActivity.promotion.getValuePromotion().equals("")){
+					tvDiscount.setText("%"+ListDetailActivity.promotion.getValuePromotion());
+				}else{
+					tvDiscount.setText("%0");
+				}
+				
+			}
 			if(valueDiscount!=0)
 				totalafterDiscount = (float)(totalValue*(100-valueDiscount)/100);
 			else
@@ -135,16 +143,21 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 			try {
 				float unit = item.getUnit()!=null?Float.parseFloat(item.getUnit()):0;
 				float price = item.getPrice()!=null?Float.parseFloat(item.getPrice()):0;
-				float discount = item.getDiscount()!=null?Float.parseFloat(item.getDiscount()):0;
+//				float discount = item.getDiscount()!=null?Float.parseFloat(item.getDiscount()):0;
 				totalValue += price*unit;
-				valueDiscount = 0;
-				valueDiscount = discount*price*unit;
-				totalafterDiscount=totalValue - valueDiscount;
+//				valueDiscount = 0;
+//				valueDiscount = discount*price*unit;
+//				totalafterDiscount=totalValue - valueDiscount;
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
 		}
+		if(ListDetailActivity.promotion !=null && ListDetailActivity.promotion.getValuePromotion() !=null && !ListDetailActivity.promotion.getValuePromotion().equals("")){
+			valueDiscount = Float.parseFloat(ListDetailActivity.promotion.getValuePromotion());	
+			totalafterDiscount=totalValue - valueDiscount;
+		}
+
 		
 	}
 	private void bindDatatoListview() {

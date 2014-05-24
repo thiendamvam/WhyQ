@@ -115,7 +115,7 @@ public class WhyqApplication extends Application {
 	public void clearToken(){
 		XMLParser.clearToken(getApplicationContext());
 	}
-	private DisplayMetrics metrics;
+	public static DisplayMetrics metrics;
 	private ImageLoader imageLoader;
 	
 	public void setDisplayMetrics( DisplayMetrics metrics ){

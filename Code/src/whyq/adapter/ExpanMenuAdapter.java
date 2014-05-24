@@ -476,6 +476,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 								}
 								ListDetailActivity.billList.remove(item.getId());
 								ListDetailActivity.billList.put(item.getId(), result);
+								notifyDataSetChanged();
+								((ListDetailActivity)mContext).updateTotal();
 							}
 						});
 						
@@ -781,6 +783,10 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		bill.setSizeList(sizelistBill);
 		bill.setOptionList(optionListBill);
 		bill.setExtraList(extraListBill);
+		if(ListDetailActivity.promotion!=null){
+			bill.setDiscount(ListDetailActivity.promotion.getValuePromotion()!=null?ListDetailActivity.promotion.getValuePromotion():""+0);
+		}
+		
 		billList.add(bill);
 		
 		ListDetailActivity.billList.put(menu.getId(), billList);

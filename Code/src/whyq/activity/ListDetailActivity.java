@@ -126,6 +126,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private TextView tvOpeningTimeTitle;
 	private TextView tvTelephoneTitle;
 	private String storeName;
+	private TextView tvTitleDiscount;
 	public static Bundle bundle;
 	public static Map<String, List<Bill>> billList;
 	public static NavigableMap<String, ExtraItemSet> extraList;
@@ -171,6 +172,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		lnPromotionContent = (LinearLayout) findViewById(R.id.lnStoreDetailPromotion);
 		imgView = (ImageView) findViewById(R.id.imgView);
 		tvNumberDiscount = (TextView) findViewById(R.id.tvNumberDiscount);
+		tvTitleDiscount = (TextView)findViewById(R.id.tvTitle);
 		tvDate = (TextView) findViewById(R.id.tvDate);
 		tvDes = (TextView) findViewById(R.id.tvDescription);
 		btnTotalValue = (Button) findViewById(R.id.btnTotalValue);
@@ -271,11 +273,17 @@ public class ListDetailActivity extends FragmentActivity implements
 	}
 
 	public void showPhotoList() {
-		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rlPhotoList
-				.getLayoutParams();
-		params.height = (int) (WhyqApplication.Instance().getDisplayMetrics().widthPixels * 3 / 5);// WhyqApplication.Instance().getDensity()
-																									// *
-		rlPhotoList.setLayoutParams(params);
+
+		try {
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rlPhotoList
+					.getLayoutParams();
+			params.height = (int) (WhyqApplication.Instance().getDisplayMetrics().widthPixels * 3 / 5);// WhyqApplication.Instance().getDensity()
+																										// *
+			rlPhotoList.setLayoutParams(params);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 
 	protected void exeAboutFocus() {
@@ -664,6 +672,7 @@ public class ListDetailActivity extends FragmentActivity implements
 			if (store.getPromotionList() != null) {
 				if (store.getPromotionList().size() > 0) {
 					promotion = store.getPromotionList().get(0);
+					tvTitleDiscount.setText(""+promotion.getTitlePromotion());
 					tvNumberDiscount.setText(promotion.getValuePromotion() + ""
 							+ promotion.getTypeValue());
 					tvDes.setText(promotion.getDescriptionPromotion());
@@ -978,20 +987,24 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	public void onViewBillClicked(View v) {
 
-		commentContent = etComment.getText().toString();
-		Intent intent = new Intent(ListDetailActivity.this,
-				WhyQBillScreen.class);
+		if(billList !=null && billList.size() > 0 && Float.parseFloat(btnTotalValue.getText().toString())!=0.00){
+			commentContent = etComment.getText().toString();
+			Intent intent = new Intent(ListDetailActivity.this,
+					WhyQBillScreen.class);
 
-		bundle.putString("store_id", store.getStoreId());
-		bundle.putString("list_items", getListItem());
-		bundle.putString("lat", "" + store.getLatitude());
-		bundle.putString("lon", "" + store.getLongitude());
-		bundle.putString("start_time", "" + store.getStartTime());
-		bundle.putString("close_time", "" + store.getEndTime());
-		bundle.putBoolean("is_ordered", false);
-		bundle.putFloat("total", Float.parseFloat(btnTotalValue.getText().toString()));
-		intent.putExtra("data", bundle);
-		startActivity(intent);
+			bundle.putString("store_id", store.getStoreId());
+			bundle.putString("list_items", getListItem());
+			bundle.putString("lat", "" + store.getLatitude());
+			bundle.putString("lon", "" + store.getLongitude());
+			bundle.putString("start_time", "" + store.getStartTime());
+			bundle.putString("close_time", "" + store.getEndTime());
+			bundle.putBoolean("is_ordered", false);
+			bundle.putFloat("total", Float.parseFloat(btnTotalValue.getText().toString()));
+			intent.putExtra("data", bundle);
+			startActivity(intent);
+		}else {
+			Toast.makeText(context, "Pls choose any item!", Toast.LENGTH_LONG).show();
+		}
 	}
 
 	private String getListItem() {
@@ -1352,7 +1365,7 @@ public class ListDetailActivity extends FragmentActivity implements
 				float sizeValue = getTotalSize(bill.getSizeList());
 				float optionValue = getTotalOption(bill.getOptionList());
 				float extraValue = getTotalExtra(bill.getExtraList());
-				total+= sizeValue + optionValue + extraValue;
+				total+= Integer.parseInt(bill.getUnit())*(sizeValue + optionValue + extraValue);
 			}
 		}
 		btnTotalValue.setText(""+round(total,2));
