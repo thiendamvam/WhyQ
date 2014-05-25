@@ -12,6 +12,8 @@ import whyq.service.ServiceResponse;
 import whyq.utils.Util;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -61,6 +63,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 	private int currentMinutes;
 	private int currentHours;
 	private String address;
+	protected String mPhoneNumber;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -252,6 +255,30 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 
 	}
 
+	public void showRememberInfoDialog(){
+		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+				context);
+		builder.setTitle(context.getString(R.string.app_name_title));
+		builder.setMessage("Do you want save your phone number?");
+		final android.app.AlertDialog alertError = builder.create();
+		alertError.setButton("Yes", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+				mPhoneNumber = etPhoneNumber.getText().toString();
+				alertError.dismiss();
+			}
+		});
+		alertError.setButton2("No", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				mPhoneNumber = null;
+				alertError.dismiss();
+			}
+		});
+		alertError.show();
+	}
+	
 	class asyncExeOrderSend extends
 			AsyncTask<HashMap<String, String>, Void, HashMap<String, String>> {
 		public asyncExeOrderSend() {
@@ -285,6 +312,8 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 			params.put("phone_deliver", etPhoneNumber.getText().toString());
 			params.put("note", note);
 			params.put("token", WhyqApplication.Instance().getRSAToken());
+			params.put("remember_info", mPhoneNumber==null?"0":"1");
+			
 			servivice.orderSend(params);
 		}
 
