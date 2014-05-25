@@ -119,9 +119,9 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 			if(valueDiscount!=0){
 //				tvDiscount.setText("%"+ Util.round(valueDiscount, 2));
 				if(ListDetailActivity.promotion !=null && ListDetailActivity.promotion.getValuePromotion() !=null && !ListDetailActivity.promotion.getValuePromotion().equals("")){
-					tvDiscount.setText("%"+ListDetailActivity.promotion.getValuePromotion());
+					tvDiscount.setText(ListDetailActivity.promotion.getValuePromotion()+"%");
 				}else{
-					tvDiscount.setText("%0");
+					tvDiscount.setText("0%");
 				}
 				
 			}
