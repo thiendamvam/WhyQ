@@ -1,6 +1,7 @@
 package whyq.adapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.activity.FavouriteActivity;
 import whyq.activity.ListActivity;
-import whyq.activity.ListActivityGroup;
 import whyq.activity.ListDetailActivity;
 import whyq.activity.ListVipStoreActivity;
 import whyq.controller.WhyqListController;
@@ -24,7 +24,7 @@ import whyq.service.img.good.ImageLoader;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.HttpPermUtils;
-import whyq.utils.UrlImageViewHelper;
+import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
 import whyq.utils.facebook.FacebookConnector;
 import android.app.Activity;
@@ -34,8 +34,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -127,6 +127,8 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 //		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 //		
 //	}
+	private Calendar mNow;
+private String mTimeNow;
 
 	public WhyqAdapter(Context context,FragmentManager fragmentManager, int textViewResourceId,
 			ArrayList<Store> items, Activity activity, int screenWidth,
@@ -145,6 +147,13 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 						Constants.PUBLISH_STREAM });
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		imageLoader = WhyqApplication.Instance().getImageLoader();
+		
+	    mNow = Calendar.getInstance();
+
+	    int hour = mNow.get(Calendar.HOUR);
+	    int minute = mNow.get(Calendar.MINUTE);
+
+	    mTimeNow = hour + ":" + minute;
 	}
 
 	private String getActivityGroupName() {
@@ -298,6 +307,12 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 				viewHolder.imgFavouriteThumb.setTag(item);
 				viewHolder.btnDistance.setTag(item);
 				rowView.setEnabled(true);
+				
+//				if(Util.compareMinDates(item.getStartTime(), mTimeNow) && Util.compareMinDates(mTimeNow, item.getEndTime()))
+				{
+					rowView.setBackgroundColor(Color.BLUE);
+					rowView.setAlpha(130);
+				}
 				return rowView;
 			}
 			else{

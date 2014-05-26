@@ -18,9 +18,12 @@ import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -78,7 +81,6 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -710,4 +712,31 @@ public class Util {
 	    listView.requestLayout();
 	}
 
+	
+	public static boolean compareMinDates(String time1, String time2){
+	    Calendar now = Calendar.getInstance();
+
+	    int hour = now.get(Calendar.HOUR);
+	    int minute = now.get(Calendar.MINUTE);
+
+	    Date date = parseDate(hour + ":" + minute);
+	    Date date1 = parseDate(time1);
+	    Date date2 = parseDate(time2);
+
+	    if ( date1.before( date ) && date2.after(date)) {
+	        return true;
+	    }else{
+	    	return false;
+	    }
+	}
+
+	public static Date parseDate(String date) {
+		String inputFormat = "HH:mm";
+		SimpleDateFormat inputParser = new SimpleDateFormat(inputFormat, Locale.US);
+	    try {
+	        return inputParser.parse(date);
+	    } catch (java.text.ParseException e) {
+	        return new Date(0);
+	    }
+	}
 }
