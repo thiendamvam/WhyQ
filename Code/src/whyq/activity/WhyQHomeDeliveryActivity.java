@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.Time;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,6 +66,9 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 	private int currentHours;
 	private String address;
 	protected String mPhoneNumber;
+	private int calHour;
+	private int calMinutes;
+	private int scheduleDeliery;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -215,6 +220,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 				showRememberInfoDialog();
 
 			}
+			exeCheckTimeInput();
 			return true;
 		} else {
 			Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
@@ -254,7 +260,24 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		}
 
 	}
-
+	private boolean exeCheckTimeInput() {
+		// TODO Auto-generated method stub
+		Time today = new Time(Time.getCurrentTimezone());
+		today.setToNow();
+		int hourNow = today.hour;
+		int minutesNow = today.hour;
+		if((currentHours > hourNow) || (currentHours == calHour ) && (calMinutes < currentMinutes)){
+			calHour = currentHours - hourNow;
+			calMinutes = currentMinutes - minutesNow;
+			scheduleDeliery = calHour*60*60*1000 + calMinutes*60 * 1000;
+		}else{
+			Toast.makeText(context, "Time set now correct", Toast.LENGTH_LONG).show();
+			return false;
+		}
+		
+		return true;
+		
+	}
 	@SuppressWarnings("deprecation")
 	public void showRememberInfoDialog(){
 		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
