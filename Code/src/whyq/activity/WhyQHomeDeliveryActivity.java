@@ -220,8 +220,8 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 				showRememberInfoDialog();
 
 			}
-			exeCheckTimeInput();
-			return true;
+			return exeCheckTimeInput();
+			
 		} else {
 			Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
 
