@@ -1363,7 +1363,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	public void updateTotal() {
 		// TODO Auto-generated method stub
 		float total = 0;
-		for(String key: billList.keySet()){
+		for (String key : billList.keySet()) {
 			try {
 
 				List<Bill> list = billList.get(key);
@@ -1385,7 +1385,7 @@ public class ListDetailActivity extends FragmentActivity implements
 				e.printStackTrace();
 			}
 		}
-		btnTotalValue.setText(""+round(total,2));
+		btnTotalValue.setText("" + round(total, 2));
 	}
 
 
