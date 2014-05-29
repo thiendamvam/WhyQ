@@ -3,7 +3,6 @@ package whyq.activity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -21,14 +20,13 @@ import whyq.model.Bill;
 import whyq.model.ExtraItem;
 import whyq.model.ExtraItemSet;
 import whyq.model.GroupMenu;
-import whyq.model.ExtraItem;
-import whyq.model.OptionItem;
-import whyq.model.SizeItem;
 import whyq.model.Menu;
+import whyq.model.OptionItem;
 import whyq.model.Photo;
 import whyq.model.ProductTypeInfo;
 import whyq.model.Promotion;
 import whyq.model.ResponseData;
+import whyq.model.SizeItem;
 import whyq.model.Store;
 import whyq.model.User;
 import whyq.model.UserCheckBill;
@@ -43,6 +41,7 @@ import whyq.view.ScreenGestureController;
 import whyq.view.ScrollviewCustom;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -1447,4 +1446,6 @@ public class ListDetailActivity extends FragmentActivity implements
 		}
 		return result;
 	}
+	
+
 }
