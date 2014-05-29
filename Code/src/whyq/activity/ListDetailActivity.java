@@ -1,6 +1,7 @@
 package whyq.activity;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -675,14 +676,33 @@ public class ListDetailActivity extends FragmentActivity implements
 					tvNumberDiscount.setText(promotion.getValuePromotion() + ""
 							+ promotion.getTypeValue());
 					tvDes.setText(promotion.getDescriptionPromotion());
-					tvDate.setText(promotion.getStartDate() + " - "
-							+ promotion.getEndDate());
+					String startDate = formatDate(promotion.getStartDate());
+					String endDate = formatDate(promotion.getEndDate());
+					tvDate.setText(startDate + " - "
+							+ endDate);
 				}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+	}
+	
+	public String formatDate(String date) {
+		Log.d("formatDate","date: "+date);
+		SimpleDateFormat input = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat output = new SimpleDateFormat("dd/MMM");
+
+		try {
+			String dateOut = output.format(input.parse(date));
+			return dateOut;
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // parse input
+
+		return null;
 	}
 
 	private void bindMenuData() {

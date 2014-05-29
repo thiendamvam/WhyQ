@@ -536,7 +536,7 @@ public class DataParser {
 									promotion.setTypePromotionId(getValue(
 											element, "type_promotion_id"));
 									promotion.setTitlePromotion(getValue(
-											element, "type_promotion_id"));
+											element, "title_promotion"));
 									promotion.setValuePromotion(getValue(
 											element, "value_promotion"));
 									promotion.setTmpData(getValue(element,
