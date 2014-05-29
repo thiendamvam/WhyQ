@@ -1352,8 +1352,9 @@ public class ListDetailActivity extends FragmentActivity implements
 	public void updateTotal(ExtraItemSet extraItemSet) {
 		// TODO Auto-generated method stub
 		float totalExtra = getTotalExtraValue(extraItemSet);
-		float currentTotal = Float.parseFloat(btnTotalValue.getText().toString()) + totalExtra;
-		btnTotalValue.setText(""+round(currentTotal,2));
+		float currentTotal = Float.parseFloat(btnTotalValue.getText()
+				.toString()) + totalExtra;
+		btnTotalValue.setText("" + round(currentTotal, 2));
 
 	}
 
