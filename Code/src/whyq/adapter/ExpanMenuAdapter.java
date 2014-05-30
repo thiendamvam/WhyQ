@@ -758,31 +758,33 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		float price = Float.parseFloat(menu.getValue());
 		bill.setPrice(""+price);
 		bill.setUnit(""+menu.getUnitForBill());
-		for(SizeItem item: sizelist){
-			if(item.isSelected()){
-				sizelistBill.add(item);
+		if(menu.getUnitForBill() > 0){
+			for(SizeItem item: sizelist){
+				if(item.isSelected()){
+					sizelistBill.add(item);
+				}
 			}
-		}
-		for(OptionItem item: optionList){
-			if(item.isSelected()){
-				optionListBill.add(item);
+			for(OptionItem item: optionList){
+				if(item.isSelected()){
+					optionListBill.add(item);
+				}
 			}
-		}
-		for(ExtraItem item: extraList){
-			if(item.isSelected()){
-				extraListBill.add(item);
+			for(ExtraItem item: extraList){
+				if(item.isSelected()){
+					extraListBill.add(item);
+				}
 			}
+			bill.setSizeList(sizelistBill);
+			bill.setOptionList(optionListBill);
+			bill.setExtraList(extraListBill);
+			if(ListDetailActivity.promotion!=null){
+				bill.setDiscount(ListDetailActivity.promotion.getValuePromotion()!=null?ListDetailActivity.promotion.getValuePromotion():""+0);
+			}
+			
+			billList.add(bill);
+			
+			ListDetailActivity.billList.put(menu.getId(), billList);
 		}
-		bill.setSizeList(sizelistBill);
-		bill.setOptionList(optionListBill);
-		bill.setExtraList(extraListBill);
-		if(ListDetailActivity.promotion!=null){
-			bill.setDiscount(ListDetailActivity.promotion.getValuePromotion()!=null?ListDetailActivity.promotion.getValuePromotion():""+0);
-		}
-		
-		billList.add(bill);
-		
-		ListDetailActivity.billList.put(menu.getId(), billList);
 		notifyDataSetChanged();
 		((ListDetailActivity)mContext).updateTotal();
 
