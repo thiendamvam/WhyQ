@@ -115,20 +115,28 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		// TODO Auto-generated method stub
 		
 		try {
+
+			if(ListDetailActivity.deliveryFee >= 0){
+//				tvDelivery.setText("$"+Util.round(ListDetailActivity.deliveryFee, 2));
+				totalValue += ListDetailActivity.deliveryFee;
+			}
 			tvTotal.setText("$"+Util.round(totalValue, 2));
 			if(valueDiscount!=0){
 //				tvDiscount.setText("%"+ Util.round(valueDiscount, 2));
 				if(ListDetailActivity.promotion !=null && ListDetailActivity.promotion.getValuePromotion() !=null && !ListDetailActivity.promotion.getValuePromotion().equals("")){
-					tvDiscount.setText(ListDetailActivity.promotion.getValuePromotion()+"%");
+					tvDiscount.setText("%"+ListDetailActivity.promotion.getValuePromotion());
 				}else{
-					tvDiscount.setText("0%");
+					tvDiscount.setText("%0");
 				}
 				
 			}
-			if(valueDiscount!=0)
+			if(valueDiscount!=0 && totalValue > 15){
 				totalafterDiscount = (float)(totalValue*(100-valueDiscount)/100);
-			else
+			}else{
 				totalafterDiscount = totalValue;
+				ListDetailActivity.promotion = null;
+			}
+			tvDiscount.setText(ListDetailActivity.promotion !=null? ListDetailActivity.promotion.getValuePromotion()+"%":"0.0%");
 			tvTotalAfterDiscount.setText("$"+Util.round(totalafterDiscount, 2));
 		} catch (Exception e) {
 			// TODO: handle exception

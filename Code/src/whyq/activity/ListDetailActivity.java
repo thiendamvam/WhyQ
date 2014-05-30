@@ -137,6 +137,8 @@ public class ListDetailActivity extends FragmentActivity implements
 		setContentView(R.layout.store_detail);
 		context = ListDetailActivity.this;
 		id = getIntent().getStringExtra("id");
+		
+		promotion = null;
 		Log.d("ListDetailActivity", "id " + id);
 		billList = new HashMap<String, List<Bill>>();
 		service = new Service(this);
@@ -254,6 +256,7 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	private String currentStoreId;
 	public static Promotion promotion;
+	public static float deliveryFee;
 	private ExpanMenuAdapter mExpanMenuAdapter;
 	public static String commentContent;
 
@@ -497,6 +500,13 @@ public class ListDetailActivity extends FragmentActivity implements
 				if (data.getStatus().equals("200")) {
 					store = (Store) data.getData();
 					if (store != null) {
+						try {
+							deliveryFee = Float.parseFloat(store.getFreeChargeOutRadiusDelieverPerOrder());//Float.parseFloat(store.getFreeChargeOutRadiusDelieverPerKm())*							
+						} catch (Exception e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}
+						
 						storeType = Integer.valueOf(store.getCateid());
 						showHeaderImage();
 						bindData();
