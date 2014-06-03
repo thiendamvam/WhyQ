@@ -332,7 +332,10 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 			note = bundle.getString("note");
 			if (location != null) {
 				longitude = location.get("lon");
-				latgitude = location.get("lon");
+				latgitude = location.get("lat");
+			}else{
+				longitude = ListActivity.longitude;
+				latgitude = ListActivity.latgitude;
 			}
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("store_id", storeId);
