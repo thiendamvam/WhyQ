@@ -885,120 +885,159 @@ public class DataParser {
 										int lengthOption = optionItem
 												.getLength();
 										List<OptionItem> optionItemList = new ArrayList<OptionItem>();
-										for (int y = 0; y < lengthOption; y++) {
-											Element inElement = (Element) optionItem
-													.item(y);
-											if(!getValue(inElement, "id").equals("")){
-												OptionItem item2 = new OptionItem();
-												item2.setId(getValue(inElement,
-														"id"));
-												item2.setProductId(getValue(inElement,
-														"product_id"));
-												item2.setName(getValue(inElement,
-														"name"));
-												item2.setSkue(getValue(inElement,
-														"sku"));
-												item2.setValue(getValue(inElement,
-														"value"));
-												item2.setStatus(getValue(inElement,
-														"status"));
-												item2.setType(getValue(inElement,
-														"type"));
-												item2.setNote(getValue(inElement,
-														"note"));
-												item2.setSort(getValue(inElement,
-														"sort"));
-												item2.setCreatedata(getValue(inElement,
-														"createdate"));
-												if(!getValue(inElement,
-														"value").equals("")){
-													optionItemList.add(item2);
+										for (int yy = 0; yy < lengthOption; yy++) {
+											Element in0Element = (Element) optionItem
+													.item(yy);
+											NodeList childMenu = in0Element
+													.getChildNodes();
+											for (int y = 0; y < childMenu
+													.getLength(); y++) {
+												Element inElement = (Element) childMenu
+														.item(y);
+
+												if (!getValue(inElement, "id")
+														.equals("")) {
+													OptionItem item2 = new OptionItem();
+													item2.setId(getValue(
+															inElement, "id"));
+													item2.setProductId(getValue(
+															inElement,
+															"product_id"));
+													item2.setName(getValue(
+															inElement, "name"));
+													item2.setSkue(getValue(
+															inElement, "sku"));
+													item2.setValue(getValue(
+															inElement, "value"));
+													item2.setStatus(getValue(
+															inElement, "status"));
+													item2.setType(getValue(
+															inElement, "type"));
+													item2.setNote(getValue(
+															inElement, "note"));
+													item2.setSort(getValue(
+															inElement, "sort"));
+													item2.setCreatedata(getValue(
+															inElement,
+															"createdate"));
+													if (!getValue(inElement,
+															"value").equals("")) {
+														optionItemList
+																.add(item2);
+													}
+												}
+											}
+										}
+										menu.setOptionItemList(optionItemList);
+
+										NodeList extraItem = elementList
+												.getElementsByTagName("extra_item");
+										int lengthExtra = extraItem.getLength();
+										List<ExtraItem> extraItemList = new ArrayList<ExtraItem>();
+										for (int yy = 0; yy < lengthExtra; yy++) {
+											Element in0Element = (Element) extraItem
+													.item(yy);
+											NodeList childMenu = in0Element
+													.getChildNodes();
+											for (int y = 0; y < childMenu
+													.getLength(); y++) {
+												Element inElement = (Element) childMenu
+														.item(y);
+												if (!getValue(inElement, "id")
+														.equals("")) {
+													ExtraItem item2 = new ExtraItem();
+													item2.setId(getValue(
+															inElement, "id"));
+													item2.setProductId(getValue(
+															inElement,
+															"product_id"));
+													item2.setName(getValue(
+															inElement, "name"));
+													item2.setSkue(getValue(
+															inElement, "sku"));
+													item2.setValue(getValue(
+															inElement, "value"));
+													item2.setStatus(getValue(
+															inElement, "status"));
+													item2.setType(getValue(
+															inElement, "type"));
+													item2.setNote(getValue(
+															inElement, "note"));
+													item2.setSort(getValue(
+															inElement, "sort"));
+													item2.setCreatedata(getValue(
+															inElement,
+															"createdate"));
+													if (!getValue(inElement,
+															"value").equals("")) {
+														extraItemList
+																.add(item2);
+													}
 												}
 											}
 
 										}
-										menu.setOptionItemList(optionItemList);
-										
-										NodeList extraItem = elementList
-												.getElementsByTagName("extra_item");
-										int lengthExtra = extraItem
-												.getLength();
-										List<ExtraItem> extraItemList = new ArrayList<ExtraItem>();
-										for (int y = 0; y < lengthExtra; y++) {
-											Element inElement = (Element) extraItem
-													.item(y);
-											if(!getValue(inElement, "id").equals("")){
-												ExtraItem item2 = new ExtraItem();
-												item2.setId(getValue(inElement,
-														"id"));
-												item2.setProductId(getValue(inElement,
-														"product_id"));
-												item2.setName(getValue(inElement,
-														"name"));
-												item2.setSkue(getValue(inElement,
-														"sku"));
-												item2.setValue(getValue(inElement,
-														"value"));
-												item2.setStatus(getValue(inElement,
-														"status"));
-												item2.setType(getValue(inElement,
-														"type"));
-												item2.setNote(getValue(inElement,
-														"note"));
-												item2.setSort(getValue(inElement,
-														"sort"));
-												item2.setCreatedata(getValue(inElement,
-														"createdate"));
-												if(!getValue(inElement,
-														"value").equals("")){
-													extraItemList.add(item2);
-												}
-											}
-	
-										}
 										menu.setExtraItemList(extraItemList);
-										
-										NodeList sizeItem = elementList
+
+										NodeList sizeItem = element
 												.getElementsByTagName("size_item");
-										int lengthSize = sizeItem
-												.getLength();
+										int lengthSize = sizeItem.getLength();
 										List<SizeItem> sizeItemList = new ArrayList<SizeItem>();
-										for (int y = 0; y < lengthSize; y++) {
-											Element inElement = (Element) sizeItem
-													.item(y);
-											if(!getValue(inElement, "id").equals("")){
-												
-												SizeItem item2 = new SizeItem();
-												item2.setId(getValue(inElement,
-														"id"));
-												item2.setProductId(getValue(inElement,
-														"product_id"));
-												item2.setName(getValue(inElement,
-														"name"));
-												item2.setSkue(getValue(inElement,
-														"sku"));
-												item2.setValue(getValue(inElement,
-														"value"));
-												item2.setStatus(getValue(inElement,
-														"status"));
-												item2.setType(getValue(inElement,
-														"type"));
-												item2.setNote(getValue(inElement,
-														"note"));
-												item2.setSort(getValue(inElement,
-														"sort"));
-												item2.setCreatedata(getValue(inElement,
-														"createdate"));
-												if(!getValue(inElement,
-														"createdate").equals("")){
-													if(y==0){
-														item2.setSelected(true);
+										for (int yy = 0; yy < lengthSize; yy++) {
+											Element in0Element = (Element) sizeItem
+													.item(yy);
+											NodeList childMenu = in0Element
+													.getChildNodes();
+											for (int y = 0; y < childMenu
+													.getLength(); y++) {
+												Element inElement = (Element) childMenu
+														.item(y);
+												if (!getValue(inElement, "id")
+														.equals("")) {
+
+													SizeItem item2 = new SizeItem();
+													item2.setId(getValue(
+															inElement, "id"));
+													item2.setProductId(getValue(
+															inElement,
+															"product_id"));
+													item2.setName(getValue(
+															inElement, "name"));
+													item2.setSkue(getValue(
+															inElement, "sku"));
+													item2.setValue(getValue(
+															inElement, "value"));
+													item2.setStatus(getValue(
+															inElement, "status"));
+													item2.setType(getValue(
+															inElement, "type"));
+													item2.setNote(getValue(
+															inElement, "note"));
+													item2.setSort(getValue(
+															inElement, "sort"));
+													item2.setCreatedata(getValue(
+															inElement,
+															"createdate"));
+													if (!getValue(inElement,
+															"createdate")
+															.equals("")) {
+														if (y == 0) {
+															item2.setSelected(true);
+														}
+														sizeItemList.add(item2);
 													}
-													sizeItemList.add(item2);
+
 												}
+
 											}
-	
+
 										}
+										Log.d("test detail",
+												""
+														+ getValue(element,
+																"name_product")
+														+ "sizeItemList "
+														+ sizeItemList);
 										menu.setSizeItemList(sizeItemList);
 										
 										NodeList storeInfoNodes = permElement
