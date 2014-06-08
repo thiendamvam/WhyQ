@@ -1131,7 +1131,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 			page++;
 			loadPermList = new LoadPermList(isSearch);
 			loadPermList.execute();
-			;
+			showProgress();
 		}
 
 	}
