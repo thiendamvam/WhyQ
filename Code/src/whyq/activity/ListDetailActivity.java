@@ -1048,35 +1048,61 @@ public class ListDetailActivity extends FragmentActivity implements
 			for (Bill bill : list) {
 				if (bill != null) {
 					if (result.equals("")) {
-						result += bill.getProductId() + ":" + bill.getUnit() + ":"
-								+ bill.getPrice();
+						result += bill.getProductId() + ":" + bill.getUnit()
+								+ ":" + bill.getPrice()+":"+getSizeExtraOptionId(bill)+":"+bill.getNote();
 					} else {
-						result += "|" + bill.getProductId() + ":" + bill.getUnit() + ":"
-								+ bill.getPrice();
+						result += "|" + bill.getProductId() + ":"
+								+ bill.getUnit() + ":" + bill.getPrice()+":"+getSizeExtraOptionId(bill)+":"+bill.getNote();
 					}
 
 				}
 
 			}
 		}
-//		Iterator myVeryOwnIterator = billList.keySet().iterator();
-//		while (myVeryOwnIterator.hasNext()) {
-//			String key = (String) myVeryOwnIterator.next();
-//			List<Bill> list = billList.get(key);
-//			
-//			
-//			Bill bill = billList.get(key);
-//			if (bill != null) {
-//				if (result.equals("")) {
-//					result += bill.getProductId() + ":" + bill.getUnit() + ":"
-//							+ bill.getPrice();
-//				} else {
-//					result += "|" + bill.getProductId() + ":" + bill.getUnit()
-//							+ ":" + bill.getPrice();
-//				}
-//
-//			}
-//		}
+		// Iterator myVeryOwnIterator = billList.keySet().iterator();
+		// while (myVeryOwnIterator.hasNext()) {
+		// String key = (String) myVeryOwnIterator.next();
+		// List<Bill> list = billList.get(key);
+		//
+		//
+		// Bill bill = billList.get(key);
+		// if (bill != null) {
+		// if (result.equals("")) {
+		// result += bill.getProductId() + ":" + bill.getUnit() + ":"
+		// + bill.getPrice();
+		// } else {
+		// result += "|" + bill.getProductId() + ":" + bill.getUnit()
+		// + ":" + bill.getPrice();
+		// }
+		//
+		// }
+		// }
+		return result;
+	}
+	
+	private String getSizeExtraOptionId(Bill bill) {
+		// TODO Auto-generated method stub
+		String result = "";
+		List<SizeItem> sizeList = bill.getSizeList();
+		if(sizeList !=null){
+			for(SizeItem item: sizeList){
+				result+=result.equals("")? item.getId():","+item.getId();
+			}
+		}
+		
+		List<OptionItem> optionList = bill.getOptionList();
+		if(optionList !=null){
+			for(OptionItem item: optionList){
+				result+=result.equals("")? item.getId():","+item.getId();
+			}
+		}
+		
+		List<ExtraItem> extraList = bill.getExtraList();
+		if(extraList !=null){
+			for(ExtraItem item: extraList){
+				result+=result.equals("")? item.getId():","+item.getId();
+			}
+		}
 		return result;
 	}
 
