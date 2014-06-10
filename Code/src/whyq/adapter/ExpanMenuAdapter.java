@@ -16,7 +16,9 @@ import whyq.model.OptionItem;
 import whyq.model.SizeItem;
 import whyq.utils.Util;
 import android.content.Context;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,6 +64,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 	private int mFocusColor;
 	private int mNormalColor;
 
+	public static Map<String, String> noteList = new HashMap<String, String>();
+	
 	public ExpanMenuAdapter(Context pContext, ExpandableListView pExpandableListView,
 			List<GroupMenu> pGroupCollection) {
 		mContext = pContext;
@@ -237,6 +242,37 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 			setViewVisibility(viewHolder.tvItem3PriceExtra, isItemInBillList);
 
 
+			/*
+			 * Set text note change
+			 */
+//			setViewVisibility(viewHolder.etNote, isItemInBillList);
+			viewHolder.etNote = (EditText) view.findViewById(R.id.et_note);
+			viewHolder.etNote.setText(item.getNote());
+			setViewVisibility(view.findViewById(R.id.rl_note), isItemInBillList);
+			viewHolder.etNote.addTextChangedListener(new TextWatcher() {
+				
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count,
+						int after) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void afterTextChanged(Editable s) {
+					// TODO Auto-generated method stub
+					item.setNote(s.toString());
+					noteList.put(item.getId(), s.toString());
+				}
+			});
+			
+			
 
 			/***
 			 * Bind option data to item
@@ -1067,6 +1103,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		public ImageView imgThumb;
 		public String storeId;
 		public Button btnAdd;
+		public EditText etNote;
 		public Button btnRemove;
 		public String menuId;
 		public LinearLayout lnPreview;

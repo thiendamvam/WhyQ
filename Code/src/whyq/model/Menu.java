@@ -19,6 +19,7 @@ public class Menu implements Serializable{
 	String status;
 	String sort;
 	private int unitForBill =0;
+	private String note;
 	public String getSort() {
 		return sort;
 	}
@@ -168,6 +169,12 @@ public class Menu implements Serializable{
 	 */
 	public void setUnitForBill(int unitForBill) {
 		this.unitForBill = unitForBill;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
 	}
 	String typeProductId;
 	String createDate;
