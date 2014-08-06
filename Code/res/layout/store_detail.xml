@@ -132,10 +132,72 @@
                                             android:textStyle="normal" />
                                     </LinearLayout>
 
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content" >
+
+                                        <ImageView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginLeft="5dp"
+                                            android:layout_marginRight="5dp"
+                                            android:background="@drawable/btn_call" />
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginBottom="5dp"
+                                            android:layout_marginLeft="0dp"
+                                            android:layout_marginRight="0dp"
+                                            android:layout_marginTop="0dp"
+                                            android:gravity="center_vertical"
+                                            android:onClick="onCallClicked"
+                                            android:orientation="horizontal" >
+
+                                            <RelativeLayout
+                                                android:layout_width="0dp"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight="1" >
+
+                                                <ImageView
+                                                    android:id="@+id/imgTelephoneIcon"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="match_parent"
+                                                    android:layout_centerInParent="true"
+                                                    android:background="@drawable/icon_call_orange" />
+                                            </RelativeLayout>
+
+                                            <TextView
+                                                android:id="@+id/tvTelephoneTitle"
+                                                style="@style/small_back_text"
+                                                android:layout_width="0dp"
+                                                android:layout_height="match_parent"
+                                                android:layout_marginLeft="5dp"
+                                                android:layout_weight="3"
+                                                android:gravity="center_vertical"
+                                                android:text="Telephone:" />
+
+                                            <TextView
+                                                android:id="@+id/tvTelephone"
+                                                style="@style/small_grey_text"
+                                                android:layout_width="0dp"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight="5"
+                                                android:gravity="center"
+                                                android:paddingLeft="5dp"
+                                                android:text=""
+                                                android:textStyle="normal" />
+                                        </LinearLayout>
+                                    </RelativeLayout>
+
                                     <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginBottom="5dp"
+                                        android:layout_marginLeft="5dp"
+                                        android:layout_marginRight="5dp"
                                         android:layout_marginTop="0dp"
                                         android:gravity="center_vertical"
                                         android:orientation="horizontal"
@@ -144,27 +206,26 @@
                                         <RelativeLayout
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
-                                            android:layout_weight="1" >
+                                            android:layout_weight="0.9" >
 
                                             <ImageView
-                                                android:id="@+id/imgTelephoneIcon"
+                                                android:id="@+id/imgMerchanrIcon"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="match_parent"
-                                                android:layout_centerInParent="true"
-                                                android:background="@drawable/icon_call_orange" />
+                                                android:layout_centerInParent="true" />
                                         </RelativeLayout>
 
                                         <TextView
-                                            android:id="@+id/tvTelephoneTitle"
+                                            android:id="@+id/tvMerchantNumberTitle"
                                             style="@style/small_back_text"
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
-                                            android:layout_weight="3"
+                                            android:layout_weight="4"
                                             android:gravity="center_vertical"
-                                            android:text="Telephone:" />
+                                            android:text="Merchant number:" />
 
                                         <TextView
-                                            android:id="@+id/tvTelephone"
+                                            android:id="@+id/tvMerchantNumber"
                                             style="@style/small_grey_text"
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
@@ -196,6 +257,7 @@
                                                 style="@style/small_grey_text"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
+                                                android:ellipsize="end"
                                                 android:text="" />
                                         </ScrollView>
                                     </LinearLayout>
@@ -259,9 +321,9 @@
         </ScrollView>
 
         <include
-            android:layout_below="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tabs"
             layout="@layout/whyq_detail_menu" />
 
         <LinearLayout

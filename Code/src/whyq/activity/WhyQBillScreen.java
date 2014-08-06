@@ -1,40 +1,35 @@
 package whyq.activity;
 
-import java.io.Serializable;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import whyq.WhyqApplication;
 import whyq.adapter.WhyQBillAdapter;
-import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
 import whyq.model.BillPushNotification;
+import whyq.model.Promotion;
 import whyq.model.ResponseData;
-import whyq.model.Store;
-import whyq.service.DataParser;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
-import whyq.service.paypal.PayPalUI;
 import whyq.utils.Util;
-import whyq.view.Whyq;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whyq.R;
+
 
 public class WhyQBillScreen extends FragmentActivity implements IServiceListener{
 	
@@ -51,6 +46,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 	private Bundle bundle;
 	private boolean isOrdered;
 	private String billId;
+	private TextView tvDelivery;
 	public static int LOGIN_REQUEST = 1;
 	
 	public static WhyQBillScreen sBillActivity;
@@ -76,19 +72,25 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 			totalValue = bundle.getFloat("total", 0);
 			listBill = getBillList(ListDetailActivity.billList);
 			btnDone.setText("Order");
+			if(ListDetailActivity.store !=null){
+				findViewById(R.id.imgCash).setVisibility(ListDetailActivity.store.isCash()?View.VISIBLE: View.INVISIBLE);
+				findViewById(R.id.imgEcoCash).setVisibility(ListDetailActivity.store.isEcoCash()?View.VISIBLE: View.INVISIBLE);
+				findViewById(R.id.imgVisa).setVisibility(ListDetailActivity.store.isVisa()?View.VISIBLE: View.INVISIBLE);
+				findViewById(R.id.imgPayment).setVisibility(ListDetailActivity.store.isVPayment()?View.VISIBLE: View.INVISIBLE);
+			}
 		}else{
 			listBill = WhyqCheckedBillActivity.listBill;
 			String billStatus = bundle.getString("bill_status");
 			if(billStatus!=null){
 				if(billStatus.equalsIgnoreCase("1")){
-					btnDone.setText("Paypal");		
+					btnDone.setText("Pay");		
 				}else{
 					btnDone.setVisibility(View.INVISIBLE);
 				}
 			}
 			if(pushNotificationData!=null){
 				billId = pushNotificationData.getBillId();
-				btnDone.setText("Paypal");
+				btnDone.setText("Pay");
 				Toast.makeText(WhyQBillScreen.this, pushNotificationData.getAlert(), Toast.LENGTH_LONG).show();
 
 			}else{
@@ -97,13 +99,22 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 				exeGetBillDetail(billId);
 		}
 		tvTotal = (TextView)findViewById(R.id.tvTotal);
+		tvDelivery = (TextView)findViewById(R.id.tvDeliveryFee);
 		tvDiscount = (TextView)findViewById(R.id.tvDiscount);
 		tvTotalAfterDiscount = (TextView)findViewById(R.id.tvTotalafterDiscount);
 		
+
 		
 		bindDatatoListview();
 		getValue(listBill);
 		bindBillValue();
+	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		ListDetailActivity.promotion = null;
+		ListDetailActivity.deliveryFee = 0;
 	}
 	private void exeGetBillDetail(String billId) {
 		// TODO Auto-generated method stub
@@ -117,8 +128,8 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		try {
 
 			if(ListDetailActivity.deliveryFee >= 0){
-//				tvDelivery.setText("$"+Util.round(ListDetailActivity.deliveryFee, 2));
-				totalValue += ListDetailActivity.deliveryFee;
+				tvDelivery.setText("$"+Util.round(ListDetailActivity.deliveryFee, 2));
+//				totalValue += ListDetailActivity.deliveryFee;
 			}
 			tvTotal.setText("$"+Util.round(totalValue, 2));
 			if(valueDiscount!=0){
@@ -131,12 +142,12 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 				
 			}
 			if(valueDiscount!=0 && totalValue > 15){
-				totalafterDiscount = (float)(totalValue*(100-valueDiscount)/100);
+				totalafterDiscount = totalValue - (float)(totalValue*(valueDiscount)/100) + ListDetailActivity.deliveryFee;
 			}else{
-				totalafterDiscount = totalValue;
+				totalafterDiscount = totalValue + ListDetailActivity.deliveryFee;
 				ListDetailActivity.promotion = null;
 			}
-			tvDiscount.setText(ListDetailActivity.promotion !=null? ListDetailActivity.promotion.getValuePromotion()+"%":"0.0%");
+			tvDiscount.setText(ListDetailActivity.promotion!=null? ListDetailActivity.promotion.getValuePromotion()+"%": "0.0%");
 			tvTotalAfterDiscount.setText("$"+Util.round(totalafterDiscount, 2));
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -153,6 +164,13 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 				float price = item.getPrice()!=null?Float.parseFloat(item.getPrice()):0;
 //				float discount = item.getDiscount()!=null?Float.parseFloat(item.getDiscount()):0;
 				totalValue += price*unit;
+				if(isOrdered){
+					ListDetailActivity.deliveryFee = Float.parseFloat(item.getDeliveryFeeValue());
+					valueDiscount = item.getDiscount()!=null?Float.parseFloat(item.getDiscount()):Float.parseFloat(ListDetailActivity.promotion.getValuePromotion());
+					ListDetailActivity.promotion  = new Promotion();
+					ListDetailActivity.promotion.setValuePromotion(""+Util.round((valueDiscount/totalValue)*100,0));
+					valueDiscount = Float.parseFloat(""+Util.round((valueDiscount/totalValue)*100,0));
+				}
 //				valueDiscount = 0;
 //				valueDiscount = discount*price*unit;
 //				totalafterDiscount=totalValue - valueDiscount;
@@ -162,7 +180,9 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 			}
 		}
 		if(ListDetailActivity.promotion !=null && ListDetailActivity.promotion.getValuePromotion() !=null && !ListDetailActivity.promotion.getValuePromotion().equals("")){
-			valueDiscount = Float.parseFloat(ListDetailActivity.promotion.getValuePromotion());	
+			if(!isOrdered){
+				valueDiscount = Float.parseFloat(ListDetailActivity.promotion.getValuePromotion());	
+			}
 			totalafterDiscount=totalValue - valueDiscount;
 		}
 
@@ -213,12 +233,12 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		if(isOrdered){
 			if(billId!=null){
 
-				PayPalUI paypalUI = new PayPalUI();
-				Bundle bundle = new Bundle();
-				bundle.putString("bill_id", billId);
-				paypalUI.setArguments(bundle);
-				getSupportFragmentManager().beginTransaction().add(paypalUI, "").commit();
-				
+//				PayPalUI paypalUI = new PayPalUI();
+//				Bundle bundle = new Bundle();
+//				bundle.putString("bill_id", billId);
+//				paypalUI.setArguments(bundle);
+//				getSupportFragmentManager().beginTransaction().add(paypalUI, "").commit();
+				showPaymentDialog(billId);
 			
 			}
 		}else{
@@ -227,6 +247,67 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
+	private void showPaymentDialog(final String billId) {
+		// TODO Auto-generated method stub
+
+		final Service service = new Service(WhyQBillScreen.this);
+		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+				WhyQBillScreen.this);
+		builder.setTitle(WhyQBillScreen.this.getString(R.string.app_name_title));
+		builder.setMessage("How would you like to pay?");
+		final android.app.AlertDialog alertError = builder.create();
+		alertError.setButton("EcoCash", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+//				service.ecoCash(billId, "12345");
+				
+				new AlertDialog.Builder(WhyQBillScreen.this)
+			    .setTitle("DIAL A DELIVERY")
+			    .setMessage("Please enter Phone application and enter *900# to proceed payment through Ecocash")
+			    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int whichButton) {
+						final EditText input = new EditText(WhyQBillScreen.this);
+//						input.setInputType(InputType.TYPE_CLASS_NUMBER);
+						
+						new AlertDialog.Builder(WhyQBillScreen.this)
+					    .setTitle("DIAL A DELIVERY")
+					    .setMessage("Please enter payment ID for order "+billId)
+					    .setView(input)
+					    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+					        public void onClick(DialogInterface dialog, int whichButton) {
+					            Editable value = input.getText(); 
+					        	service.ecoCash(billId, ""+value);
+					        }
+					    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					        public void onClick(DialogInterface dialog, int whichButton) {
+					            // Do nothing.
+					        	
+					        }
+					    }).show();
+			        }
+			    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int whichButton) {
+			            // Do nothing.
+			        }
+			    }).show();
+				
+//				service.ecoCash(billId, "12345");
+				alertError.dismiss();
+			}
+		});
+		alertError.setButton2("Cash", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				service.ecoCash(billId, "1");
+				alertError.dismiss();
+			}
+		});
+
+		alertError.show();
+	
+	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == LOGIN_REQUEST && resultCode == RESULT_OK) {
@@ -259,7 +340,13 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 			}else if(data.getStatus().equals("204")){
 			}else{
 			}
-		} 
+		} else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionGetBillDetail){
+			Toast.makeText(WhyQBillScreen.this, "Can not get data for now.", Toast.LENGTH_LONG).show();
+		}else if(result.isSuccess()&& result.getAction() == ServiceAction.ActionOrderEcoCash){
+			Toast.makeText(WhyQBillScreen.this, "Done!", Toast.LENGTH_LONG).show();
+		}else if(!result.isSuccess()&& result.getAction() == ServiceAction.ActionOrderEcoCash){
+			Toast.makeText(WhyQBillScreen.this, "Payment is failed.", Toast.LENGTH_LONG).show();
+		}
 	}
 	private ArrayList<Bill> filterBillWithName(ArrayList<Bill> listBill2) {
 		// TODO Auto-generated method stub

@@ -152,7 +152,7 @@ public class Constants {
 	/**
 	 * Facebook app configuration
 	 */
-	public static final String FACEBOOK_APP_ID = "166995593484260";//thienapp:760638923986947
+	public static final String FACEBOOK_APP_ID = "429233960446986";//thienapp:760638923986947
 	public static final String EMAIL = "email";
 	public static final String PUBLISH_STREAM = "publish_stream";
 	

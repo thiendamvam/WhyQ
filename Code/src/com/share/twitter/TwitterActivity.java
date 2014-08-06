@@ -27,7 +27,6 @@ import android.widget.ProgressBar;
 import com.whyq.R;
 
 
-
 public class TwitterActivity extends Activity {
 	// Define constain
 	public static final String TWITTER_KEY_LOGIN = "twitter_key_login";
@@ -104,12 +103,26 @@ public class TwitterActivity extends Activity {
 					e.printStackTrace();
 				}
 				
-				twitterWebView.setWebViewClient(new TWWebviewClient());
-				twitterWebView.getSettings().setJavaScriptEnabled(true);
-				twitterWebView.getSettings().setSavePassword(false);
-				twitterWebView.loadUrl(url);
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						twitterWebView.setWebViewClient(new TWWebviewClient());
+						twitterWebView.getSettings().setJavaScriptEnabled(true);
+						twitterWebView.getSettings().setSavePassword(false);
+						twitterWebView.loadUrl(url);
+					}
+				});
 			} catch (Exception e) {
-				progressBar.setVisibility(View.GONE);
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						progressBar.setVisibility(View.GONE);	
+					}
+				});
 				e.printStackTrace();
 				
 			}

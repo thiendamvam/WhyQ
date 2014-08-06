@@ -1,28 +1,29 @@
 package whyq.activity;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.TimeZone;
 
 import whyq.WhyqApplication;
-import whyq.adapter.PlacesAutoCompleteAdapter;
+import whyq.interfaces.IDialogListener;
 import whyq.interfaces.IServiceListener;
+import whyq.model.DeliveryFee;
 import whyq.model.ResponseData;
 import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
+import whyq.utils.Constants;
 import whyq.utils.Util;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.text.format.Time;
-import android.view.MotionEvent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
-import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
@@ -66,9 +67,10 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 	private int currentHours;
 	private String address;
 	protected String mPhoneNumber;
-	private int calHour;
 	private int calMinutes;
-	private int scheduleDeliery;
+	private int calHour;
+	private long scheduleDeliery;
+	private List<DeliveryFee> deliveryFeeLis;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		setContentView(R.layout.whyq_home_delivery);
 		context = this;
 		TextView headerTitle = (TextView) findViewById(R.id.tvHeaderTitle);
-		headerTitle.setText("Home Deliver");
+		headerTitle.setText("Home Delivery");
 		storeId = getIntent().getStringExtra("store_id");
 		etOtherAddress = (EditText) findViewById(R.id.etOtherAddress);
 		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
@@ -85,7 +87,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		etMinutes = (Button) findViewById(R.id.etMinutes);
 		cbASAP = (CheckBox) findViewById(R.id.cbASAP);
 		atAddress = (AutoCompleteTextView)findViewById(R.id.atAddress);
-		atAddress.setAdapter(new PlacesAutoCompleteAdapter(context, R.layout.place_item_2));
+//		atAddress.setAdapter(new PlacesAutoCompleteAdapter(context, R.layout.place_item_2));
 		progressBar = (ProgressBar) findViewById(R.id.prgBar);
 		
 		currentHours = 0;
@@ -116,7 +118,15 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		etMinutes.setOnClickListener(this);
 		if(address!=null)
 			atAddress.setText(address);
+		
+//		getDeliveryFeeList();
 	}
+
+//	private void getDeliveryFeeList() {
+//		// TODO Auto-generated method stub
+//		setProgressBarVisibility(true);
+//		servivice.getDeliveryFeeList();
+//	}
 
 	protected void endAbleTimeField() {
 		// TODO Auto-generated method stub
@@ -225,13 +235,16 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 				etPhoneNumber.requestFocus();
 				return false;
 			} else {
-				if(exeCheckTimeInput()){
+				
+//				ASAP no need to check time
+//				if(exeCheckTimeInput())
+				{
 					showDialog();
 					showRememberInfoDialog();
 				}
 
-
 			}
+			
 			return true;
 			
 		} else {
@@ -268,31 +281,14 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 				if(exeCheckTimeInput()){
 					showDialog();
 					showRememberInfoDialog();
-					
 				}
+
 				return true;
 			}
 		}
 
 	}
-	private boolean exeCheckTimeInput() {
-		// TODO Auto-generated method stub
-		Time today = new Time(Time.getCurrentTimezone());
-		today.setToNow();
-		int hourNow = today.hour;
-		int minutesNow = today.hour;
-		if((currentHours > hourNow) || (currentHours == calHour ) && (calMinutes < currentMinutes)){
-			calHour = currentHours - hourNow;
-			calMinutes = currentMinutes - minutesNow;
-			scheduleDeliery = calHour*60*60*1000 + calMinutes*60 * 1000;
-		}else{
-			Toast.makeText(context, "Time incorrect", Toast.LENGTH_LONG).show();
-			return false;
-		}
-		
-		return true;
-		
-	}
+
 	@SuppressWarnings("deprecation")
 	public void showRememberInfoDialog(){
 		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
@@ -346,6 +342,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 				longitude = ListActivity.longitude;
 				latgitude = ListActivity.latgitude;
 			}
+		
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("store_id", storeId);
 			params.put("deliver_type", "2");
@@ -359,6 +356,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 			}
 			params.put("deliver_latitude", longitude);
 			params.put("deliver_longitude", latgitude);
+			params.put("deliver_fee_value", ""+Util.round(ListDetailActivity.deliveryFee, 2));
 			params.put("phone_deliver", etPhoneNumber.getText().toString());
 			params.put("note", note);
 			params.put("token", WhyqApplication.Instance().getRSAToken());
@@ -394,12 +392,35 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
 		hideDialog();
-		if (result.getAction() == ServiceAction.ActionOrderSend
+		if (result.getAction() == ServiceAction.ActionGetDeliveryFeeList
 				&& result.isSuccess()) {
 			ResponseData data = (ResponseData) result.getData();
 			if (data != null) {
 				if (data.getStatus().equals("200")) {
+					deliveryFeeLis = (List<DeliveryFee>) data.getData(); 
+
+				} else if (data.getStatus().equals("401")) {
+					Util.loginAgain(context, data.getMessage());
+				} else {
 					Util.showDialog(context, data.getMessage());
+				}
+			}
+		}else if (result.getAction() == ServiceAction.ActionGetDeliveryFeeList
+				&& !result.isSuccess()) {
+			Log.d(""+result.getAction(),"fail");
+		} else if (result.getAction() == ServiceAction.ActionOrderSend
+				&& result.isSuccess()) {
+			ResponseData data = (ResponseData) result.getData();
+			if (data != null) {
+				if (data.getStatus().equals("200")) {
+					Util.showDialog(context, data.getMessage(),new IDialogListener() {
+						
+						@Override
+						public void onClose(int type, Object data) {
+							// TODO Auto-generated method stub
+							finish();
+						}
+					});
 //					WhyqOrderMenuActivity.sOrderMenuActivity.dismiss();
 //					WhyQBillScreen.sBillActivity.finish();
 				} else if (data.getStatus().equals("401")) {
@@ -408,10 +429,38 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 					Util.showDialog(context, data.getMessage());
 				}
 			}
-			finish();
+			Log.d("scheduleDeliery","scheduleDelier: "+scheduleDeliery);
+			if(scheduleDeliery > 0){
+				String message = "Hey, your order at "+ListDetailActivity.store.getNameStore()+" is on the way to your set-up place, will come at around "+currentHours+"h "+currentMinutes+". Make sure you are there to get it. Thanks.";
+				WhyqApplication.Instance().pushNotification(WhyqApplication.Instance().getApplicationContext(), scheduleDeliery, Constants.APP_NAME, message);	
+			}
+//			finish();
 		}else if(result.getAction() == ServiceAction.ActionOrderSend){
 			finish();
 		}
+	}
+
+	private boolean exeCheckTimeInput() {
+		// TODO Auto-generated method stub
+
+//		TimeZone tz = TimeZone.getTimeZone("GMT+07:00");
+//		Calendar cal = Calendar.getInstance(tz);
+		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+		int isAM = cal.get(Calendar.AM) ==0? 0: 12;
+		int hourNow = cal.get(Calendar.HOUR)+isAM;
+		int minutesNow = cal.get(Calendar.MINUTE);
+		Log.d("","currentHours: "+currentHours+"currentMinutes: "+currentMinutes+"hourNow: "+hourNow+"minutesNow: "+minutesNow);
+		if((currentHours > hourNow) || (currentHours == hourNow ) && (minutesNow < currentMinutes)){
+			calHour = currentHours - hourNow;
+			calMinutes = currentMinutes - minutesNow;
+			scheduleDeliery = cal.getTimeInMillis() + calHour*60*60*1000 + calMinutes*60 * 1000;
+		}else{
+			Toast.makeText(context, "Time incorrect", Toast.LENGTH_LONG).show();
+			return false;
+		}
+		
+		return true;
+		
 	}
 
 	private void showDialog() {

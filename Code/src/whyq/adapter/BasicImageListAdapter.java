@@ -1,13 +1,9 @@
 package whyq.adapter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import whyq.WhyqApplication;
-import whyq.activity.ListDetailActivity;
 import whyq.model.Photo;
-import whyq.service.img.UrlImageViewHelper;
-import whyq.utils.Util;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
-import android.widget.TextView;
 
 import com.whyq.R;
 
@@ -30,9 +24,9 @@ public class BasicImageListAdapter extends Fragment implements OnScrollListener 
 //	private TextView tvNumberFavourtie;
 	private ImageView imgView;
 	private HashMap<String, View> viewList = new HashMap<String, View>();
-	public BasicImageListAdapter(ArrayList<Photo> photoList){
-		
-	}
+//	public BasicImageListAdapter(ArrayList<Photo> photoList){
+//		
+//	}
 	public BasicImageListAdapter() {
 		// TODO Auto-generated constructor stub
 	}
@@ -45,7 +39,7 @@ public class BasicImageListAdapter extends Fragment implements OnScrollListener 
 		if(v!=null){
 			return v;
 		}else{
-			String url = photo.getThumb();
+			
 
 			v = inflater.inflate(R.layout.image_item, container, false);
 			imgView = (ImageView)v.findViewById(R.id.imgView);
@@ -57,10 +51,14 @@ public class BasicImageListAdapter extends Fragment implements OnScrollListener 
 //			tvAddresss.setText(ListDetailActivity.store.getAddress());
 //			tvNumberFavourtie.setText(ListDetailActivity.store.getCountFavaouriteMember());
 
-			if(photo.getThumb() !=null)
-//				UrlImageViewHelper.setUrlDrawable(imgView, photo.getThumb());
-				WhyqApplication.Instance().getImageLoader().DisplayImage(photo.getThumb(), imgView);
 
+			if(photo !=null){
+				String url = photo.getThumb();
+				if(photo.getThumb() !=null)
+//					UrlImageViewHelper.setUrlDrawable(imgView, photo.getThumb());
+					WhyqApplication.Instance().getImageLoader().DisplayImage(photo.getThumb(), imgView);
+
+			}
 			return v;
 		}
 

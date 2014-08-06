@@ -2,11 +2,15 @@ package whyq.activity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import whyq.WhyqApplication;
 import whyq.interfaces.FragmentDialogListener;
-import whyq.interfaces.IFacebookLister;
 import whyq.interfaces.IServiceListener;
 import whyq.model.BillPushNotification;
 import whyq.model.FriendFacebook;
@@ -19,21 +23,13 @@ import whyq.service.Service;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
 import whyq.service.img.UrlImageViewHelper;
-import whyq.utils.Constants;
 import whyq.utils.SharedPreferencesManager;
 import whyq.utils.Util;
 import whyq.utils.WhyqUtils;
-import whyq.utils.facebook.SessionLoginFragment;
-import whyq.utils.facebook.sdk.DialogError;
-import whyq.utils.facebook.sdk.Facebook;
-import whyq.utils.facebook.sdk.Facebook.DialogListener;
-import whyq.utils.facebook.sdk.FacebookError;
 import whyq.utils.share.ShareHandler;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -47,9 +43,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.facebook.FacebookRequestError;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.RequestAsyncTask;
+import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.SessionState;
+import com.facebook.Session.NewPermissionsRequest;
 import com.facebook.Session.StatusCallback;
+import com.facebook.SessionState;
 import com.whyq.R;
 
 public class WhyqShareActivity extends FragmentActivity implements
@@ -69,7 +71,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 	private ToggleButton tglShareWhyq;
 	private ToggleButton tgleShareFb;
 	private ProgressBar prgBar;
-	private String facebookIdTag, facebookNameTag="";
+	private String facebookIdTag="", facebookNameTag="";
 	private Context context;
 	private boolean isComment;
 	private RelativeLayout rlTags;
@@ -203,7 +205,12 @@ public class WhyqShareActivity extends FragmentActivity implements
 
 			this.isSend = isSend;
 			session = Util.createSession();
+
 			if (session.isOpened()) {
+				
+				List<String> permissions = Arrays.asList("publish_actions", "publish_stream","user_checkins");
+				NewPermissionsRequest newPermission = new Session.NewPermissionsRequest(this, permissions);
+				session.requestNewPublishPermissions(newPermission);
 				if (isSend) {
 					shareWhyq(session.getAccessToken());
 				} else {
@@ -231,7 +238,12 @@ public class WhyqShareActivity extends FragmentActivity implements
 									.setPositiveButton(R.string.ok, null)
 									.show();
 							session = Util.createSession();
+//							List<String> permissions = Arrays.asList("publish_actions", "publish_stream","user_checkins");
+//							NewPermissionsRequest newPermission = new Session.NewPermissionsRequest(WhyqShareActivity.this, permissions);
+//							session.requestNewPublishPermissions(newPermission);
+							exePostFacebook(session.getAccessToken());	
 						}
+//						exePostFacebook(session.getAccessToken());
 					}
 				};
 				pendingRequest = true;
@@ -269,7 +281,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 		shareData.setDescription("");
 		shareData.setLink(data.getLink());
 		shareData.setMessage(etMessage.getText().toString().replace(facebookNameTag, ""));
-		shareData.setName("WHY Q");
+		shareData.setName(getResources().getString(R.string.app_name));
 		shareData.setPicture(data.getImage());
 		shareData.setThumb("");
 		shareData.setTags(tagsList);
@@ -277,7 +289,16 @@ public class WhyqShareActivity extends FragmentActivity implements
 //		shareHandler.postFacebook(accessToken, shareData);
 		Service service = new Service(WhyqShareActivity.this);
 		if(isComment){
-			service.postFBComments(accessToken, shareData);	
+			if(data.getImage() ==null || "".equals(data.getImage())){
+				service.postFBComments(accessToken, shareData);				
+//				postImageToWll(accessToken, shareData);	
+			}else{
+//				service.postFBComments(accessToken, shareData);
+//				postImageToWll(accessToken, shareData);
+				service.postFBComments(accessToken, shareData);		
+			}
+				
+	
 		}else{
 			service.postFBCheckBill(accessToken, shareData);
 		}
@@ -285,6 +306,84 @@ public class WhyqShareActivity extends FragmentActivity implements
 		
 		
 		pendingRequest = false;
+	}
+	private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
+	    for (String string : subset) {
+	        if (!superset.contains(string)) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+	private void postImageToWll(String accessToken, ShareData shareData) {
+		Session session = Session.getActiveSession();
+
+		if (session != null) {
+
+			// Check for publish permissions
+//			List<String> permissions = session.getPermissions();
+//			if (!isSubsetOf(PERMISSIONS, permissions)) {
+////				pendingPublishReauthorization = true;
+//				Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(
+//						this, PERMISSIONS);
+//				session.requestNewPublishPermissions(newPermissionsRequest);
+//				return;
+//			}
+
+			Bundle postParams = new Bundle();
+//			postParams.putString("name", "DEAL A MEAL");
+//			postParams.putString("caption", "");
+//			postParams.putString("description", "");
+//			postParams.putString("link", ""+shareData.getLink());
+			postParams.putString("picture", ""+shareData.getPicture());
+			postParams.putString("message", ""+shareData.getMessage());
+			
+			Request.Callback callback = new Request.Callback() {
+				public void onCompleted(Response response) {
+
+					try {
+						setProgressBar(false);
+						Log.d("Request.Callback", "response: "+response);
+						if(response.getGraphObject() != null){
+							JSONObject graphResponse = response.getGraphObject()
+									.getInnerJSONObject();
+							String postId = null;
+							postId = graphResponse.getString("id");
+							if(postId !=null){
+								Toast.makeText(context, "Message sent!", Toast.LENGTH_LONG).show();
+							}else{
+								Toast.makeText(context, "Post to Facebook is failure!", Toast.LENGTH_LONG).show();
+							}
+							Log.d("post fb","post fb success postid: "+postId);
+							
+						}else{
+							Toast.makeText(context, "Post to Facebook is failure!", Toast.LENGTH_LONG).show();
+						}
+					} catch (JSONException e) {
+						Log.i("JSON error", "JSON error " + e.getMessage());
+						Toast.makeText(context, "Post to Facebook is failure!", Toast.LENGTH_LONG).show();
+					}
+					FacebookRequestError error = response.getError();
+					if (error != null) {
+						Toast.makeText(
+								WhyqShareActivity.this.getApplicationContext(),
+								error.getErrorMessage(), Toast.LENGTH_SHORT)
+								.show();
+					} else {
+//						Toast.makeText(
+//								WhyqShareActivity.this.getApplicationContext(),
+//								postId, Toast.LENGTH_LONG).show();
+					}
+				}
+			};
+
+			Request request = new Request(session, "me/feed", postParams,
+					HttpMethod.POST, callback);
+
+			RequestAsyncTask task = new RequestAsyncTask(request);
+			task.execute();
+		}
 	}
 
 	private String getAccessToken() {
@@ -301,26 +400,27 @@ public class WhyqShareActivity extends FragmentActivity implements
 		try {
 
 			Log.d("onActivityResult Join", "onActivityResult " + requestCode);
-			 if (session
-						.onActivityResult(this, requestCode, resultCode, data)
-						&& pendingRequest && this.session.getState().isOpened()) {
+			if (session != null
+					&& session.onActivityResult(this, requestCode, resultCode,
+							data) && pendingRequest
+					&& this.session.getState().isOpened()) {
 
-				Log.d("onActivityResult","isSend "+isSend);
+				Log.d("onActivityResult", "isSend " + isSend);
 				if (isSend) {
 					shareWhyq(session.getAccessToken());
 				} else {
 					if (isComment) {
 						exePostFacebook(session.getAccessToken());
 					} else {
-						if(isTag ){
+						if (isTag) {
 							showTagDialog(session.getAccessToken());
-						}else{
+						} else {
 							exePostFacebook(session.getAccessToken());
 						}
 					}
 				}
-			
-			}else if (resultCode == RESULT_OK) {
+
+			} else if (resultCode == RESULT_OK) {
 				if (requestCode == GET_IMAGE) {
 					avatarPath = data.getStringExtra("path");
 					Log.d("onActivityResult Join", "" + avatarPath);
@@ -336,39 +436,38 @@ public class WhyqShareActivity extends FragmentActivity implements
 				} else if (requestCode == TAG_FRIENDS) {
 					TransferData tfdata = (TransferData) data
 							.getSerializableExtra("data");
-					if (tfdata != null){
+					if (tfdata != null) {
 						facebookIdTag = convertData(tfdata.getData());
 						facebookNameTag = convertFBNameData(tfdata.getData());
 						tagsList = convertDataToFBIDArray(tfdata.getData());
 					}
-//					shareWhyq(session.getAccessToken());
-					etMessage.setText("With "+facebookNameTag);
+					// shareWhyq(session.getAccessToken());
+					etMessage.setText("With " + facebookNameTag);
 				}
 				ImageActivity.imagePath = "";
 			}
-
-			
 
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	@Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
 
-        pendingRequest = savedInstanceState.getBoolean(PENDING_REQUEST_BUNDLE_KEY, pendingRequest);
-    }
+		pendingRequest = savedInstanceState.getBoolean(
+				PENDING_REQUEST_BUNDLE_KEY, pendingRequest);
+	}
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 
-        outState.putBoolean(PENDING_REQUEST_BUNDLE_KEY, pendingRequest);
-    }
+		outState.putBoolean(PENDING_REQUEST_BUNDLE_KEY, pendingRequest);
+	}
+
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
@@ -380,7 +479,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 				if (data.getStatus().equals("200")) {
 					orderCheck = (OrderCheckData) data.getData();
 					if (tgleShareFb.isChecked())
-						checkLoginFacebook(false,false);
+						checkLoginFacebook(false, false);
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(getParent(), data.getMessage());
 				} else if (data.getStatus().equals("204")) {
@@ -411,7 +510,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 			ResponseData data = (ResponseData) result.getData();
 			if (data != null) {
 				if (data.getStatus().equals("200")) {
-					Toast.makeText(context, "Posted comment", Toast.LENGTH_LONG)
+					Toast.makeText(context, "Message sent.", Toast.LENGTH_LONG)
 							.show();
 					orderCheck = (OrderCheckData) data.getData();
 					if (tgleShareFb.isChecked())
@@ -423,20 +522,21 @@ public class WhyqShareActivity extends FragmentActivity implements
 					// Util.showDialog(context, data.getMessage());
 				}
 			}
-		} else if ((result.isSuccess()
-				&& result.getAction() == ServiceAction.ActionPostFBComment)||((result.isSuccess()
-						&& result.getAction() == ServiceAction.ActionPostFBCheckBill))) {
+		} else if ((result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBComment)
+				|| ((result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBCheckBill))) {
 			setProgressBar(false);
 			boolean status = (Boolean) result.getData();
-			if(status){
-				Toast.makeText(context, "Posted to Facebook!", Toast.LENGTH_LONG).show();
+			if (status) {
+				Toast.makeText(context, "Message sent.", Toast.LENGTH_LONG)
+						.show();
 			}
-		} else if ((!result.isSuccess()
-				&& result.getAction() == ServiceAction.ActionPostFBComment)||((result.isSuccess()
-						&& result.getAction() == ServiceAction.ActionPostFBCheckBill))) {
+		} else if ((!result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBComment)
+				|| ((!result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBCheckBill))) {
 			setProgressBar(false);
-			Toast.makeText(context, "Fail post to Facebook!", Toast.LENGTH_LONG).show();
-		}else if (!result.isSuccess()
+			Log.d("Fail post to Facebook", "" + result.getData());
+			Toast.makeText(context, "Fail post to Facebook!", Toast.LENGTH_LONG)
+					.show();
+		} else if (!result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionPostComment) {
 			Toast.makeText(context, "Fail", Toast.LENGTH_LONG).show();
 		}
@@ -446,17 +546,27 @@ public class WhyqShareActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		try {
 			tvTitle.setText("" + store.getNameStore());
-			String cateId = store.getCateid();
-			if (cateId.equals("1")) {
-				imgTitle.setImageResource(R.drawable.icon_cat_cutlery);
-			} else if (cateId.equals("1")) {
-				imgTitle.setImageResource(R.drawable.icon_cat_wine);
-			} else if (cateId.equals("1")) {
-				imgTitle.setImageResource(R.drawable.icon_cat_coffee);
-			} else {
-				imgTitle.setImageResource(R.drawable.icon_cat_hotel);
+			// String cateId = store.getCateid();
+			// if (cateId.equals("1")) {
+			// imgTitle.setImageResource(R.drawable.icon_cat_cutlery);
+			// } else if (cateId.equals("1")) {
+			// imgTitle.setImageResource(R.drawable.icon_cat_wine);
+			// } else if (cateId.equals("1")) {
+			// imgTitle.setImageResource(R.drawable.icon_cat_coffee);
+			// } else {
+			// imgTitle.setImageResource(R.drawable.icon_cat_hotel);
+			// }
+			int storeType = Integer.parseInt(store.getCateid());
+			if (storeType == 1) {
+				imgTitle.setImageResource(R.drawable.icon_tab_cutlery_active);
+			} else if (storeType == 2) {
+				imgTitle.setImageResource(R.drawable.icon_tab_wine_active);
+			} else if (storeType == 3) {
+				imgTitle.setImageResource(R.drawable.icon_tab_coffee_active);
+			} else if (storeType == 4) {
+				imgTitle.setImageResource(R.drawable.icon_tab_hotel_active);
 			}
-			Log.d("bindHeaderData", "cate id " + cateId);
+			// Log.d("bindHeaderData", "cate id " + cateId);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -493,7 +603,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 			return "";
 		}
 	}
-	
+
 	private ArrayList<String> convertDataToFBIDArray(Object data) {
 		// TODO Auto-generated method stub
 		tagsList.clear();
@@ -509,6 +619,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 			return tagsList;
 		}
 	}
+
 	private String convertFBNameData(Object data) {
 		// TODO Auto-generated method stub
 		facebookNameTag = "";
@@ -528,22 +639,22 @@ public class WhyqShareActivity extends FragmentActivity implements
 			return "";
 		}
 	}
-//	// Oncompleted will be call when login facebook successful
-//	@Override
-//	public void onCompled(boolean b) {
-//		// TODO Auto-generated method stub
-//		
-//		Log.d("onCompleted", "onCompled(boolean b) {" + b);
-//		if (b) {
-//			accessToken = getAccessToken();
-//			if(isComment){
-//				if(accessToken!=null)
-//					exePostFacebook(accessToken);
-//			}else{
-//				if(accessToken!=null)
-//					showTagDialog(accessToken);	
-//			}
-//			
-//		}
-//	}
+	// // Oncompleted will be call when login facebook successful
+	// @Override
+	// public void onCompled(boolean b) {
+	// // TODO Auto-generated method stub
+	//
+	// Log.d("onCompleted", "onCompled(boolean b) {" + b);
+	// if (b) {
+	// accessToken = getAccessToken();
+	// if(isComment){
+	// if(accessToken!=null)
+	// exePostFacebook(accessToken);
+	// }else{
+	// if(accessToken!=null)
+	// showTagDialog(accessToken);
+	// }
+	//
+	// }
+	// }
 }

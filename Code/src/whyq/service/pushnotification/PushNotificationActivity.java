@@ -1,5 +1,6 @@
 package whyq.service.pushnotification;
 
+import whyq.activity.ListDetailActivity;
 import whyq.activity.WhyQBillScreen;
 import whyq.activity.WhyqShareActivity;
 import whyq.model.BillPushNotification;
@@ -34,6 +35,13 @@ public class PushNotificationActivity extends Activity {
 				finish();
 			} else if (data.getType().toUpperCase().equals("ACCEPT")) {
 				Intent i = new Intent(this, WhyQBillScreen.class);
+				Bundle bundle = new Bundle();
+				bundle.putSerializable("push_data", data);
+				i.putExtras(bundle);
+				startActivity(i);
+				finish();
+			}else{
+				Intent i = new Intent(this, ListDetailActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putSerializable("push_data", data);
 				i.putExtras(bundle);

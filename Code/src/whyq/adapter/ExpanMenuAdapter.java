@@ -7,13 +7,16 @@ import java.util.Map;
 
 import whyq.WhyqApplication;
 import whyq.activity.ListDetailActivity;
+import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
 import whyq.model.ExtraItem;
-import whyq.model.ExtraItemSet;
 import whyq.model.GroupMenu;
 import whyq.model.Menu;
 import whyq.model.OptionItem;
+import whyq.model.ResponseData;
 import whyq.model.SizeItem;
+import whyq.service.Service;
+import whyq.service.ServiceResponse;
 import whyq.utils.Util;
 import android.content.Context;
 import android.text.Editable;
@@ -23,14 +26,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewDebug.FlagToString;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -165,6 +167,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 				viewHolder.btnRemove = (Button) view.findViewById(R.id.btnRemove);
 				viewHolder.lnPreview = (LinearLayout) view.findViewById(R.id.ln_preview_extra_selected);
 				viewHolder.rlExtraView = (RelativeLayout) view.findViewById(R.id.rl_extra_view);
+				viewHolder.tvFavouriteCount = (TextView) view.findViewById(R.id.tv_favourite_food_count);
+				viewHolder.imgFavourite = (ImageView) view.findViewById(R.id.imgFavouriteFood);
 
 				viewHolder.tvItem1NameSize = (TextView) view.findViewById(R.id.tv_item1_name_size);
 				viewHolder.tvItem1PriceSize = (TextView) view.findViewById(R.id.tv_item1_price_size);
@@ -214,11 +218,15 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 				viewHolder = (ViewHolderMitemInfo) view.getTag();
 			}
 
+			
+			viewHolder.tvFavouriteCount.setText(""+item.getCountFavorite());
+			viewHolder.imgFavourite.setImageResource(item.isFavorite()? R.drawable.icon_fav_enable: R.drawable.icon_fav_disable);
 //			boolean isItemInBillList = ListDetailActivity.billList.containsKey(item.getId());
 			boolean isItemInBillList = item.getUnitForBill() > 0;
 
 //			setViewVisibility(viewHolder.lnPreview, isItemInBillList);
 			setViewVisibility(viewHolder.rlExtraView, isItemInBillList);	
+			
 			
 			setViewVisibility(viewHolder.tvItem1NameOption, isItemInBillList);
 			setViewVisibility(viewHolder.tvItem1PriceOption, isItemInBillList);
@@ -241,7 +249,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 			setViewVisibility(viewHolder.tvItem3NameExtra, isItemInBillList);
 			setViewVisibility(viewHolder.tvItem3PriceExtra, isItemInBillList);
 
-
+			
 			/*
 			 * Set text note change
 			 */
@@ -272,7 +280,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 				}
 			});
 			
-			
+
 
 			/***
 			 * Bind option data to item
@@ -288,7 +296,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(viewHolder.tvItem1NameOption, true);
 						setViewVisibility(viewHolder.tvItem1PriceOption, true);
 						viewHolder.tvItem1NameOption.setText(itemDetail.getName());
-						viewHolder.tvItem1PriceOption.setText("$" + itemDetail.getValue());
+						if(floatValue(itemDetail.getValue()) !=0)
+							viewHolder.tvItem1PriceOption.setText("$" + itemDetail.getValue());
 						viewHolder.tvItem1PriceOption.setTag(itemDetail);
 						
 						viewHolder.lnItem1Option.setTag(itemDetail);
@@ -301,7 +310,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(viewHolder.tvItem2NameOption, true);
 						setViewVisibility(viewHolder.tvItem2NameOption, true);
 						viewHolder.tvItem2NameOption.setText(itemDetail.getName());
-						viewHolder.tvItem2PriceOption.setText("$" + itemDetail.getValue());
+						if(floatValue(itemDetail.getValue()) !=0)
+							viewHolder.tvItem2PriceOption.setText("$" + itemDetail.getValue());
 						viewHolder.tvItem2PriceOption.setTag(itemDetail);
 						viewHolder.tvItem2NameOption.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
 						viewHolder.tvItem2PriceOption.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
@@ -313,7 +323,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(viewHolder.tvItem3NameOption, true);
 						setViewVisibility(viewHolder.tvItem3PriceOption, true);
 						viewHolder.tvItem3NameOption.setText(itemDetail.getName());
-						viewHolder.tvItem3PriceOption.setText("$" + itemDetail.getValue());
+						if(floatValue(itemDetail.getValue()) !=0)
+							viewHolder.tvItem3PriceOption.setText("$" + itemDetail.getValue());
 						viewHolder.tvItem3PriceOption.setTag(itemDetail);
 						viewHolder.tvItem3NameOption.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
 						viewHolder.tvItem3PriceOption.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
@@ -340,7 +351,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(viewHolder.tvItem1NameSize, true);
 						setViewVisibility(viewHolder.tvItem1PriceSize, true);
 						viewHolder.tvItem1NameSize.setText(itemDetail.getName());
-						viewHolder.tvItem1PriceSize.setText("$" + itemDetail.getValue());
+						if(floatValue(itemDetail.getValue()) !=0)
+							viewHolder.tvItem1PriceSize.setText("$" + itemDetail.getValue());
 						viewHolder.tvItem1PriceSize.setTag(itemDetail);
 						viewHolder.tvItem1NameSize.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
 						viewHolder.tvItem1PriceSize.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
@@ -352,7 +364,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(viewHolder.tvItem2NameSize, true);
 						setViewVisibility(viewHolder.tvItem1PriceSize, true);
 						viewHolder.tvItem2NameSize.setText(itemDetail.getName());
-						viewHolder.tvItem2PriceSize.setText("$" + itemDetail.getValue());
+						if(floatValue(itemDetail.getValue()) !=0)
+							viewHolder.tvItem2PriceSize.setText("$" + itemDetail.getValue());
 						viewHolder.tvItem2PriceSize.setTag(itemDetail);
 						viewHolder.tvItem2NameSize.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
 						viewHolder.tvItem2PriceSize.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
@@ -364,7 +377,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(viewHolder.tvItem3NameSize, true);
 						setViewVisibility(viewHolder.tvItem3PriceSize, true);
 						viewHolder.tvItem3NameSize.setText(itemDetail.getName());
-						viewHolder.tvItem3PriceSize.setText("$" + itemDetail.getValue());
+						if(floatValue(itemDetail.getValue()) !=0)
+							viewHolder.tvItem3PriceSize.setText("$" + itemDetail.getValue());
 						viewHolder.tvItem3PriceSize.setTag(itemDetail);
 						viewHolder.tvItem3NameSize.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
 						viewHolder.tvItem3PriceSize.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
@@ -393,7 +407,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(viewHolder.tvItem1NameExtra, true);
 						setViewVisibility(viewHolder.tvItem1PriceExtra, true);
 						viewHolder.tvItem1NameExtra.setText(itemDetail.getName());
-						viewHolder.tvItem1PriceExtra.setText("$" + itemDetail.getValue());
+						if(floatValue(itemDetail.getValue()) !=0)
+							viewHolder.tvItem1PriceExtra.setText("$" + itemDetail.getValue());
 						viewHolder.tvItem1PriceExtra.setTag(itemDetail);
 						viewHolder.tvItem1NameExtra.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
 						viewHolder.tvItem1PriceExtra.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
@@ -405,7 +420,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(viewHolder.tvItem2NameExtra, true);
 						setViewVisibility(viewHolder.tvItem2PriceExtra, true);
 						viewHolder.tvItem2NameExtra.setText(itemDetail.getName());
-						viewHolder.tvItem2PriceExtra.setText("$" + itemDetail.getValue());
+						if(floatValue(itemDetail.getValue()) !=0)
+							viewHolder.tvItem2PriceExtra.setText("$" + itemDetail.getValue());
 						viewHolder.tvItem2PriceExtra.setTag(itemDetail);
 						viewHolder.tvItem2NameExtra.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
 						viewHolder.tvItem2PriceExtra.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
@@ -417,7 +433,8 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 						setViewVisibility(viewHolder.tvItem3NameExtra, true);
 						setViewVisibility(viewHolder.tvItem3PriceExtra, true);
 						viewHolder.tvItem3NameExtra.setText(itemDetail.getName());
-						viewHolder.tvItem3PriceExtra.setText("$" + itemDetail.getValue());
+						if(floatValue(itemDetail.getValue()) !=0)
+							viewHolder.tvItem3PriceExtra.setText("$" + itemDetail.getValue());
 						viewHolder.tvItem3PriceExtra.setTag(itemDetail);
 						viewHolder.tvItem3NameExtra.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
 						viewHolder.tvItem3PriceExtra.setTextColor( itemDetail.isSelected()?mFocusColor:mNormalColor);
@@ -446,11 +463,44 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 //			}
 			viewHolder.tvType.setText(Html.fromHtml(item.getNameProduct()));
 		
-//			viewHolder.tvPrice.setText("$" + Html.fromHtml(item.getValue()));
 			viewHolder.tvPrice.setText("$" + Html.fromHtml(""+Util.round(Float.parseFloat(item.getValue()), 1)));
 			viewHolder.tvCount.setText(""+item.getUnitForBill());
 			viewHolder.storeId = item.getStoreId();
 			viewHolder.menuId = item.getId();
+			viewHolder.imgFavourite.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					
+					
+					Service service = new Service(new IServiceListener() {
+						
+						@Override
+						public void onCompleted(Service service, ServiceResponse result) {
+							// TODO Auto-generated method stub
+							try {
+								Log.d("favorite onCompleted", "isFavorite "+item.isFavorite());
+								ResponseData data = (ResponseData) result.getData();
+
+								if (data.getStatus().equals("200")) {
+									item.setFavorite(!item.isFavorite());
+									viewHolder.imgFavourite.setImageResource(item.isFavorite()? R.drawable.icon_fav_enable: R.drawable.icon_fav_disable);
+									int newNumberFavCount = item.isFavorite()?Integer.parseInt(viewHolder.tvFavouriteCount.getText().toString())+1: Integer.parseInt(viewHolder.tvFavouriteCount.getText().toString())-1; 
+									viewHolder.tvFavouriteCount.setText(newNumberFavCount > 0? ""+newNumberFavCount: "0");
+								} else if (data.getStatus().equals("401")) {
+									Util.loginAgain(mContext, data.getMessage());
+								} else {
+									Util.showDialog(mContext, data.getMessage());
+								}
+							} catch (Exception e) {
+								// TODO: handle exception
+								e.printStackTrace();
+							}
+								
+						}
+					});
+					service.postLikeFavouriteFoods(item.getId());	
+				}
+			});
 			
 			viewList.put(item.getId(), view);
 			viewHolder.btnRemove.setTag(item);
@@ -467,6 +517,9 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 				float price = ((ListDetailActivity) mContext).getTotalSize(item.getSizeItemList())
 						+ ((ListDetailActivity) mContext).getTotalOption(item.getOptionItemList())
 						+ ((ListDetailActivity) mContext).getTotalExtra(item.getExtraItemList());
+				if(((ListDetailActivity) mContext).getTotalSize(item.getSizeItemList()) <= 0){
+					price += Float.parseFloat(item.getValue());
+				}
 				viewHolder.tvPrice.setText("$" + price);
 			}
 			
@@ -560,6 +613,15 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		return view;
 	}
 
+	private float floatValue(String value) {
+		// TODO Auto-generated method stub
+		float result =0;
+		if(value !=null && !value.equals("")){
+			result = Float.parseFloat(""+Util.round(Float.parseFloat(value), 2));
+		}
+		return result;
+	}
+
 	private int getTotolPrice(List<Bill> list) {
 		// TODO Auto-generated method stub
 		int result = 0;
@@ -616,7 +678,6 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		}
 		return result;
 	}
-
 
 	private void setViewVisibility(View v, boolean b) {
 		// TODO Auto-generated method stub
@@ -734,7 +795,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 			break;
 		case R.id.btn_done_select_extra:
 			onDoneSelectedClicked(v);
-		case R.id.btn_delete_item:
+		case R.id.imgbtn_delete_item:
 			onRemoveMenuSelectClicked(v);
 			break;
 		default:
@@ -747,9 +808,9 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		// TODO Auto-generated method stub
 //		((ListDetailActivity)mContext).onAddClicked(v);
 
-		Log.d("onAddClicked", "id =" + v.getId());
+		
 		Menu item = (Menu) v.getTag();
-	
+		Log.d("onAddClicked", "id =" + v.getId()+ " unit "+item.getUnitForBill());
 		if (item != null) {
 			item.setUnitForBill(item.getUnitForBill()+1);
 			changeItem(item);
@@ -782,68 +843,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		
 	
 	}
-	private void exeAddItemToList(Menu menu, boolean isUpdate) {
-		// TODO Auto-generated method stub
-		List<SizeItem> sizelist = menu.getSizeItemList();
-		List<OptionItem> optionList = menu.getOptionItemList();
-		List<ExtraItem> extraList = menu.getExtraItemList();
-		
-		List<SizeItem> sizelistBill = new ArrayList<SizeItem>();
-		List<OptionItem> optionListBill = new ArrayList<OptionItem>();
-		List<ExtraItem> extraListBill = new ArrayList<ExtraItem>();
 
-		List<Bill> billList = ListDetailActivity.billList.get(menu.getId());
-		if(billList ==null){
-			billList = new ArrayList<Bill>();
-		}else{
-			if(isUpdate){
-				billList.clear();
-			}
-		}
-		
-		Bill bill = new Bill();
-		bill.setId(menu.getId());
-		bill.setProductName(menu.getNameProduct());
-		bill.setProductId(menu.getId());
-		float price = ((ListDetailActivity) mContext).getTotalSize(menu.getSizeItemList())
-				+ ((ListDetailActivity) mContext).getTotalOption(menu.getOptionItemList())
-				+ ((ListDetailActivity) mContext).getTotalExtra(menu.getExtraItemList());
-		if(price <= 0){
-			price = Float.parseFloat(menu.getValue());
-		}
-		bill.setPrice(""+price);
-		bill.setUnit(""+menu.getUnitForBill());
-		if(menu.getUnitForBill() > 0){
-			for(SizeItem item: sizelist){
-				if(item.isSelected()){
-					sizelistBill.add(item);
-				}
-			}
-			for(OptionItem item: optionList){
-				if(item.isSelected()){
-					optionListBill.add(item);
-				}
-			}
-			for(ExtraItem item: extraList){
-				if(item.isSelected()){
-					extraListBill.add(item);
-				}
-			}
-			bill.setSizeList(sizelistBill);
-			bill.setOptionList(optionListBill);
-			bill.setExtraList(extraListBill);
-			if(ListDetailActivity.promotion!=null){
-				bill.setDiscount(ListDetailActivity.promotion.getValuePromotion()!=null?ListDetailActivity.promotion.getValuePromotion():""+0);
-			}
-			
-			billList.add(bill);
-			
-			ListDetailActivity.billList.put(menu.getId(), billList);
-		}
-		notifyDataSetChanged();
-		((ListDetailActivity)mContext).updateTotal();
-
-	}
 	private void onRemoveClicked(View v) {
 		// TODO Auto-generated method stub
 		// ((ListDetailActivity)mContext).onRemoveClicked(v);
@@ -884,11 +884,97 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 
 	}
 
+//	public void exeRemoveBill(Menu item){
+//		List<Bill> billList = ListDetailActivity.billList.get(item.getId());
+//		try {
+//			List<Bill> result = billList ;
+//			for(int i=0; i < billList.size(); i++){
+//				Bill bill2 =  billList.get(i);
+//				if(bill2== bill){
+//					result.remove(bill2);
+//				}
+//			}
+//			ListDetailActivity.billList.remove(item.getId());
+//			ListDetailActivity.billList.put(item.getId(), result);
+//			notifyDataSetChanged();
+//			((ListDetailActivity)mContext).updateTotal();
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+//	}
+	
 	private void onDoneSelectedClicked(View v) {
 		// TODO Auto-generated method stub
 
 		Menu menu = (Menu)v.getTag();
 		exeAddItemToList(menu, false);
+	}
+
+	private void exeAddItemToList(Menu menu, boolean isUpdate) {
+		// TODO Auto-generated method stub
+		List<SizeItem> sizelist = menu.getSizeItemList();
+		List<OptionItem> optionList = menu.getOptionItemList();
+		List<ExtraItem> extraList = menu.getExtraItemList();
+		
+		List<SizeItem> sizelistBill = new ArrayList<SizeItem>();
+		List<OptionItem> optionListBill = new ArrayList<OptionItem>();
+		List<ExtraItem> extraListBill = new ArrayList<ExtraItem>();
+
+		List<Bill> billList = ListDetailActivity.billList.get(menu.getId());
+		if(billList ==null){
+			billList = new ArrayList<Bill>();
+		}else{
+			if(isUpdate){
+				billList.clear();
+			}
+		}
+		
+		Bill bill = new Bill();
+		bill.setId(menu.getId());
+		bill.setProductName(menu.getNameProduct());
+		bill.setProductId(menu.getId());
+		float price = ((ListDetailActivity) mContext).getTotalSize(menu.getSizeItemList())
+				+ ((ListDetailActivity) mContext).getTotalOption(menu.getOptionItemList())
+				+ ((ListDetailActivity) mContext).getTotalExtra(menu.getExtraItemList());
+		if(price <= 0){
+			price = Float.parseFloat(menu.getValue());
+		}
+		bill.setPrice(""+price);
+		bill.setUnit(""+menu.getUnitForBill());
+		bill.setNote(noteList.get(menu.getId()));
+		
+		if(menu.getUnitForBill() > 0){
+			for(SizeItem item: sizelist){
+				if(item.isSelected()){
+					sizelistBill.add(item);
+				}
+			}
+			for(OptionItem item: optionList){
+				if(item.isSelected()){
+					optionListBill.add(item);
+				}
+			}
+			for(ExtraItem item: extraList){
+				if(item.isSelected()){
+					extraListBill.add(item);
+				}
+			}
+			bill.setSizeList(sizelistBill);
+			bill.setOptionList(optionListBill);
+			bill.setExtraList(extraListBill);
+			if(ListDetailActivity.promotion!=null){
+				bill.setDiscount(ListDetailActivity.promotion.getValuePromotion()!=null?ListDetailActivity.promotion.getValuePromotion():""+0);
+			}
+			
+			billList.add(bill);
+			
+			ListDetailActivity.billList.put(menu.getId(), billList);
+		}
+		
+		notifyDataSetChanged();
+		((ListDetailActivity)mContext).updateTotal();
+
 	}
 
 	private void onRemoveMenuSelectClicked(View v) {
@@ -1099,15 +1185,15 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 	}
 
 	public static class ViewHolderMitemInfo {
-		public TextView tvType, tvPrice, tvCount;
-		public ImageView imgThumb;
+		public TextView tvType, tvPrice, tvCount, tvFavouriteCount;
+		public ImageView imgThumb, imgFavourite;
 		public String storeId;
 		public Button btnAdd;
-		public EditText etNote;
 		public Button btnRemove;
 		public String menuId;
 		public LinearLayout lnPreview;
 		public RelativeLayout rlExtraView;
+		public EditText etNote;
 		public Button btnDoneSelect;
 		public TextView tvItem1NameOption;
 		public TextView tvItem1PriceOption;

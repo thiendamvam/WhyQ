@@ -3,18 +3,27 @@
  */
 package whyq;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import whyq.model.User;
 import whyq.service.img.good.ImageLoader;
+import whyq.service.pushnotification.AlarmReceiver;
 import whyq.utils.RSA;
 import whyq.utils.Util;
 import whyq.utils.XMLParser;
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 
 /**
@@ -212,4 +221,31 @@ public class WhyqApplication extends Application {
 		return imageLoader;
 	}
 	
+	
+	public static void pushNotification(Context ctx, long time, String title,
+			String message) {
+		Intent intentAlarm = new Intent(ctx, AlarmReceiver.class);
+		intentAlarm.putExtra("title", title);
+		intentAlarm.putExtra("message", ""+message);
+		
+//		TimeZone tz = TimeZone.getTimeZone("GMT+07:00");
+		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+		
+		Log.d("pushNotification","compare time: "+ (time - cal.getTimeInMillis())/(60*60*1000));
+		if (time <= cal.getTimeInMillis() + 15 * 60 * 1000)
+			time = time + 60 * 1000;
+		else if (time - 15 * 60 * 1000 >= cal.getTimeInMillis())
+			// notify before 15'
+			time = time - 15 * 60 * 1000;
+
+		Log.d("pushNotification","pushNotification time: "+time+" current time: "+cal.getTimeInMillis());
+		// create the object
+		AlarmManager alarmManager = (AlarmManager) ctx
+				.getSystemService(ALARM_SERVICE);
+		// set the alarm for particular time
+		alarmManager.set(AlarmManager.RTC_WAKEUP, time, PendingIntent
+				.getBroadcast(ctx, 1, intentAlarm,
+						PendingIntent.FLAG_UPDATE_CURRENT));
+	}
+
 }
