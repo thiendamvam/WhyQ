@@ -14,6 +14,7 @@ public class Bill {
 	private List<OptionItem> optionList;
 	private List<SizeItem> sizeList;
 	private List<ExtraItem> extraList;
+	private String deliveryFeeValue;
 	private String note;
 
 	public String getId() {
@@ -41,7 +42,7 @@ public class Bill {
 	}
 
 	public String getUnit() {
-		return unit ==null? "1": unit;
+		return unit;
 	}
 
 	public void setUnit(String unit) {
@@ -144,11 +145,19 @@ public class Bill {
 	}
 
 	public String getNote() {
-		return note;
+		return note == null? "": note;
 	}
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public String getDeliveryFeeValue() {
+		return deliveryFeeValue;
+	}
+
+	public void setDeliveryFeeValue(String deliveryFeeValue) {
+		this.deliveryFeeValue = deliveryFeeValue;
 	}
 
 }

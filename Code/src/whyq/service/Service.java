@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
@@ -40,7 +41,6 @@ import org.apache.http.params.HttpParams;
 import whyq.WhyqApplication;
 import whyq.activity.ListDetailActivity;
 import whyq.interfaces.IServiceListener;
-import whyq.model.FriendFacebook;
 import whyq.model.SearchFriendCriteria;
 import whyq.model.ShareData;
 import whyq.utils.API;
@@ -98,7 +98,18 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/favourite/business", params, true, false);
 	}
+	
+	public void getDeliveryFeeList() {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionGetDeliveryFeeList;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("token", WhyqApplication.Instance().getRSAToken());
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/innscor/delivery", params, true, false);
+	}
 
+	
 	public void removeFavorite(String storeId) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionRemoveFavorite;
@@ -125,11 +136,13 @@ public class Service implements Runnable {
 		params.put("only_friend", onlyFriend ? "1" : "");
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/member/comment", params, true, false);
 	}
 
 	public void getFriends(String token, String user_id) {
-		// ÖNedd add page and key = if search
+		// ï¿½Nedd add page and key = if search
 
 		_action = ServiceAction.ActionGetFriends;
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -143,7 +156,7 @@ public class Service implements Runnable {
 	}
 
 	public void getInvitation(String token, String listInvited) {
-		// ÖNedd add page and key = if search
+		// ï¿½Nedd add page and key = if search
 
 		_action = ServiceAction.ActionGetInvitations;
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -157,7 +170,7 @@ public class Service implements Runnable {
 	}
 
 	public void getInvitationNotification(String token, String listInvited) {
-		// ÖNedd add page and key = if search
+		// ï¿½Nedd add page and key = if search
 
 		_action = ServiceAction.ActionGetInvitationsNotification;
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -213,13 +226,16 @@ public class Service implements Runnable {
 		request("/m/member/friend/facebook/invite", params, true, false);
 	}
 
-	public void getUserActivities(String encryptedToken, String userId) {
+	public void getUserActivities(String encryptedToken, String userId, int page) {
 		_action = ServiceAction.ActionGetUserActivities;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("page", page);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/member/recent/activity", params, true, false);
 	}
 
@@ -244,6 +260,8 @@ public class Service implements Runnable {
 		}
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/member/comment/post", params, true, false);
 	}
 
@@ -343,6 +361,10 @@ public class Service implements Runnable {
 			result = result.replace("<0></0>", "");
 			resObj = parser.parserLoginData(result);
 			break;
+		case ActionLoginasGuest:
+			result = result.replace("<0></0>", "");
+			resObj = parser.parserLoginData(result);
+			break;
 		case ActionSigup:
 			resObj = parser.parserSignupResult(result);
 			break;
@@ -416,8 +438,14 @@ public class Service implements Runnable {
 		case ActionGetLocation:
 			resObj = parser.parseLCationResult(result);
 			break;
+		case ActionGetDeliveryFeeList:
+			resObj = parser.parseLGetDeliveryFeeList(result);
+			break;
 		case ActionPostFavorite:
 			resObj = parser.parseLFavouriteResult(result);
+			break;
+		case ActionOrderEcoCash:
+			resObj = parser.parseOrderEcoCash(result);
 			break;
 		case ActionRemoveFavorite:
 			resObj = parser.parseLFavouriteResult(result);
@@ -442,6 +470,12 @@ public class Service implements Runnable {
 			break;
 		case ActionPostFBAdd:
 			resObj = parser.parserPostOpenGraphResult(result);
+			break;
+		case ActionGetFavouriteFoods:
+			resObj = parser.parseFavouriteFood(result);
+			break;
+		case ActionPostFavouriteFoods:
+			resObj = parser.parseLFavouriteResult(result);
 			break;
 		default:
 			resObj = result;
@@ -512,7 +546,7 @@ public class Service implements Runnable {
 				urlString = _includeHost ? API.hostURL + _actionURI
 						: _actionURI;
 			HttpRequestBase request = null;
-
+			Log.d("Service", "url: " + urlString + " " + _isGet);
 			if (_isGet) {
 				request = new HttpGet();
 				if (_params != null) {
@@ -621,6 +655,8 @@ public class Service implements Runnable {
 		params.put("access_token", accessToken);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/login/fb", params, true, false);
 	}
 
@@ -633,6 +669,8 @@ public class Service implements Runnable {
 		params.put("oauth_token_secret", oauthTokenSecret);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/login/tw", params, true, false);
 	}
 
@@ -733,6 +771,8 @@ public class Service implements Runnable {
 		params.put("store_id", id);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/business/show", params, true, false);
 	}
 
@@ -750,6 +790,8 @@ public class Service implements Runnable {
 		params.put("store_id", store_id);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/business/member/check_bill", params, true, false);
 	}
 
@@ -761,6 +803,8 @@ public class Service implements Runnable {
 		params.put("store_id", store_id);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		if (text != null) {
 			params.put("key", text);
 			request("/m/business/member/check_bill/search", params, true, false);
@@ -780,13 +824,16 @@ public class Service implements Runnable {
 		request("/m/member/profile/order", params, true, false);
 	}
 
-	public void getHistories(String encryptedToken, String userId) {
+	public void getHistories(String encryptedToken, String userId, int page) {
 		_action = ServiceAction.ActionGetHistories;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("page", page);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/member/order", params, true, false);
 	}
 
@@ -798,8 +845,36 @@ public class Service implements Runnable {
 		params.put("store_id", storeId);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/business/show", params, true, false);
 
+	}
+	
+	public void getFavouriteFoods(int page) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionGetFavouriteFoods;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("page", page);
+		params.put("token", WhyqApplication.Instance().getRSAToken());
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
+		request("/m/member/product/like", params, true, false);
+	}
+	
+	public void postLikeFavouriteFoods(String id) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionPostFavouriteFoods;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("product_id", id);
+		params.put("token", WhyqApplication.Instance().getRSAToken());
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
+		request("/m/product/like", params, true, false);
 	}
 
 	public void orderDelivery(String storeId, String otherAddress,
@@ -815,6 +890,8 @@ public class Service implements Runnable {
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/member/profile/photo", params, true, false);
 	}
 
@@ -825,6 +902,8 @@ public class Service implements Runnable {
 		params.put("text-search", string);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("getlocation", params, true, false);
 	}
 
@@ -835,6 +914,8 @@ public class Service implements Runnable {
 		params.put("user_id", userId);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/member/profile", params, true, false);
 	}
 
@@ -845,6 +926,8 @@ public class Service implements Runnable {
 		params.put("email", string);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/forget_password", params, true, false);
 	}
 
@@ -859,6 +942,18 @@ public class Service implements Runnable {
 		params.put("password", pass);
 	}
 
+	public void loginasGuest(String deviceToken) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionLoginasGuest;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		params.put("device_token", deviceToken);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
+		request("/m/login/guest", params, true, false);
+	}
+	
 	public void register(HashMap<String, Object> params) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionSigup;
@@ -898,6 +993,8 @@ public class Service implements Runnable {
 		params.put("token", WhyqApplication.Instance().getRSAToken());
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		params.put("is_receive_notification", isReceiveNotify);
 		params.put("is_show_friend", isReceiveNotify);
 		request("/m/member/setting/edit", params, true, false);
@@ -913,8 +1010,8 @@ public class Service implements Runnable {
 		params.put("token", "" + WhyqApplication.Instance().getRSAToken());
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
-		params.put("appname", appName);
-		params.put("development", "pro");
+		params.put("appname", Constants.APP_NAME);
+		params.put("env", Constants.DEVELOPMENT);//pro
 		params.put("appversion", appVersion);
 		params.put("devicename", deviceName);
 		params.put("devicemodel", deviceModel);
@@ -932,6 +1029,8 @@ public class Service implements Runnable {
 		params.put("key", key);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		params.put("search", criteria.toString());
 		request("/m/member/search/friend", params, true, false);
 	}
@@ -970,6 +1069,8 @@ public class Service implements Runnable {
 		params.put("bill_id", billId);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/member/order/show", params, true, false);
 	}
 
@@ -989,9 +1090,27 @@ public class Service implements Runnable {
 		params.put("message", message);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
 		request("/m/member/order/show", params, true, false);
 	}
 
+	public void ecoCash(String billId, String usingEcocash) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionOrderEcoCash;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("token", WhyqApplication.Instance().getRSAToken());
+		params.put("bill_id", billId);
+		params.put("using_cash", usingEcocash);
+		params.put("hotel_charge_code", "");
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		params.put("version", Constants.APP_VERSION);
+		params.put("time_zone", TimeZone.getDefault());
+		request("/m/member/order/update", params, true, false);
+	}
+	
+	
 	public void getPaypalURI(String token, String billId) {
 		// TODO Auto-generat ed method stub
 		_action = ServiceAction.ActionGetPaypalURI;
@@ -1073,8 +1192,10 @@ public class Service implements Runnable {
 		params.put("access_token", accessToken);
 		params.put("fb:explicitly_shared", true);
 		params.put("format", "json");
-		if(data.getPicture()!=null)
+		if(data.getPicture()!=null && !"".equals(""+data.getPicture())){
 			params.put("image[0][url]", data.getPicture());
+			params.put("image[0][user_generated]", true);
+		}
 		params.put("message", "" + data.getMessage());
 		params.put("place", data.getLink());
 		params.put("scrape", true);
@@ -1082,7 +1203,7 @@ public class Service implements Runnable {
 		params.put("sdk_version", 1);
 		params.put("venue", data.getLink());
 
-		request("/whyqapp:comment", params, true, false);
+		request("/dial_a_delivery:comment", params, true, false);
 	}
 
 	public void postFBCheckBill(String accessToken, ShareData data) {

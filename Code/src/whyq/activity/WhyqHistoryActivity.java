@@ -17,6 +17,7 @@ import whyq.utils.Util;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +26,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import com.costum.android.widget.LoadMoreListView;
 import com.whyq.R;
 
 public class WhyqHistoryActivity extends ImageWorkerActivity {
@@ -35,6 +36,10 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 	public static final String ARG_USER_ID = "userid";
 
 	private BillAdapter mAdapter;
+
+	private LoadMoreListView mListview;
+	protected int mPage = 0;
+	protected int mTotalPage;
 	
 	private static final int[] STATUS_MAP = new int[] {R.drawable.waiting_for_payment, R.drawable.declined, R.drawable.delivered, R.drawable.dismissed, R.drawable.waiting_to_be_accepted,  R.drawable.paid};
 
@@ -47,9 +52,9 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 		setTitle(R.string.history);
 
 		mAdapter = new BillAdapter(this, mImageWorker);
-		ListView listview = (ListView) findViewById(R.id.listview);
-		listview.setAdapter(mAdapter);
-		listview.setOnItemClickListener(new OnItemClickListener() {
+		mListview = (LoadMoreListView) findViewById(R.id.listview);
+		mListview.setAdapter(mAdapter);
+		mListview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -74,11 +79,32 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 			}
 		});
 
-		setLoading(true);
-		String userId = getIntent().getStringExtra(ARG_USER_ID);
-		getService().getHistories(getEncryptedToken(), userId);
+		mListview.setOnLoadMoreListener(new LoadMoreListView.OnLoadMoreListener() {
+			
+			@Override
+			public void onLoadMore() {
+				// TODO Auto-generated method stub
+				Log.d("loadmore listener", mPage+ "and total is "+ mTotalPage);
+				if( mPage < mTotalPage){
+					mPage++;
+					exeGetData(mPage);
+					
+				}else{
+					mListview.onLoadMoreComplete();
+				}
+			}
+		});
+		mPage = 1;
+		exeGetData(mPage);
 	}
 	
+	private void exeGetData(int page) {
+		// TODO Auto-generated method stub
+		setLoading(true);
+		String userId = getIntent().getStringExtra(ARG_USER_ID);
+		getService().getHistories(WhyqApplication.getRSAToken(), userId, page);
+	}
+
 	public void onBackClicked(View v){
 		finish();
 	}
@@ -88,14 +114,22 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
 		setLoading(false);
+		mListview.onLoadMoreComplete();
 		if (result != null && result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionGetHistories) {
 			DataParser parser = new DataParser();
 			ResponseData data = (ResponseData) parser.parseBills(String.valueOf(result.getData()));
+			mTotalPage = data.getTotalPage();
 			if (data.getStatus().equals("401")) {
 				Util.loginAgain(this, data.getMessage()) ;
-			} else {
-				mAdapter.setItems((List<BillItem>) data.getData());
+			} else if(data.getStatus().equals("200")) {
+				List<BillItem> newData = mAdapter.getData();
+				if(mPage == 1){
+					newData.clear();
+				}
+				newData.addAll((List<BillItem>) data.getData());
+				mAdapter.setItems(newData);
+				mAdapter.notifyDataSetChanged();
 			}
 		}
 	}
@@ -153,26 +187,27 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 //			} else {
 //				holder.circleIcon.setImageResource(R.drawable.circle);
 //			}
-
 			int statusBill = item.getStatus_bill();
-
-			if (statusBill == -1) {
-				holder.circleIcon.setImageResource(R.drawable.circle);
-			} else if (statusBill == 0) {
-
-			} else if (statusBill == 1) {
+			
+			if(statusBill == -1){
+//				holder.circleIcon.setImageResource(R.drawable.circle);
+				holder.circleIcon.setImageResource(STATUS_MAP[1]);
+			}else if(statusBill == 0){
+				
+			}else if(statusBill == 1){
 				holder.circleIcon.setImageResource(STATUS_MAP[0]);
-			} else if (statusBill == 2 && statusBill == 6) {
+			}else if(statusBill == 2 || statusBill == 6){
 				holder.circleIcon.setImageResource(STATUS_MAP[5]);
-			} else if (statusBill == 3 && statusBill == 7) {
+			}else if(statusBill == 3 || statusBill == 7){
 				holder.circleIcon.setImageResource(STATUS_MAP[2]);
-			} else if (statusBill == 4) {
+			}else if(statusBill == 4){
 				holder.circleIcon.setImageResource(STATUS_MAP[3]);
-			} else if (statusBill == 5) {
-
-			} else {
+			}else if(statusBill == 5){
+				
+			}else{
 				holder.circleIcon.setImageResource(R.drawable.circle);
 			}
+			
 			holder.circleIcon.setVisibility(View.VISIBLE);
 			BusinessInfo bi = item.getBusiness_info();
 			if (bi != null) {
@@ -214,5 +249,11 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 			}
 		}
 
+		public List<BillItem> getData(){
+			return mItems;
+		}
+		public void changeSrc(List<BillItem> list){
+			mItems = list;
+		}
 	}
 }

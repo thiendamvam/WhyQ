@@ -34,6 +34,7 @@ import whyq.handler.UserProfileHandler;
 import whyq.model.Bill;
 import whyq.model.BillItem;
 import whyq.model.BillPushNotification;
+import whyq.model.DeliveryFee;
 import whyq.model.Distance;
 import whyq.model.ExtraItem;
 import whyq.model.Faq;
@@ -43,6 +44,7 @@ import whyq.model.OptionItem;
 import whyq.model.OrderCheckData;
 import whyq.model.OrderSendResult;
 import whyq.model.Photo;
+import whyq.model.Product;
 import whyq.model.ProductTypeInfo;
 import whyq.model.Promotion;
 import whyq.model.ResponseData;
@@ -87,34 +89,39 @@ public class DataParser {
 			String statusResponse = doc.getElementsByTagName("Status").item(0)
 					.getFirstChild().getNodeValue();
 			if (statusResponse.equals("200")) {
-			/*	XMLReader xmlReader = initializeReader();
-				UserHandler userHandler = new UserHandler();
-				// assign the handler
-				xmlReader.setContentHandler(userHandler);
-				xmlReader.parse(new InputSource(new StringReader(inputString)));
-				*/
+				/*
+				 * XMLReader xmlReader = initializeReader(); UserHandler
+				 * userHandler = new UserHandler(); // assign the handler
+				 * xmlReader.setContentHandler(userHandler); xmlReader.parse(new
+				 * InputSource(new StringReader(inputString)));
+				 */
 				final String mes = doc.getElementsByTagName("Message").item(0)
 						.getFirstChild().getNodeValue();
 				data.setStatus(statusResponse);
-//				data.setData(userHandler.getUser());
-				
+				// data.setData(userHandler.getUser());
+
 				User user = new User();
 				NodeList nodeList = doc.getElementsByTagName("obj");
 				for (int i = 0; i < nodeList.getLength(); i++) {
 					try {
 						Element element = (Element) nodeList.item(i);
-						
+
 						user.setToken(getValue(element, "token"));
 						user.setId(getValue(element, "id"));
 						user.setEmail(getValue(element, "email"));
 						user.setRoleId(getValue(element, "role_id"));
-						user.setAcive(getValue(element, "is_active").equals("1"));
-						user.setTotalMoney(getValue(element, "total_saving_money"));
-						user.setTotalSavingMoney(getValue(element, "total_saving_money"));
+						user.setAcive(getValue(element, "is_active")
+								.equals("1"));
+						user.setTotalMoney(getValue(element,
+								"total_saving_money"));
+						user.setTotalSavingMoney(getValue(element,
+								"total_saving_money"));
 						user.setTotalComment(getValue(element, "total_comment"));
 						user.setTotalFriend(getValue(element, "total_friend"));
-						user.setTotalFavourite(getValue(element, "total_favourite"));
-						user.setTotalCheckBill(getValue(element, "total_check_bill"));
+						user.setTotalFavourite(getValue(element,
+								"total_favourite"));
+						user.setTotalCheckBill(getValue(element,
+								"total_check_bill"));
 						user.setTwitterId(getValue(element, "twitter_id"));
 						user.setFacebookId(getValue(element, "facebook_id"));
 						user.setStatus(getValue(element, "status"));
@@ -122,9 +129,10 @@ public class DataParser {
 						user.setUpdateDate(getValue(element, "updatedate"));
 						user.setFirstName(getValue(element, "first_name"));
 						user.setLastName(getValue(element, "last_name"));
-						if(!getValue(element, "gender").equals(""))
-							user.setGender(Integer.parseInt(getValue(element, "gender")));
-//						user.seta(getValue(element, "avatar"));
+						if (!getValue(element, "gender").equals(""))
+							user.setGender(Integer.parseInt(getValue(element,
+									"gender")));
+						// user.seta(getValue(element, "avatar"));
 						user.setCity(getValue(element, "city"));
 						user.setAddress(getValue(element, "address"));
 						user.setPhoneNumber(getValue(element, "phone_number"));
@@ -135,11 +143,9 @@ public class DataParser {
 						// TODO: handle exception
 						e.printStackTrace();
 					}
-					
+
 				}
-						
-	
-				
+
 				data.setData(user);
 				data.setMessage(mes);
 				return data;
@@ -163,28 +169,34 @@ public class DataParser {
 		try {
 			Document doc = XMLfromString(inputString);
 			ResponseData data = new ResponseData();
-			String statusResponse = doc.getElementsByTagName("Status").item(0)
-					.getFirstChild().getNodeValue();
-			if (statusResponse.equals("200")) {
-				XMLReader xmlReader = initializeReader();
-				ActivityHandler handler = new ActivityHandler();
-				xmlReader.setContentHandler(handler);
-				xmlReader.parse(new InputSource(new StringReader(inputString)));
-
-				final String mes = doc.getElementsByTagName("Message").item(0)
+			if(doc.getElementsByTagName("Status") !=null){
+				String statusResponse = doc.getElementsByTagName("Status").item(0)
 						.getFirstChild().getNodeValue();
-				data.setStatus(statusResponse);
-				data.setData(handler.getActivities());
-				data.setMessage(mes);
-				return data;
-			} else {
-				final String mes = doc.getElementsByTagName("Message").item(0)
-						.getFirstChild().getNodeValue();
-				data.setStatus(statusResponse);
-				data.setData(null);
-				data.setMessage(mes);
-				return data;
+				
+				if (statusResponse.equals("200")) {
+					String totalPage = doc.getElementsByTagName("TotalPage").item(0)
+							.getFirstChild().getNodeValue();
+					XMLReader xmlReader = initializeReader();
+					ActivityHandler handler = new ActivityHandler();
+					xmlReader.setContentHandler(handler);
+					xmlReader.parse(new InputSource(new StringReader(inputString)));
 
+					final String mes = doc.getElementsByTagName("Message").item(0)
+							.getFirstChild().getNodeValue();
+					data.setStatus(statusResponse);
+					data.setTotalPage(Integer.parseInt(totalPage));
+					data.setData(handler.getActivities());
+					data.setMessage(mes);
+					return data;
+				} else {
+					final String mes = doc.getElementsByTagName("Message").item(0)
+							.getFirstChild().getNodeValue();
+					data.setStatus(statusResponse);
+					data.setData(null);
+					data.setMessage(mes);
+					return data;
+
+				}
 			}
 
 		} catch (ParserConfigurationException e) {
@@ -203,6 +215,7 @@ public class DataParser {
 			ResponseData data = new ResponseData();
 			String statusResponse = doc.getElementsByTagName("Status").item(0)
 					.getFirstChild().getNodeValue();
+			
 			if (statusResponse.equals("200")) {
 				XMLReader xmlReader = initializeReader();
 				BillHandler handler = new BillHandler();
@@ -211,8 +224,11 @@ public class DataParser {
 
 				final String mes = doc.getElementsByTagName("Message").item(0)
 						.getFirstChild().getNodeValue();
+				String totalPage = doc.getElementsByTagName("TotalPage").item(0)
+						.getFirstChild().getNodeValue();
 				data.setStatus(statusResponse);
 				data.setData(handler.getBills());
+				data.setTotalPage(Integer.parseInt(totalPage));
 				data.setMessage(mes);
 				return data;
 			} else {
@@ -257,10 +273,10 @@ public class DataParser {
 
 			Document doc = XMLfromString(inputString);
 			ResponseData data = new ResponseData();
-			String statusResponse ="";
-			if(doc!=null)
-				doc.getElementsByTagName("Status").item(0)
-					.getFirstChild().getNodeValue();
+			String statusResponse = "";
+			if (doc != null)
+				statusResponse = doc.getElementsByTagName("Status").item(0).getFirstChild()
+						.getNodeValue();
 			if (statusResponse.equals("200")) {
 				XMLReader xmlReader = initializeReader();
 				PhotoHandler handler = new PhotoHandler();
@@ -298,7 +314,10 @@ public class DataParser {
 			ResponseData data = new ResponseData();
 			String statusResponse = doc.getElementsByTagName("Status").item(0)
 					.getFirstChild().getNodeValue();
+
 			if (statusResponse.equals("200")) {
+				String totalPage = doc.getElementsByTagName("TotalPage").item(0)
+						.getFirstChild().getNodeValue();
 				XMLReader xmlReader = initializeReader();
 				CommentHandler handler = new CommentHandler();
 				xmlReader.setContentHandler(handler);
@@ -309,11 +328,13 @@ public class DataParser {
 				data.setStatus(statusResponse);
 				data.setData(handler.getComments());
 				data.setMessage(mes);
+				data.setTotalPage(Integer.parseInt(totalPage));
 				return data;
 			} else {
 				final String mes = doc.getElementsByTagName("Message").item(0)
 						.getFirstChild().getNodeValue();
 				data.setStatus(statusResponse);
+				data.setTotalPage(Integer.parseInt("0"));
 				data.setData(null);
 				data.setMessage(mes);
 				return data;
@@ -455,6 +476,74 @@ public class DataParser {
 		return xmlReader;
 	}
 
+	public Object parseFavouriteFood(String input) {
+		try {
+			ArrayList<Product> productList = new ArrayList<Product>();
+			Document doc = XMLfromString(input);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("Status").item(0)
+					.getFirstChild().getNodeValue();
+			if (statusResponse.equals("200")) {
+				NodeList nodeList = doc.getElementsByTagName("obj");
+
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					try {
+						Element permElement = (Element) nodeList.item(i);
+						Product mProduct = new Product();
+						mProduct.id = getValue(permElement, "id");
+						mProduct.storeId = getValue(permElement, "store_id");
+						mProduct.name = getValue(permElement, "name_product");
+						mProduct.value = getValue(permElement, "value");
+						mProduct.valuePromotion = getValue(permElement,
+								"value_promotion");
+						mProduct.description = getValue(permElement,
+								"description");
+						mProduct.imgProduct = getValue(permElement,
+								"image_product");
+						mProduct.imgThumb = getValue(permElement, "image_thumb");
+						mProduct.status = getValue(permElement, "status");
+						mProduct.productTypeId = getValue(permElement,
+								"type_product_id");
+						mProduct.createDate = getValue(permElement,
+								"createdate");
+						mProduct.updateDate = getValue(permElement,
+								"updatedate");
+						mProduct.sort = getValue(permElement, "sort");
+						mProduct.likeCount = getValue(permElement, "count_like");
+						mProduct.isLike = getValue(permElement, "is_like")
+								.equals("1") ? true : false;
+
+						NodeList groupItemInfo = (NodeList) permElement
+								.getElementsByTagName("group_item_info");
+						mProduct.groupItemId = getValue(
+								((Element) groupItemInfo.item(0)), "id");
+						mProduct.groupItemName = getValue(
+								((Element) groupItemInfo.item(0)), "group_name");
+
+						productList.add(mProduct);
+					} catch (Exception e) {
+					}
+				}
+				final String mes = doc.getElementsByTagName("Message").item(0)
+						.getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(productList);
+				data.setMessage(mes);
+				return data;
+			} else {
+				final String mes = doc.getElementsByTagName("Message").item(0)
+						.getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(productList);
+				data.setMessage(mes);
+				return data;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return input;
+	}
+
 	public Object parseBusinessList(String result) {
 		try {
 
@@ -464,7 +553,10 @@ public class DataParser {
 			ResponseData data = new ResponseData();
 			String statusResponse = doc.getElementsByTagName("Status").item(0)
 					.getFirstChild().getNodeValue();
+
 			if (statusResponse.equals("200")) {
+				String totalPage = doc.getElementsByTagName("TotalPage").item(0)
+						.getFirstChild().getNodeValue();
 				NodeList nodeList = doc.getElementsByTagName("obj");
 
 				for (int i = 0; i < nodeList.getLength(); i++) {
@@ -484,8 +576,8 @@ public class DataParser {
 								permElement,
 								"fee_charge_out_radius_allow_deliver");
 						String feeChargeOutRadiesDeliverPerOrder = getValue(
-								permElement, "fee_charge_for_delivery_sub_product_for_every_order");
-
+								permElement,
+								"feeChargeOutRadiesDeliverPerOrder");
 						String createdate = getValue(permElement, "createdate");
 						String updatedate = getValue(permElement, "updatedate");
 						String cateId = getValue(permElement, "cate_id");
@@ -493,6 +585,8 @@ public class DataParser {
 						String nameStore = getValue(permElement, "name_store");
 						String introStore = getValue(permElement, "intro_store");
 						String phoneStore = getValue(permElement, "phone_store");
+						String merchant_number = getValue(permElement,
+								"merchant_number");
 						String logi = getValue(permElement, "logo");
 						;
 						String style = getValue(permElement, "style");
@@ -573,6 +667,7 @@ public class DataParser {
 								}
 							} catch (Exception e) {
 								// TODO: handle exception
+								e.printStackTrace();
 							}
 						}
 						item.setPromotionList(promotionList);
@@ -623,6 +718,7 @@ public class DataParser {
 						item.setNameStore(nameStore);
 						item.setIntroStore(introStore);
 						item.setPhoneStore(phoneStore);
+						item.setMerchantNumber(merchant_number);
 						item.setLogo(logi);
 						item.setStyle(style);
 						item.setStartTime(startTime);
@@ -630,6 +726,7 @@ public class DataParser {
 						item.setHomeDeliver(isHomeDeliver);
 						item.setHotelDeliver(isHotelDeliver);
 						item.setTakeAway(isTakeAway);
+						item.setAtPlace(isPlace);
 
 						item.setTableQuantity(tableQuantity);
 						item.setCountFavaouriteMember(countFavouriteMemebr);
@@ -651,6 +748,7 @@ public class DataParser {
 				final String mes = doc.getElementsByTagName("Message").item(0)
 						.getFirstChild().getNodeValue();
 				data.setStatus(statusResponse);
+				data.setTotalPage(Integer.parseInt(totalPage));
 				data.setData(permList);
 				data.setMessage(mes);
 				return data;
@@ -658,6 +756,7 @@ public class DataParser {
 				final String mes = doc.getElementsByTagName("Message").item(0)
 						.getFirstChild().getNodeValue();
 				data.setStatus(statusResponse);
+				data.setTotalPage(Integer.parseInt("0"));
 				data.setData(permList);
 				data.setMessage(mes);
 				return data;
@@ -697,8 +796,8 @@ public class DataParser {
 					String feeChargeOutRadiesDeliverPerKm = getValue(
 							permElement, "fee_charge_out_radius_deliver_per_km");
 					String feeChargeOutRadiesDeliverPerOrder = getValue(
-							permElement, "fee_charge_for_delivery_sub_product_for_every_order");
-
+							permElement,
+							"fee_charge_for_delivery_sub_product_for_every_order");
 					String createdate = getValue(permElement, "createdate");
 					String updatedate = getValue(permElement, "updatedate");
 					String cateId = getValue(permElement, "cate_id");
@@ -706,6 +805,8 @@ public class DataParser {
 					String nameStore = getValue(permElement, "name_store");
 					String introStore = getValue(permElement, "intro_store");
 					String phoneStore = getValue(permElement, "phone_store");
+					String merchant_number = getValue(permElement,
+							"merchant_number");
 					String logo = getValue(permElement, "logo");
 					String style = getValue(permElement, "style");
 					;
@@ -725,6 +826,8 @@ public class DataParser {
 							"table_quantity");
 					String countFavouriteMemebr = getValue(permElement,
 							"count_favourite_member");
+					boolean isFavourite = getValue(permElement,
+							"is_favourite").equals("1") ? true : false;
 					String coutBill = getValue(permElement, "count_bill");
 					String inCome = getValue(permElement, "income");
 					String nameCate = getValue(permElement, "name_cate");
@@ -747,6 +850,7 @@ public class DataParser {
 					item.setNameStore(nameStore);
 					item.setIntroStore(introStore);
 					item.setPhoneStore(phoneStore);
+					item.setMerchantNumber(merchant_number);
 					item.setLogo(logo);
 					item.setStyle(style);
 					item.setStartTime(startTime);
@@ -754,9 +858,11 @@ public class DataParser {
 					item.setHomeDeliver(isHomeDeliver);
 					item.setHotelDeliver(isHotelDeliver);
 					item.setTakeAway(isTakeAway);
+					item.setAtPlace(isPlace);
 
 					item.setTableQuantity(tableQuantity);
 					item.setCountFavaouriteMember(countFavouriteMemebr);
+					item.setIsFavourite(isFavourite);
 					item.setCoutBill(coutBill);
 					item.setIncome(inCome);
 					item.setNameCate(nameCate);
@@ -765,6 +871,21 @@ public class DataParser {
 					item.setPlace(isPlace);
 					item.setCountComment(countComment);
 					item.setMinimum(minimunTimeDeliver);
+					
+					NodeList paymentMethod = permElement.getElementsByTagName("payment_method");
+					int lengPayment = paymentMethod.getLength();
+					for(int ii = 0; ii< lengPayment; ii++){
+						Element element = (Element) paymentMethod.item(ii);
+						String isCash = getValue(element, "is_cash");
+						String isEcoCash = getValue(element, "is_ecocash");
+						String isVisa = getValue(element, "is_visa");
+						String isVPayement = getValue(element, "is_vpayments");
+						item.setCash(isCash.equals("1")?true:false);
+						item.setEcoCash(isEcoCash.equals("1")?true:false);
+						item.setVisa(isVisa.equals("1")? true:false);
+						item.setVPayment(isVPayement.equals("1")?true:false);
+					}
+					
 					NodeList nodes = permElement.getElementsByTagName("user");
 					int lengthUser = nodes.getLength();
 					ArrayList<User> userList = new ArrayList<User>();
@@ -797,8 +918,7 @@ public class DataParser {
 								"gender")));
 						WhyqImage image = new WhyqImage(getValue(element,
 								"avatar"));
-						user.setUrlAvatar(getValue(element,
-								"avatar"));
+						user.setUrlAvatar(getValue(element, "avatar"));
 						user.setAvatar(image);
 						user.setAddress(getValue(element, "address"));
 						userList.add(user);
@@ -839,6 +959,10 @@ public class DataParser {
 										menu.setId(getValue(element, "id"));
 										menu.setStoreId(getValue(element,
 												"store_id"));
+										menu.setGroupId(getValue(menuElement,
+												"id"));
+										menu.setGroupName(getValue(menuElement,
+												"group_name"));
 										menu.setNameProduct(getValue(element,
 												"name_product"));
 										menu.setValue(getValue(element, "value"));
@@ -858,6 +982,9 @@ public class DataParser {
 												"updatedate"));
 										menu.setSort(getValue(element, "sort"));
 
+										menu.setFavorite(getValue(element, "is_like").equals("1")? true: false);
+										menu.setCountFavorite(Integer.parseInt(getValue(element, "count_like")));
+										
 										NodeList productTypeInfoNodes = permElement
 												.getElementsByTagName("product_type_info");
 										int length = productTypeInfoNodes
@@ -880,7 +1007,7 @@ public class DataParser {
 										}
 										menu.setProductTypeInfoList(productTypeInfoList);
 
-										NodeList optionItem = elementList
+										NodeList optionItem = element
 												.getElementsByTagName("option_item");
 										int lengthOption = optionItem
 												.getLength();
@@ -930,7 +1057,7 @@ public class DataParser {
 										}
 										menu.setOptionItemList(optionItemList);
 
-										NodeList extraItem = elementList
+										NodeList extraItem = element
 												.getElementsByTagName("extra_item");
 										int lengthExtra = extraItem.getLength();
 										List<ExtraItem> extraItemList = new ArrayList<ExtraItem>();
@@ -1021,7 +1148,7 @@ public class DataParser {
 													if (!getValue(inElement,
 															"createdate")
 															.equals("")) {
-													
+												
 														sizeItemList.add(item2);
 													}
 
@@ -1036,11 +1163,12 @@ public class DataParser {
 																"name_product")
 														+ "sizeItemList "
 														+ sizeItemList);
-										if(sizeItemList.size() > 0){
-											sizeItemList.get(0).setSelected(true);
+										if (sizeItemList.size() > 0) {
+											sizeItemList.get(0).setSelected(
+													true);
 										}
 										menu.setSizeItemList(sizeItemList);
-										
+
 										NodeList storeInfoNodes = permElement
 												.getElementsByTagName("store_info");
 										int storeInfoLength = productTypeInfoNodes
@@ -1065,6 +1193,10 @@ public class DataParser {
 													.setPhoneStore(getValue(
 															infoElement,
 															"phone_store"));
+											storeInfo
+													.setMerchantNumber(getValue(
+															infoElement,
+															"merchant_number"));
 											storeInfo.setLogo(getValue(
 													infoElement, "logo"));
 											storeInfo.setStyle(getValue(
@@ -1080,7 +1212,7 @@ public class DataParser {
 											storeInfo.setHotelDeliver(getValue(
 													infoElement,
 													"is_hotel_deliver").equals(
-													"2") ? true : false);
+													"1") ? true : false);
 											storeInfo
 													.setTakeAray(getValue(
 															infoElement,
@@ -1091,7 +1223,7 @@ public class DataParser {
 													.setAtPlace(getValue(
 															infoElement,
 															"is_at_place")
-															.equals("2") ? true
+															.equals("1") ? true
 															: false);
 											storeInfo
 													.setStartTimeDeliver(getValue(
@@ -1131,6 +1263,7 @@ public class DataParser {
 
 										}
 										menuList.add(menu);
+
 									}
 
 								}
@@ -1138,6 +1271,7 @@ public class DataParser {
 
 						} catch (Exception e) {
 							// TODO: handle exception
+							e.printStackTrace();
 						}
 					}
 					item.setMenuList(menuList);
@@ -1158,8 +1292,8 @@ public class DataParser {
 										"location_id"));
 								promotion.setTypePromotionId(getValue(element,
 										"type_promotion_id"));
-								 promotion.setTitlePromotion(getValue(element,
-								 "title_promotion"));
+								promotion.setTitlePromotion(getValue(element,
+										"title_promotion"));
 								promotion.setValuePromotion(getValue(element,
 										"value_promotion"));
 								promotion.setTmpData(getValue(element,
@@ -1191,6 +1325,7 @@ public class DataParser {
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
+							e.printStackTrace();
 						}
 					}
 					item.setPromotionList(promotionList);
@@ -1235,6 +1370,7 @@ public class DataParser {
 
 						} catch (Exception e) {
 							// TODO: handle exception
+							e.printStackTrace();
 						}
 					}
 					item.setPhotos(photos);
@@ -1573,12 +1709,13 @@ public class DataParser {
 						user.setUpdateDate(getValue(element, "updatedate"));
 						user.setFirstName(getValue(element, "first_name"));
 						user.setLastName(getValue(element, "last_name"));
-						user.setGender(Integer.parseInt(getValue(element,
-								"gender")));
+						if (!getValue(element, "gender").equals("")) {
+							user.setGender(Integer.parseInt(getValue(element,
+									"gender")));
+						}
 						WhyqImage image = new WhyqImage(getValue(element,
 								"avatar"));
-						user.setUrlAvatar(getValue(element,
-								"avatar"));
+						user.setUrlAvatar(getValue(element, "avatar"));
 						user.setAvatar(image);
 						user.setAddress(getValue(element, "city"));
 						user.setCity(getValue(element, "address"));
@@ -1843,12 +1980,14 @@ public class DataParser {
 				data.setMessage(mes);
 
 				String discount = "0";
+				String deliveryFeeValue = "0";
 				NodeList objNodeList = doc.getElementsByTagName("obj");
 				int sizeObj = objNodeList.getLength();
 				for (int ii = 0; ii < sizeObj; ii++) {
 					Element element1 = (Element) objNodeList.item(ii);
 
 					discount = getValue(element1, "discount_value");
+					deliveryFeeValue = getValue(element1, "deliver_fee_value");
 					ArrayList<Bill> listBill = new ArrayList<Bill>();
 					NodeList nodeList = doc.getElementsByTagName("detail");
 					int size = nodeList.getLength();
@@ -1874,6 +2013,7 @@ public class DataParser {
 											"product_id"));
 									item.setUnit(getValue(element, "quantity"));
 									item.setDiscount(discount);
+									item.setDeliveryFeeValue(deliveryFeeValue);
 									NodeList productes = element
 											.getElementsByTagName("product");
 									for (int j = 0; j < productes.getLength(); j++) {
@@ -2144,4 +2284,83 @@ public class DataParser {
 		}
 		return true;
 	}
+
+	public Object parseOrderEcoCash(String result) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+		try {
+			Document doc = XMLfromString(result);
+			ResponseData data = new ResponseData();
+			String statusResponse = doc.getElementsByTagName("Status").item(0)
+					.getFirstChild().getNodeValue();
+			data.setStatus(statusResponse);
+			return data;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
+	public Object parseLGetDeliveryFeeList(String result) {
+
+		// TODO Auto-generated method stub
+		try {
+			ResponseData data = new ResponseData();
+			Document doc = XMLfromString(result);
+			List<DeliveryFee> list = new ArrayList<DeliveryFee>();
+			String statusResponse = doc.getElementsByTagName("Status").item(0)
+					.getFirstChild().getNodeValue();
+			if (statusResponse.equals("200")) {
+				XMLReader xmlReader = initializeReader();
+				UserHandler userHandler = new UserHandler();
+				// assign the handler
+				xmlReader.setContentHandler(userHandler);
+				xmlReader.parse(new InputSource(new StringReader(result)));
+				final String mes = doc.getElementsByTagName("Message").item(0)
+						.getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				// data.setData(userHandler.getUser());
+				data.setMessage(mes);
+
+				String from = "0", to = "0", fee = "0";
+				NodeList objNodeList = doc.getElementsByTagName("obj");
+				int sizeObj = objNodeList.getLength();
+				for (int ii = 0; ii < sizeObj; ii++) {
+					Element element1 = (Element) objNodeList.item(ii);
+
+					from = getValue(element1, "distance_from");
+					to = getValue(element1, "distance_to");
+					fee = getValue(element1, "fee");
+
+					DeliveryFee item = new DeliveryFee();
+					item.setTo(Integer.parseInt(to));
+					item.setFrom(Integer.parseInt(from));
+					item.setFee(Integer.parseInt(fee));
+
+					list.add(item);
+
+				}
+				data.setData(list);
+				return data;
+			} else {
+				final String mes = doc.getElementsByTagName("Message").item(0)
+						.getFirstChild().getNodeValue();
+				data.setStatus(statusResponse);
+				data.setData(null);
+				data.setMessage(mes);
+				return data;
+
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
 }

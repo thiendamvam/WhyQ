@@ -889,5 +889,15 @@ private String mTimeNow;
 		WhyqMain.showLogin();
 	}
 
+	public ArrayList<Store> getData() {
+		// TODO Auto-generated method stub
+		return items;
+	}
+
+	public void changeSrc(ArrayList<Store> newData) {
+		// TODO Auto-generated method stub
+		items = newData;
+	}
+
 }
 

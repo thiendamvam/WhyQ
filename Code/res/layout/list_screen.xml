@@ -78,7 +78,7 @@
                 android:src="@drawable/icon_arrow" />
         </RelativeLayout>
 
-        <ListView
+        <com.costum.android.widget.LoadMoreListView
             android:id="@+id/lvWhyqList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -87,8 +87,8 @@
             android:background="@color/bgListView"
             android:divider="@drawable/divider_store"
             android:dividerHeight="3dp"
-            android:listSelector="@drawable/play_expand_seletor" >
-        </ListView>
+            android:listSelector="@drawable/play_expand_seletor" 
+        />
 
         <LinearLayout
             android:id="@+id/lnFilterView"

@@ -7,6 +7,8 @@ import java.util.List;
 public class Menu implements Serializable{
 	String id;
 	String storeId;
+	private String groupName;
+	private String groupId;
 	private String nameProduct;
 	private ArrayList<ProductTypeInfo> productTypeInfoList;
 	private List<SizeItem> sizeItemList;
@@ -20,6 +22,9 @@ public class Menu implements Serializable{
 	String sort;
 	private int unitForBill =0;
 	private String note;
+	private int countFavorite;
+	private boolean isFavorite;
+	
 	public String getSort() {
 		return sort;
 	}
@@ -170,11 +175,35 @@ public class Menu implements Serializable{
 	public void setUnitForBill(int unitForBill) {
 		this.unitForBill = unitForBill;
 	}
+	public String getGroupName() {
+		return groupName;
+	}
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+	public String getGroupId() {
+		return groupId;
+	}
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
 	public String getNote() {
 		return note;
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	public boolean isFavorite() {
+		return isFavorite;
+	}
+	public void setFavorite(boolean isFavorite) {
+		this.isFavorite = isFavorite;
+	}
+	public int getCountFavorite() {
+		return countFavorite;
+	}
+	public void setCountFavorite(int countFavorite) {
+		this.countFavorite = countFavorite;
 	}
 	String typeProductId;
 	String createDate;

@@ -65,6 +65,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.costum.android.widget.LoadMoreListView;
 import com.whyq.R;
 
 public class ListActivity extends FragmentActivity implements OnClickListener,
@@ -92,7 +93,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 	int nextItem = -1;
 
 	public static String storeId;
-	ListView whyqListView;
+	LoadMoreListView whyqListView;
 	ProgressBar progressBar;
 	WhyqAdapter permListAdapter;
 	View headerView = null;
@@ -249,7 +250,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 
 		lnPageContent = (LinearLayout) findViewById(R.id.page_content);
 		lnNavigation = (LinearLayout) findViewById(R.id.lnNavigation);
-		whyqListView = (ListView) findViewById(R.id.lvWhyqList);
+		whyqListView = (LoadMoreListView) findViewById(R.id.lvWhyqList);
 		lnCutlery = (LinearLayout) findViewById(R.id.lnCutleryTab);
 		lnWine = (LinearLayout) findViewById(R.id.lnWineTab);
 		lnCoffe = (LinearLayout) findViewById(R.id.lnCoffeTab);
@@ -287,6 +288,28 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 
 		context = ListActivity.this;
 		whyqListView.setOnItemClickListener(onStoreItemListener);
+		
+		whyqListView.setOnLoadMoreListener(new LoadMoreListView.OnLoadMoreListener() {
+			
+			@Override
+			public void onLoadMore() {
+				// TODO Auto-generated method stub
+				Log.d("onLoadMore","page = "+page+" and mTotalPage "+mTotalPage);
+				if((page < mTotalPage) || mTotalPage < 0){
+					isLoadMore = true;
+					page++;
+					loadPermList = new LoadPermList(isSearch);
+					loadPermList.execute();
+					showProgress();
+				}else{
+//					if(whyqListView !=null)
+					{
+						whyqListView.onLoadMoreComplete();
+					}
+				}
+			}
+		});
+		
 		etTextSearch
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
@@ -370,7 +393,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 //			exeListActivity(false);
 
 		}
-
+		hideFilterView();
 	}
 
 	protected void onPause() {
@@ -509,9 +532,9 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 			permListAdapter.clear();
 			UrlImageViewHelper.clearAllImageView();
 		}
-		if (whyqListView != null && headerView != null) {
-			whyqListView.removeHeaderView(headerView);
-		}
+//		if (whyqListView != null && headerView != null) {
+//			whyqListView.removeHeaderView(headerView);
+//		}
 	}
 
 	public void removeAllData() {
@@ -831,7 +854,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 	private int mPosition;
 	private int mOffset;
 	private boolean isLoadMore = false;
-
+	private int mTotalPage;
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
 		if (hasFocus) {
@@ -1001,6 +1024,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 		if (result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionGetBusinessList) {
 			ResponseData data = (ResponseData) result.getData();
+			mTotalPage = data.getTotalPage();
 			if (data.getStatus().equals("200")) {
 				if (isExpandableSearch) {
 					if (isLoadMore) {
@@ -1037,12 +1061,20 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 					exeBindSearchExpandableStoreData(permListMain);
 					isExpandableSearch = false;
 				}
-				if (isLoadMore)
-					page--;
+//				if (isLoadMore)
+//					page--;
+				if (isLoadMore && whyqListView != null){
+					isLoadMore = false;
+					whyqListView.onLoadMoreComplete();
+				}
 			} else {
 				// Util.showDialog(getParent(), data.getMessage());
 			}
 			hideProgress();
+			if (isLoadMore && whyqListView != null){
+				isLoadMore = false;
+				whyqListView.onLoadMoreComplete();
+			}
 		} else if (result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionPostFavorite) {
 			// Toast.makeText(context, "Favourite successfully",
@@ -1083,8 +1115,10 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 					.show();
 			hideProgress();
 		}
-		if (isLoadMore)
+		if (isLoadMore && whyqListView != null){
 			isLoadMore = false;
+			whyqListView.onLoadMoreComplete();
+		}
 	}
 
 	private void updateFavoriteWitId(String id, boolean b) {
@@ -1126,41 +1160,41 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 		int currentItem = firstVisibleItem + visibleItemCount;
 		Log.d("onScroll", "onScroll current " + currentItem + " and total "
 				+ totalItemCount);
-		if ((currentItem >= totalItemCount - 1) && !isLoadMore) {
-			isLoadMore = true;
-			page++;
-			loadPermList = new LoadPermList(isSearch);
-			loadPermList.execute();
-			showProgress();
-		}
+//		if ((currentItem >= totalItemCount - 1) && !isLoadMore) {
+//			isLoadMore = true;
+//			page++;
+//			loadPermList = new LoadPermList(isSearch);
+//			loadPermList.execute();
+//			showProgress();
+//		}
 
 	}
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-		if (scrollState == 0) {
-			int position = whyqListView.getFirstVisiblePosition();
-			View v = whyqListView.getChildAt(0);
-			int offset = (v == null) ? 0 : v.getTop();
-
-			if (mPosition < position) {// || (mPosition == position && mOffset <
-										// offset)
-				// Scrolled up
-				Log.d("onScrollStateChanged", "up");
-				hideNavigationBar();
-				hideTabbarInTabhost();
-			} else if (mPosition > position) {
-				// Scrolled down
-
-				showNavigationBar();
-				showTabbarInTabhost();
-				Log.d("onScrollStateChanged", "down");
-
-			}
-			mPosition = position;
-			// mOffset = offset;
-		}
+//		if (scrollState == 0) {
+//			int position = whyqListView.getFirstVisiblePosition();
+//			View v = whyqListView.getChildAt(0);
+//			int offset = (v == null) ? 0 : v.getTop();
+//
+//			if (mPosition < position) {// || (mPosition == position && mOffset <
+//										// offset)
+//				// Scrolled up
+//				Log.d("onScrollStateChanged", "up");
+////				hideNavigationBar();
+////				hideTabbarInTabhost();
+//			} else if (mPosition > position) {
+//				// Scrolled down
+//
+////				showNavigationBar();
+////				showTabbarInTabhost();
+//				Log.d("onScrollStateChanged", "down");
+//
+//			}
+//			mPosition = position;
+//			// mOffset = offset;
+//		}
 	}
 
 	private void hideNavigationBar() {

@@ -32,6 +32,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,11 +46,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.costum.android.widget.LoadMoreListView;
 import com.devsmart.android.ui.HorizontalListView;
 import com.whyq.R;
 
 public class WhyqUserProfileActivity extends ImageWorkerActivity implements
-		OnPositionChangedListener {
+		OnPositionChangedListener, com.costum.android.widget.LoadMoreListView.OnPositionChangedListener {
 
 	private static final String TIME_SERVER = "yyyy-MM-dd HH:mm:ss";
 	private static final String TIME_FORMAT = "HH:mm a";
@@ -77,6 +79,10 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	private boolean isFriendProfile;
 	private boolean isFriended;
 
+	private LoadMoreListView mLvActivity;
+	protected int mPage = 0;
+	protected int mTotalPage;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -88,10 +94,39 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		clockHeight = (int) (getResources().getDisplayMetrics().density * 32);
         tvHeader = (TextView)findViewById(R.id.tvHeaderTitle);
         tvHeader.setText("Profile");
-		ExtendedListView lv = (ExtendedListView) findViewById(R.id.listview);
-		lv.setOnPositionChangedListener(this);
+        mLvActivity = (LoadMoreListView) findViewById(R.id.listview);
+		mLvActivity.setOnPositionChangedListener(this);
 		mActivitiesAdapter = new ActivitiesAdapter(this);
-		lv.setAdapter(mActivitiesAdapter);
+		mLvActivity.setAdapter(mActivitiesAdapter);
+		mLvActivity.setOnLoadMoreListener(new LoadMoreListView.OnLoadMoreListener() {
+			
+			@Override
+			public void onLoadMore() {
+				// TODO Auto-generated method stub
+				try {
+					Log.d("loadmore listener", mPage+ "and total is "+ mTotalPage);
+					if( mPage < mTotalPage){
+						mPage++;
+						getActivityList(mPage);
+						
+					}else{
+						mLvActivity.onLoadMoreComplete();
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+					try {
+						mLvActivity.onLoadMoreComplete();
+					} catch (Exception e2) {
+						// TODO: handle exception
+						e2.printStackTrace();
+					}
+				}
+			}
+
+
+		});
+		
 
 		mPhotoAdapter = new PhotoAdapter(this, mImageWorker);
 		int PHOTO_SIZE = WhyqApplication.sScreenWidth / 5;
@@ -154,6 +189,13 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	}
 	
 	
+	protected void getActivityList(int page) {
+		// TODO Auto-generated method stub
+		getService().getUserActivities(
+				WhyqApplication.Instance().getRSAToken(), mUserId, page);
+	}
+
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -162,7 +204,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		hideExtraButton();
 
 		setLoading(true);
-		getService().getUserActivities(WhyqApplication.Instance().getRSAToken(), mUserId);
+		getService().getUserActivities(WhyqApplication.Instance().getRSAToken(), mUserId, mPage);
 		getService().getPhotos(WhyqApplication.Instance().getRSAToken(), mUserId);
 		getService().getProfiles(WhyqApplication.Instance().getRSAToken(), mUserId);
 
@@ -298,13 +340,30 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		DataParser parser = new DataParser();
 		
 		if (result.getAction() == ServiceAction.ActionGetUserActivities) {
-			ResponseData data = (ResponseData) parser.parseActivities(String.valueOf(result.getData()));
+			try {
+
+				ResponseData data = (ResponseData) parser.parseActivities(String
+						.valueOf(result.getData()));
+
+				mTotalPage = data.getTotalPage();
+				mLvActivity.onLoadMoreComplete();
+				if (data.getStatus().equals("401")) {
+					Util.loginAgain(this, data.getMessage());
+					return;
+				} else if(data.getStatus().equals("200")) {
+					
+					List<ActivityItem> newData = mActivitiesAdapter.getData();
+					if(mPage == 1){
+						newData.clear();
+					}
+					newData.addAll((List<ActivityItem>)data.getData());
+					mActivitiesAdapter.setItems(newData);
+					mActivitiesAdapter.notifyDataSetChanged();
+				}
 			
-			if (data.getStatus().equals("401")) {
-				Util.loginAgain(this, data.getMessage());
-				return;
-			} else {
-				mActivitiesAdapter.setItems((List<ActivityItem>) data.getData());
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
 			}
 		} else if (result.getAction() == ServiceAction.ActionGetPhotos) {
 			ResponseData data = (ResponseData) parser.parsePhotos(String.valueOf(result.getData()));
@@ -433,6 +492,11 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 		public ActivitiesAdapter(Context context) {
 			this.mContext = context;
 			this.mItems = new ArrayList<ActivityItem>();
+		}
+
+		public List<ActivityItem> getData() {
+			// TODO Auto-generated method stub
+			return mItems;
 		}
 
 		public void setItems(List<ActivityItem> items) {
@@ -584,5 +648,36 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	}
 	public void onBackClicked(View v){
 		finish();
+	}
+
+
+	@Override
+	public void onPositionChanged(LoadMoreListView listView, int position, View scrollBarPanel) {
+		// TODO Auto-generated method stub
+
+
+		Log.d("onPositionChanged","onPositionChanged position: "+position);
+		final TextView tvTime = (TextView) scrollBarPanel
+				.findViewById(R.id.textTime);
+		tvTime.getLayoutParams().height = clockHeight / 2;
+		Util.adjustTextSizeByTextHeight(tvTime, clockHeight / 3);
+		final TextView tvDate = (TextView) scrollBarPanel
+				.findViewById(R.id.textDate);
+		tvDate.getLayoutParams().height = clockHeight / 2;
+		Util.adjustTextSizeByTextHeight(tvDate, clockHeight / 3);
+
+		final whyq.view.AnalogClock analogClock = (whyq.view.AnalogClock) scrollBarPanel
+				.findViewById(R.id.clock);
+
+		ActivityItem item = (ActivityItem) mActivitiesAdapter.getItem(position);
+		if (item != null) {
+			Date date = getDate(item.getUpdatedate());
+			if (date != null) {
+				analogClock.setTime(date.getHours(), date.getMinutes(), 00);
+			}
+			tvTime.setText(converServerTimeToTime(item.getUpdatedate()));
+			tvDate.setText(converServerTimeToDate(item.getUpdatedate()));
+		}
+	
 	}
 }

@@ -23,14 +23,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import com.costum.android.widget.LoadMoreListView;
 import com.whyq.R;
 
 public class CommentActivity extends ImageWorkerActivity {
@@ -38,7 +37,9 @@ public class CommentActivity extends ImageWorkerActivity {
 	private CommentAdapter mAdapter;
 	private RadioGroup mFilterLayout;
 	private String mStoreId;
-	private int page = 1;
+	protected int mPage = 0;
+	protected int mTotalPage;
+	private LoadMoreListView mListview;
 	private boolean isLoadMore = false;
 	private boolean mIsShowFilter;
 	private String mUserId;
@@ -52,8 +53,8 @@ public class CommentActivity extends ImageWorkerActivity {
 
 		mAdapter = new CommentAdapter(this, mImageWorker);
 
-		ListView listview = (ListView) findViewById(R.id.listview);
-		listview.setAdapter(mAdapter);
+	    mListview = (LoadMoreListView) findViewById(R.id.listview);
+		mListview.setAdapter(mAdapter);
 
 		Intent i = getIntent();
 		mIsShowFilter = i.getBooleanExtra("is_show_filter", false);
@@ -89,30 +90,46 @@ public class CommentActivity extends ImageWorkerActivity {
 			filter.setVisibility(View.INVISIBLE);
 			findViewById(R.id.btnCommentHere).setVisibility(View.GONE);
 		}
-//		getComments(false);
-		listview.setOnScrollListener(new AbsListView.OnScrollListener() {
+		mListview.setOnLoadMoreListener(new LoadMoreListView.OnLoadMoreListener() {
 			
-		
-
 			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			public void onLoadMore() {
 				// TODO Auto-generated method stub
+				Log.d("loadmore listener", mPage+ "and total is "+ mTotalPage);
+				if( mPage < mTotalPage){
+					mPage++;
+					getComments(true);
+					
+				}else{
+					mListview.onLoadMoreComplete();
+				}
 				
 			}
-			
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				// TODO Auto-generated method stub
-				int currentItem = firstVisibleItem + visibleItemCount;
-				Log.d("onScroll","onScroll current "+currentItem+" and total "+totalItemCount);
-				if((currentItem >=  totalItemCount-1) && !isLoadMore){
-					isLoadMore = true;
-					page++;
-					getComments(false);
-				}
-			}
 		});
+//		getComments(false);
+//		listview.setOnScrollListener(new AbsListView.OnScrollListener() {
+//			
+//		
+//
+//			@Override
+//			public void onScrollStateChanged(AbsListView view, int scrollState) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//			@Override
+//			public void onScroll(AbsListView view, int firstVisibleItem,
+//					int visibleItemCount, int totalItemCount) {
+//				// TODO Auto-generated method stub
+//				int currentItem = firstVisibleItem + visibleItemCount;
+//				Log.d("onScroll","onScroll current "+currentItem+" and total "+totalItemCount);
+//				if((currentItem >=  totalItemCount-1) && !isLoadMore){
+//					isLoadMore = true;
+//					page++;
+//					getComments(false);
+//				}
+//			}
+//		});
 	}
 
 	@Override
@@ -120,15 +137,16 @@ public class CommentActivity extends ImageWorkerActivity {
 		// TODO Auto-generated method stub
 		Log.d("onResume","storeId "+mStoreId);
 		super.onResume();
-		page = 1;
+//		page = 1;
+		mPage = 1;
 		getComments(false);
 	}
 	
 	private void getComments(boolean onlyFriend) {
 		setLoading(true);
-		if(!isLoadMore)
-			page = 1;
-		getService().getComments(getEncryptedToken(), mIsShowFilter?mStoreId:mUserId, page , 20,
+//		if(!isLoadMore)
+//			page = 1;
+		getService().getComments(WhyqApplication.getRSAToken(), mIsShowFilter?mStoreId:mUserId, mPage , 20,
 				onlyFriend, mIsShowFilter);
 	}
 
@@ -151,11 +169,13 @@ public class CommentActivity extends ImageWorkerActivity {
 	public void onCompleted(Service service, ServiceResponse result) {
 		super.onCompleted(service, result);
 		setLoading(false);
+		mListview.onLoadMoreComplete();
 		if (result != null && result.getCode() == ResultCode.Success
 				&& result.getAction() == ServiceAction.ActionGetComment) {
 			DataParser paser = new DataParser();
 			ResponseData data = (ResponseData) paser.parseComments(String
 					.valueOf(result.getData()));
+			mTotalPage = data.getTotalPage();
 			if (data == null) {
 				return;
 			}
@@ -164,14 +184,22 @@ public class CommentActivity extends ImageWorkerActivity {
 				Util.loginAgain(this, data.getStatus());
 			} if (data.getStatus().equals("204")) {
 				isLoadMore = false;
-				page = 1;
+//				page = 1;
 			} else {
-				if(isLoadMore){
+				if(mAdapter != null){//isLoadMore
 					List<Comment> newData = mAdapter.getItems();
-					newData.addAll((List<Comment>) data.getData());
-					mAdapter.setItems(newData);
+					
+					if(data !=null && data.getData() !=null){
+						if(mPage == 1){
+							newData.clear();
+						}
+						newData.addAll((List<Comment>) data.getData());
+						mAdapter.setItems(newData);
+						mAdapter.notifyDataSetChanged();
+					}
 				}else{
-					mAdapter.setItems((List<Comment>) data.getData());	
+					mAdapter.setItems((List<Comment>) data.getData());
+					mAdapter.notifyDataSetChanged();
 				}
 				
 			}
@@ -255,6 +283,7 @@ public class CommentActivity extends ImageWorkerActivity {
 				if (photo != null && photo.getThumb() != null) {
 //					mImageWorker.downloadImage(item.getPhotos().getThumb(),
 //							holder.thumb);
+					holder.thumb.setVisibility(View.VISIBLE);
 					mImageLoader.DisplayImage(item.getPhotos().getThumb(), holder.thumb);
 				}else{
 					holder.thumb.setVisibility(View.GONE);
