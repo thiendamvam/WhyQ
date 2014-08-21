@@ -587,9 +587,9 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 
 						if (filterType.equals("1")) {
 
-						} else if (filterType.equals("2")) {
-							postParams.put("friend_visit", filterType);
 						} else if (filterType.equals("3")) {
+							postParams.put("friend_visit", filterType);
+						} else if (filterType.equals("2")) {
 							postParams.put("friend_favourite", filterType);
 						}
 
@@ -625,9 +625,9 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 						postParams.put("page", "" + page);
 						if (filterType.equals("1")) {
 
-						} else if (filterType.equals("2")) {
-							postParams.put("friend_visit", filterType);
 						} else if (filterType.equals("3")) {
+							postParams.put("friend_visit", filterType);
+						} else if (filterType.equals("2")) {
 							postParams.put("friend_favourite", filterType);
 						}
 
@@ -940,6 +940,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 		}
 
 		hideFilterView();
+		exeListActivity(false);
 	}
 
 	private void initCheckAll() {
