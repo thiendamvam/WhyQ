@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">whyq</string>
+    <string name="app_name">WHYQ</string>
     <string name="app_name_title">WHY Q</string>
     <string name="app_name_inkakao"> 펌핑 이미지 SNS </string>
     <string name="bt_join">회원 등록</string>
@@ -183,8 +183,7 @@
 
     <!-- Latitude, longitude format -->
     <string name="latitude_longitude">%1$.8f, %2$.8f</string>
-        <!-- Menu title -->
-    <string name="action_settings">Settings</string>
+
 
     <!-- Labels -->
     <string name="latlng">Lat/Long:</string>

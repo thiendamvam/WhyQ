@@ -678,7 +678,7 @@ public class MapsActivity extends FragmentActivity implements
 										.removeOnGlobalLayoutListener(this);
 							}
 							mMap.moveCamera(CameraUpdateFactory
-									.newLatLngBounds(bounds, 50));
+									.newLatLngBounds(bounds, 500, 500, 30));
 							mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
 									HOTEL_LOCAL, 15));
 

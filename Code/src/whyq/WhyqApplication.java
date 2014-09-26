@@ -93,8 +93,8 @@ public class WhyqApplication extends Application {
 		
 		try {
 			RSA rsa = new RSA();
-//			String token = rsa.RSAEncrypt(XMLParser.getToken(Instance().getApplicationContext()));
-			String token = XMLParser.getToken(Instance().getApplicationContext());
+			String token = rsa.RSAEncrypt(XMLParser.getToken(Instance().getApplicationContext()));
+//			String token = XMLParser.getToken(Instance().getApplicationContext());
 			return token;
 		} catch (Exception e) {
 			// TODO: handle exception

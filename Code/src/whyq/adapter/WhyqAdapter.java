@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -218,6 +219,18 @@ private String mTimeNow;
 //					viewList.put(store.getStoreId(), rowView);
 					
 				}
+				
+				final boolean isOpen = checkOpenTime(item);
+				rowView.findViewById(R.id.v_grey_no_open).setVisibility(isOpen ? View.INVISIBLE: View.VISIBLE);
+				((Button)rowView.findViewById(R.id.v_grey_no_open)).setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						Util.showDialog(context, "This store is open from "+store.getStartTime()+" to "+store.getEndTime());	
+					}
+				});
+				
 				viewHolder.tvItemName.setText(item.getNameStore().toUpperCase());
 				viewHolder.tvItemAddress.setText(item.getAddress());
 				viewHolder.tvNumberFavourite.setText(""+item.getCountFavaouriteMember());
@@ -309,10 +322,10 @@ private String mTimeNow;
 				rowView.setEnabled(true);
 				
 //				if(Util.compareMinDates(item.getStartTime(), mTimeNow) && Util.compareMinDates(mTimeNow, item.getEndTime()))
-				{
-					rowView.setBackgroundColor(Color.BLUE);
-					rowView.setAlpha(130);
-				}
+//				{
+//					rowView.setBackgroundColor(Color.BLUE);
+//					rowView.setAlpha(130);
+//				}
 				return rowView;
 			}
 			else{
@@ -327,6 +340,36 @@ private String mTimeNow;
 		}
 	}
 	
+	private boolean checkOpenTime(Store store) {
+		// TODO Auto-generated method stub
+		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+		int isAM = cal.get(Calendar.AM) == 0? 0:12;
+		int hour = cal.get(Calendar.HOUR)+isAM;
+		int minutes = cal.get(Calendar.MINUTE);
+		long current =  hour*60 + minutes;
+		
+		String start = store.getStartTime();
+		String end = store.getEndTime();
+		
+		long startTime = getLongFromTime(start);
+		long endTime = getLongFromTime(end);
+		
+		if((current >= startTime) && (current <= endTime)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	private long getLongFromTime(String start) {
+		// TODO Auto-generated method stub
+		
+		String hour = start.substring(0, start.indexOf(":"));
+		String minute = start.substring(start.indexOf(":")+1, start.length());
+		
+		return Integer.parseInt(hour)*60 + Integer.parseInt(minute);
+	}
+
 	public void addComments(View view, Store store) {
 		LinearLayout comments = (LinearLayout) view
 				.findViewById(R.id.comments);

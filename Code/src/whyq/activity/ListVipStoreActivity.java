@@ -9,6 +9,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
+import whyq.activity.ListActivity.LoadPermList;
 import whyq.adapter.ExpandableStoreAdapter;
 import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
@@ -51,13 +52,12 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.costum.android.widget.LoadMoreListView;
 import com.whyq.R;
 
 public class ListVipStoreActivity extends FragmentActivity implements OnClickListener,
@@ -84,7 +84,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 	int nextItem = -1;
 
 	public static String storeId;
-	ListView whyqListView;
+	LoadMoreListView whyqListView;
 	ProgressBar progressBar;
 	WhyqAdapter permListAdapter;
 	View headerView = null;
@@ -215,7 +215,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 
 		lnPageContent = (LinearLayout) findViewById(R.id.page_content);
 		lnNavigation = (LinearLayout) findViewById(R.id.lnNavigation);
-		whyqListView = (ListView) findViewById(R.id.lvWhyqList);
+		whyqListView = (LoadMoreListView) findViewById(R.id.lvWhyqList);
 		loadPermList = new LoadPermList();
 
 		progressBar = (ProgressBar) findViewById(R.id.prgBar);
@@ -226,6 +226,24 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 
 		context = ListVipStoreActivity.this;
 		whyqListView.setOnItemClickListener(onStoreItemListener);
+		whyqListView.setOnLoadMoreListener(new LoadMoreListView.OnLoadMoreListener() {
+			
+			@Override
+			public void onLoadMore() {
+				// TODO Auto-generated method stub
+				Log.d("onLoadMore","page = "+page+" and mTotalPage "+mTotalPage);
+				if((page < mTotalPage) || mTotalPage < 0){
+					page++;
+					loadPermList = new LoadPermList();
+					loadPermList.execute();
+				}else{
+//					if(whyqListView !=null)
+					{
+						whyqListView.onLoadMoreComplete();
+					}
+				}
+			}
+		});
 
 	}
 
@@ -534,6 +552,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 	private int mPosition;
 	private int mOffset;
 	private boolean isLoadMore = false;
+	private int mTotalPage;
 
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
@@ -590,6 +609,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 		// TODO Auto-generated method stub
 		if (result.isSuccess() && result.getAction() == ServiceAction.ActionGetBusinessList) {
 			ResponseData data = (ResponseData) result.getData();
+			mTotalPage = data.getTotalPage();
 			if (data.getStatus().equals("200")) {
 
 				if (isLoadMore) {
