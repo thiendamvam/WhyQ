@@ -98,7 +98,7 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/favourite/business", params, true, false);
 	}
-	
+
 	public void getDeliveryFeeList() {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionGetDeliveryFeeList;
@@ -109,7 +109,6 @@ public class Service implements Runnable {
 		request("/m/innscor/delivery", params, true, false);
 	}
 
-	
 	public void removeFavorite(String storeId) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionRemoveFavorite;
@@ -126,9 +125,9 @@ public class Service implements Runnable {
 		_action = ServiceAction.ActionGetComment;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("token", encryptedToken);
-		if(isStore){
-			params.put("store_id", id);			
-		}else{
+		if (isStore) {
+			params.put("store_id", id);
+		} else {
 			params.put("user_id", id);
 		}
 		params.put("page", String.valueOf(page));
@@ -850,7 +849,7 @@ public class Service implements Runnable {
 		request("/m/business/show", params, true, false);
 
 	}
-	
+
 	public void getFavouriteFoods(int page) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionGetFavouriteFoods;
@@ -863,7 +862,7 @@ public class Service implements Runnable {
 		params.put("time_zone", TimeZone.getDefault());
 		request("/m/member/product/like", params, true, false);
 	}
-	
+
 	public void postLikeFavouriteFoods(String id) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionPostFavouriteFoods;
@@ -953,7 +952,7 @@ public class Service implements Runnable {
 		params.put("time_zone", TimeZone.getDefault());
 		request("/m/login/guest", params, true, false);
 	}
-	
+
 	public void register(HashMap<String, Object> params) {
 		// TODO Auto-generated method stub
 		_action = ServiceAction.ActionSigup;
@@ -1011,7 +1010,7 @@ public class Service implements Runnable {
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		params.put("appname", Constants.APP_NAME);
-		params.put("env", Constants.DEVELOPMENT);//pro
+		params.put("env", Constants.DEVELOPMENT);// pro
 		params.put("appversion", appVersion);
 		params.put("devicename", deviceName);
 		params.put("devicemodel", deviceModel);
@@ -1109,8 +1108,7 @@ public class Service implements Runnable {
 		params.put("time_zone", TimeZone.getDefault());
 		request("/m/member/order/update", params, true, false);
 	}
-	
-	
+
 	public void getPaypalURI(String token, String billId) {
 		// TODO Auto-generat ed method stub
 		_action = ServiceAction.ActionGetPaypalURI;
@@ -1179,20 +1177,20 @@ public class Service implements Runnable {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-//		params.put("image", image);
+		// params.put("image", image);
 		params.put("app", Constants.APP);
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/order/check", params, true, false);
 	}
 
 	public void postFBComments(String accessToken, ShareData data) {
-		Log.d("postFBComments","accessToken "+accessToken);
+		Log.d("postFBComments", "accessToken " + accessToken);
 		_action = ServiceAction.ActionPostFBComment;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("access_token", accessToken);
 		params.put("fb:explicitly_shared", true);
 		params.put("format", "json");
-		if(data.getPicture()!=null && !"".equals(""+data.getPicture())){
+		if (data.getPicture() != null && !"".equals("" + data.getPicture())) {
 			params.put("image[0][url]", data.getPicture());
 			params.put("image[0][user_generated]", true);
 		}
@@ -1203,7 +1201,7 @@ public class Service implements Runnable {
 		params.put("sdk_version", 1);
 		params.put("venue", data.getLink());
 
-		request("/whyq:comment", params, true, false);
+		request("/whyqapp:comment", params, true, false);
 	}
 
 	public void postFBCheckBill(String accessToken, ShareData data) {
@@ -1213,7 +1211,8 @@ public class Service implements Runnable {
 		params.put("fb:explicitly_shared", true);
 		params.put("format", "json");
 		params.put("image[0][url]", data.getPicture());
-		params.put("message", data.getMessage()+ " " + convertArrayToFBArray(data.getTags()));
+		params.put("message", data.getMessage() + " "
+				+ convertArrayToFBArray(data.getTags()));
 		params.put("place", data.getLink());
 		params.put("scrape", true);
 		params.put("sdk", "android");
@@ -1243,7 +1242,7 @@ public class Service implements Runnable {
 			return null;
 		}
 	}
-	
+
 	private String convertArrayToFBArray(ArrayList<String> data) {
 		// TODO Auto-generated method stub
 		if (data != null) {
@@ -1252,7 +1251,7 @@ public class Service implements Runnable {
 			for (int i = 0; i < list.size(); i++) {
 				String item = "";
 				item = list.get(i);
-				item="@["+item+"]";
+				item = "@[" + item + "]";
 				if (i == 0)
 					result += "" + item;
 				else
