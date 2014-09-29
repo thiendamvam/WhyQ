@@ -462,6 +462,10 @@ public class MapsActivity extends FragmentActivity implements
 		btnDirection.setText("Direction");
 		if(store!=null)
 			bindStoreInfo(store);
+		
+		//hide distance
+		findViewById(R.id.btnDistance).setVisibility(View.INVISIBLE);
+		findViewById(R.id.v_grey_no_open).setVisibility(View.INVISIBLE);
 	}
 
 	private void bindStoreInfo(final Store store) {
