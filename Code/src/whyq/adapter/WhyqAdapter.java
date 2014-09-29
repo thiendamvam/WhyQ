@@ -341,24 +341,32 @@ private String mTimeNow;
 	}
 	
 	private boolean checkOpenTime(Store store) {
-		// TODO Auto-generated method stub
-		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
-		int isAM = cal.get(Calendar.AM) == 0? 0:12;
-		int hour = cal.get(Calendar.HOUR)+isAM;
-		int minutes = cal.get(Calendar.MINUTE);
-		long current =  hour*60 + minutes;
+		try {
+
+			// TODO Auto-generated method stub
+			Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+			int isAM = cal.get(Calendar.AM) == 0? 0:12;
+			int hour = cal.get(Calendar.HOUR)+isAM;
+			int minutes = cal.get(Calendar.MINUTE);
+			long current =  hour*60 + minutes;
+			
+			String start = store.getStartTime();
+			String end = store.getEndTime();
+			
+			long startTime = getLongFromTime(start);
+			long endTime = getLongFromTime(end);
+			
+			if((current >= startTime) && (current <= endTime)){
+				return true;
+			}else{
+				return false;
+			}
 		
-		String start = store.getStartTime();
-		String end = store.getEndTime();
-		
-		long startTime = getLongFromTime(start);
-		long endTime = getLongFromTime(end);
-		
-		if((current >= startTime) && (current <= endTime)){
-			return true;
-		}else{
-			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
+		return true;
 	}
 
 	private long getLongFromTime(String start) {
