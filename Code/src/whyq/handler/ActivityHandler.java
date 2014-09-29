@@ -20,17 +20,20 @@ public class ActivityHandler extends BaseHandler {
 	private static final String TAG_OPTIONAL_ID = "optional_id";
 	private static final String TAG_ACTIVITY_TYPE = "activity_type";
 	private static final String TAG_MESSAGE = "message";
+	private static final String TAG_MESSAGE_CONTENT = "content";
 	private static final String TAG_IS_READ = "is_read";
 	private static final String TAG_CREATEDATE = "createdate";
 	private static final String TAG_UPDATEDATE = "updatedate";
 	private static final String TAG_BUSINESS_INFO = "business_info";
 	private static final String TAG_USER_NAME = "user_name";
 	private static final String TAG_NAME_STORE = "name_store";
+	private static final String TAG_USER = "user";
 	private static final String ITEM = "obj";
 
 	private List<ActivityItem> activities;
 	private ActivityItem currentActivityItem;
 	private BusinessInfo currentBusinessInfo;
+	private boolean mIsUser;
 
 	public List<ActivityItem> getActivities() {
 		return activities;
@@ -54,7 +57,7 @@ public class ActivityHandler extends BaseHandler {
 				currentActivityItem.setActivity_type(getString());
 			} else if (localName.equalsIgnoreCase(TAG_BUSINESS_INFO)) {
 				currentActivityItem.setBusiness_info(currentBusinessInfo);
-			} else if (localName.equalsIgnoreCase(TAG_CREATEDATE)) {
+			} else if (localName.equalsIgnoreCase(TAG_CREATEDATE)  && !mIsUser) {
 				currentActivityItem.setCreatedate(getString());
 			} else if (localName.equalsIgnoreCase(TAG_ID)) {
 				currentActivityItem.setId(getString());
@@ -62,9 +65,11 @@ public class ActivityHandler extends BaseHandler {
 				currentActivityItem.setIs_read(getInt());
 			} else if (localName.equalsIgnoreCase(TAG_MESSAGE)) {
 				currentActivityItem.setMessage(getString());
+			}else if (localName.equalsIgnoreCase(TAG_MESSAGE_CONTENT)) {
+				currentActivityItem.setMessageContent(getString());
 			} else if (localName.equalsIgnoreCase(TAG_OPTIONAL_ID)) {
 				currentActivityItem.setOptional_id(getString());
-			} else if (localName.equalsIgnoreCase(TAG_UPDATEDATE)) {
+			} else if (localName.equalsIgnoreCase(TAG_UPDATEDATE) && !mIsUser) {
 				currentActivityItem.setUpdatedate(getString());
 			} else if (localName.equalsIgnoreCase(TAG_USER_ID)) {
 				currentActivityItem.setUser_id(getString());
@@ -72,6 +77,8 @@ public class ActivityHandler extends BaseHandler {
 				currentActivityItem.setUser_name(getString());
 			} else if (localName.equalsIgnoreCase(ITEM)) {
 				activities.add(currentActivityItem);
+			} else if (localName.equalsIgnoreCase(TAG_USER)) {
+				mIsUser = false;
 			}
 		}
 		builder.setLength(0);
@@ -89,6 +96,8 @@ public class ActivityHandler extends BaseHandler {
 		super.startElement(uri, localName, name, attributes);
 		if (localName.equalsIgnoreCase(ITEM)) {
 			this.currentActivityItem = new ActivityItem();
+		}else if (localName.equalsIgnoreCase(TAG_USER)) {
+			mIsUser = true;
 		} else if (localName.equalsIgnoreCase(TAG_BUSINESS_INFO)) {
 			this.currentBusinessInfo = new BusinessInfo();
 		}
