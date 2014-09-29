@@ -1,5 +1,6 @@
 package whyq.activity;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import whyq.interfaces.Login_delegate;
 import whyq.map.MapsActivity;
 import whyq.model.ResponseData;
 import whyq.model.Store;
+import whyq.model.Tag;
 import whyq.model.User;
 import whyq.service.ServiceAction;
 import whyq.service.ServiceResponse;
@@ -270,7 +272,30 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		mPage = 1;
 		searchKey = string;
 		isSearch = true;
-		exeListActivity(true);
+//		exeListActivity(true);
+		//Seach local
+		ArrayList<Store> result = new ArrayList<Store>();
+		ArrayList<Store> data = permListAdapter.getData();
+		if(data !=null && data.size() > 0){
+			for(Store item: data){
+				if(item !=null && item.getNameStore().contains(string)){
+					result.add(item);
+				}else if(item!=null && item.getTagList() !=null){
+					ArrayList<Tag> tags = item.getTagList();
+					if(tags !=null && tags.size() > 0){
+						for(Tag tag: tags){
+							if(tag !=null && tag.getNameTag() !=null && tag.getNameTag().contains(string)){
+								result.add(item);
+							}
+						}
+					}
+				}
+			}
+		}else{
+			
+		}
+		permListAdapter.changeSrc(result);
+		permListAdapter.notifyDataSetChanged();
 	}
 
 	@Override
