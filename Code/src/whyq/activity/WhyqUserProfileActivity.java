@@ -366,28 +366,40 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 				e.printStackTrace();
 			}
 		} else if (result.getAction() == ServiceAction.ActionGetPhotos) {
-			ResponseData data = (ResponseData) parser.parsePhotos(String.valueOf(result.getData()));
-			List<Photo> photos = (List<Photo>) data.getData();
-			if (photos == null || photos.size() == 0) {
-				return;
-			}
+			
 			mPhotos.setVisibility(View.VISIBLE);
-			mPhotoAdapter.setItems(photos);
+			try {
+				ResponseData data = (ResponseData) parser.parsePhotos(String.valueOf(result.getData()));
+				List<Photo> photos = (List<Photo>) data.getData();
+				if (photos == null || photos.size() == 0) {
+					return;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+			
 		} else if (result.getAction() == ServiceAction.ActionGetProfiles) {
 			userProfile = DataParser.parseUerProfiles(String.valueOf(result.getData()));
 			bindData(userProfile);
 		} else if (result.isSuccess() && (result.getAction() == ServiceAction.ActionInviteFriendsWhyQ)) {
 			setLoading(false);
-			ResponseData data = (ResponseData)result.getData();
-			if(data.getStatus().equals("200")){
-				Toast.makeText(WhyqUserProfileActivity.this, "Invited", Toast.LENGTH_LONG).show();
-			}else if(data.getStatus().equals("401")){
-				Util.loginAgain(getParent(), data.getMessage());
-			}else if(data.getStatus().equals("204")){
-				
-			}else{
-				Util.showDialog(WhyqUserProfileActivity.this, data.getMessage());
+			try {
+				ResponseData data = (ResponseData)result.getData();
+				if(data.getStatus().equals("200")){
+					Toast.makeText(WhyqUserProfileActivity.this, "Invited", Toast.LENGTH_LONG).show();
+				}else if(data.getStatus().equals("401")){
+					Util.loginAgain(getParent(), data.getMessage());
+				}else if(data.getStatus().equals("204")){
+					
+				}else{
+					Util.showDialog(WhyqUserProfileActivity.this, data.getMessage());
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
 			}
+			
 		}
 	}
 
