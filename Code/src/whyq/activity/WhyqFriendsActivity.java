@@ -338,7 +338,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 
 			final FriendWhyq item = listWhyq.get(position);
 			holder.name.setText(item.getFirst_name()+" "+item.getLast_name());
-			if(item.getStatus_user().getIs_friend()==1){
+			if(item !=null && (item.getStatus_user() !=null) && item.getStatus_user().getIs_friend()==1){
 				holder.invite.setBackgroundResource(R.drawable.icon_friended);
 				holder.invite.setVisibility(View.VISIBLE);
 				holder.invite.setText("");
