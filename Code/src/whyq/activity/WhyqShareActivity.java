@@ -241,7 +241,10 @@ public class WhyqShareActivity extends FragmentActivity implements
 //							List<String> permissions = Arrays.asList("publish_actions", "publish_stream","user_checkins");
 //							NewPermissionsRequest newPermission = new Session.NewPermissionsRequest(WhyqShareActivity.this, permissions);
 //							session.requestNewPublishPermissions(newPermission);
-							exePostFacebook(session.getAccessToken());	
+							//New add 31.9 for whyq
+							if(isComment){
+								exePostFacebook(session.getAccessToken());	
+							}
 						}
 //						exePostFacebook(session.getAccessToken());
 					}
