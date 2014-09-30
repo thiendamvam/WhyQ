@@ -278,13 +278,13 @@ public class FavouriteActivity extends FragmentActivity implements Login_delegat
 		ArrayList<Store> data = permListAdapter.getData();
 		if(data !=null && data.size() > 0){
 			for(Store item: data){
-				if(item !=null && item.getNameStore().contains(string)){
+				if(item !=null && item.getNameStore().toLowerCase().contains(string.toLowerCase())){
 					result.add(item);
 				}else if(item!=null && item.getTagList() !=null){
 					ArrayList<Tag> tags = item.getTagList();
 					if(tags !=null && tags.size() > 0){
 						for(Tag tag: tags){
-							if(tag !=null && tag.getNameTag() !=null && tag.getNameTag().contains(string)){
+							if(tag !=null && tag.getNameTag() !=null && tag.getNameTag().toLowerCase().contains(string.toLowerCase())){
 								result.add(item);
 							}
 						}
