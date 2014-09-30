@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import whyq.WhyqApplication;
+import whyq.activity.WhyqUserProfileActivity.PhotoAdapter.ViewHolder;
 import whyq.controller.WhyqListController;
 import whyq.model.ActivityItem;
 import whyq.model.Photo;
@@ -80,7 +81,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 	private boolean isFriended;
 
 	private LoadMoreListView mLvActivity;
-	protected int mPage = 0;
+	protected int mPage = 1;
 	protected int mTotalPage;
 	
 	@Override
@@ -366,19 +367,14 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 				e.printStackTrace();
 			}
 		} else if (result.getAction() == ServiceAction.ActionGetPhotos) {
-			
-			mPhotos.setVisibility(View.VISIBLE);
-			try {
-				ResponseData data = (ResponseData) parser.parsePhotos(String.valueOf(result.getData()));
-				List<Photo> photos = (List<Photo>) data.getData();
-				if (photos == null || photos.size() == 0) {
-					return;
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
+			ResponseData data = (ResponseData) parser.parsePhotos(String
+					.valueOf(result.getData()));
+			List<Photo> photos = (List<Photo>) data.getData();
+			if (photos == null || photos.size() == 0) {
+				return;
 			}
-			
+			mPhotos.setVisibility(View.VISIBLE);
+			mPhotoAdapter.setItems(photos);
 		} else if (result.getAction() == ServiceAction.ActionGetProfiles) {
 			userProfile = DataParser.parseUerProfiles(String.valueOf(result.getData()));
 			bindData(userProfile);
@@ -632,8 +628,8 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 			final Photo item = mItems.get(position);
 
 			ViewHolder holder = getViewHolder(convertView);
-//			mImageWorker.downloadImage(item.getImage(), holder.photo);
-			mImageLoader.DisplayImage(item.getImage(), holder.photo);
+			// mImageWorker.downloadImage(item.getImage(), holder.photo);
+			mImageLoader.DisplayImage(item.getThumb(), holder.photo);
 
 			return convertView;
 		}
