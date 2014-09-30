@@ -182,7 +182,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 	private TextView tvNodata;
 	private TextView tvNumberResult;
 	private TextView tvTextSearch;
-	private int page = 0;
+	private int page = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -368,7 +368,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 
 	protected void exeSearch(String string, boolean isExpandable) {
 		// TODO Auto-generated method stub
-		page = 0;
+		page = 1;
 		isExpandableSearch = isExpandable;
 		searchKey = string;
 		isSearch = true;
@@ -387,7 +387,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		page = 0;
+		page = 1;
 		if (!isFirst) {
 			isFirst = true;
 //			exeListActivity(false);
@@ -708,7 +708,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 
 			cateId = "1";
 			storeType = 1;
-			page = 0;
+			page = 1;
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
 		case 2:
@@ -718,7 +718,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_middle_normal);
 			lnHotel.setBackgroundResource(R.drawable.bg_tab_right_normal);
 			storeType = 2;
-			page = 0;
+			page = 1;
 			cateId = "2";
 			exeGetBusiness(etTextSearch.getText().toString());
 			break;
@@ -728,7 +728,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 			lnWine.setBackgroundResource(R.drawable.bg_tab_middle_normal);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_left_normal);
 			lnHotel.setBackgroundResource(R.drawable.bg_tab_right_normal);
-			page = 0;
+			page = 1;
 			storeType = 3;
 			cateId = "3";
 			exeGetBusiness(etTextSearch.getText().toString());
@@ -739,7 +739,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 			lnCoffe.setBackgroundResource(R.drawable.bg_tab_middle_normal);
 			lnWine.setBackgroundResource(R.drawable.bg_tab_middle_normal);
 			lnCutlery.setBackgroundResource(R.drawable.bg_tab_left_normal);
-			page = 0;
+			page = 1;
 			storeType = 4;
 			cateId = "4";
 			exeGetBusiness(etTextSearch.getText().toString());
@@ -836,7 +836,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 					exeDisableSearchFocus();
 					isSearch = false;
 					exeDisableSearchFocus();
-					page = 0;
+					page = 1;
 					exeListActivity(false);
 
 				} else {
