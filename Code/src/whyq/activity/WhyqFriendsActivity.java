@@ -342,11 +342,10 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 				holder.invite.setBackgroundResource(R.drawable.icon_friended);
 				holder.invite.setVisibility(View.VISIBLE);
 				holder.invite.setText("");
-//				holder.invite.setTag(item);
+				holder.invite.setTag(item);
 			}else{
-//				holder.invite.setVisibility(View.GONE);
+				holder.invite.setVisibility(View.GONE);
 			}
-			holder.invite.setTag(item);
 			mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
 			return convertView;
 		}
