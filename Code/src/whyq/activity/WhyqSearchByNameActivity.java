@@ -144,7 +144,7 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 		}
 	}
 
-	private void exeInvite(FriendFacebook item) {
+	public void exeInvite(FriendFacebook item) {
 		// TODO Auto-generated method stub
 			
 				setLoading(true);
@@ -281,6 +281,9 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 					e.printStackTrace();
 				}
 				
+			}else if (result.isSuccess() && (result.getAction() == ServiceAction.ActionInviteFriendsWhyQ)) {
+				setLoading(false);
+				mFriendFacebookAdapter.notifyDataSetChanged();
 			}else {
 				if (result.getAction() == ServiceAction.ActionGetFriendsFacebook
 						|| result.getAction() == ServiceAction.ActionSearchFriendsFacebook) {
@@ -463,7 +466,7 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 		public View getAmazingView(int position, View convertView,
 				ViewGroup parent) {
 			final FriendFacebook item = (FriendFacebook) getItem(position);
-			convertView = viewList.get(item.getFacebookId());
+			convertView = viewList.get(item.getId());
 			if (convertView == null) {
 				convertView = mActivity.getLayoutInflater().inflate(
 						R.layout.friend_list_item, parent, false);
@@ -473,11 +476,19 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 				final ViewHolder holder = getViewHolder(convertView);
 
 				holder.data = item;
-				holder.name.setText(item.getFirstName());
+				holder.name.setText(item.getFirstName()+ " " + item.getLast_name());
 				mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
 				if (item.getIsFriend() == 0) {
 					holder.invite.setBackgroundResource(R.drawable.btn_accept);
 					holder.invite.setText("");
+					holder.invite.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							// TODO Auto-generated method stub
+							Toast.makeText(mActivity, "User had invited", Toast.LENGTH_LONG).show();
+						}
+					});
 				} else {
 					displayInviteButtn(holder, item);
 					holder.invite.setTag(holder);
@@ -495,15 +506,16 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 										}
 										displayInviteButtn(holder, item);
 									} else {
-
-//										setLoading(true);
-										Service service  = new Service(mActivity);
-										service.inviteFriendsWhyq(WhyqApplication.Instance().getRSAToken(), item.getId());
+										//Reset the icon
+										holder.invite.setBackgroundResource(R.drawable.btn_accept);
+										holder.invite.setText("");
+										//send to server
+										exeInviteUser(item);
 									}
 								}
 							});
 				}
-				viewList.put(item.getFacebookId(), convertView);
+				viewList.put(item.getId(), convertView);
 			} else {
 
 			}
@@ -512,6 +524,12 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 		}
 
 		
+
+		protected void exeInviteUser(FriendFacebook item) {
+			// TODO Auto-generated method stub
+			((WhyqSearchByNameActivity) mActivity).exeInvite(item);
+
+		}
 
 		private void displayInviteButtn(ViewHolder holder, FriendFacebook item) {
 			if (INVITED_LIST.containsKey(item.getId())) {
@@ -554,14 +572,14 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 
 		private void bindHeader(ViewHolder holder, String section) {
 			if (section.equals(SECTION_WHYQ)) {
-				final String key = countListWhyq + " facebook friends";
+				final String key = countListWhyq + " friends";
 				final String result = "You have " + key + " had joined WHY Q.";
 				Spannable message = SpannableUtils.stylistTextBold(result, key,
 						mActivity.getResources().getColor(R.color.orange));
 				holder.headerMessage.setText(message);
 				holder.headerFriendAll.setVisibility(View.VISIBLE);
 			} else {
-				final String key = countListNotJoinWhyq + " facebook friends";
+				final String key = countListNotJoinWhyq + " friends";
 				final String result = "And "
 						+ key
 						+ " haven't joined WHY Q. Invite your friend to join this app!";
