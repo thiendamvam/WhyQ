@@ -191,7 +191,7 @@ public class WhyqFindMenuActivity extends FragmentActivity implements
 
 	public void searchByNameClicked(View v) {
 		Intent intent = new Intent(WhyqFindMenuActivity.this,
-				SearchFriendsActivity.class);
+				WhyqSearchByNameActivity.class);
 		intent.putExtra("is_search_by_name", true);
 		startActivity(intent);
 	}
