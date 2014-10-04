@@ -441,7 +441,7 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity implements
 				final ViewHolder holder = getViewHolder(convertView);
 
 				holder.data = item;
-				holder.name.setText(item.getFirstName());
+				holder.name.setText(item.getFirstName() + " "+ item.getLast_name());
 				mImageWorker.downloadImage(item.getAvatar(), holder.avatar);
 				if (item.getIsFriend() == 0) {
 					holder.invite.setBackgroundResource(R.drawable.btn_accept);
