@@ -115,6 +115,7 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 			@Override
 			public void onClick(View v) {
 				if (INVITED_LIST.size() == 0) {
+					Toast.makeText(mActivity, "Please choose at least 1 people to invite", Toast.LENGTH_LONG).show();
 					return;
 				}
 				inviteFriends();

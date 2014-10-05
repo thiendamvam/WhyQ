@@ -99,6 +99,7 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 			@Override
 			public void onClick(View v) {
 				if (INVITED_LIST.size() == 0) {
+					Toast.makeText(WhyqFriendsTwitterActivity.this, "Please choose at least 1 people to invite", Toast.LENGTH_LONG).show();
 					return;
 				}
 				inviteFriends();
