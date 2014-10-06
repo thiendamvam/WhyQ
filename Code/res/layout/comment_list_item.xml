@@ -41,7 +41,7 @@
 
         <ImageButton
             android:id="@+id/favorite"
-            android:onClick=""
+            android:onClick="favoriteComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
