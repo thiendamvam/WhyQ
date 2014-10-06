@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -203,6 +204,20 @@ public class CommentActivity extends ImageWorkerActivity {
 				}
 				
 			}
+		} else if (result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionPostFavoriteComment) {
+			// Toast.makeText(context, "Favourite successfully",
+			// Toast.LENGTH_SHORT).show();
+			ResponseData data = (ResponseData) result.getData();
+
+			if (data.getStatus().equals("200")) {
+			
+			} else if (data.getStatus().equals("401")) {
+				Util.loginAgain(getParent(), data.getMessage());
+			} else {
+				// Util.showDialog(getParent(), data.getMessage());
+			}
+			setLoading(false);
 		}
 	}
 
@@ -252,7 +267,7 @@ public class CommentActivity extends ImageWorkerActivity {
 		HashMap<String, View > viewList = new HashMap<String, View>();
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			Comment item = mItems.get(position);
+			final Comment item = mItems.get(position);
 			convertView = viewList.get(item.getId());
 			if(convertView==null){
 				if (convertView == null) {
@@ -268,14 +283,14 @@ public class CommentActivity extends ImageWorkerActivity {
 				holder.name.setText(item.getUser().getFirstName()+" "+item.getUser().getLastName());
 				holder.comment.setText(item.getContent());
 				holder.like.setText("" + item.getCount_like());
-				holder.like.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-
-					}
-				});
+//				holder.favorite.setOnClickListener(new View.OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						// TODO Auto-generated method stub
+//						((CommentActivity)mContext).favoriteComment(item);
+//					}
+//				});
 //				mImageWorker.downloadImage(item.getUser().getUrlAvatar(),
 //						holder.avatar);
 				mImageLoader.DisplayImage(item.getUser().getUrlAvatar(), holder.avatar);
@@ -288,6 +303,7 @@ public class CommentActivity extends ImageWorkerActivity {
 				}else{
 					holder.thumb.setVisibility(View.GONE);
 				}
+				holder.favorite.setTag(item);
 				if (item.getUser().getLike() > 0) {
 					holder.favorite.setImageResource(R.drawable.icon_fav_enable);
 				} else {
@@ -312,7 +328,7 @@ public class CommentActivity extends ImageWorkerActivity {
 
 		class ViewHolder {
 			ImageView avatar;
-			ImageView favorite;
+			ImageButton favorite;
 			ImageView thumb;
 			TextView name;
 			TextView like;
@@ -326,7 +342,7 @@ public class CommentActivity extends ImageWorkerActivity {
 				thumb = (ImageView) view.findViewById(R.id.imageThumb);
 				thumb.getLayoutParams().height = THUMB_HEIGHT;
 
-				favorite = (ImageView) view.findViewById(R.id.favorite);
+				favorite = (ImageButton ) view.findViewById(R.id.favorite);
 				name = (TextView) view.findViewById(R.id.name);
 				like = (TextView) view.findViewById(R.id.like);
 				comment = (TextView) view.findViewById(R.id.comment);
@@ -341,6 +357,13 @@ public class CommentActivity extends ImageWorkerActivity {
 		startActivity(i);
 	}
 	
+	public void favoriteComment(View view) {
+		// TODO Auto-generated method stub
+		Comment item = (Comment)view.getTag();
+		setLoading(true);
+		getService().postFavoriteComment(item.getId(), WhyqApplication.Instance().getRSAToken(), true);
+	}
+
 	public void onBackClicked(View v){
 		finish();
 	}

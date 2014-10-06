@@ -98,6 +98,17 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		request("/m/member/favourite/business", params, true, false);
 	}
+	
+	public void postFavoriteComment(String commentId, String token, boolean isLike) {
+		// TODO Auto-generated method stub
+		_action = ServiceAction.ActionPostFavoriteComment;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("token",token);
+		params.put("comment_id", commentId);
+		params.put("app", Constants.APP);
+		params.put("app_name", Constants.APP_NAME);
+		request("/m/member/comment/like", params, true, false);
+	}
 
 	public void getDeliveryFeeList() {
 		// TODO Auto-generated method stub
@@ -439,6 +450,9 @@ public class Service implements Runnable {
 			break;
 		case ActionGetDeliveryFeeList:
 			resObj = parser.parseLGetDeliveryFeeList(result);
+			break;
+		case ActionPostFavoriteComment:
+			resObj = parser.parseLFavouriteResult(result);
 			break;
 		case ActionPostFavorite:
 			resObj = parser.parseLFavouriteResult(result);

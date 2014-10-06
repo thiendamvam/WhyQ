@@ -39,8 +39,9 @@
             android:paddingRight="@dimen/base_padding"
             android:textColor="@android:color/secondary_text_dark_nodisable" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/favorite"
+            android:onClick=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
