@@ -345,8 +345,7 @@ private String mTimeNow;
 
 			// TODO Auto-generated method stub
 			Calendar cal = Calendar.getInstance(TimeZone.getDefault());
-			int isAM = cal.get(Calendar.AM) == 0? 0:12;
-			int hour = cal.get(Calendar.HOUR)+isAM;
+			int hour = cal.get(Calendar.HOUR_OF_DAY);
 			int minutes = cal.get(Calendar.MINUTE);
 			long current =  hour*60 + minutes;
 			
