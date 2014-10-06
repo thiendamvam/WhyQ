@@ -463,7 +463,7 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 //			}
 			viewHolder.tvType.setText(Html.fromHtml(item.getNameProduct()));
 		
-			viewHolder.tvPrice.setText("$" + Html.fromHtml(""+Util.round(Float.parseFloat(item.getValue()), 1)));
+			viewHolder.tvPrice.setText("$" + Html.fromHtml(""+Util.round(Float.parseFloat(item.getValue()), 2)));
 			viewHolder.tvCount.setText(""+item.getUnitForBill());
 			viewHolder.storeId = item.getStoreId();
 			viewHolder.menuId = item.getId();
@@ -937,8 +937,9 @@ public class ExpanMenuAdapter extends BaseExpandableListAdapter implements OnCli
 		float price = ((ListDetailActivity) mContext).getTotalSize(menu.getSizeItemList())
 				+ ((ListDetailActivity) mContext).getTotalOption(menu.getOptionItemList())
 				+ ((ListDetailActivity) mContext).getTotalExtra(menu.getExtraItemList());
-		if(price <= 0){
-			price = Float.parseFloat(menu.getValue());
+//		if(price <= 0){
+		if(((ListDetailActivity) mContext).getTotalSize(menu.getSizeItemList()) <= 0){
+			price += Float.parseFloat(menu.getValue());
 		}
 		bill.setPrice(""+price);
 		bill.setUnit(""+menu.getUnitForBill());
