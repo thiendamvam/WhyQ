@@ -473,75 +473,89 @@ public class WhyqShareActivity extends FragmentActivity implements
 
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
-		// TODO Auto-generated method stub
-		setProgressBar(false);
-		if (result.isSuccess()
-				&& result.getAction() == ServiceAction.ActionOrderCheck) {
-			if (session.getAccessToken() != null) {
-				ResponseData data = (ResponseData) result.getData();
-				if (data.getStatus().equals("200")) {
-					orderCheck = (OrderCheckData) data.getData();
-					if (tgleShareFb.isChecked())
-						checkLoginFacebook(false, false);
-				} else if (data.getStatus().equals("401")) {
-					Util.loginAgain(getParent(), data.getMessage());
-				} else if (data.getStatus().equals("204")) {
-				} else {
+		try {
 
+			// TODO Auto-generated method stub
+			setProgressBar(false);
+
+			if (result.isSuccess()
+					&& result.getAction() == ServiceAction.ActionOrderCheck) {
+				if(session == null){
+					session = Util.createSession();
+					List<String> permissions = Arrays.asList("publish_actions", "publish_stream","user_checkins");
+					NewPermissionsRequest newPermission = new Session.NewPermissionsRequest(this, permissions);
+					session.requestNewPublishPermissions(newPermission);
 				}
+				if (session.getAccessToken() != null) {
+					ResponseData data = (ResponseData) result.getData();
+					if (data.getStatus().equals("200")) {
+						orderCheck = (OrderCheckData) data.getData();
+						if (tgleShareFb.isChecked())
+							checkLoginFacebook(false, false);
+					} else if (data.getStatus().equals("401")) {
+						Util.loginAgain(getParent(), data.getMessage());
+					} else if (data.getStatus().equals("204")) {
+					} else {
 
-			}
-		} else if (result.isSuccess()
-				&& result.getAction() == ServiceAction.ActionGetBusinessDetail) {
-
-			ResponseData data = (ResponseData) result.getData();
-			if (data != null) {
-				if (data.getStatus().equals("200")) {
-					store = (Store) data.getData();
-					if (store != null) {
-						bindHeaderData();
 					}
-				} else if (data.getStatus().equals("401")) {
-					Util.loginAgain(context, data.getMessage());
-				} else {
-					// Util.showDialog(context, data.getMessage());
-				}
-			}
 
-		} else if (result.isSuccess()
-				&& result.getAction() == ServiceAction.ActionPostComment) {
-			ResponseData data = (ResponseData) result.getData();
-			if (data != null) {
-				if (data.getStatus().equals("200")) {
+				}
+			} else if (result.isSuccess()
+					&& result.getAction() == ServiceAction.ActionGetBusinessDetail) {
+
+				ResponseData data = (ResponseData) result.getData();
+				if (data != null) {
+					if (data.getStatus().equals("200")) {
+						store = (Store) data.getData();
+						if (store != null) {
+							bindHeaderData();
+						}
+					} else if (data.getStatus().equals("401")) {
+						Util.loginAgain(context, data.getMessage());
+					} else {
+						// Util.showDialog(context, data.getMessage());
+					}
+				}
+
+			} else if (result.isSuccess()
+					&& result.getAction() == ServiceAction.ActionPostComment) {
+				ResponseData data = (ResponseData) result.getData();
+				if (data != null) {
+					if (data.getStatus().equals("200")) {
+						Toast.makeText(context, "Message sent.", Toast.LENGTH_LONG)
+								.show();
+						orderCheck = (OrderCheckData) data.getData();
+						if (tgleShareFb.isChecked())
+							checkLoginFacebook(false, false);
+						// exePostFacebook(accessToken, responseData);
+					} else if (data.getStatus().equals("401")) {
+						Util.loginAgain(context, data.getMessage());
+					} else {
+						// Util.showDialog(context, data.getMessage());
+					}
+				}
+			} else if ((result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBComment)
+					|| ((result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBCheckBill))) {
+				setProgressBar(false);
+				boolean status = (Boolean) result.getData();
+				if (status) {
 					Toast.makeText(context, "Message sent.", Toast.LENGTH_LONG)
 							.show();
-					orderCheck = (OrderCheckData) data.getData();
-					if (tgleShareFb.isChecked())
-						checkLoginFacebook(false, false);
-					// exePostFacebook(accessToken, responseData);
-				} else if (data.getStatus().equals("401")) {
-					Util.loginAgain(context, data.getMessage());
-				} else {
-					// Util.showDialog(context, data.getMessage());
 				}
-			}
-		} else if ((result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBComment)
-				|| ((result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBCheckBill))) {
-			setProgressBar(false);
-			boolean status = (Boolean) result.getData();
-			if (status) {
-				Toast.makeText(context, "Message sent.", Toast.LENGTH_LONG)
+			} else if ((!result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBComment)
+					|| ((!result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBCheckBill))) {
+				setProgressBar(false);
+				Log.d("Fail post to Facebook", "" + result.getData());
+				Toast.makeText(context, "Fail post to Facebook!", Toast.LENGTH_LONG)
 						.show();
+			} else if (!result.isSuccess()
+					&& result.getAction() == ServiceAction.ActionPostComment) {
+				Toast.makeText(context, "Fail", Toast.LENGTH_LONG).show();
 			}
-		} else if ((!result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBComment)
-				|| ((!result.isSuccess() && result.getAction() == ServiceAction.ActionPostFBCheckBill))) {
-			setProgressBar(false);
-			Log.d("Fail post to Facebook", "" + result.getData());
-			Toast.makeText(context, "Fail post to Facebook!", Toast.LENGTH_LONG)
-					.show();
-		} else if (!result.isSuccess()
-				&& result.getAction() == ServiceAction.ActionPostComment) {
-			Toast.makeText(context, "Fail", Toast.LENGTH_LONG).show();
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 
