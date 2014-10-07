@@ -107,7 +107,12 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 		});
 		
 	}
-	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		INVITED_LIST.clear();
+	}
 	private void startUserProfileActivity(String userId, String userName,
 			String avatar, int isFriend) {
 		// TODO Auto-generated method stub
@@ -192,6 +197,13 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 		String oauth_token = mTwitterAccess.getToken();
 		String oauth_token_secret = mTwitterAccess.getTokenSecret();
 		service.inviteFriendsTwitter(getEncryptedToken(), oauth_token, oauth_token_secret, userIds.toString());
+	}
+	
+	void inviteOnlyFriend(String userId){
+		String oauth_token = mTwitterAccess.getToken();
+		String oauth_token_secret = mTwitterAccess.getTokenSecret();
+		setLoading(true);
+		service.inviteFriendsTwitter(getEncryptedToken(), oauth_token, oauth_token_secret, userId);
 	}
 	void removeInviteFriend(FriendTwitter friend) {
 		INVITED_LIST.remove(friend.getId());
@@ -391,17 +403,18 @@ public class WhyqFriendsTwitterActivity extends ImageWorkerActivity {
 								}
 								displayInviteButton(holder, item);
 							} else {
-//								Bundle params = new Bundle();
-//								params.putString("to", item.getTwitterId());
-								if(INVITED_LIST.containsKey(item.getTwitterId())){
-									mActivity.removeInviteFriendNotJoin(item);
-									Log.d("Invite Friend", "INVITED_LIST =>>>>>>>" +INVITED_LIST);
-								}else{
-									mActivity.addInviteFriendNotJoin(item);
-									Log.d("Invite Friend", "INVITED_LIST =>>>>>>>" +INVITED_LIST);
-									
-								}
+////								Bundle params = new Bundle();
+////								params.putString("to", item.getTwitterId());
+//								if(INVITED_LIST.containsKey(item.getTwitterId())){
+//									mActivity.removeInviteFriendNotJoin(item);
+//									Log.d("Invite Friend", "INVITED_LIST =>>>>>>>" +INVITED_LIST);
+//								}else{
+//									mActivity.addInviteFriendNotJoin(item);
+//									Log.d("Invite Friend", "INVITED_LIST =>>>>>>>" +INVITED_LIST);
+//									
+//								}
 								displayInviteButtonNotJoin(holder, item);
+								((WhyqFriendsTwitterActivity)mActivity).inviteOnlyFriend(item.getTwitterId());
 								//send request invite twitter 
 								//
 								
