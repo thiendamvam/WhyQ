@@ -141,7 +141,7 @@ public class InvitationActivity extends Activity implements IServiceListener {
 		setLoading(true);
 		User user = (User) v.getTag();
 		Service service = new Service(InvitationActivity.this);
-		service.acceptInvitation(WhyqApplication.Instance().getRSAToken(),
+		service.declineInvitation(WhyqApplication.Instance().getRSAToken(),
 				user.getId()); 
 	}
 
@@ -150,7 +150,7 @@ public class InvitationActivity extends Activity implements IServiceListener {
 		setLoading(true);
 		User user = (User) v.getTag();
 		Service service = new Service(InvitationActivity.this);
-		service.declineInvitation(WhyqApplication.Instance().getRSAToken(),
+		service.acceptInvitation(WhyqApplication.Instance().getRSAToken(),
 				user.getId());
 	}
 }
