@@ -1045,7 +1045,7 @@ public class Service implements Runnable {
 		params.put("version", Constants.APP_VERSION);
 		params.put("time_zone", TimeZone.getDefault());
 		params.put("search", criteria.toString());
-		request("/m/member/search/friend", params, true, false);
+		request("/m/member/friend", params, true, false);
 	}
 
 	public void deleteFriend(String userId, String encryptedToken) {

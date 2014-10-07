@@ -262,7 +262,7 @@ public class WhyqFriendsActivity extends ImageWorkerActivity implements
 		Log.d("searchFriends","key: "+queryString);
 		Service service = getService();
 		setLoading(true);
-		if(!isSearchByName){
+		if(isSearchByName){
 			service.searchFriends(SearchFriendCriteria.whyq, getEncryptedToken(),
 					queryString, null, null, null);
 		}else{

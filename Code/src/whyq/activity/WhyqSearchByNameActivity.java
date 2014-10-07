@@ -80,6 +80,11 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 		tvSearch.setHint(R.string.find_a_friend);
 		tvSearch.setTextColor(getResources().getColor(R.color.white));
 		tvSearch.setBackgroundResource(R.drawable.textfield_search_default_holo_dark);
+		
+		//hide invite all and invite container
+		
+		findViewById(R.id.inviteContainer).setVisibility(View.GONE);
+		findViewById(R.id.header).setVisibility(View.GONE);
 
 		mListview = (AmazingListView) findViewById(R.id.listview);
 		mListview.setPinnedHeaderView(findViewById(R.id.header));
@@ -458,7 +463,7 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 			} else {
 				holder.header.setVisibility(View.GONE);
 			}
-
+			holder.header.setVisibility(View.GONE);
 		}
 
 		HashMap<String, View> viewList = new HashMap<String, View>();
