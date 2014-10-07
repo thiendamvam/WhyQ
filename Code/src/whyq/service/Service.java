@@ -1219,22 +1219,24 @@ public class Service implements Runnable {
 	}
 
 	public void postFBCheckBill(String accessToken, ShareData data) {
-		_action = ServiceAction.ActionPostFBCheckBill;
+		Log.d("postFBComments", "accessToken " + accessToken);
+		_action = ServiceAction.ActionPostFBComment;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("access_token", accessToken);
 		params.put("fb:explicitly_shared", true);
 		params.put("format", "json");
-		params.put("image[0][url]", data.getPicture());
-		params.put("message", data.getMessage() + " "
-				+ convertArrayToFBArray(data.getTags()));
+		if (data.getPicture() != null && !"".equals("" + data.getPicture())) {
+			params.put("image[0][url]", data.getPicture());
+			params.put("image[0][user_generated]", true);
+		}
+		params.put("message", "" + data.getMessage());
 		params.put("place", data.getLink());
 		params.put("scrape", true);
 		params.put("sdk", "android");
 		params.put("sdk_version", 1);
-		params.put("tags", convertArrayToString(data.getTags()));
 		params.put("venue", data.getLink());
 
-		request("/whyqapp:check_bill", params, true, false);
+		request("/whyqapp:comment", params, true, false);
 	}
 
 	private String convertArrayToString(ArrayList<String> data) {
