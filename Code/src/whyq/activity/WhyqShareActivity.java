@@ -276,6 +276,15 @@ public class WhyqShareActivity extends FragmentActivity implements
 	}
 
 	protected void exePostFacebook(String accessToken) {
+		
+		try {
+			List<String> permissions = Arrays.asList("publish_actions", "publish_stream","user_checkins");
+			NewPermissionsRequest newPermission = new Session.NewPermissionsRequest(this, permissions);
+			session.requestNewPublishPermissions(newPermission);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 		// TODO Auto-generated method stub
 		OrderCheckData data = orderCheck;
 		ShareHandler shareHandler = new ShareHandler(WhyqShareActivity.this);

@@ -132,7 +132,7 @@ public class ImageActivity extends Activity {
 	        		try {
 	        			InputStream is = openFileInput("MyFile.jpg");
 	        			BitmapFactory.Options options = new BitmapFactory.Options();
-	        			//options.inSampleSize = 4;
+	        			options.inSampleSize = 4;
 	        			Bitmap retrievedBitmap = BitmapFactory.decodeStream(is, null, options);
 	        			}
 	        			catch(IOException e) {
