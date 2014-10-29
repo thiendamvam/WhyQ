@@ -3,6 +3,7 @@ package whyq.activity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -10,14 +11,20 @@ import org.apache.http.message.BasicNameValuePair;
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.activity.ListActivity.LoadPermList;
+import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpandableStoreAdapter;
 import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
+import whyq.controller.RestaurentRunnerController;
 import whyq.controller.WhyqListController;
 import whyq.interfaces.IServiceListener;
 import whyq.map.MapsActivity;
+import whyq.model.Bill;
+import whyq.model.ExtraItem;
 import whyq.model.GroupStore;
+import whyq.model.OptionItem;
 import whyq.model.ResponseData;
+import whyq.model.SizeItem;
 import whyq.model.Store;
 import whyq.model.User;
 import whyq.service.Service;
@@ -58,6 +65,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.costum.android.widget.LoadMoreListView;
+import com.google.android.gms.internal.ey;
 import com.whyq.R;
 
 public class ListVipStoreActivity extends FragmentActivity implements OnClickListener,
@@ -160,6 +168,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 		whyqListView.setOnScrollListener(this);
 		showProgress();
 		Util.generateKeyHash(this);
+		RestaurentRunnerController.restaurentList.clear();
 		exeListActivity();
 	}
 
@@ -202,6 +211,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 		intent.putExtra("id", storeId);
 		intent.putExtra("store_type", storeType);
 		intent.putExtra("store_name", storeName);
+		intent.putExtra("is_vip", true);
 		startActivity(intent);
 	}
 
@@ -244,9 +254,104 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 				}
 			}
 		});
+		
 
 	}
 
+	protected void gotoBillScreen() {
+		// TODO Auto-generated method stub
+	
+		if(ListDetailActivity.billList !=null && ListDetailActivity.billList.size() > 0 && Float.parseFloat(ListDetailActivity.btnTotalValue.getText().toString())!=0.00){
+//			commentContent = etComment.getText().toString();
+			addItemToBillList();
+			Intent intent = new Intent(ListVipStoreActivity.this,
+					WhyQBillScreen.class);
+
+			Bundle bundle = new Bundle();
+			bundle.putString("list_items", getListItem());
+			bundle.putBoolean("is_ordered", false);
+			bundle.putFloat("total", Float.parseFloat(ListDetailActivity.btnTotalValue.getText().toString()));
+			intent.putExtra("data", bundle);
+			startActivity(intent);
+		}else {
+			Toast.makeText(context, "Pls choose any item!", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private void addItemToBillList() {
+		// TODO Auto-generated method stub
+		Map<String, List<Bill>> result = new HashMap<String, List<Bill>>();
+		for (Map.Entry<String, Map<String, List<Bill>>> entry : RestaurentRunnerController.restaurentList.entrySet()) {
+			Map<String, List<Bill>> billListMap =  entry.getValue();
+			if(billListMap !=null &&!billListMap.isEmpty() && billListMap.entrySet() !=null){
+				for(Map.Entry<String, List<Bill>> entry2 : billListMap.entrySet()){
+					if(ListDetailActivity.billList.containsKey(entry2.getKey())){
+//						ListDetailActivity.billList.remove(entry2.getKey());
+					}
+					ListDetailActivity.billList.put(entry2.getKey(),entry2.getValue());
+				
+				}
+				
+			}
+
+		}
+	}
+
+	public String getListItem() {
+		// TODO Auto-generated method stub
+		String result = "";
+		for (String key : ListDetailActivity.billList.keySet()) {
+			List<Bill> list = ListDetailActivity.billList.get(key);
+			for (Bill bill : list) {
+				if (bill != null) {
+					if (result.equals("")) {
+						result += bill.getProductId() + ":" + bill.getUnit()
+								+ ":" + bill.getPrice()+":"+getSizeExtraOptionId(bill)+":"+getNote(bill);
+					} else {
+						result += "|" + bill.getProductId() + ":"
+								+ bill.getUnit() + ":" + bill.getPrice()+":"+getSizeExtraOptionId(bill)+":"+getNote(bill);
+					}
+
+				}
+
+			}
+		}
+		return result;
+	}
+	
+
+	private String getNote(Bill bill) {
+		// TODO Auto-generated method stub
+		return ExpanMenuAdapter.noteList.get(bill.getId()) ==null? "": ExpanMenuAdapter.noteList.get(bill.getId());
+	}
+	
+	private String getSizeExtraOptionId(Bill bill) {
+		// TODO Auto-generated method stub
+		String result = "";
+		List<SizeItem> sizeList = bill.getSizeList();
+		if(sizeList !=null){
+			for(SizeItem item: sizeList){
+				result+=result.equals("")? item.getId():","+item.getId();
+			}
+		}
+		
+		List<OptionItem> optionList = bill.getOptionList();
+		if(optionList !=null){
+			for(OptionItem item: optionList){
+				result+=result.equals("")? item.getId():","+item.getId();
+			}
+		}
+		
+		List<ExtraItem> extraList = bill.getExtraList();
+		if(extraList !=null){
+			for(ExtraItem item: extraList){
+				result+=result.equals("")? item.getId():","+item.getId();
+			}
+		}
+		return result;
+	}
+	
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d("onActivityResult changelocation", "");
@@ -390,6 +495,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 					this.permListAdapter = new WhyqAdapter(ListVipStoreActivity.this,
 							getSupportFragmentManager(), R.layout.whyq_item_1, permListMain, this,
 							screenWidth, screenHeight, header, user);
+					permListAdapter.setAdapterType(2);
 				} else {
 					for (int i = 0; i < permListMain.size(); i++) {
 						Store store = permListMain.get(i);
@@ -863,7 +969,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 	}
 
 	public void onDoneClicked(View v){
-		
+		gotoBillScreen();
 	}
 	public void onBack(View v){
 		finish();

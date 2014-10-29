@@ -15,6 +15,7 @@ import whyq.activity.FavouriteActivity;
 import whyq.activity.ListActivity;
 import whyq.activity.ListDetailActivity;
 import whyq.activity.ListVipStoreActivity;
+import whyq.controller.RestaurentRunnerController;
 import whyq.controller.WhyqListController;
 import whyq.model.Comment;
 import whyq.model.Promotion;
@@ -130,6 +131,7 @@ public class WhyqAdapter extends ArrayAdapter<Store> implements OnClickListener 
 //	}
 	private Calendar mNow;
 private String mTimeNow;
+private int mAdapterType;
 
 	public WhyqAdapter(Context context,FragmentManager fragmentManager, int textViewResourceId,
 			ArrayList<Store> items, Activity activity, int screenWidth,
@@ -306,10 +308,16 @@ private String mTimeNow;
 							
 							
 						}else{
-							Intent intent = new Intent(context, ListDetailActivity.class);
-							intent.putExtra("store_id", store.getStoreId());//store.getStoreId()
-							intent.putExtra("id", viewId);//store.getStoreId()
-							context.startActivity(intent);							
+							if(RestaurentRunnerController.restaurentList!=null && RestaurentRunnerController.restaurentList.size() >= 2){
+								Util.showDialog(context, "Please order from no more than 2 establishments");
+							}else{
+								Intent intent = new Intent(context, ListDetailActivity.class);
+								intent.putExtra("store_id", store.getStoreId());//store.getStoreId()
+								intent.putExtra("id", viewId);//store.getStoreId()
+								intent.putExtra("is_vip", mAdapterType == 2);
+								context.startActivity(intent);							
+								
+							}
 						}
 					}
 				});
@@ -947,6 +955,11 @@ private String mTimeNow;
 	public void changeSrc(ArrayList<Store> newData) {
 		// TODO Auto-generated method stub
 		items = newData;
+	}
+
+	public void setAdapterType(int type) {
+		// TODO Auto-generated method stub
+		mAdapterType = type;
 	}
 
 }

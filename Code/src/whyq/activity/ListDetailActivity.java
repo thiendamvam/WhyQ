@@ -15,6 +15,7 @@ import whyq.adapter.BasicUserAdapter;
 import whyq.adapter.ExpanMenuAdapter;
 import whyq.adapter.ExpanMenuAdapter.ViewHolderMitemInfo;
 import whyq.adapter.WhyqMenuAdapter;
+import whyq.controller.RestaurentRunnerController;
 import whyq.interfaces.IServiceListener;
 import whyq.map.MapsActivity;
 import whyq.model.Bill;
@@ -116,7 +117,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private TextView tvDes;
 	private ImageView imgView;
 	private WhyqMenuAdapter menuAdapter;
-	private Button btnTotalValue;
+	public static Button btnTotalValue;
 	private ArrayList<Menu> menuList;
 	private CustomViewPager vpPhotoList;
 	private Context context;
@@ -130,6 +131,8 @@ public class ListDetailActivity extends FragmentActivity implements
 	private TextView tvTelephoneTitle;
 	private String storeName;
 	private TextView tvTitleDiscount;
+	private boolean mIsVipStore;
+	private Button mBtnBack;
 	public static Bundle bundle;
 	public static Map<String, List<Bill>> billList;
 	public static NavigableMap<String, ExtraItemSet> extraList;
@@ -208,7 +211,20 @@ public class ListDetailActivity extends FragmentActivity implements
 			id = declineData.getStoryId();
 			setViewContent(2);
 		}else{
-			id = getIntent().getStringExtra("id");			
+			id = getIntent().getStringExtra("id");	
+			mIsVipStore = getIntent().getBooleanExtra("is_vip", false);
+			billList  = new HashMap<String, List<Bill>>();
+			if(mIsVipStore){
+				setViewContent(2);
+				findViewById(R.id.btnViewBill).setVisibility(View.GONE);
+				mBtnBack = (Button)findViewById(R.id.btn_back);
+				mBtnBack.setTag(""+mIsVipStore);
+				if(RestaurentRunnerController.restaurentList.containsKey(id)){
+					
+					billList = RestaurentRunnerController.restaurentList.get(id);
+				}
+				updateTotal();
+			}
 		}
 
 		Log.d("ListDetailActivity", "id " + id);
@@ -1261,8 +1277,9 @@ public class ListDetailActivity extends FragmentActivity implements
 			totalValue = 0;
 		holder.tvCount.setText("" + round(value, 0));
 		holder.tvCount.requestLayout();
-		btnTotalValue.setText("" + round(totalValue, 2));
+		updateTotalValue("" + round(totalValue, 2));
 		checkCommentView(totalValue);
+		
 	}
 
 	private float getTotalExtraValue(ExtraItemSet extraSet) {
@@ -1347,7 +1364,7 @@ public class ListDetailActivity extends FragmentActivity implements
 						totalValue = 0;
 					holder.tvCount.setText("" + value);
 					lvMenu.getChildAt(i).requestLayout();
-					btnTotalValue.setText("" + totalValue);
+					updateTotalValue("" + totalValue);
 				}
 
 			} catch (Exception e) {
@@ -1388,6 +1405,11 @@ public class ListDetailActivity extends FragmentActivity implements
 	}
 
 	public void onBack(View v) {
+		
+		if(billList !=null && billList.size() > 0){
+			
+			RestaurentRunnerController.restaurentList.put(id, billList);
+		}
 		finish();
 
 	}
@@ -1490,7 +1512,7 @@ public class ListDetailActivity extends FragmentActivity implements
 				float totalExtra = getTotalExtraValue(item);
 				float currentTotal = Float.parseFloat(btnTotalValue.getText()
 						.toString()) + totalExtra;
-				btnTotalValue.setText("" + round(currentTotal, 2));
+				updateTotalValue("" + round(currentTotal, 2));
 				btnDeleteMenu.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -1510,7 +1532,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		float totalExtra = getTotalExtraValue(extraItemSet);
 		float currentTotal = Float.parseFloat(btnTotalValue.getText()
 				.toString()) + totalExtra;
-		btnTotalValue.setText("" + round(currentTotal, 2));
+		updateTotalValue("" + round(currentTotal, 2));
 
 	}
 
@@ -1542,7 +1564,21 @@ public class ListDetailActivity extends FragmentActivity implements
 				e.printStackTrace();
 			}
 		}
-		btnTotalValue.setText("" + round(total, 2));
+//		btnTotalValue.setText("" + round(total, 2));
+		updateTotalValue("" + round(total, 2));
+	}
+
+	private void updateTotalValue(String string) {
+		// TODO Auto-generated method stub
+		btnTotalValue.setText(string);
+		float totalValue = Float.parseFloat(string);
+		if(totalValue > 0){
+			mBtnBack.setBackgroundResource(R.drawable.ic_btn_menu_done);
+			mBtnBack.setText("Add to order");
+		}else{
+			mBtnBack.setBackgroundResource(R.drawable.icon_back);
+			mBtnBack.setText("");
+		}
 	}
 
 	public float getTotalSize(List<SizeItem> list) {
