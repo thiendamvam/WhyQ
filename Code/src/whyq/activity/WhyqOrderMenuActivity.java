@@ -1,6 +1,7 @@
 package whyq.activity;
 
 import whyq.WhyqApplication;
+import whyq.controller.RestaurentRunnerController;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -93,26 +94,34 @@ public class WhyqOrderMenuActivity extends DialogFragment implements
 
 	private void checkOrderMenu() {
 		// TODO Auto-generated method stub
-		if (ListDetailActivity.store.isHomeDeliver()) {
+		if(RestaurentRunnerController.restaurentRRID != null){
+			storeId = RestaurentRunnerController.restaurentRRID;
 			btnHomeDelivery.setVisibility(View.VISIBLE);
-		}else{
-			btnHomeDelivery.setVisibility(View.GONE);
-		}
-		if (ListDetailActivity.store.isTakeAway()) {
-			btnTakeAway.setVisibility(View.VISIBLE);
-			
-		}else{
 			btnTakeAway.setVisibility(View.GONE);
-		}
-		if (ListDetailActivity.store.isHotelDeliver()) {
-			btnHotelDelivery.setVisibility(View.VISIBLE);
-		}else{
 			btnHotelDelivery.setVisibility(View.GONE);
-		}
-		if (ListDetailActivity.store.isAtPlace()) {
-			btnDinein.setVisibility(View.VISIBLE);
-		}else{
 			btnDinein.setVisibility(View.GONE);
+		}else{
+			if (ListDetailActivity.store.isHomeDeliver()) {
+				btnHomeDelivery.setVisibility(View.VISIBLE);
+			}else{
+				btnHomeDelivery.setVisibility(View.GONE);
+			}
+			if (ListDetailActivity.store.isTakeAway()) {
+				btnTakeAway.setVisibility(View.VISIBLE);
+				
+			}else{
+				btnTakeAway.setVisibility(View.GONE);
+			}
+			if (ListDetailActivity.store.isHotelDeliver()) {
+				btnHotelDelivery.setVisibility(View.VISIBLE);
+			}else{
+				btnHotelDelivery.setVisibility(View.GONE);
+			}
+			if (ListDetailActivity.store.isAtPlace()) {
+				btnDinein.setVisibility(View.VISIBLE);
+			}else{
+				btnDinein.setVisibility(View.GONE);
+			}
 		}
 	}
 

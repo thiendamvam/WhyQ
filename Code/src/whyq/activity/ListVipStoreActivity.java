@@ -297,7 +297,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 		}
 	}
 
-	public String getListItem() {
+	public static String getListItem() {
 		// TODO Auto-generated method stub
 		String result = "";
 		for (String key : ListDetailActivity.billList.keySet()) {
@@ -320,12 +320,12 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 	}
 	
 
-	private String getNote(Bill bill) {
+	private static String getNote(Bill bill) {
 		// TODO Auto-generated method stub
 		return ExpanMenuAdapter.noteList.get(bill.getId()) ==null? "": ExpanMenuAdapter.noteList.get(bill.getId());
 	}
 	
-	private String getSizeExtraOptionId(Bill bill) {
+	private static String getSizeExtraOptionId(Bill bill) {
 		// TODO Auto-generated method stub
 		String result = "";
 		List<SizeItem> sizeList = bill.getSizeList();

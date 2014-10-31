@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import whyq.WhyqApplication;
+import whyq.controller.RestaurentRunnerController;
 import whyq.interfaces.IDialogListener;
 import whyq.interfaces.IServiceListener;
 import whyq.model.DeliveryFee;
@@ -331,10 +332,17 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		@Override
 		protected void onPostExecute(HashMap<String, String> location) {
 			// TODO Auto-generated method stub
-			Bundle bundle = ListDetailActivity.bundle;
-			storeId = bundle.getString("store_id");
-			listItem = bundle.getString("list_items");
-			note = bundle.getString("note");
+			if(RestaurentRunnerController.restaurentRRID !=null){
+				storeId = RestaurentRunnerController.restaurentRRID;
+				listItem = RestaurentRunnerController.getListItem();
+				note = RestaurentRunnerController.restaurentRRNote;
+			}else{
+				Bundle bundle = ListDetailActivity.bundle;
+				storeId = bundle.getString("store_id");
+				listItem = bundle.getString("list_items");
+				note = bundle.getString("note");
+			}
+
 			if (location != null) {
 				longitude = location.get("lon");
 				latgitude = location.get("lat");

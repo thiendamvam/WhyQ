@@ -304,10 +304,17 @@ private int mAdapterType;
 							Intent intent = new Intent(context, ListVipStoreActivity.class);
 							intent.putExtra("vip", true);
 							intent.putExtra("name", store.getNameStore());
+							RestaurentRunnerController.restaurentRRID = "49";
+							
 							context.startActivity(intent);							
 							
 							
 						}else{
+							//Store 
+							if(mAdapterType != 2){
+								RestaurentRunnerController.restaurentRRID = null;
+								RestaurentRunnerController.restaurentList.clear();
+							}
 							if(RestaurentRunnerController.restaurentList!=null && RestaurentRunnerController.restaurentList.size() >= 2){
 								Util.showDialog(context, "Please order from no more than 2 establishments");
 							}else{
