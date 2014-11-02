@@ -209,12 +209,14 @@ public class ListDetailActivity extends FragmentActivity implements
 		if(getIntent().getExtras().getSerializable("push_data")!=null){
 			BillPushNotification declineData = (BillPushNotification) getIntent().getExtras().getSerializable("push_data");
 			id = declineData.getStoryId();
+			radioGroup.check(R.id.rdoMenu);
 			setViewContent(2);
 		}else{
 			id = getIntent().getStringExtra("id");	
 			mIsVipStore = getIntent().getBooleanExtra("is_vip", false);
 			billList  = new HashMap<String, List<Bill>>();
 			if(mIsVipStore){
+				radioGroup.check(R.id.rdoMenu);
 				setViewContent(2);
 				findViewById(R.id.btnViewBill).setVisibility(View.GONE);
 				mBtnBack = (Button)findViewById(R.id.btn_back);
@@ -228,7 +230,7 @@ public class ListDetailActivity extends FragmentActivity implements
 		}
 
 		Log.d("ListDetailActivity", "id " + id);
-		getDetailData();
+
 		// hide photos list when scroll
 		// lvResult.setOnScrollListener(this);
 
@@ -265,6 +267,21 @@ public class ListDetailActivity extends FragmentActivity implements
 		});
 
 		appyFont();
+		
+		//BindData
+		
+		if(mIsVipStore){
+			store = RestaurentRunnerController.storeList.get(id);
+			if(store != null){
+				bindStoreDetailData();	
+			}else{
+				getDetailData();
+			}
+			
+		}else{
+			getDetailData();		
+		}
+	
 	}
 
 	private void appyFont() {
@@ -532,13 +549,8 @@ public class ListDetailActivity extends FragmentActivity implements
 					store = (Store) data.getData();
 					if (store != null) {
 
-						storeType = Integer.valueOf(store.getCateid());
-						showHeaderImage();
-						bindData();
-						bindMenuData();
-						bindPromotionData();
-						bindImageList();
-						bindFriend();
+						
+						bindStoreDetailData();
 					}
 				} else if (data.getStatus().equals("401")) {
 					Util.loginAgain(context, data.getMessage());
@@ -627,6 +639,17 @@ public class ListDetailActivity extends FragmentActivity implements
 			Log.d(""+result.getAction(),"fail");
 		} 
 
+	}
+
+	private void bindStoreDetailData() {
+		// TODO Auto-generated method stub
+		storeType = Integer.valueOf(store.getCateid());
+		showHeaderImage();
+		bindData();
+		bindMenuData();
+		bindPromotionData();
+		bindImageList();
+		bindFriend();
 	}
 
 	private void calculateDeliveryFee() {
@@ -1406,10 +1429,16 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	public void onBack(View v) {
 		
-		if(billList !=null && billList.size() > 0){
+		if(mIsVipStore){
+			if(billList !=null && billList.size() > 0){
+				RestaurentRunnerController.restaurentList.put(id, billList);	
+			}
+			if(store !=null){
+				RestaurentRunnerController.storeList.put(store.getStoreId(), store);	
+			}
 			
-			RestaurentRunnerController.restaurentList.put(id, billList);
 		}
+		
 		finish();
 
 	}

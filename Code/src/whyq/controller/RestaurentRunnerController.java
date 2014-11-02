@@ -10,10 +10,12 @@ import whyq.model.Bill;
 import whyq.model.ExtraItem;
 import whyq.model.OptionItem;
 import whyq.model.SizeItem;
+import whyq.model.Store;
 
 public class RestaurentRunnerController{
 	
 	public static Map<String, Map<String, List<Bill>>> restaurentList = new HashMap<String, Map<String,List<Bill>>>();
+	public static Map<String, Store> storeList = new HashMap<String, Store>();
 	public static String restaurentRRID;
 	public static String restaurentRRNote;
 	

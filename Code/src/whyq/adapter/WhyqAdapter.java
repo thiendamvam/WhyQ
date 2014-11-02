@@ -314,6 +314,7 @@ private int mAdapterType;
 							if(mAdapterType != 2){
 								RestaurentRunnerController.restaurentRRID = null;
 								RestaurentRunnerController.restaurentList.clear();
+								RestaurentRunnerController.storeList.clear();
 							}
 							if(RestaurentRunnerController.restaurentList!=null && RestaurentRunnerController.restaurentList.size() >= 2){
 								Util.showDialog(context, "Please order from no more than 2 establishments");
