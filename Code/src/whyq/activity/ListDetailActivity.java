@@ -1600,14 +1600,17 @@ public class ListDetailActivity extends FragmentActivity implements
 	private void updateTotalValue(String string) {
 		// TODO Auto-generated method stub
 		btnTotalValue.setText(string);
-		float totalValue = Float.parseFloat(string);
-		if(totalValue > 0){
-			mBtnBack.setBackgroundResource(R.drawable.ic_btn_menu_done);
-			mBtnBack.setText("Add to order");
-		}else{
-			mBtnBack.setBackgroundResource(R.drawable.icon_back);
-			mBtnBack.setText("");
+		if (mIsVipStore) {
+			float totalValue = Float.parseFloat(string);
+			if(totalValue > 0){
+				mBtnBack.setBackgroundResource(R.drawable.ic_btn_menu_done);
+				mBtnBack.setText("Add to order");
+			}else{
+				mBtnBack.setBackgroundResource(R.drawable.icon_back);
+				mBtnBack.setText("");
+			}
 		}
+
 	}
 
 	public float getTotalSize(List<SizeItem> list) {
