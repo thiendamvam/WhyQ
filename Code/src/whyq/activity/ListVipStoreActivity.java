@@ -253,7 +253,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 			public void onLoadMore() {
 				// TODO Auto-generated method stub
 				Log.d("onLoadMore","page = "+page+" and mTotalPage "+mTotalPage);
-				if((page <= mTotalPage) || mTotalPage < 0){
+				if((page < mTotalPage) || mTotalPage < 0){
 					page++;
 					loadPermList = new LoadPermList();
 					loadPermList.execute();
@@ -761,8 +761,8 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 				Util.loginAgain(getParent(), data.getMessage());
 			} else if (data.getStatus().equals("204")) {
 
-				if (isLoadMore)
-					page--;
+//				if (isLoadMore)
+//					page--;
 			} else {
 				// Util.showDialog(getParent(), data.getMessage());
 			}
@@ -840,13 +840,13 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 
 		int currentItem = firstVisibleItem + visibleItemCount;
 		Log.d("onScroll", "onScroll current " + currentItem + " and total " + totalItemCount);
-		if ((currentItem >= totalItemCount - 1) && !isLoadMore) {
-			isLoadMore = true;
-			page++;
-			loadPermList = new LoadPermList();
-			loadPermList.execute();
-			;
-		}
+//		if ((currentItem >= totalItemCount - 1) && !isLoadMore) {
+//			isLoadMore = true;
+//			page++;
+//			loadPermList = new LoadPermList();
+//			loadPermList.execute();
+//			;
+//		}
 
 	}
 

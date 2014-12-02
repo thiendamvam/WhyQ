@@ -300,7 +300,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 			public void onLoadMore() {
 				// TODO Auto-generated method stub
 				Log.d("onLoadMore","page = "+page+" and mTotalPage "+mTotalPage);
-				if((page <= mTotalPage) || mTotalPage < 0){
+				if((page < mTotalPage) || mTotalPage < 0){
 					isLoadMore = true;
 					page++;
 					loadPermList = new LoadPermList(isSearch);
