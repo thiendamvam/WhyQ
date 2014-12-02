@@ -387,10 +387,16 @@ private int mAdapterType;
 	private long getLongFromTime(String start) {
 		// TODO Auto-generated method stub
 		
-		String hour = start.substring(0, start.indexOf(":"));
-		String minute = start.substring(start.indexOf(":")+1, start.length());
-		
-		return Integer.parseInt(hour)*60 + Integer.parseInt(minute);
+		try {
+			String hour = start.substring(0, start.indexOf(":"));
+			String minute = start.substring(start.indexOf(":")+1, start.length());
+			
+			return Integer.parseInt(hour)*60 + Integer.parseInt(minute);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 	public void addComments(View view, Store store) {

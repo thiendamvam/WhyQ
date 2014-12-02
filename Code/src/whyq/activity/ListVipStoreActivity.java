@@ -151,9 +151,11 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 	private ExpandableListView expandbleStoreView;
 	private TextView tvNumberResult;
 	private TextView tvTextSearch;
-	private int page = 0;
+	private int page = 1;
 	private TextView mTvHeaderTitle;
 	private Button mBtnDone;
+	private IntentFilter intentFilter;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -161,7 +163,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 		createUI();
 		FavouriteActivity.isFavorite = false;
 		service = new Service(ListVipStoreActivity.this);
-		regisReceiver();
+	
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils = new WhyqUtils();
 		utils.writeLogFile(ListVipStoreActivity.this.getIntent());
@@ -172,6 +174,8 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 		exeListActivity();
 	}
 
+	
+	
 	private void checkLocationAccess() {
 		// TODO Auto-generated method stub
 		Util.checkLocationSetting(getParent());
@@ -194,10 +198,17 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 
 	private void regisReceiver() {
 		// TODO Auto-generated method stub
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(DOWNLOAD_COMPLETED);
-		intentFilter.addAction(CHANGE_LOCATION);
-		registerReceiver(receiver, intentFilter);
+		try {
+			if (intentFilter == null) {
+				intentFilter = new IntentFilter();
+				intentFilter.addAction(DOWNLOAD_COMPLETED);
+				intentFilter.addAction(CHANGE_LOCATION);
+			}
+			registerReceiver(receiver, intentFilter);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 
 	protected void updateLocation(Intent intent) {
@@ -242,7 +253,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 			public void onLoadMore() {
 				// TODO Auto-generated method stub
 				Log.d("onLoadMore","page = "+page+" and mTotalPage "+mTotalPage);
-				if((page < mTotalPage) || mTotalPage < 0){
+				if((page <= mTotalPage) || mTotalPage < 0){
 					page++;
 					loadPermList = new LoadPermList();
 					loadPermList.execute();
@@ -383,21 +394,34 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 	@Override
 	protected void onResume() {
 		super.onResume();
-		page = 0;
+		page = 1;
 		if (!isFirst) {
 			isFirst = true;
 			// exeListActivity(false);
 
 		}
-
+		regisReceiver();
 	}
+	
+	
 
 	protected void onPause() {
 		super.onPause();
 		// isFirst = false;
 		nextItem = -1;
+		unRegisterReceiver();
 
 	}
+
+	private void unRegisterReceiver() {
+		// TODO Auto-generated method stub
+		if (receiver != null) {
+			unregisterReceiver(receiver);
+			
+		}
+	}
+
+
 
 	public void exeListActivity() {
 		// TODO Auto-generated method stub

@@ -193,7 +193,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 		FavouriteActivity.isFavorite = false;
 		service = new Service(ListActivity.this);
 		resetTabBarFocus(1);
-		regisReceiver();
+//		regisReceiver();
 		WhyqUtils.clearViewHistory();
 		WhyqUtils utils = new WhyqUtils();
 		utils.writeLogFile(ListActivity.this.getIntent());
@@ -225,10 +225,15 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 
 	private void regisReceiver() {
 		// TODO Auto-generated method stub
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(DOWNLOAD_COMPLETED);
-		intentFilter.addAction(CHANGE_LOCATION);
-		registerReceiver(receiver, intentFilter);
+		try {
+			IntentFilter intentFilter = new IntentFilter();
+			intentFilter.addAction(DOWNLOAD_COMPLETED);
+			intentFilter.addAction(CHANGE_LOCATION);
+			registerReceiver(receiver, intentFilter);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 
 	protected void updateLocation(Intent intent) {
@@ -295,7 +300,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 			public void onLoadMore() {
 				// TODO Auto-generated method stub
 				Log.d("onLoadMore","page = "+page+" and mTotalPage "+mTotalPage);
-				if((page < mTotalPage) || mTotalPage < 0){
+				if((page <= mTotalPage) || mTotalPage < 0){
 					isLoadMore = true;
 					page++;
 					loadPermList = new LoadPermList(isSearch);
@@ -387,6 +392,8 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
+		regisReceiver();
+
 		page = 1;
 		if (!isFirst) {
 			isFirst = true;
@@ -401,7 +408,10 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 //		isFirst = false;
 		nextItem = -1;
 		isExpandableSearch = false;
-
+		if (receiver != null) {
+			unregisterReceiver(receiver);
+			
+		}
 	}
 
 	public void exeListActivity(boolean isSearch) {
