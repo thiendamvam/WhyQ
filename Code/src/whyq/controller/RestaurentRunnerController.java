@@ -18,6 +18,7 @@ public class RestaurentRunnerController{
 	public static Map<String, Store> storeList = new HashMap<String, Store>();
 	public static String restaurentRRID;
 	public static String restaurentRRNote;
+	public static float deliveryFee;
 	
 	public RestaurentRunnerController() {
 		// TODO Auto-generated constructor stub

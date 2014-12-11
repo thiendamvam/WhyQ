@@ -116,8 +116,8 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 	private LinearLayout lnCoffe;
 
 	public static String searchKey = "";
-	public static String longitude = "";
-	public static String latgitude = "";
+	public static String longitude = "106.629664";
+	public static String latgitude = "10.823099";
 	public static String currentLocation;
 	private String filterType = "1";
 	private String cateId = "1";

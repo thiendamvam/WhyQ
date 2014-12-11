@@ -659,6 +659,9 @@ public class ListDetailActivity extends FragmentActivity implements
 			for(DeliveryFee item: deliveryFeeLis){
 				if(distance >= item.getFrom() && distance <= item.getTo()){
 					deliveryFee = item.getFee();
+					if (mIsVipStore) {
+						RestaurentRunnerController.deliveryFee = deliveryFee;
+					}
 				}
 			}
 		} catch (Exception e) {

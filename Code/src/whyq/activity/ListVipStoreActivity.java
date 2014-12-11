@@ -105,8 +105,8 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 	 */
 
 	public static String searchKey = "";
-	public static String longitude = "";
-	public static String latgitude = "";
+	public static String longitude = "106.629664";
+	public static String latgitude = "10.823099";
 	public static String currentLocation;
 	private String filterType = "1";
 	private String cateId = "1";
@@ -281,6 +281,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 			Bundle bundle = new Bundle();
 			bundle.putString("list_items", getListItem());
 			bundle.putBoolean("is_ordered", false);
+			bundle.putBoolean("is_vip", true);
 			bundle.putFloat("total", Float.parseFloat(ListDetailActivity.btnTotalValue.getText().toString()));
 			intent.putExtra("data", bundle);
 			startActivity(intent);

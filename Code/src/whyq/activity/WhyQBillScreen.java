@@ -6,6 +6,7 @@ import java.util.Map;
 
 import whyq.WhyqApplication;
 import whyq.adapter.WhyQBillAdapter;
+import whyq.controller.RestaurentRunnerController;
 import whyq.interfaces.IServiceListener;
 import whyq.model.Bill;
 import whyq.model.BillPushNotification;
@@ -47,6 +48,8 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 	private boolean isOrdered;
 	private String billId;
 	private TextView tvDelivery;
+	private boolean mIsVipStore;
+	private float mDeliveryFee;
 	public static int LOGIN_REQUEST = 1;
 	
 	public static WhyQBillScreen sBillActivity;
@@ -67,6 +70,12 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		lvBill = (ListView)findViewById(R.id.lvBill);
 		listBill = new ArrayList<Bill>();
 		isOrdered = bundle.getBoolean("is_ordered", true);
+		mIsVipStore = bundle.getBoolean("is_vip", false);
+		if (mIsVipStore) {
+			mDeliveryFee = RestaurentRunnerController.deliveryFee;
+		}else{
+			mDeliveryFee = mDeliveryFee;
+		}
 		btnDone = (Button)findViewById(R.id.btnDone);
 		if(!isOrdered){
 			totalValue = bundle.getFloat("total", 0);
@@ -114,7 +123,12 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		ListDetailActivity.promotion = null;
-		ListDetailActivity.deliveryFee = 0;
+		if (!mIsVipStore) {
+			ListDetailActivity.deliveryFee = 0;	
+		}else{
+			
+		}
+		
 	}
 	private void exeGetBillDetail(String billId) {
 		// TODO Auto-generated method stub
@@ -127,9 +141,9 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 		
 		try {
 
-			if(ListDetailActivity.deliveryFee >= 0){
-				tvDelivery.setText("$"+Util.round(ListDetailActivity.deliveryFee, 2));
-//				totalValue += ListDetailActivity.deliveryFee;
+			if(mDeliveryFee >= 0){
+				tvDelivery.setText("$"+Util.round(mDeliveryFee, 2));
+//				totalValue += mDeliveryFee;
 			}
 			tvTotal.setText("$"+Util.round(totalValue, 2));
 			if(valueDiscount!=0){
@@ -142,9 +156,9 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 				
 			}
 			if(valueDiscount!=0 && totalValue > 15){
-				totalafterDiscount = totalValue - (float)(totalValue*(valueDiscount)/100) + ListDetailActivity.deliveryFee;
+				totalafterDiscount = totalValue - (float)(totalValue*(valueDiscount)/100) + mDeliveryFee;
 			}else{
-				totalafterDiscount = totalValue + ListDetailActivity.deliveryFee;
+				totalafterDiscount = totalValue + mDeliveryFee;
 				ListDetailActivity.promotion = null;
 			}
 			tvDiscount.setText(ListDetailActivity.promotion!=null? ListDetailActivity.promotion.getValuePromotion()+"%": "0.0%");
@@ -165,7 +179,7 @@ public class WhyQBillScreen extends FragmentActivity implements IServiceListener
 //				float discount = item.getDiscount()!=null?Float.parseFloat(item.getDiscount()):0;
 				totalValue += price*unit;
 				if(isOrdered){
-					ListDetailActivity.deliveryFee = Float.parseFloat(item.getDeliveryFeeValue());
+					mDeliveryFee = Float.parseFloat(item.getDeliveryFeeValue());
 					valueDiscount = item.getDiscount()!=null?Float.parseFloat(item.getDiscount()):Float.parseFloat(ListDetailActivity.promotion.getValuePromotion());
 					ListDetailActivity.promotion  = new Promotion();
 					ListDetailActivity.promotion.setValuePromotion(""+Util.round((valueDiscount/totalValue)*100,0));
