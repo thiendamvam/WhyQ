@@ -33,6 +33,14 @@ public class WhyqLogout extends Activity implements IServiceListener{
 	public void onLogoutOnClicked(View v){
 		service.logout();
 		showLoading();
+		
+		//Logout facebook in case logged in facebook
+		try {
+			Util.facebookLogout();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 
 	public void onCancelClicked(View v){

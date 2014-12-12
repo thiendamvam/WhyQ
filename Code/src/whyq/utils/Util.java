@@ -739,4 +739,11 @@ public class Util {
 	        return new Date(0);
 	    }
 	}
+	
+	public static void facebookLogout() {
+        Session activeSession = Session.getActiveSession();
+        if (activeSession != null) {
+                 activeSession.closeAndClearTokenInformation();
+        }
+}
 }
