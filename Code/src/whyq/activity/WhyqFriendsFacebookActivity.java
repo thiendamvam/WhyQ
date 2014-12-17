@@ -230,7 +230,8 @@ public class WhyqFriendsFacebookActivity extends ImageWorkerActivity implements
 						} else {
 							final String requestId = values
 									.getString("post_id");
-							if (requestId != null) {
+							if (requestId != null) // need to check more 
+							{
 								Toast.makeText(
 										mActivity.getApplicationContext(),
 										"Feed sent", Toast.LENGTH_SHORT).show();

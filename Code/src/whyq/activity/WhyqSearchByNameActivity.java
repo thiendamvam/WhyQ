@@ -203,15 +203,16 @@ public class WhyqSearchByNameActivity extends ImageWorkerActivity implements
 						} else {
 							final String requestId = values
 									.getString("post_id");
-							if (requestId != null) {
+							if (requestId != null) // nned to check more
+							{
 								Toast.makeText(
 										mActivity.getApplicationContext(),
 										"Feed sent", Toast.LENGTH_SHORT).show();
 							} else {
-								Toast.makeText(
-										mActivity.getApplicationContext(),
-										"Feed cancelled", Toast.LENGTH_SHORT)
-										.show();
+//								Toast.makeText(
+//										mActivity.getApplicationContext(),
+//										"Feed cancelled", Toast.LENGTH_SHORT)
+//										.show();
 							}
 						}
 					}

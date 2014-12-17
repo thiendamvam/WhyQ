@@ -606,7 +606,7 @@ public class ListDetailActivity extends FragmentActivity implements
 					if (userList.size() > 0) {
 						loadCheckFriend(userList);
 						try {
-							getDeliveryFeeList();
+//							getDeliveryFeeList();
 //							deliveryFee = Float.parseFloat(store.getFreeChargeOutRadiusDelieverPerOrder());//Float.parseFloat(store.getFreeChargeOutRadiusDelieverPerKm())*							
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -614,9 +614,12 @@ public class ListDetailActivity extends FragmentActivity implements
 						}
 					}
 				}
+				getDeliveryFeeList();
+				
 			} else if (data.getStatus().equals("401")) {
 				Util.loginAgain(context, data.getMessage());
 			} else {
+				getDeliveryFeeList();
 				// Util.showDialog(context, data.getMessage());
 			}
 
