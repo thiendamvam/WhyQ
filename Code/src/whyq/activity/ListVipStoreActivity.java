@@ -768,6 +768,8 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 				// Util.showDialog(getParent(), data.getMessage());
 			}
 			hideProgress();
+		}else if (!result.isSuccess() && result.getAction() == ServiceAction.ActionGetBusinessList) {
+			hideProgress();
 		} else if (result.isSuccess() && result.getAction() == ServiceAction.ActionPostFavorite) {
 			// Toast.makeText(context, "Favourite successfully",
 			// Toast.LENGTH_SHORT).show();

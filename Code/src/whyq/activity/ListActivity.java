@@ -1086,7 +1086,14 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 				isLoadMore = false;
 				whyqListView.onLoadMoreComplete();
 			}
-		} else if (result.isSuccess()
+		} else if (!result.isSuccess()
+				&& result.getAction() == ServiceAction.ActionGetBusinessList) {
+			hideProgress();
+			if (isLoadMore && whyqListView != null){
+				isLoadMore = false;
+				whyqListView.onLoadMoreComplete();
+			}
+		}else if (result.isSuccess()
 				&& result.getAction() == ServiceAction.ActionPostFavorite) {
 			// Toast.makeText(context, "Favourite successfully",
 			// Toast.LENGTH_SHORT).show();
