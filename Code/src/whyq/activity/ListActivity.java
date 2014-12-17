@@ -468,6 +468,7 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 			loadPermList.execute();
 		} else {
 			Util.showNetworkError(context);
+			hideProgress();
 		}
 	}
 
