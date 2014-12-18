@@ -11,6 +11,8 @@
         android:id="@+id/rlBackField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="12dp"
         android:onClick="onBack" >
 
         <Button
@@ -20,7 +22,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_margin="12dp"
             android:background="@drawable/icon_back"
             android:onClick="onBack" />
     </RelativeLayout>
