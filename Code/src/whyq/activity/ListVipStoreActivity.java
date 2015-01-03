@@ -11,7 +11,7 @@ import org.apache.http.message.BasicNameValuePair;
 import whyq.WhyqApplication;
 import whyq.WhyqMain;
 import whyq.activity.ListActivity.LoadPermList;
-import whyq.adapter.ExpanMenuAdapter;
+import whyq.adapter.ExpandMenuAdapterV2;
 import whyq.adapter.ExpandableStoreAdapter;
 import whyq.adapter.WhyqAdapter;
 import whyq.adapter.WhyqAdapter.ViewHolder;
@@ -334,7 +334,7 @@ public class ListVipStoreActivity extends FragmentActivity implements OnClickLis
 
 	private static String getNote(Bill bill) {
 		// TODO Auto-generated method stub
-		return ExpanMenuAdapter.noteList.get(bill.getId()) ==null? "": ExpanMenuAdapter.noteList.get(bill.getId());
+		return ExpandMenuAdapterV2.noteList.get(bill.getId()) ==null? "": ExpandMenuAdapterV2.noteList.get(bill.getId());
 	}
 	
 	private static String getSizeExtraOptionId(Bill bill) {

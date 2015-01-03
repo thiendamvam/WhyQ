@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import whyq.activity.ListDetailActivity;
-import whyq.adapter.ExpanMenuAdapter;
+import whyq.adapter.ExpandMenuAdapterV2;
 import whyq.model.Bill;
 import whyq.model.ExtraItem;
 import whyq.model.OptionItem;
@@ -47,7 +47,7 @@ public class RestaurentRunnerController{
 	}
 	private static String getNote(Bill bill) {
 		// TODO Auto-generated method stub
-		return ExpanMenuAdapter.noteList.get(bill.getId()) ==null? "": ExpanMenuAdapter.noteList.get(bill.getId());
+		return ExpandMenuAdapterV2.noteList.get(bill.getId()) ==null? "": ExpandMenuAdapterV2.noteList.get(bill.getId());
 	}
 	
 	private static String getSizeExtraOptionId(Bill bill) {

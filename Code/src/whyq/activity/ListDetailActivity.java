@@ -12,8 +12,8 @@ import java.util.TreeMap;
 import whyq.WhyqApplication;
 import whyq.adapter.BasicImageListAdapter;
 import whyq.adapter.BasicUserAdapter;
-import whyq.adapter.ExpanMenuAdapter;
-import whyq.adapter.ExpanMenuAdapter.ViewHolderMitemInfo;
+import whyq.adapter.ExpandMenuAdapterV2;
+import whyq.adapter.ExpandMenuAdapterV2.ViewHolderMitemInfo;
 import whyq.adapter.WhyqMenuAdapter;
 import whyq.controller.RestaurentRunnerController;
 import whyq.interfaces.IServiceListener;
@@ -303,7 +303,7 @@ public class ListDetailActivity extends FragmentActivity implements
 	private String currentStoreId;
 	public static Promotion promotion;
 	public static float deliveryFee;
-	private ExpanMenuAdapter mExpanMenuAdapter;
+	private ExpandMenuAdapterV2 mExpandMenuAdapterV2;
 	public static List<DeliveryFee> deliveryFeeLis;
 	public static String commentContent;
 
@@ -871,13 +871,13 @@ public class ListDetailActivity extends FragmentActivity implements
 						e.printStackTrace();
 					}
 				}
-				mExpanMenuAdapter = new ExpanMenuAdapter(
+				mExpandMenuAdapterV2 = new ExpandMenuAdapterV2(
 						ListDetailActivity.this, lvMenu, mGroupCollection);
 
-				lvMenu.setAdapter(mExpanMenuAdapter);
-				mExpanMenuAdapter.notifyDataSetChanged();
+				lvMenu.setAdapter(mExpandMenuAdapterV2);
+				mExpandMenuAdapterV2.notifyDataSetChanged();
 
-				lvMenu.setAdapter(mExpanMenuAdapter);
+				lvMenu.setAdapter(mExpandMenuAdapterV2);
 				for (int i = 0; i < mGroupCollection.size(); i++) {
 					lvMenu.expandGroup(i);
 				}
@@ -1055,8 +1055,8 @@ public class ListDetailActivity extends FragmentActivity implements
 			// updateCount(holder,true);
 			// updateCountInExpandListview(holder, true);
 		}
-		if (mExpanMenuAdapter != null) {
-			mExpanMenuAdapter.notifyDataSetChanged();
+		if (mExpandMenuAdapterV2 != null) {
+			mExpandMenuAdapterV2.notifyDataSetChanged();
 		}
 	}
 
@@ -1087,7 +1087,7 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	private Menu getMenuItemById(String menuId) {
 		// TODO Auto-generated method stub
-		List<GroupMenu> data = mExpanMenuAdapter.getData();
+		List<GroupMenu> data = mExpandMenuAdapterV2.getData();
 		for (GroupMenu groupItem : data) {
 			List<Menu> menuList = groupItem.getMenuList();
 			for (Menu menu : menuList) {
@@ -1142,8 +1142,8 @@ public class ListDetailActivity extends FragmentActivity implements
 				// bill.setUnit("1");
 				// billList.put(item.getId(), bill);
 			}
-			if (mExpanMenuAdapter != null) {
-				mExpanMenuAdapter.notifyDataSetChanged();
+			if (mExpandMenuAdapterV2 != null) {
+				mExpandMenuAdapterV2.notifyDataSetChanged();
 			}
 		}
 	}
@@ -1212,7 +1212,7 @@ public class ListDetailActivity extends FragmentActivity implements
 
 	private String getNote(Bill bill) {
 		// TODO Auto-generated method stub
-		return ExpanMenuAdapter.noteList.get(bill.getId()) ==null? "": ExpanMenuAdapter.noteList.get(bill.getId());
+		return ExpandMenuAdapterV2.noteList.get(bill.getId()) ==null? "": ExpandMenuAdapterV2.noteList.get(bill.getId());
 	}
 
 	private String getSizeExtraOptionId(Bill bill) {
@@ -1556,7 +1556,7 @@ public class ListDetailActivity extends FragmentActivity implements
 						holder.lnPreview.removeView(preview);
 					}
 				});
-				mExpanMenuAdapter.notifyDataSetChanged();
+				mExpandMenuAdapterV2.notifyDataSetChanged();
 			}
 
 		}
