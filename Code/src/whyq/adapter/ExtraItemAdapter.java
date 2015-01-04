@@ -16,16 +16,23 @@ public class ExtraItemAdapter extends OptionItemBasicAdapter {
 
 	public ExtraItemAdapter(Context context, int resource, List<ExtraItem> objects) {
 
-		super(context, resource, convertSizeToOption(objects));
+		super(context, resource, convertExtraToOption(objects));
 		// TODO Auto-generated constructor stub
 		mContext = context;
 	}
 
+
+	
+	public void updateData(List<ExtraItem> list) {
+		// TODO Auto-generated method stub
+		super.setDatas(convertExtraToOption(list));
+	}
+	
 	public void setDelegate(OnnOptionItemSelected listener){
 		mOnOptionItemSelected = listener;
 	}
 	
-	private static List<OptionItem> convertSizeToOption(List<ExtraItem> objects) {
+	private static List<OptionItem> convertExtraToOption(List<ExtraItem> objects) {
 		// TODO Auto-generated method stub
 		List<OptionItem> result = new ArrayList<OptionItem>();
 		for (ExtraItem item : objects) {
@@ -48,19 +55,19 @@ public class ExtraItemAdapter extends OptionItemBasicAdapter {
 
 	}
 	
-	@Override
-	protected void onItemClicked(OptionItem item) {
-		// TODO Auto-generated method stub
-		super.onItemClicked(item);
-		
-		Log.d("onItemClicked","onItemClicked"+item);
-		
-		ExtraItem i = convertOptionItemToExtraItem(item);
-		
-		mOnOptionItemSelected.onSelected(2, i);
-		
-		notifyDataSetChanged();
-	}
+//	@Override
+//	protected void onItemClicked(OptionItem item) {
+//		// TODO Auto-generated method stub
+//		super.onItemClicked(item);
+//		
+//		Log.d("onItemClicked","onItemClicked"+item);
+//		
+//		ExtraItem i = convertOptionItemToExtraItem(item);
+//		
+//		mOnOptionItemSelected.onSelected(2, i);
+//		
+//		notifyDataSetChanged();
+//	}
 
 	public static ExtraItem convertOptionItemToExtraItem(OptionItem item){
 		ExtraItem i = new ExtraItem();

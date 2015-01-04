@@ -20,6 +20,11 @@ public class SizeItemAdapter extends OptionItemBasicAdapter {
 		// TODO Auto-generated constructor stub
 	}
 
+	public void updateData(List<SizeItem> list) {
+		// TODO Auto-generated method stub
+		super.setDatas(convertSizeToOption(list));
+	}
+	
 	public void setDelegate(OnnOptionItemSelected listener){
 		mOnOptionItemSelected = listener;
 	}
@@ -49,17 +54,17 @@ public class SizeItemAdapter extends OptionItemBasicAdapter {
 	}
 	
 	
-	@Override
-	protected void onItemClicked(OptionItem item) {
-		// TODO Auto-generated method stub
-		super.onItemClicked(item);
-		
-		SizeItem i = convertOptionItemToSizeItem(item);
-		
-		mOnOptionItemSelected.onSelected(0, i);
-		
-		notifyDataSetChanged();
-	}
+//	@Override
+//	protected void onItemClicked(OptionItem item) {
+//		// TODO Auto-generated method stub
+//		super.onItemClicked(item);
+//		
+//		SizeItem i = convertOptionItemToSizeItem(item);
+//		
+//		mOnOptionItemSelected.onSelected(0, i);
+//		
+//		notifyDataSetChanged();
+//	}
 	
 	public static SizeItem convertOptionItemToSizeItem(OptionItem item){
 		SizeItem i = new SizeItem();

@@ -140,7 +140,7 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 	@Override
 	public int getChildrenCount(int arg0) {
 		// TODO Auto-generated method stub
-		Log.d("getChildrenCount", "size: " + mGroupCollection.get(arg0).getMenuList().size());
+//		Log.d("getChildrenCount", "size: " + mGroupCollection.get(arg0).getMenuList().size());
 		return mGroupCollection.get(arg0).getMenuList().size();
 	}
 
@@ -150,11 +150,11 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 		// TODO Auto-generated method stub
 	
 		final Menu item = mGroupCollection.get(arg0).getMenuList().get(arg1);
-		Log.d("getChildView", "getChildView id "+item.getId());
+		Log.d("getChildView", "getChildView id "+ view);
 		{
 			LayoutInflater inflator = ((ListDetailActivity) mContext).getLayoutInflater();
 			final ViewHolderMitemInfo viewHolder;
-			if (true) {//view == null
+			if (view == null) {//view == null
 				viewHolder = new ViewHolderMitemInfo();
 				view = inflator.inflate(R.layout.whyq_menu_item_phase2, null);
 				viewHolder.tvType = (TextView) view.findViewById(R.id.tvType);
@@ -177,7 +177,8 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 
 				viewHolder.hlv_sizes.setTag(listview.SIZES);
 				viewHolder.hlv_options.setTag(listview.OPTIONS);
-				viewHolder.hlv_extras.setTag(listview.SIZES);
+				viewHolder.hlv_extras.setTag(listview.EXTRAS);
+				
 				
 				viewHolder.hlv_sizes.setOnItemClickListener(this);
 				viewHolder.hlv_options.setOnItemClickListener(this);
@@ -245,12 +246,18 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 			if (item.getOptionItemList() != null && item.getOptionItemList().size() > 0) {
 				List<OptionItem> list = item.getOptionItemList();
 				
-				OptionItemAdapter optionAdapter = new OptionItemAdapter(mContext, R.layout.option_item, list);
-				optionAdapter.setDelegate(this);
-				viewHolder.hlv_options.setAdapter(optionAdapter);
+				OptionItemAdapter optionAdapter = (OptionItemAdapter)viewHolder.hlv_options.getAdapter();
+				if (optionAdapter == null) {
+					optionAdapter = new OptionItemAdapter(mContext, R.layout.option_item, list);	
+					optionAdapter.setDelegate(this);
+					viewHolder.hlv_options.setAdapter(optionAdapter);
+				}else{
+					optionAdapter.updateData(list);
+					optionAdapter.notifyDataSetChanged();
+				}
 				
 				
-				
+							
 				setViewVisibility(view.findViewById(R.id.divery_1), true);
 				isHaveMenu = true;
 				setViewVisibility(view.findViewById(R.id.ln_option), true);
@@ -262,9 +269,16 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 			if (item.getSizeItemList() != null && item.getSizeItemList().size() > 0) {
 				List<SizeItem> list = item.getSizeItemList();
 
-				SizeItemAdapter sizeAdapter = new SizeItemAdapter(mContext, R.layout.option_item, list);
-				sizeAdapter.setDelegate(this);
-				viewHolder.hlv_sizes.setAdapter(sizeAdapter);
+				SizeItemAdapter sizeAdapter = (SizeItemAdapter)viewHolder.hlv_sizes.getAdapter();
+				if (sizeAdapter == null) {
+					sizeAdapter = new SizeItemAdapter(mContext, R.layout.option_item, list);	
+					sizeAdapter.setDelegate(this);
+					viewHolder.hlv_sizes.setAdapter(sizeAdapter);
+				}else{
+					sizeAdapter.updateData(list);
+					sizeAdapter.notifyDataSetChanged();
+				}
+				
 				
 				isHaveMenu = true;
 				setViewVisibility(view.findViewById(R.id.ln_size), true);
@@ -279,9 +293,17 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 				// setViewVisibility(lnExtra, true);
 				List<ExtraItem> list = item.getExtraItemList();
 
-				ExtraItemAdapter extrasAdapter = new ExtraItemAdapter(mContext, R.layout.option_item, list);
-				extrasAdapter.setDelegate(this);
-				viewHolder.hlv_extras.setAdapter(extrasAdapter);
+				ExtraItemAdapter extrasAdapter = (ExtraItemAdapter) viewHolder.hlv_extras.getAdapter();
+				if (extrasAdapter == null) {
+					extrasAdapter =  new ExtraItemAdapter(mContext, R.layout.option_item, list);
+					extrasAdapter.setDelegate(this);	
+					viewHolder.hlv_extras.setAdapter(extrasAdapter);
+				}else{
+					extrasAdapter.updateData(list);
+					extrasAdapter.notifyDataSetChanged();
+				}
+				
+				
 
 				isHaveMenu = true;
 				setViewVisibility(view.findViewById(R.id.ln_extra), true);
@@ -366,6 +388,8 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 			 * Bind menu preview to view
 			 */
 			ViewGroup viewGroup = (ViewGroup) viewHolder.lnPreview.getParent();
+			viewHolder.lnPreview.removeAllViewsInLayout();
+			
 			final List<Bill> billList = ListDetailActivity.billList.get(item.getId());
 			if(item.getUnitForBill() > 0 && billList != null){//billList!=null && billList.size()
 				
@@ -743,6 +767,7 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 
 		Menu menu = (Menu)v.getTag();
 		exeAddItemToList(menu, false);
+		notifyDataSetChanged();
 	}
 
 	private void exeAddItemToList(Menu menu, boolean isUpdate) {
@@ -1064,6 +1089,9 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 		OptionItemBasicAdapter.OptionItemHolder holder = (OptionItemBasicAdapter.OptionItemHolder) view.getTag();
 		OptionItem item = holder.data;
 		
+		// Keep the current first position
+		int firstPosition = parent.getLastVisiblePosition();
+		
 		ExpandMenuAdapterV2.listview tag = (ExpandMenuAdapterV2.listview)parent.getTag();
 		if (tag == listview.SIZES) {
 			onSelected(0, SizeItemAdapter.convertOptionItemToSizeItem(item));
@@ -1075,5 +1103,9 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 			onSelected(2, ExtraItemAdapter.convertOptionItemToExtraItem(item));
 			
 		}
+		Log.d("onItemClick", "setSelection "+firstPosition);
+		// Reset first position
+		parent.setSelection(firstPosition);
+		
 	}
 }
