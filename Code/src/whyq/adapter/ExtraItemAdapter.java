@@ -55,6 +55,14 @@ public class ExtraItemAdapter extends OptionItemBasicAdapter {
 		
 		Log.d("onItemClicked","onItemClicked"+item);
 		
+		ExtraItem i = convertOptionItemToExtraItem(item);
+		
+		mOnOptionItemSelected.onSelected(2, i);
+		
+		notifyDataSetChanged();
+	}
+
+	public static ExtraItem convertOptionItemToExtraItem(OptionItem item){
 		ExtraItem i = new ExtraItem();
 		i.setName(item.getName());
 		i.setValue(item.getValue());
@@ -68,9 +76,6 @@ public class ExtraItemAdapter extends OptionItemBasicAdapter {
 		i.setStatus(item.getStatus());
 		i.setType(item.getType());
 		
-		mOnOptionItemSelected.onSelected(2, i);
-		
-		notifyDataSetChanged();
+		return i;
 	}
-
 }

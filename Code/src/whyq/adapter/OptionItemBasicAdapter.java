@@ -71,14 +71,14 @@ public class OptionItemBasicAdapter extends ArrayAdapter<OptionItem> {
 			holder.mValue = (TextView) view.findViewById(R.id.tv_option_item_value);
 			holder.mLnItem = (LinearLayout)view.findViewById(R.id.ln_item_option);
 			
-			holder.mLnItem.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					onItemClicked(item);
-				}
-			});
+//			holder.mLnItem.setOnClickListener(new View.OnClickListener() {
+//				
+//				@Override
+//				public void onClick(View v) {
+//					// TODO Auto-generated method stub
+//					onItemClicked(item);
+//				}
+//			});
 			
 			view.setTag(holder);
 		} else {
@@ -103,11 +103,11 @@ public class OptionItemBasicAdapter extends ArrayAdapter<OptionItem> {
 		
 	}
 
-	private static class OptionItemHolder {
+	public static class OptionItemHolder {
 
 		private TextView mName;
 		private TextView mValue;
 		private LinearLayout mLnItem;
-		private OptionItem data;
+		public OptionItem data;
 	}
 }

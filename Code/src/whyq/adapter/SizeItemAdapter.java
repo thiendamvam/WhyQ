@@ -54,6 +54,14 @@ public class SizeItemAdapter extends OptionItemBasicAdapter {
 		// TODO Auto-generated method stub
 		super.onItemClicked(item);
 		
+		SizeItem i = convertOptionItemToSizeItem(item);
+		
+		mOnOptionItemSelected.onSelected(0, i);
+		
+		notifyDataSetChanged();
+	}
+	
+	public static SizeItem convertOptionItemToSizeItem(OptionItem item){
 		SizeItem i = new SizeItem();
 		i.setName(item.getName());
 		i.setValue(item.getValue());
@@ -67,9 +75,7 @@ public class SizeItemAdapter extends OptionItemBasicAdapter {
 		i.setStatus(item.getStatus());
 		i.setType(item.getType());
 		
-		mOnOptionItemSelected.onSelected(0, i);
-		
-		notifyDataSetChanged();
+		return i;
 	}
 
 

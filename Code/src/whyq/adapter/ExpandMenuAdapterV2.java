@@ -28,10 +28,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageButton;
@@ -44,8 +46,14 @@ import com.custom.WebImageView;
 import com.meetme.android.horizontallistview.HorizontalListView;
 import com.whyq.R;
 
-public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements OnClickListener, OnnOptionItemSelected {
 
+public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements OnClickListener, OnnOptionItemSelected , OnItemClickListener{
+
+	
+	public enum listview{
+		SIZES, OPTIONS, EXTRAS
+	}
+	
 	@Override
 	public void notifyDataSetChanged() {
 		// TODO Auto-generated method stub
@@ -167,7 +175,13 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 				viewHolder.hlv_options = (HorizontalListView)view.findViewById(R.id.hlv_options);
 				viewHolder.hlv_extras = (HorizontalListView)view.findViewById(R.id.hlv_extras);
 
-
+				viewHolder.hlv_sizes.setTag(listview.SIZES);
+				viewHolder.hlv_options.setTag(listview.OPTIONS);
+				viewHolder.hlv_extras.setTag(listview.SIZES);
+				
+				viewHolder.hlv_sizes.setOnItemClickListener(this);
+				viewHolder.hlv_options.setOnItemClickListener(this);
+				viewHolder.hlv_extras.setOnItemClickListener(this);
 				
 				viewHolder.btnAdd.setOnClickListener(this);
 				viewHolder.btnRemove.setOnClickListener(this);
@@ -1041,6 +1055,25 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 		}else if(type == 2){
 			ExtraItem item = (ExtraItem)data;
 			onExtraClicked(0, item);
+		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		// TODO Auto-generated method stub
+		OptionItemBasicAdapter.OptionItemHolder holder = (OptionItemBasicAdapter.OptionItemHolder) view.getTag();
+		OptionItem item = holder.data;
+		
+		ExpandMenuAdapterV2.listview tag = (ExpandMenuAdapterV2.listview)parent.getTag();
+		if (tag == listview.SIZES) {
+			onSelected(0, SizeItemAdapter.convertOptionItemToSizeItem(item));
+			
+		}else if(tag == listview.OPTIONS){
+			onSelected(1, item);
+			
+		}else if(tag == listview.EXTRAS){
+			onSelected(2, ExtraItemAdapter.convertOptionItemToExtraItem(item));
+			
 		}
 	}
 }
