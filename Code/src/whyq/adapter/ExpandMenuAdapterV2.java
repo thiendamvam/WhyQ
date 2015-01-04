@@ -371,6 +371,8 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 							((TextView) preview.findViewById(R.id.tv_size)).setText("Size: $"+value);
 							sizeValue += value;
 							
+						}else{
+							preview.findViewById(R.id.tv_size).setVisibility(View.GONE);	
 						}
 
 						if(bill.getOptionList()!=null && bill.getOptionList().size() > 0){
@@ -378,13 +380,18 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 							float value = getTotalOptionPrice(bill.getOptionList());
 							((TextView) preview.findViewById(R.id.tv_option)).setText("Option: $"+value);
 							sizeValue += value;
+						}else{
+							preview.findViewById(R.id.tv_option).setVisibility(View.GONE);
 						}
+						
 						if(bill.getExtraList()!=null && bill.getExtraList().size() > 0){
 							viewHolder.lnPreview.setVisibility(View.VISIBLE);
 							float value = getTotalExtraPrice(bill.getExtraList());
 							((TextView) preview.findViewById(R.id.tv_extra)).setText("Extra: $"+value);
 							sizeValue += value;
 
+						}else{
+							preview.findViewById(R.id.tv_extra).setVisibility(View.GONE);
 						}
 						
 						btnDeleteMenu.setOnClickListener(new View.OnClickListener() {
@@ -810,7 +817,8 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 		// TODO Auto-generated method stub
 		Log.d("onClick", "onSizeClicked" + i);
 //		SizeItem item = (SizeItem)v0.getTag();
-		if(!item.isSelected()){
+//		if(!item.isSelected())
+		{
 			Menu menu = getMenuItemById(item.getProductId());
 			if(menu!=null){
 				List<SizeItem> list = menu.getSizeItemList();
@@ -828,7 +836,7 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 				}
 			}
 			
-			updateSizeItem(item);
+//			updateSizeItem(item);
 			notifyDataSetChanged();
 		}
 	}

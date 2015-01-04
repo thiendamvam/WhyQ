@@ -29,10 +29,19 @@ public class ExtraItemAdapter extends OptionItemBasicAdapter {
 		// TODO Auto-generated method stub
 		List<OptionItem> result = new ArrayList<OptionItem>();
 		for (ExtraItem item : objects) {
-			OptionItem option = new OptionItem();
-			option.setName(item.getName());
-			option.setValue(item.getValue());
-			result.add(option);
+			OptionItem i = new OptionItem();
+			i.setName(item.getName());
+			i.setValue(item.getValue());
+			i.setCreatedata(item.getCreatedata());
+			i.setId(item.getId());
+			i.setNote(item.getNote());
+			i.setProductId(item.getProductId());
+			i.setSelected(item.isSelected());
+			i.setSkue(item.getSkue());
+			i.setSort(item.getSort());
+			i.setStatus(item.getStatus());
+			i.setType(item.getType());
+			result.add(i);
 		}
 
 		return result;
