@@ -88,10 +88,10 @@ public class LoginWhyqActivity extends Activity implements Login_delegate,
 		login_delegate = new WhyqMain();
 		email = (EditText) findViewById(R.id.permEmail);
 		password = (EditText) findViewById(R.id.permPassword);
-		if (BuildConfig.DEBUG) {
-			email.setText("acthan09022002@gmail.com");
-			password.setText("123456");
-		}
+//		if (BuildConfig.DEBUG) {
+//			email.setText("acthan09022002@gmail.com");
+//			password.setText("123456");
+//		}
 		// facebookLogin = (Button) findViewById(R.id.loginfb);
 		// twitterLogin = (Button) findViewById(R.id.logintw);
 		login = (Button) findViewById(R.id.loginPerm);
