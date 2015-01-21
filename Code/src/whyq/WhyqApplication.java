@@ -6,6 +6,8 @@ package whyq;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+
+
 import whyq.model.User;
 import whyq.service.img.good.ImageLoader;
 import whyq.service.pushnotification.AlarmReceiver;
@@ -21,6 +23,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -42,6 +47,8 @@ public class WhyqApplication extends Application {
 	public static final String TOKEN_EXPIRED_TIME = "expires_in";
 	public static String DEVICE_ID = "noID";
 	public static final String DISK_CACHE_DIR = "images";
+	private static final long LOCATION_REFRESH_TIME = 150*60*1000;
+	private static final float LOCATION_REFRESH_DISTANCE = 1000;
 	public static int sScreenWidth = 0;
 	public static int sScreenHeight;
 	public static int sBaseViewHeight;
@@ -57,6 +64,41 @@ public class WhyqApplication extends Application {
 	private String loginType;
 
 	public static WhyqApplication _instance;
+
+	private final LocationListener mLocationListener = new LocationListener() {
+	    @Override
+	    public void onLocationChanged(final Location location) {
+	        //your code here
+	    	currentLocation = location;
+	    }
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
+	private LocationManager mLocationManager;
+	
+	public void setLocation() {
+
+		mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);
+	}
 	
 	public WhyqApplication() {
 		super();
@@ -70,6 +112,8 @@ public class WhyqApplication extends Application {
 		sTypefaceRegular = Typeface.createFromAsset(getAssets(), "Roboto-Regular.ttf");
 		sTypefaceBold = Typeface.createFromAsset(getAssets(), "Roboto-Bold.ttf");
 		sTypefaceItalic = Typeface.createFromAsset(getAssets(), "Roboto-Italic.ttf");
+		
+		setLocation();
 	}
 	
 	public static void initScreenSize(int width, int height) {

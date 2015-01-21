@@ -154,7 +154,7 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 		{
 			LayoutInflater inflator = ((ListDetailActivity) mContext).getLayoutInflater();
 			final ViewHolderMitemInfo viewHolder;
-			if (view == null) {//view == null
+			if (true) {//view == null
 				viewHolder = new ViewHolderMitemInfo();
 				view = inflator.inflate(R.layout.whyq_menu_item_phase2, null);
 				viewHolder.tvType = (TextView) view.findViewById(R.id.tvType);
@@ -170,7 +170,9 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 				viewHolder.rlExtraView = (RelativeLayout) view.findViewById(R.id.rl_extra_view);
 				viewHolder.tvFavouriteCount = (TextView) view.findViewById(R.id.tv_favourite_food_count);
 				viewHolder.imgFavourite = (ImageView) view.findViewById(R.id.imgFavouriteFood);
-
+				
+				viewHolder.etNote = (EditText) view.findViewById(R.id.et_note);
+				
 				viewHolder.hlv_sizes = (HorizontalListView)view.findViewById(R.id.hlv_sizes);
 				viewHolder.hlv_options = (HorizontalListView)view.findViewById(R.id.hlv_options);
 				viewHolder.hlv_extras = (HorizontalListView)view.findViewById(R.id.hlv_extras);
@@ -210,7 +212,7 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 			 * Set text note change
 			 */
 //			setViewVisibility(viewHolder.etNote, isItemInBillList);
-			viewHolder.etNote = (EditText) view.findViewById(R.id.et_note);
+//			viewHolder.etNote = (EditText) view.findViewById(R.id.et_note);
 			viewHolder.etNote.setText(item.getNote());
 			setViewVisibility(view.findViewById(R.id.rl_note), isItemInBillList);
 			viewHolder.etNote.addTextChangedListener(new TextWatcher() {
@@ -218,20 +220,22 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 				@Override
 				public void onTextChanged(CharSequence s, int start, int before, int count) {
 					// TODO Auto-generated method stub
-					
+					Log.d("onTextChanged","onTextChanged "+s);
 				}
 				
 				@Override
 				public void beforeTextChanged(CharSequence s, int start, int count,
 						int after) {
 					// TODO Auto-generated method stub
-					
+					Log.d("beforeTextChanged","beforeTextChanged "+s);
 				}
 				
 				@Override
 				public void afterTextChanged(Editable s) {
 					// TODO Auto-generated method stub
+					Log.d("afterTextChanged","afterTextChanged "+s);
 					item.setNote(s.toString());
+					changeItem(item);
 					noteList.put(item.getId(), s.toString());
 				}
 			});
