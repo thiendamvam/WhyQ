@@ -860,7 +860,7 @@ public class ExpandMenuAdapterV2 extends BaseExpandableListAdapter implements On
 		// TODO Auto-generated method stub
 		Log.d("onClick", "onSizeClicked" + i);
 //		SizeItem item = (SizeItem)v0.getTag();
-//		if(!item.isSelected())
+		if(!item.isSelected())
 		{
 			Menu menu = getMenuItemById(item.getProductId());
 			if(menu!=null){
