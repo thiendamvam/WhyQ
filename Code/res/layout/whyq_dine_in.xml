@@ -80,6 +80,7 @@
                     android:layout_weight="1"
                     android:hint="No Number"
                     android:padding="5dp"
+                    android:clickable="false"
                     android:singleLine="true" />
             </LinearLayout>
         </LinearLayout>

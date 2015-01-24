@@ -79,14 +79,15 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 		new asyncGetLocatoin().execute();
 		// btnDone = (Button)findViewById(R.id.btnDone);
 		// btnDone.setOnClickListener(this);
-		disableTimeField();
+		resetTimeField();
+		cbLeaveNow.setChecked(true);
 		cbLeaveNow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// TODO Auto-generated method stub
 				if(cbLeaveNow.isChecked()){
-					disableTimeField();
+					resetTimeField();
 				}else{
 					endAbleTimeField();
 				}
@@ -105,7 +106,22 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 		// TODO Auto-generated method stub
 		etHours.setEnabled(false);
 		etMinutes.setEnabled(false);
+		
+		resetTimeField();
 	}
+	
+	
+	
+	private void resetTimeField() {
+		// TODO Auto-generated method stub
+		etHours.setText("");
+		etMinutes.setText("");
+		currentHours = 0;
+		currentMinutes = 0;
+	}
+
+
+
 	class asyncGetLocatoin extends AsyncTask<Bundle, Void, Bundle> {
 
 		public asyncGetLocatoin() {

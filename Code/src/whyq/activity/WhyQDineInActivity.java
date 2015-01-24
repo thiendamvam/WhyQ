@@ -72,6 +72,7 @@ public class WhyQDineInActivity extends FragmentActivity implements OnClickListe
 		cbxNonumber = (CheckBox)findViewById(R.id.cbNoNumber);
 		progressBar = (ProgressBar)findViewById(R.id.prgBar);
 				
+		etNoNumber.setClickable(false);
 		btnCancel.setOnClickListener(this);
 		btnOk.setOnClickListener(this);
 		context = this;

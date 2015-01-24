@@ -109,7 +109,7 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// TODO Auto-generated method stub
 				if(cbASAP.isChecked()){
-					disableTimeField();
+					resetTimeField();
 				}else{
 					endAbleTimeField();
 				}
@@ -120,6 +120,8 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		if(address!=null)
 			atAddress.setText(address);
 		
+		cbASAP.setChecked(true);
+		resetTimeField();
 //		getDeliveryFeeList();
 	}
 
@@ -139,6 +141,16 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		etHours.setEnabled(false);
 		etMinutes.setEnabled(false);
+		
+		resetTimeField();
+	}
+
+	private void resetTimeField() {
+		// TODO Auto-generated method stub
+		currentHours = 0;
+		currentMinutes = 0;
+		etHours.setText("");
+		etMinutes.setText("");
 	}
 
 	private void setUpMapIfNeeded() {
@@ -486,6 +498,9 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		int id = v.getId();
 		if(id == R.id.etHours||id == R.id.etMinutes){
+			
+			cbASAP.setChecked(false);
+			
 			new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
 				
 				@Override
@@ -495,6 +510,8 @@ public class WhyQHomeDeliveryActivity extends FragmentActivity implements
 					currentMinutes = minute;
 					etHours.setText(""+hourOfDay);
 					etMinutes.setText(""+minute);
+					
+					
 				}
 			}, currentHours, currentMinutes, true).show();
 		}
