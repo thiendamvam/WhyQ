@@ -155,6 +155,9 @@ public class WhyQTakeAwayActivity extends Activity implements OnClickListener,
 			break;
 		}
 		if(id == R.id.etHours||id == R.id.etMinutes){
+			
+			cbLeaveNow.setChecked(false);
+			
 			new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
 
 
