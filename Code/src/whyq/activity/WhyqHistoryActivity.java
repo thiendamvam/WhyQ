@@ -49,7 +49,7 @@ public class WhyqHistoryActivity extends ImageWorkerActivity {
 
 		setContentView(R.layout.activity_history);
 
-		setTitle(R.string.history);
+		setTitle(R.string.orders_place);
 
 		mAdapter = new BillAdapter(this, mImageWorker);
 		mListview = (LoadMoreListView) findViewById(R.id.listview);

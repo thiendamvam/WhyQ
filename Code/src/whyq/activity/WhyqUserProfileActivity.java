@@ -419,7 +419,7 @@ public class WhyqUserProfileActivity extends ImageWorkerActivity implements
 				});
 		final int totalHistory = total.getTotal_check_bill();
 		bindCategory(R.id.history, R.drawable.btn_blue_history, isFriendProfile==true?""+total.getTotal_friend():totalHistory + "",
-				isFriendProfile==true?"Friends":"History", new OnClickListener() {
+				isFriendProfile==true?"Friends":"Orders placed", new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
