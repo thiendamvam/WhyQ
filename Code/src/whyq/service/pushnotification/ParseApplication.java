@@ -5,7 +5,9 @@ import whyq.activity.HomeActivity;
 import whyq.activity.ListActivity;
 import whyq.activity.WhyQBillScreen;
 import whyq.adapter.WhyqMenuAdapter;
+import whyq.interfaces.IServiceListener;
 import whyq.service.Service;
+import whyq.service.ServiceResponse;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
@@ -21,8 +23,8 @@ import android.util.Log;
 public class ParseApplication {
 
 	
-	private static final String APPLICATION_ID = "b6Aq0s7gZq2XK79XJJMxCJu2GAi8FAarj2X3QRXS";
-	private static final String CLIENT_KEY = "nbVoZs1qjWcOCMk4ztIQP0pZzIXPamBk4gfuT0bH";
+	private static final String APPLICATION_ID = "b6Aq0s7gZq2XK79XJJMxCJu2GAi8FAarj2X3QRXS";//"b6Aq0s7gZq2XK79XJJMxCJu2GAi8FAarj2X3QRXS";
+	private static final String CLIENT_KEY = "nbVoZs1qjWcOCMk4ztIQP0pZzIXPamBk4gfuT0bH";//"nbVoZs1qjWcOCMk4ztIQP0pZzIXPamBk4gfuT0bH";
 	public static void registerPushNotification(Context context) {
 
 		// Add your initialization code here
@@ -52,7 +54,8 @@ public class ParseApplication {
 				String appVerions = "1";
 				String deviceName = android.os.Build.DEVICE;
 				String deviceModel = android.os.Build.MODEL;
-				((WhyqMain)context).sendDeviceInfoToPushNotificationServer(appName, appVerions, deviceName, deviceModel, installationId, objectId);
+				sendDeviceInfoToPushNotificationServer(appName, appVerions, deviceName, deviceModel, installationId, objectId);
+//				((WhyqMain)context).sendDeviceInfoToPushNotificationServer(appName, appVerions, deviceName, deviceModel, installationId, objectId);
 	        	
 	        }
 	        
@@ -60,5 +63,20 @@ public class ParseApplication {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+	}
+	
+	public static void sendDeviceInfoToPushNotificationServer(String appName, String appVersion, String deviceName, String deviceModel, String installationId, String objectId) {
+		// TODO Auto-generated method stub
+		IServiceListener listener = new IServiceListener() {
+			
+			@Override
+			public void onCompleted(Service service, ServiceResponse result) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		Service service = new Service(listener);
+		service.registerDeviceToPushNotificationServer(appName, appVersion, deviceName, deviceModel, installationId, objectId);
+			
 	}
 }

@@ -34,6 +34,10 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 
 import com.parse.ParseAnalytics;
+import com.parse.ParseException;
+import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.RefreshCallback;
 import com.whyq.R;
 
 public class WhyqMain extends TabActivity implements IServiceListener {
@@ -50,7 +54,7 @@ public class WhyqMain extends TabActivity implements IServiceListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
 		token = XMLParser.getToken(WhyqApplication.Instance()
 				.getApplicationContext());
 			tabHost = getTabHost();
@@ -192,11 +196,27 @@ public class WhyqMain extends TabActivity implements IServiceListener {
 			 * Register pushnotification
 			 */
 			ParseAnalytics.trackAppOpened(getIntent());
-			ParseApplication.registerPushNotification(context);
+//			ParseApplication.registerPushNotification(context);
 			ParseApplication.exePushNotification(context);
+			
+			refreshUserProfile();
 		}
 
 //	}
+	
+	// Get the latest values from the ParseInstallation object.
+	private void refreshUserProfile() {		
+		ParseInstallation.getCurrentInstallation().refreshInBackground(new RefreshCallback() {
+
+			@Override
+			public void done(ParseObject arg0, ParseException arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			
+		});
+	}
 	
 	public static void hideTabBar(){
 		for(int i =0; i < 4;i++){

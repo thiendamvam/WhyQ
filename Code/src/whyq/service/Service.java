@@ -46,6 +46,7 @@ import whyq.model.ShareData;
 import whyq.utils.API;
 import whyq.utils.Constants;
 import whyq.utils.Logger;
+import whyq.utils.Util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -1008,6 +1009,7 @@ public class Service implements Runnable {
 		params.put("app_name", Constants.APP_NAME);
 		params.put("version", Constants.APP_VERSION);
 		params.put("time_zone", TimeZone.getDefault());
+		params.put("devicetoken", Util.generateDeviceId());
 		params.put("is_receive_notification", isReceiveNotify);
 		params.put("is_show_friend", isReceiveNotify);
 		request("/m/member/setting/edit", params, true, false);
@@ -1026,6 +1028,7 @@ public class Service implements Runnable {
 		params.put("appname", Constants.APP_NAME);
 		params.put("env", Constants.DEVELOPMENT);// pro
 		params.put("appversion", appVersion);
+		params.put("devicetoken", Util.generateDeviceId());
 		params.put("devicename", deviceName);
 		params.put("devicemodel", deviceModel);
 		params.put("installationId", installationId);
