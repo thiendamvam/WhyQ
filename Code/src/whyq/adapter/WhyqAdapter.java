@@ -153,7 +153,7 @@ private int mAdapterType;
 		
 	    mNow = Calendar.getInstance();
 
-	    int hour = mNow.get(Calendar.HOUR);
+	    int hour = mNow.get(Calendar.HOUR_OF_DAY);
 	    int minute = mNow.get(Calendar.MINUTE);
 
 	    mTimeNow = hour + ":" + minute;

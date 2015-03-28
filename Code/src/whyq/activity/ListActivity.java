@@ -3,6 +3,7 @@ package whyq.activity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -189,6 +190,8 @@ public class ListActivity extends FragmentActivity implements OnClickListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createUI();
+		
+		Log.d("timezone", "timeZone: "+TimeZone.getDefault());
 		mGetLocationCount = 0;
 		
 		isExpandableSearch = false;

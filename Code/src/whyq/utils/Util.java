@@ -716,7 +716,7 @@ public class Util {
 	public static boolean compareMinDates(String time1, String time2){
 	    Calendar now = Calendar.getInstance();
 
-	    int hour = now.get(Calendar.HOUR);
+	    int hour = now.get(Calendar.HOUR_OF_DAY);
 	    int minute = now.get(Calendar.MINUTE);
 
 	    Date date = parseDate(hour + ":" + minute);
