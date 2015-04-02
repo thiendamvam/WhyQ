@@ -144,7 +144,9 @@
             android:layout_below="@+id/v_delivery"
             android:layout_margin="6dp"
             android:background="@drawable/black_container"
-            android:padding="3dp"
+            android:padding="5dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/red"
             android:visibility="gone"/>
     </RelativeLayout>
 
