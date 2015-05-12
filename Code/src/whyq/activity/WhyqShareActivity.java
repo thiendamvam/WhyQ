@@ -208,7 +208,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 
 			if (session.isOpened()) {
 				
-				List<String> permissions = Arrays.asList("publish_actions", "publish_stream","user_checkins");
+				List<String> permissions = Arrays.asList("publish_actions");
 				NewPermissionsRequest newPermission = new Session.NewPermissionsRequest(this, permissions);
 				session.requestNewPublishPermissions(newPermission);
 				if (isSend) {
@@ -243,10 +243,10 @@ public class WhyqShareActivity extends FragmentActivity implements
 //							session.requestNewPublishPermissions(newPermission);
 //							//New add 31.9 for whyq
 //							if(isComment){
-//								exePostFacebook(session.getAccessToken());	
+//							exePostFacebook(session.getAccessToken());	
 //							}
 						}
-						exePostFacebook(session.getAccessToken());
+						exePostFacebook(session.getAccessToken());	
 					}
 				};
 				pendingRequest = true;
@@ -277,14 +277,6 @@ public class WhyqShareActivity extends FragmentActivity implements
 
 	protected void exePostFacebook(String accessToken) {
 		
-		try {
-			List<String> permissions = Arrays.asList("publish_actions");
-			NewPermissionsRequest newPermission = new Session.NewPermissionsRequest(this, permissions);
-			session.requestNewPublishPermissions(newPermission);
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
 		// TODO Auto-generated method stub
 		OrderCheckData data = orderCheck;
 		ShareHandler shareHandler = new ShareHandler(WhyqShareActivity.this);
@@ -489,13 +481,9 @@ public class WhyqShareActivity extends FragmentActivity implements
 
 			if (result.isSuccess()
 					&& result.getAction() == ServiceAction.ActionOrderCheck) {
-				if(session == null){
-					session = Util.createSession();
-					List<String> permissions = Arrays.asList("publish_actions", "publish_stream","user_checkins");
-					NewPermissionsRequest newPermission = new Session.NewPermissionsRequest(this, permissions);
-					session.requestNewPublishPermissions(newPermission);
-				}
-				if (session.getAccessToken() != null) {
+
+//				if (session.getAccessToken() != null) 
+				{
 					ResponseData data = (ResponseData) result.getData();
 					if (data.getStatus().equals("200")) {
 						orderCheck = (OrderCheckData) data.getData();
