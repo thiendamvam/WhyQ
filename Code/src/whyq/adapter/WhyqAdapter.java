@@ -222,7 +222,7 @@ private int mAdapterType;
 					
 				}
 				
-				final boolean isOpen = true;//checkOpenTime(item);
+				final boolean isOpen = checkOpenTime(item);
 				rowView.findViewById(R.id.v_grey_no_open).setVisibility(isOpen ? View.INVISIBLE: View.VISIBLE);
 				((Button)rowView.findViewById(R.id.v_grey_no_open)).setOnClickListener(new View.OnClickListener() {
 					
