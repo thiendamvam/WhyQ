@@ -1187,7 +1187,7 @@ public class Service implements Runnable {
 			File file = new File(image);
 			if (file.exists()) {
 				FileBody encFile = new FileBody(file, "image/png");
-				params.put("photo", encFile);
+				params.put("image", encFile);
 			}
 
 		} catch (Exception e) {

@@ -208,7 +208,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 
 			if (session.isOpened()) {
 				
-				List<String> permissions = Arrays.asList("publish_actions");
+				List<String> permissions = Arrays.asList("publish_actions", "user_friends", "email", "read_stream", "public_profile");
 				NewPermissionsRequest newPermission = new Session.NewPermissionsRequest(this, permissions);
 				session.requestNewPublishPermissions(newPermission);
 				if (isSend) {
@@ -232,12 +232,12 @@ public class WhyqShareActivity extends FragmentActivity implements
 					public void call(Session session, SessionState state,
 							Exception exception) {
 						if (exception != null) {
-							new AlertDialog.Builder(context)
-									.setTitle(R.string.login_text1)
-									.setMessage(exception.getMessage())
-									.setPositiveButton(R.string.ok, null)
-									.show();
-							session = Util.createSession();
+//							new AlertDialog.Builder(context)
+//									.setTitle(R.string.login_text1)
+//									.setMessage(exception.getMessage())
+//									.setPositiveButton(R.string.ok, null)
+//									.show();
+//							session = Util.createSession();
 //							List<String> permissions = Arrays.asList("publish_actions");
 //							NewPermissionsRequest newPermission = new Session.NewPermissionsRequest(WhyqShareActivity.this, permissions);
 //							session.requestNewPublishPermissions(newPermission);
@@ -319,7 +319,7 @@ public class WhyqShareActivity extends FragmentActivity implements
 	    }
 	    return true;
 	}
-	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions", "email", "read_stream", "public_profile");
 	private void postImageToWll(String accessToken, ShareData shareData) {
 		Session session = Session.getActiveSession();
 
