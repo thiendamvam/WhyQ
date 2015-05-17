@@ -756,7 +756,7 @@ public class Service implements Runnable {
 			try {
 
 				Object value = params.get(key);
-				if (key.toUpperCase().equals("PHOTO")) {
+				if (key.toUpperCase().equals("PHOTO") || key.toUpperCase().equals("IMAGE")) {
 					reqEntity.addPart(key, (ContentBody) value);
 				} else {
 					Charset chars = Charset.forName("UTF-8");
