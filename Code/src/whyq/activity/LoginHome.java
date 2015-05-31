@@ -28,6 +28,7 @@ import whyq.utils.Util;
 import whyq.utils.XMLParser;
 import whyq.utils.facebook.FacebookConnector;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -62,8 +63,8 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 	private Button twitterLogin;
 	public static boolean isLoginFb = false;
 	public static boolean isTwitter = false;
-	// private ProgressDialog loadingDialog;
-	private ProgressBar progressBar;
+	private ProgressDialog loadingDialog;
+//	private ProgressBar progressBar;
 	private SharedPreferences prefs;
 	private FacebookConnector facebookConnector;
 	private boolean pendingRequest;
@@ -86,7 +87,12 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 		facebookLogin = (Button) findViewById(R.id.btnFbLogin);
 		twitterLogin = (Button) findViewById(R.id.btnLoginTw);
 		// login = (Button) findViewById(R.id.loginPerm);
-		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+//		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		
+		loadingDialog = new ProgressDialog(this);
+		loadingDialog.setMessage("Loading...");
+		dismissLoadingDialog();
+		
 		facebookConnector = new FacebookConnector(Constants.FACEBOOK_APP_ID,
 				this, getApplicationContext(), new String[] { Constants.EMAIL,
 						Constants.PUBLISH_STREAM });
@@ -217,16 +223,18 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 		super.onDestroy();
 	}
 
-	private void showLoadingDialog(String title, String msg) {
+	private void showLoadingDialog() {
 
-		progressBar.setVisibility(View.VISIBLE);
+//		progressBar.setVisibility(View.VISIBLE);
+		loadingDialog.show();
 	}
 
 	private void dismissLoadingDialog() {
 
-		if (progressBar.getVisibility() == View.VISIBLE) {
-			progressBar.setVisibility(View.GONE);
-		}
+//		if (progressBar.getVisibility() == View.VISIBLE) {
+//			progressBar.setVisibility(View.GONE);
+//		}
+		loadingDialog.dismiss();
 	}
 
 	public void onClickedSignup(View v) {
@@ -274,11 +282,13 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 	public void exeLoginFacebook(String accessToken) {
 		Service service = new Service(LoginHome.this);
 		service.loginFacebook(accessToken);
+		showLoadingDialog();
 		pendingRequest = false;
 	}
 
 	public void exeLoginTwitter(String oauthToken, String oauthTokenSecret) {
 		Service service = new Service(LoginHome.this);
+		showLoadingDialog();
 		service.loginTwitter(oauthToken, oauthTokenSecret);
 	}
 
@@ -295,6 +305,8 @@ public class LoginHome extends FragmentActivity implements IServiceListener,
 	@Override
 	public void onCompleted(Service service, ServiceResponse result) {
 		// TODO Auto-generated method stub
+		
+		dismissLoadingDialog();
 		if (result.isSuccess() == true
 				&& result.getAction() == ServiceAction.ActionLoginFacebook) {
 			ResponseData data = (ResponseData) result.getData();
